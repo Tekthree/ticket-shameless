@@ -1,0 +1,12 @@
+{
+  "name": "mcp-supabase",
+  "version": "1.0.0",
+  "description": "Supabase MCP for Shameless Ticketing",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.1"
+  }
+}
