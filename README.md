@@ -38,6 +38,7 @@ This project implements a complete ticketing platform for the Shameless music pr
 - ✅ Artist and lineup management for events
 - ✅ Site content management for landing page customization
 - ✅ Image and video management through Supabase Storage
+- ✅ Customizable navigation and footer logos
 
 All basic functionality is working. You can add, edit, and delete events through the admin interface, manage artists and lineups, customize landing page content, and users can browse and purchase tickets.
 
@@ -144,7 +145,9 @@ NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_api_key_here
      ('about', 'image', '/images/logo.png', 'image'),
      ('motto', 'title', 'Shake Your Shame Off And Get Your Game On.', 'text'),
      ('motto', 'description', 'From day one, each Shameless party was a special one regardless of the wide ranges of genres and bookings represented. With an eye towards the cutting edge, but deep respect for electronic music''s rich history, Shameless has kept its finger on the pulse of Seattle''s underground for years now and yet keeps looking forward.', 'text'),
-     ('motto', 'image', '/images/logo.png', 'image');
+     ('motto', 'image', '/images/logo.png', 'image'),
+     ('navigation', 'logo', '/images/logo.png', 'image'),
+     ('footer', 'logo', '/images/logo.png', 'image');
    ```
 
    - **Set up storage:** Run this SQL in your Supabase SQL editor:
@@ -229,7 +232,7 @@ Stores information about artists including name and image URL.
 Junction table that creates a many-to-many relationship between events and artists, including performance time information.
 
 ### Site_Content Table
-Stores customizable content for the landing page including text, images, and videos.
+Stores customizable content for the landing page including text, images, videos, and logos.
 
 ## Key Features
 
@@ -261,6 +264,7 @@ The platform includes a lightweight CMS for managing landing page content:
 - Edit motto section text and images
 - Upload and manage media assets using Supabase Storage
 - Preview changes in real-time
+- Customize navigation and footer logos for consistent branding
 
 The content management interface is available at `/admin/site-content`.
 
@@ -331,6 +335,20 @@ For production deployment:
 The application uses Supabase Authentication. The admin dashboard is protected and requires authentication.
 
 For development, you can create a user in your Supabase project and use those credentials to access the admin dashboard.
+
+## Customizing Site Layout
+
+### Navigation and Footer
+
+The site features a customizable navigation bar and footer with uploadable logos:
+
+1. The navigation bar is taller with a larger logo area for better visibility
+2. The footer includes a prominent logo space, navigation links, social links, and legal information
+3. Both logos can be updated through the Site Content manager in the admin area
+
+To change the appearance of the navigation or footer:
+- For layout changes: Edit the `components/Navbar.tsx` and `components/Footer.tsx` files
+- For content changes: Use the admin interface at `/admin/site-content` and go to the Logos tab
 
 ## Troubleshooting
 

@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import { getSiteContent, updateSiteContent, SiteContent } from '@/lib/site-content';
 import AdminHeader from '@/components/AdminHeader';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function SiteContentManager() {
   const [content, setContent] = useState<SiteContent | null>(null);
@@ -118,15 +119,9 @@ export default function SiteContentManager() {
     }
   };
   
-  const handleFileButtonClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
-  
-  const handleVideoButtonClick = () => {
-    if (videoInputRef.current) {
-      videoInputRef.current.click();
+  const handleFileButtonClick = (inputRef: React.RefObject<HTMLInputElement>) => {
+    if (inputRef.current) {
+      inputRef.current.click();
     }
   };
   
@@ -151,7 +146,7 @@ export default function SiteContentManager() {
           Edit your site's content including text, images, and videos.
         </p>
         
-        <div className="flex border-b mb-6">
+        <div className="flex flex-wrap border-b mb-6">
           <button
             className={`px-4 py-2 ${activeSection === 'hero' ? 'border-b-2 border-indigo-500 text-indigo-600' : 'text-gray-500'}`}
             onClick={() => setActiveSection('hero')}
@@ -169,6 +164,12 @@ export default function SiteContentManager() {
             onClick={() => setActiveSection('motto')}
           >
             Motto Section
+          </button>
+          <button
+            className={`px-4 py-2 ${activeSection === 'logos' ? 'border-b-2 border-indigo-500 text-indigo-600' : 'text-gray-500'}`}
+            onClick={() => setActiveSection('logos')}
+          >
+            Logos
           </button>
         </div>
         
@@ -232,7 +233,7 @@ export default function SiteContentManager() {
                 }}
               />
               <button
-                onClick={handleFileButtonClick}
+                onClick={() => handleFileButtonClick(fileInputRef)}
                 className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
                 disabled={loading}
               >
@@ -264,7 +265,7 @@ export default function SiteContentManager() {
                 }}
               />
               <button
-                onClick={handleVideoButtonClick}
+                onClick={() => handleFileButtonClick(videoInputRef)}
                 className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
                 disabled={loading}
               >
@@ -431,6 +432,98 @@ export default function SiteContentManager() {
                 disabled={loading}
               >
                 Upload New Image
+              </button>
+            </div>
+          </div>
+        )}
+        
+        {content && activeSection === 'logos' && (
+          <div className="space-y-8">
+            <div className="border-b pb-6">
+              <h2 className="text-xl font-semibold mb-4">Navigation Logo</h2>
+              <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                <p className="text-gray-600 mb-2">This logo appears in the navigation bar at the top of every page.</p>
+                <p className="text-gray-600 mb-2">Recommended size: 200px x 60px</p>
+              </div>
+              
+              {content.navigation?.logo?.content ? (
+                <div className="mb-4">
+                  <p className="text-sm text-gray-500 mb-2">Current logo:</p>
+                  <div className="bg-gray-100 p-4 rounded-lg inline-block">
+                    <img
+                      src={content.navigation.logo.content}
+                      alt="Navigation logo"
+                      className="h-16 object-contain"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="mb-4">
+                  <p className="text-sm text-gray-500">No navigation logo set</p>
+                </div>
+              )}
+              
+              <input
+                type="file"
+                className="hidden"
+                accept="image/*"
+                id="nav-logo-input"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    handleUploadFile('navigation', 'logo', e.target.files[0]);
+                  }
+                }}
+              />
+              <button
+                onClick={() => document.getElementById('nav-logo-input')?.click()}
+                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                disabled={loading}
+              >
+                Upload Navigation Logo
+              </button>
+            </div>
+            
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Footer Logo</h2>
+              <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                <p className="text-gray-600 mb-2">This logo appears in the footer at the bottom of every page.</p>
+                <p className="text-gray-600 mb-2">Recommended size: 200px x 60px</p>
+              </div>
+              
+              {content.footer?.logo?.content ? (
+                <div className="mb-4">
+                  <p className="text-sm text-gray-500 mb-2">Current logo:</p>
+                  <div className="bg-gray-800 p-4 rounded-lg inline-block">
+                    <img
+                      src={content.footer.logo.content}
+                      alt="Footer logo"
+                      className="h-16 object-contain"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="mb-4">
+                  <p className="text-sm text-gray-500">No footer logo set</p>
+                </div>
+              )}
+              
+              <input
+                type="file"
+                className="hidden"
+                accept="image/*"
+                id="footer-logo-input"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    handleUploadFile('footer', 'logo', e.target.files[0]);
+                  }
+                }}
+              />
+              <button
+                onClick={() => document.getElementById('footer-logo-input')?.click()}
+                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                disabled={loading}
+              >
+                Upload Footer Logo
               </button>
             </div>
           </div>
