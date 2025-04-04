@@ -57,7 +57,7 @@ export default function BuyTicketButton({ eventId, price, title }: BuyTicketButt
           id="quantity"
           value={quantity}
           onChange={(e) => setQuantity(Number(e.target.value))}
-          className="block w-full p-2 border border-gray-700 rounded-md bg-gray-800 text-white focus:ring-red-500 focus:border-red-500"
+          className="block w-full p-2 border border-gray-700 rounded-full bg-gray-800 text-white focus:ring-red-500 focus:border-red-500"
           disabled={isLoading}
         >
           {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
@@ -71,7 +71,7 @@ export default function BuyTicketButton({ eventId, price, title }: BuyTicketButt
       <button
         onClick={handleBuyTicket}
         disabled={isLoading}
-        className="w-full py-3 bg-red-600 text-white font-bold rounded-md hover:bg-red-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+        className="w-full py-3 bg-red-600 text-white font-bold rounded-full hover:bg-red-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
       >
         {isLoading ? 'Processing...' : `Buy ${quantity > 1 ? `${quantity} tickets` : 'ticket'}`}
       </button>

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { getEventBySlug } from '@/lib/events'
 import BuyTicketButton from '@/components/BuyTicketButton'
+import GoogleMap from '@/components/GoogleMap'
 import { formatDate } from '@/lib/utils'
 
 export async function generateMetadata({ 
@@ -70,6 +71,15 @@ export default async function EventPage({
                       <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM11 7H13V13H11V7ZM11 15H13V17H11V15Z" fill="currentColor"/>
                     </svg>
                     <span className="text-sm">{event.ageRestriction} event</span>
+                  </div>
+                )}
+                
+                {/* Buy Tickets Button - Only visible on mobile */}
+                {!event.soldOut && (
+                  <div className="mt-4 block md:hidden">
+                    <a href="#buy-tickets" className="inline-block py-2 px-6 bg-red-600 text-white font-bold rounded-full hover:bg-red-700 transition text-center">
+                      Buy Tickets
+                    </a>
                   </div>
                 )}
               </div>
@@ -158,15 +168,15 @@ export default async function EventPage({
                 <p className="text-gray-400">{event.address}</p>
               </div>
               
-              <div className="h-64 bg-gray-800 rounded-lg mb-4 flex items-center justify-center">
-                <span className="text-gray-500">Map view</span>
-              </div>
+              <GoogleMap address={event.address} venueTitle={event.venue} />
+
+              
               
               <a 
                 href={`https://maps.google.com/?q=${encodeURIComponent(event.address)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-white hover:text-gray-300"
+                className="inline-flex items-center mt-5 text-white hover:text-gray-300 py-2 px-4 border border-white rounded-full"
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="currentColor"/>
@@ -179,7 +189,7 @@ export default async function EventPage({
           {/* Right Column - Ticket Box Only */}
           <div className="md:col-span-1">
             {/* Ticket Box */}
-            <div className="bg-gray-900 rounded-lg p-6 sticky top-4 z-20">
+            <div id="buy-tickets" className="bg-gray-900 rounded-lg p-6 sticky top-4 z-20">
               <div className="mb-6">
                 <div className="text-3xl font-bold mb-2">${event.price.toFixed(2)}</div>
                 <div className="text-gray-400 mb-4">
@@ -190,7 +200,7 @@ export default async function EventPage({
               </div>
               
               {event.soldOut ? (
-                <button className="w-full py-3 bg-gray-700 text-white font-bold rounded-md cursor-not-allowed mb-4" disabled>
+                <button className="w-full py-3 bg-gray-700 text-white font-bold rounded-full cursor-not-allowed mb-4" disabled>
                   Sold Out
                 </button>
               ) : (

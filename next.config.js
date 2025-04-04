@@ -27,6 +27,16 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'avatars.githubusercontent.com',
         pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'scontent-sea1-1.xx.fbcdn.net',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.xx.fbcdn.net',
+        pathname: '**',
       }
     ]
   },

@@ -1,3 +1,23 @@
+## Google Maps Integration
+
+The application uses Google Maps to display venue locations. To set up Google Maps:
+
+1. Create a Google Cloud project at https://console.cloud.google.com/
+2. Enable the following APIs:
+   - Maps JavaScript API
+   - Geocoding API
+3. Create an API key with appropriate restrictions (HTTP referrers recommended)
+4. Add your API key to the `.env.local` file:
+   ```
+   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_api_key_here
+   ```
+
+If you encounter a "REQUEST_DENIED" error, check that:
+- Your API key is correctly added to `.env.local`
+- Billing is enabled on your Google Cloud project
+- The necessary APIs are enabled
+- Your API key restrictions (if any) allow access from your domain
+
 # Shameless Ticket Platform
 
 A ticketing platform for Shameless Productions, built with Next.js, Supabase, and Stripe.
