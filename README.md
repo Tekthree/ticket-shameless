@@ -15,8 +15,9 @@ This project implements a complete ticketing platform for the Shameless music pr
 - ✅ Webhook handlers for Stripe events
 - ✅ Mock data fallback for development
 - ✅ Database seeding scripts for initial setup
+- ✅ Artist and lineup management for events
 
-All basic functionality is working. You can add, edit, and delete events through the admin interface, and users can browse and purchase tickets.
+All basic functionality is working. You can add, edit, and delete events through the admin interface, manage artists and lineups, and users can browse and purchase tickets.
 
 ## Next Steps
 
@@ -72,7 +73,7 @@ STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ```
 
-4. Set up your Supabase database by running the SQL in `supabase/schema.sql` in your Supabase SQL editor.
+4. Set up your Supabase database by running the SQL in `supabase/schema.sql` and `supabase/artists-schema.sql` in your Supabase SQL editor.
 
 5. Seed your database with initial events:
 ```bash
@@ -88,13 +89,19 @@ npm run dev
 
 ## Database Schema
 
-The database has two main tables:
+The database has the following main tables:
 
 ### Events Table
 Stores information about events including title, date, venue, and ticket inventory.
 
 ### Orders Table
 Stores information about ticket purchases including customer details and payment status.
+
+### Artists Table
+Stores information about artists including name and image URL.
+
+### Event_Artists Table
+Junction table that creates a many-to-many relationship between events and artists, including performance time information.
 
 ## Key Features
 
@@ -105,14 +112,24 @@ Admins can:
 - Edit existing events
 - Delete events
 - Set ticket prices and inventory
+- Manage artist lineups for events
 
 The admin interface is available at `/admin`.
+
+### Artist Management
+
+The platform includes a complete artist management system:
+- Search for existing artists by name
+- Create new artists with name and image
+- Add artists to event lineups with performance times
+- Reuse artists across multiple events
+- View and manage the current lineup for each event
 
 ### Ticket Purchasing
 
 Users can:
 - Browse available events
-- View event details
+- View event details and lineups
 - Purchase tickets via Stripe
 - See confirmation of their purchase
 

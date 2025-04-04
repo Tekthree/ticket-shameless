@@ -50,18 +50,18 @@ export default function BuyTicketButton({ eventId, price, title }: BuyTicketButt
   return (
     <div>
       <div className="mb-4">
-        <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="quantity" className="block text-sm font-medium text-gray-300 mb-1">
           Quantity
         </label>
         <select
           id="quantity"
           value={quantity}
           onChange={(e) => setQuantity(Number(e.target.value))}
-          className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+          className="block w-full p-2 border border-gray-700 rounded-md bg-gray-800 text-white focus:ring-red-500 focus:border-red-500"
           disabled={isLoading}
         >
           {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
-            <option key={num} value={num}>
+            <option key={num} value={num} className="bg-gray-800 text-white">
               {num} {num === 1 ? 'ticket' : 'tickets'} (${(price * num).toFixed(2)})
             </option>
           ))}

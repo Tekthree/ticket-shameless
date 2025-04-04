@@ -126,23 +126,39 @@ const mockEvents: Event[] = [
   }
 ];
 
-// Parse the lineup JSON from Supabase into the expected format
-function parseEventData(event: any): Event {
-  let lineup: Artist[] = [];
+// Fetch lineup for an event
+async function getEventLineup(supabase, eventId: string): Promise<Artist[]> {
+  const { data, error } = await supabase
+    .from('event_artists')
+    .select(`
+      artist_id,
+      performance_time,
+      artists:artist_id (
+        id,
+        name,
+        image
+      )
+    `)
+    .eq('event_id', eventId);
   
-  try {
-    // If lineup is a string, try to parse it as JSON
-    if (typeof event.lineup === 'string') {
-      lineup = JSON.parse(event.lineup);
-    } 
-    // If lineup is already an object (parsed by Supabase)
-    else if (event.lineup && typeof event.lineup === 'object') {
-      lineup = event.lineup;
-    }
-  } catch (error) {
-    console.error('Error parsing lineup data:', error);
-    lineup = [];
+  if (error || !data) {
+    console.error('Error fetching event lineup:', error);
+    return [];
   }
+  
+  // Transform the data to the expected format
+  return data.map(item => ({
+    id: item.artist_id,
+    name: item.artists.name,
+    image: item.artists.image,
+    time: item.performance_time
+  }));
+}
+
+// Parse the event data from Supabase into the expected format
+async function parseEventData(supabase, event: any): Promise<Event> {
+  // Fetch lineup for this event
+  const lineup = await getEventLineup(supabase, event.id);
   
   return {
     id: event.id,
@@ -193,7 +209,13 @@ export async function getEvents(limit?: number) {
     }
     
     console.log(`Successfully fetched ${data.length} events from Supabase`);
-    return data.map(parseEventData);
+    
+    // Process each event to include lineup data
+    const eventsWithLineup = await Promise.all(
+      data.map(event => parseEventData(supabase, event))
+    );
+    
+    return eventsWithLineup;
   } catch (error) {
     console.error('Exception when connecting to Supabase:', error);
     console.warn('Falling back to mock data due to exception');
@@ -222,7 +244,16 @@ export async function getPastEvents(limit?: number) {
       return [];
     }
     
-    return data ? data.map(parseEventData) : [];
+    if (!data || data.length === 0) {
+      return [];
+    }
+    
+    // Process each event to include lineup data
+    const eventsWithLineup = await Promise.all(
+      data.map(event => parseEventData(supabase, event))
+    );
+    
+    return eventsWithLineup;
   } catch (error) {
     console.error('Failed to connect to database:', error);
     return [];
@@ -246,7 +277,12 @@ export async function getEventBySlug(slug: string) {
       return mockEvent || null;
     }
     
-    return data ? parseEventData(data) : null;
+    if (!data) {
+      return null;
+    }
+    
+    // Add lineup data
+    return parseEventData(supabase, data);
   } catch (error) {
     console.error('Failed to connect to database:', error);
     // Return a mock event when there's an exception
@@ -272,7 +308,12 @@ export async function getEventById(id: string) {
       return mockEvent || null;
     }
     
-    return data ? parseEventData(data) : null;
+    if (!data) {
+      return null;
+    }
+    
+    // Add lineup data
+    return parseEventData(supabase, data);
   } catch (error) {
     console.error('Failed to connect to database:', error);
     // Return a mock event when there's an exception
@@ -286,28 +327,24 @@ export async function updateEvent(id: string, eventData: Partial<Event>) {
   try {
     const supabase = createClient();
     
-    // Convert lineup to JSON string if it's an array
-    const preparedData = { ...eventData };
-    if (preparedData.lineup && Array.isArray(preparedData.lineup)) {
-      preparedData.lineup = JSON.stringify(preparedData.lineup);
-    }
+    // Handle lineup separately
+    const { lineup, ...eventDataWithoutLineup } = eventData;
     
     // Map our client-side data structure to the database column names
     const dbData = {
-      title: preparedData.title,
-      description: preparedData.description,
-      date: preparedData.date,
-      time: preparedData.time,
-      venue: preparedData.venue,
-      address: preparedData.address,
-      image: preparedData.image,
-      price: preparedData.price,
-      tickets_total: preparedData.ticketsTotal,
-      tickets_remaining: preparedData.ticketsRemaining,
-      sold_out: preparedData.soldOut,
-      promoter: preparedData.promoter,
-      age_restriction: preparedData.ageRestriction,
-      lineup: preparedData.lineup
+      title: eventDataWithoutLineup.title,
+      description: eventDataWithoutLineup.description,
+      date: eventDataWithoutLineup.date,
+      time: eventDataWithoutLineup.time,
+      venue: eventDataWithoutLineup.venue,
+      address: eventDataWithoutLineup.address,
+      image: eventDataWithoutLineup.image,
+      price: eventDataWithoutLineup.price,
+      tickets_total: eventDataWithoutLineup.ticketsTotal,
+      tickets_remaining: eventDataWithoutLineup.ticketsRemaining,
+      sold_out: eventDataWithoutLineup.soldOut,
+      promoter: eventDataWithoutLineup.promoter,
+      age_restriction: eventDataWithoutLineup.ageRestriction
     };
     
     // Remove undefined values
@@ -330,8 +367,43 @@ export async function updateEvent(id: string, eventData: Partial<Event>) {
       throw new Error(`Failed to update event: ${error.message}`);
     }
     
+    // Handle lineup updates if provided
+    if (lineup && Array.isArray(lineup)) {
+      // First, delete existing lineup entries
+      const { error: deleteError } = await supabase
+        .from('event_artists')
+        .delete()
+        .eq('event_id', id);
+      
+      if (deleteError) {
+        console.error('Error deleting existing lineup:', deleteError);
+        // Continue anyway
+      }
+      
+      // Then, insert new lineup entries
+      if (lineup.length > 0) {
+        const eventArtistInserts = lineup.map(artist => ({
+          event_id: id,
+          artist_id: artist.id,
+          performance_time: artist.time || null
+        }));
+        
+        const { error: insertError } = await supabase
+          .from('event_artists')
+          .insert(eventArtistInserts);
+        
+        if (insertError) {
+          console.error('Error inserting new lineup:', insertError);
+          // Continue anyway
+        }
+      }
+    }
+    
     console.log('Event updated successfully:', data);
-    return data[0] ? parseEventData(data[0]) : null;
+    
+    // Get the updated event with lineup
+    const updatedEvent = await getEventById(id);
+    return updatedEvent;
   } catch (error) {
     console.error('Exception when updating event:', error);
     throw error;

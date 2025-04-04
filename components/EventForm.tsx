@@ -2,11 +2,20 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Event } from '@/lib/events'
+import Image from 'next/image'
+import { Event, Artist } from '@/lib/events'
+import { useDebounce } from '@/lib/hooks'
 import toast from 'react-hot-toast'
 
 interface EventFormProps {
   event?: Event
+}
+
+type LineupArtist = {
+  id: string
+  name: string
+  image?: string
+  time?: string
 }
 
 export default function EventForm({ event }: EventFormProps) {
@@ -25,7 +34,20 @@ export default function EventForm({ event }: EventFormProps) {
     ticketsRemaining: 0,
     promoter: '',
     ageRestriction: '21+',
+    lineup: [] as LineupArtist[]
   })
+  
+  // Artist search state
+  const [artistSearch, setArtistSearch] = useState('')
+  const [searchResults, setSearchResults] = useState<Artist[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+  const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null)
+  const [performanceTime, setPerformanceTime] = useState('')
+  const [showNewArtistForm, setShowNewArtistForm] = useState(false)
+  const [newArtist, setNewArtist] = useState({ name: '', image: '' })
+  
+  // Use debounce to avoid too many API calls
+  const debouncedSearch = useDebounce(artistSearch, 300)
   
   // If editing an existing event, populate form with event data
   useEffect(() => {
@@ -44,9 +66,35 @@ export default function EventForm({ event }: EventFormProps) {
         ticketsRemaining: event.ticketsRemaining,
         promoter: event.promoter,
         ageRestriction: event.ageRestriction || '21+',
+        lineup: event.lineup || []
       })
     }
   }, [event])
+  
+  // Search for artists when the debounced search term changes
+  useEffect(() => {
+    const searchArtists = async () => {
+      if (!debouncedSearch.trim()) {
+        setSearchResults([])
+        return
+      }
+      
+      setIsSearching(true)
+      try {
+        const response = await fetch(`/api/artists/search?term=${encodeURIComponent(debouncedSearch)}`)
+        if (!response.ok) throw new Error('Failed to search artists')
+        const data = await response.json()
+        setSearchResults(data)
+      } catch (error) {
+        console.error('Error searching artists:', error)
+        toast.error('Failed to search artists')
+      } finally {
+        setIsSearching(false)
+      }
+    }
+    
+    searchArtists()
+  }, [debouncedSearch])
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
@@ -65,6 +113,71 @@ export default function EventForm({ event }: EventFormProps) {
     }
   }
   
+  // Function to add an artist to the lineup
+  const addArtistToLineup = () => {
+    if (!selectedArtist) return
+    
+    setFormData(prev => ({
+      ...prev,
+      lineup: [...prev.lineup, {
+        ...selectedArtist,
+        time: performanceTime
+      }]
+    }))
+    
+    // Reset the form
+    setSelectedArtist(null)
+    setPerformanceTime('')
+    setArtistSearch('')
+  }
+  
+  // Function to create a new artist
+  const createNewArtist = async () => {
+    if (!newArtist.name.trim()) {
+      toast.error('Artist name is required')
+      return
+    }
+    
+    try {
+      const response = await fetch('/api/artists', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newArtist)
+      })
+      
+      if (!response.ok) throw new Error('Failed to create artist')
+      
+      const createdArtist = await response.json()
+      
+      // Add the new artist to the lineup
+      setFormData(prev => ({
+        ...prev,
+        lineup: [...prev.lineup, {
+          ...createdArtist,
+          time: performanceTime
+        }]
+      }))
+      
+      toast.success('Artist created and added to lineup')
+      
+      // Reset the forms
+      setNewArtist({ name: '', image: '' })
+      setShowNewArtistForm(false)
+      setPerformanceTime('')
+    } catch (error) {
+      console.error('Error creating artist:', error)
+      toast.error('Failed to create artist')
+    }
+  }
+  
+  // Function to remove an artist from the lineup
+  const removeArtistFromLineup = (artistId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      lineup: prev.lineup.filter(artist => artist.id !== artistId)
+    }))
+  }
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -78,8 +191,6 @@ export default function EventForm({ event }: EventFormProps) {
         // Ensure tickets counts are numbers
         ticketsTotal: parseInt(formData.ticketsTotal.toString()),
         ticketsRemaining: parseInt(formData.ticketsRemaining.toString()),
-        // Add lineup if it exists in the original event
-        lineup: event?.lineup || [],
         // Add soldOut status based on remaining tickets
         soldOut: parseInt(formData.ticketsRemaining.toString()) <= 0
       }
@@ -337,6 +448,215 @@ export default function EventForm({ event }: EventFormProps) {
                 <option value="All Ages">All Ages</option>
               </select>
             </div>
+          </div>
+        </div>
+        
+        {/* Lineup Section */}
+        <div>
+          <h2 className="text-xl font-bold mb-4">Event Lineup</h2>
+          
+          {/* Current Lineup */}
+          {formData.lineup.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2">Current Lineup</h3>
+              <div className="space-y-2">
+                {formData.lineup.map((artist) => (
+                  <div key={artist.id} className="flex items-center justify-between bg-gray-100 p-3 rounded">
+                    <div className="flex items-center gap-3">
+                      {artist.image && (
+                        <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-300">
+                          <Image
+                            src={artist.image}
+                            alt={artist.name}
+                            width={40}
+                            height={40}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-medium">{artist.name}</p>
+                        {artist.time && <p className="text-sm text-gray-500">{artist.time}</p>}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeArtistFromLineup(artist.id)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Add Artist Section */}
+          <div className="border p-4 rounded-md mb-4">
+            {!showNewArtistForm ? (
+              <>
+                <h3 className="text-lg font-semibold mb-3">Add Artist to Lineup</h3>
+                <div className="space-y-3">
+                  <div>
+                    <label htmlFor="artistSearch" className="block text-sm font-medium text-gray-700 mb-1">
+                      Search Artists
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        id="artistSearch"
+                        value={artistSearch}
+                        onChange={(e) => setArtistSearch(e.target.value)}
+                        placeholder="Start typing to search artists..."
+                        className="block w-full p-2 border border-gray-300 rounded-md"
+                      />
+                      {isSearching && (
+                        <div className="absolute right-3 top-2">
+                          <svg className="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Search Results */}
+                    {searchResults.length > 0 && (
+                      <div className="mt-2 border border-gray-200 rounded-md overflow-hidden max-h-40 overflow-y-auto">
+                        {searchResults.map(artist => (
+                          <div 
+                            key={artist.id}
+                            className={`p-2 cursor-pointer hover:bg-gray-100 ${selectedArtist?.id === artist.id ? 'bg-gray-100' : ''}`}
+                            onClick={() => setSelectedArtist(artist)}
+                          >
+                            <div className="flex items-center gap-2">
+                              {artist.image && (
+                                <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-300">
+                                  <Image
+                                    src={artist.image}
+                                    alt={artist.name}
+                                    width={32}
+                                    height={32}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              )}
+                              <span>{artist.name}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {searchResults.length === 0 && artistSearch.trim() !== '' && !isSearching && (
+                      <div className="mt-2 text-sm text-gray-500">
+                        No artists found.
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowNewArtistForm(true)
+                            setNewArtist(prev => ({ ...prev, name: artistSearch }))
+                          }}
+                          className="ml-2 text-red-600 hover:text-red-800"
+                        >
+                          Create new artist
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {selectedArtist && (
+                    <>
+                      <div>
+                        <label htmlFor="performanceTime" className="block text-sm font-medium text-gray-700 mb-1">
+                          Performance Time
+                        </label>
+                        <input
+                          type="text"
+                          id="performanceTime"
+                          value={performanceTime}
+                          onChange={(e) => setPerformanceTime(e.target.value)}
+                          placeholder="e.g., 9:00 PM - 10:30 PM"
+                          className="block w-full p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                      
+                      <button
+                        type="button"
+                        onClick={addArtistToLineup}
+                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                      >
+                        Add to Lineup
+                      </button>
+                    </>
+                  )}
+                </div>
+              </>
+            ) : (
+              <>
+                <h3 className="text-lg font-semibold mb-3">Create New Artist</h3>
+                <div className="space-y-3">
+                  <div>
+                    <label htmlFor="newArtistName" className="block text-sm font-medium text-gray-700 mb-1">
+                      Artist Name
+                    </label>
+                    <input
+                      type="text"
+                      id="newArtistName"
+                      value={newArtist.name}
+                      onChange={(e) => setNewArtist(prev => ({ ...prev, name: e.target.value }))}
+                      className="block w-full p-2 border border-gray-300 rounded-md"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="newArtistImage" className="block text-sm font-medium text-gray-700 mb-1">
+                      Artist Image URL
+                    </label>
+                    <input
+                      type="url"
+                      id="newArtistImage"
+                      value={newArtist.image}
+                      onChange={(e) => setNewArtist(prev => ({ ...prev, image: e.target.value }))}
+                      className="block w-full p-2 border border-gray-300 rounded-md"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="newArtistPerformanceTime" className="block text-sm font-medium text-gray-700 mb-1">
+                      Performance Time
+                    </label>
+                    <input
+                      type="text"
+                      id="newArtistPerformanceTime"
+                      value={performanceTime}
+                      onChange={(e) => setPerformanceTime(e.target.value)}
+                      placeholder="e.g., 9:00 PM - 10:30 PM"
+                      className="block w-full p-2 border border-gray-300 rounded-md"
+                    />
+                  </div>
+                  
+                  <div className="flex space-x-2">
+                    <button
+                      type="button"
+                      onClick={createNewArtist}
+                      className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                    >
+                      Create and Add
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowNewArtistForm(false)}
+                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
         
