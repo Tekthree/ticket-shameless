@@ -1,45 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        pathname: '**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'unsplash.com',
-        pathname: '**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'pub-3626123a908647a7980f57fbd34oef12.r2.dev',
-        pathname: '**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'lh3.googleusercontent.com',
-        pathname: '**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'avatars.githubusercontent.com',
-        pathname: '**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'scontent-sea1-1.xx.fbcdn.net',
-        pathname: '**',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.xx.fbcdn.net',
-        pathname: '**',
-      }
-    ]
+    domains: [
+      'ynyixqpdeuglzuogeqsh.supabase.co', // Supabase project domain
+      'scontent-sea1-1.xx.fbcdn.net',     // Facebook CDN domain
+      'scontent.xx.fbcdn.net',            // Alternative Facebook CDN domain
+      'graph.facebook.com',               // Graph API domain
+    ],
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

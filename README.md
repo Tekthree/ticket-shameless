@@ -36,8 +36,10 @@ This project implements a complete ticketing platform for the Shameless music pr
 - ✅ Mock data fallback for development
 - ✅ Database seeding scripts for initial setup
 - ✅ Artist and lineup management for events
+- ✅ Site content management for landing page customization
+- ✅ Image and video management through Supabase Storage
 
-All basic functionality is working. You can add, edit, and delete events through the admin interface, manage artists and lineups, and users can browse and purchase tickets.
+All basic functionality is working. You can add, edit, and delete events through the admin interface, manage artists and lineups, customize landing page content, and users can browse and purchase tickets.
 
 ## Next Steps
 
@@ -48,7 +50,6 @@ Future enhancements could include:
 - [ ] QR code generation for tickets
 - [ ] Ticket scanning at the door
 - [ ] Analytics dashboard for sales
-- [ ] Image upload to Supabase Storage
 - [ ] Featured events and promotions
 
 ## Tech Stack
@@ -57,8 +58,8 @@ Future enhancements could include:
 - **Styling**: Tailwind CSS
 - **Authentication**: Supabase Auth
 - **Database**: Supabase PostgreSQL
+- **File Storage**: Supabase Storage
 - **Payments**: Stripe
-- **Image Storage**: Currently using URLs, could upgrade to Supabase Storage
 
 ## Getting Started
 
@@ -91,21 +92,125 @@ STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
 
 # App URL
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
+
+# Google Maps API Key
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_api_key_here
 ```
 
-4. Set up your Supabase database by running the SQL in `supabase/schema.sql` and `supabase/artists-schema.sql` in your Supabase SQL editor.
+4. Set up your Supabase database schema:
+   - **Create the tables:** Run the following SQL files in your Supabase SQL editor:
+   ```
+   supabase/schema.sql (main schema)
+   supabase/artists-schema.sql (artist management)
+   ```
+   
+   - **Set up site content:** Run this SQL in your Supabase SQL editor:
+   ```sql
+   -- Create a site_content table to store configurable content
+   CREATE TABLE site_content (
+     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+     section VARCHAR NOT NULL, -- e.g., 'hero', 'about', 'motto'
+     field VARCHAR NOT NULL, -- e.g., 'title', 'description', 'image', 'video'
+     content TEXT NOT NULL,
+     content_type VARCHAR NOT NULL DEFAULT 'text', -- 'text', 'image', 'video'
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+     UNIQUE(section, field)
+   );
 
-5. Seed your database with initial events:
+   -- Create RLS policies for site_content
+   ALTER TABLE site_content ENABLE ROW LEVEL SECURITY;
+
+   -- Allow anyone to read site content
+   CREATE POLICY "Allow public read access to site_content" ON site_content
+     FOR SELECT USING (true);
+     
+   -- Only allow authenticated users (admins) to modify site content
+   CREATE POLICY "Allow authenticated users to update site_content" ON site_content
+     FOR UPDATE USING (auth.role() = 'authenticated');
+     
+   -- Use WITH CHECK for the INSERT policy
+   CREATE POLICY "Allow authenticated users to insert site_content" ON site_content
+     FOR INSERT TO authenticated WITH CHECK (true);
+
+   -- Seed initial content values
+   INSERT INTO site_content (section, field, content, content_type) VALUES
+     ('hero', 'title', '22 Years Shameless', 'text'),
+     ('hero', 'subtitle', 'Keeping It Weird Since 2003', 'text'),
+     ('hero', 'background', '/images/logo.png', 'image'),
+     ('hero', 'video', '', 'video'),
+     ('about', 'title', 'Keeping It Weird Since 2003', 'text'),
+     ('about', 'description', 'In 2003, Shameless first took shape as a weekly indie dance night in the basement of the Alibi Room located in Seattle''s historic Pike Place Market. The ensemble quickly became one of the city''s most respected underground dance music collectives by throwing numerous legendary club nights, open air and after parties.', 'text'),
+     ('about', 'image', '/images/logo.png', 'image'),
+     ('motto', 'title', 'Shake Your Shame Off And Get Your Game On.', 'text'),
+     ('motto', 'description', 'From day one, each Shameless party was a special one regardless of the wide ranges of genres and bookings represented. With an eye towards the cutting edge, but deep respect for electronic music''s rich history, Shameless has kept its finger on the pulse of Seattle''s underground for years now and yet keeps looking forward.', 'text'),
+     ('motto', 'image', '/images/logo.png', 'image');
+   ```
+
+   - **Set up storage:** Run this SQL in your Supabase SQL editor:
+   ```sql
+   -- Create a public bucket for storing images and videos
+   INSERT INTO storage.buckets (id, name, public)
+   VALUES ('public', 'Public Storage', true)
+   ON CONFLICT (id) DO NOTHING;
+
+   -- Create policies to allow authenticated users to insert into the storage
+   CREATE POLICY "Allow authenticated users to upload files"
+   ON storage.objects
+   FOR INSERT
+   TO authenticated
+   WITH CHECK (bucket_id = 'public');
+
+   -- Create policy to allow all users to select/view objects from public bucket
+   CREATE POLICY "Allow public read access to objects"
+   ON storage.objects
+   FOR SELECT
+   TO public
+   USING (bucket_id = 'public');
+
+   -- Create policy to allow authenticated users to update their own objects
+   CREATE POLICY "Allow authenticated users to update their own files"
+   ON storage.objects
+   FOR UPDATE
+   TO authenticated
+   USING (bucket_id = 'public' AND auth.uid() = owner);
+
+   -- Create policy to allow authenticated users to delete their own objects
+   CREATE POLICY "Allow authenticated users to delete their own files"
+   ON storage.objects
+   FOR DELETE
+   TO authenticated
+   USING (bucket_id = 'public' AND auth.uid() = owner);
+   ```
+   
+5. Configure Next.js for external images:
+   - Add your Supabase domain and any other image domains to `next.config.js`:
+   ```javascript
+   /** @type {import('next').NextConfig} */
+   const nextConfig = {
+     images: {
+       domains: [
+         'your-project.supabase.co', // Replace with your Supabase project domain
+         'scontent-sea1-1.xx.fbcdn.net', // For Facebook images
+         'scontent.xx.fbcdn.net',        // Alternative Facebook CDN domain
+       ],
+     },
+   };
+   
+   module.exports = nextConfig;
+   ```
+
+6. Seed your database with initial events:
 ```bash
 npm run seed
 ```
 
-6. Run the development server:
+7. Run the development server:
 ```bash
 npm run dev
 ```
 
-7. Open [http://localhost:3000](http://localhost:3000) to view the application.
+8. Open [http://localhost:3000](http://localhost:3000) to view the application.
 
 ## Database Schema
 
@@ -122,6 +227,9 @@ Stores information about artists including name and image URL.
 
 ### Event_Artists Table
 Junction table that creates a many-to-many relationship between events and artists, including performance time information.
+
+### Site_Content Table
+Stores customizable content for the landing page including text, images, and videos.
 
 ## Key Features
 
@@ -144,6 +252,17 @@ The platform includes a complete artist management system:
 - Add artists to event lineups with performance times
 - Reuse artists across multiple events
 - View and manage the current lineup for each event
+
+### Site Content Management
+
+The platform includes a lightweight CMS for managing landing page content:
+- Edit hero section text, images, and background video
+- Edit about section text and images
+- Edit motto section text and images
+- Upload and manage media assets using Supabase Storage
+- Preview changes in real-time
+
+The content management interface is available at `/admin/site-content`.
 
 ### Ticket Purchasing
 
@@ -212,6 +331,14 @@ For production deployment:
 The application uses Supabase Authentication. The admin dashboard is protected and requires authentication.
 
 For development, you can create a user in your Supabase project and use those credentials to access the admin dashboard.
+
+## Troubleshooting
+
+### Image Loading Issues
+If you encounter errors with loading images from external domains, make sure to add those domains to the `next.config.js` file as described in the installation steps.
+
+### Database Setup Issues
+If you have issues with running the setup scripts, you can always run the SQL statements directly in the Supabase SQL editor as outlined in the installation steps.
 
 ## License
 
