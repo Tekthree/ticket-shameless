@@ -54,8 +54,17 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: 'Missing event ID in metadata' }, { status: 400 })
         }
         
-        // Record the order in Supabase
-        const supabase = createClient()
+        // Record the order in Supabase using admin rights to bypass RLS
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+        const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+        
+        // Create a supabase client with the service role key
+        const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+          auth: {
+            autoRefreshToken: false,
+            persistSession: false
+          }
+        })
         const { error: orderError } = await supabase
           .from('orders')
           .insert({

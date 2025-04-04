@@ -160,6 +160,20 @@ The application handles Stripe webhook events including:
 - `payment_intent.succeeded` - When a payment intent succeeds
 - `payment_intent.payment_failed` - When a payment fails
 
+#### Webhook Database Access
+
+The Stripe webhook needs to insert data into the `orders` table when a purchase is completed. Since webhooks don't have an authenticated context, you need to set up proper Row Level Security (RLS) to allow these operations:
+
+```sql
+-- Allow webhook handlers to insert into the orders table
+CREATE POLICY "Allow public inserts for webhooks" ON orders
+  FOR INSERT
+  TO public
+  WITH CHECK (true);
+```
+
+Run this SQL in your Supabase SQL editor to enable the webhook to function correctly.
+
 ## Utility Scripts
 
 ### Database Seeding
