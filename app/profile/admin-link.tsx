@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
+import { Button } from '@/components/ui/button';
+import { LayoutDashboard, Settings } from 'lucide-react';
 
 export default function AdminLink() {
   const [hasAdminRole, setHasAdminRole] = useState(false);
@@ -37,22 +39,22 @@ export default function AdminLink() {
   if (isLoading || !hasAdminRole) return null;
   
   return (
-    <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-      <h3 className="font-bold text-lg">Admin Access</h3>
-      <p className="mb-2">You have administrator privileges</p>
+    <div className="mt-4 p-4 bg-blue-50 dark:bg-gray-800 rounded-lg">
+      <h3 className="font-bold text-lg dark:text-white">Admin Access</h3>
+      <p className="mb-2 dark:text-gray-200">You have administrator privileges</p>
       <div className="space-x-4">
-        <Link 
-          href="/admin" 
-          className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-        >
-          Main Admin
-        </Link>
-        <Link 
-          href="/simple-admin" 
-          className="inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-        >
-          Simple Admin
-        </Link>
+        <Button variant="default" asChild className="bg-blue-600 hover:bg-blue-700">
+          <Link href="/admin">
+            <LayoutDashboard className="h-4 w-4 mr-2" />
+            Main Admin
+          </Link>
+        </Button>
+        <Button variant="default" asChild className="bg-green-600 hover:bg-green-700">
+          <Link href="/simple-admin">
+            <Settings className="h-4 w-4 mr-2" />
+            Simple Admin
+          </Link>
+        </Button>
       </div>
     </div>
   );

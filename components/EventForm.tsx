@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { Event, Artist } from '@/lib/events'
 import { useDebounce } from '@/lib/hooks'
-import toast from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -13,6 +12,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Icons } from '@/components/ui/icons'
+import { useToast } from '@/components/ui/use-toast'
 import { cn } from '@/lib/utils'
 
 interface EventFormProps {
@@ -29,6 +29,7 @@ type LineupArtist = {
 export default function EventForm({ event }: EventFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { toast } = useToast()
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -95,7 +96,11 @@ export default function EventForm({ event }: EventFormProps) {
         setSearchResults(data)
       } catch (error) {
         console.error('Error searching artists:', error)
-        toast.error('Failed to search artists')
+        toast({
+          title: "Error",
+          description: "Failed to search artists",
+          variant: "destructive"
+        })
       } finally {
         setIsSearching(false)
       }
@@ -149,7 +154,11 @@ export default function EventForm({ event }: EventFormProps) {
   // Function to create a new artist
   const createNewArtist = async () => {
     if (!newArtist.name.trim()) {
-      toast.error('Artist name is required')
+      toast({
+        title: "Error",
+        description: "Artist name is required",
+        variant: "destructive"
+      })
       return
     }
     
@@ -173,7 +182,11 @@ export default function EventForm({ event }: EventFormProps) {
         }]
       }))
       
-      toast.success('Artist created and added to lineup')
+      toast({
+        title: "Success",
+        description: "Artist created and added to lineup",
+        variant: "success"
+      })
       
       // Reset the forms
       setNewArtist({ name: '', image: '' })
@@ -181,7 +194,11 @@ export default function EventForm({ event }: EventFormProps) {
       setPerformanceTime('')
     } catch (error) {
       console.error('Error creating artist:', error)
-      toast.error('Failed to create artist')
+      toast({
+        title: "Error",
+        description: "Failed to create artist",
+        variant: "destructive"
+      })
     }
   }
   
@@ -230,14 +247,22 @@ export default function EventForm({ event }: EventFormProps) {
         throw new Error(data.error || 'Failed to save event')
       }
       
-      toast.success(event ? 'Event updated successfully' : 'Event created successfully')
+      toast({
+        title: "Success",
+        description: event ? "Event updated successfully" : "Event created successfully",
+        variant: "success"
+      })
       
       // Redirect to the event list
       router.push('/admin')
       router.refresh()
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An error occurred'
-      toast.error(errorMessage)
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive"
+      })
       console.error('Error saving event:', error)
     } finally {
       setIsSubmitting(false)

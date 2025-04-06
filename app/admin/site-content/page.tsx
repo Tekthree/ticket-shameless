@@ -3,6 +3,12 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Icons } from '@/components/ui/icons';
+import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/components/ui/use-toast';
 
 export default function SiteContentPage() {
   const [content, setContent] = useState<any[]>([]);
@@ -11,6 +17,7 @@ export default function SiteContentPage() {
   const [editingItem, setEditingItem] = useState<any | null>(null);
   const [updatedContent, setUpdatedContent] = useState('');
   const supabase = createClient();
+  const { toast } = useToast();
   
   useEffect(() => {
     async function loadContent() {
@@ -82,19 +89,29 @@ export default function SiteContentPage() {
       setEditingItem(null);
       setUpdatedContent('');
       
+      toast({
+        title: "Saved successfully",
+        description: `Updated ${editingItem.field} content`,
+        variant: "success"
+      });
+      
     } catch (error) {
       console.error('Error updating content:', error);
-      alert('Failed to update content');
+      toast({
+        title: "Error",
+        description: "Failed to update content",
+        variant: "destructive"
+      });
     }
   };
   
   if (isLoading) {
     return (
-      <div className="container mx-auto p-8">
+      <div className="px-4 py-6 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold mb-6">Site Content Management</h1>
         <div className="animate-pulse space-y-4">
-          <div className="h-10 bg-gray-200 rounded w-1/4"></div>
-          <div className="h-64 bg-gray-200 rounded"></div>
+          <div className="h-10 bg-muted rounded w-1/4"></div>
+          <div className="h-64 bg-muted rounded"></div>
         </div>
       </div>
     );
@@ -102,12 +119,14 @@ export default function SiteContentPage() {
   
   if (error) {
     return (
-      <div className="container mx-auto p-8">
-        <h1 className="text-3xl font-bold text-red-600 mb-4">Error</h1>
+      <div className="px-4 py-6 sm:px-6 lg:px-8">
+        <h1 className="text-3xl font-bold text-destructive mb-4">Error</h1>
         <p className="mb-4">{error}</p>
-        <Link href="/simple-admin" className="text-blue-500 hover:underline">
-          Return to Admin Dashboard
-        </Link>
+        <Button asChild variant="outline">
+          <Link href="/admin">
+            Return to Admin Dashboard
+          </Link>
+        </Button>
       </div>
     );
   }
@@ -122,75 +141,85 @@ export default function SiteContentPage() {
   });
   
   return (
-    <div className="container mx-auto p-8">
-      <div className="flex justify-between items-center mb-6">
+    <div className="px-4 py-6 sm:px-6 lg:px-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h1 className="text-3xl font-bold">Site Content Management</h1>
-        <Link 
-          href="/simple-admin" 
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition"
-        >
-          Back to Dashboard
-        </Link>
+        <Button asChild variant="outline">
+          <Link href="/admin">
+            <Icons.arrowRight className="mr-2 h-4 w-4 rotate-180" />
+            Back to Dashboard
+          </Link>
+        </Button>
       </div>
       
       {Object.keys(contentBySection).length === 0 ? (
-        <div className="bg-white rounded-lg shadow p-8 text-center">
-          <p className="text-lg text-gray-500">No content found.</p>
-        </div>
+        <Card className="p-8 text-center">
+          <div className="flex flex-col items-center justify-center">
+            <Icons.fileText className="h-12 w-12 text-muted-foreground mb-4" />
+            <p className="text-lg text-muted-foreground">No content found.</p>
+          </div>
+        </Card>
       ) : (
         <div className="space-y-8">
           {Object.entries(contentBySection).map(([section, items]) => (
-            <div key={section} className="bg-white rounded-lg shadow overflow-hidden">
-              <div className="bg-gray-50 px-6 py-4 border-b">
-                <h2 className="text-xl font-semibold capitalize">{section} Section</h2>
-              </div>
-              
-              <div className="divide-y">
-                {items.map(item => (
-                  <div key={item.id} className="p-6">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-lg font-medium capitalize">{item.field}</h3>
+            <Card key={section}>
+              <CardHeader className="pb-3">
+                <CardTitle className="capitalize">{section} Section</CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="divide-y">
+                  {items.map(item => (
+                    <div key={item.id} className="p-6">
+                      <div className="flex justify-between items-start mb-4">
+                        <h3 className="text-lg font-medium capitalize">{item.field}</h3>
+                        {editingItem?.id === item.id ? (
+                          <div className="space-x-2">
+                            <Button 
+                              onClick={saveEdit}
+                              size="sm"
+                              variant="success"
+                            >
+                              <Icons.check className="mr-2 h-4 w-4" />
+                              Save
+                            </Button>
+                            <Button 
+                              onClick={cancelEdit}
+                              size="sm"
+                              variant="outline"
+                            >
+                              <Icons.close className="mr-2 h-4 w-4" />
+                              Cancel
+                            </Button>
+                          </div>
+                        ) : (
+                          <Button 
+                            onClick={() => startEdit(item)}
+                            size="sm"
+                            variant="outline"
+                          >
+                            <Icons.edit className="mr-2 h-4 w-4" />
+                            Edit
+                          </Button>
+                        )}
+                      </div>
+                      
                       {editingItem?.id === item.id ? (
-                        <div className="space-x-2">
-                          <button 
-                            onClick={saveEdit}
-                            className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition"
-                          >
-                            Save
-                          </button>
-                          <button 
-                            onClick={cancelEdit}
-                            className="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 transition"
-                          >
-                            Cancel
-                          </button>
-                        </div>
+                        <Textarea
+                          value={updatedContent}
+                          onChange={e => setUpdatedContent(e.target.value)}
+                          className="w-full"
+                          rows={5}
+                        />
                       ) : (
-                        <button 
-                          onClick={() => startEdit(item)}
-                          className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition"
-                        >
-                          Edit
-                        </button>
+                        <div className="bg-muted p-4 rounded-md overflow-auto">
+                          <pre className="whitespace-pre-wrap text-sm">{item.content}</pre>
+                        </div>
                       )}
                     </div>
-                    
-                    {editingItem?.id === item.id ? (
-                      <textarea
-                        value={updatedContent}
-                        onChange={e => setUpdatedContent(e.target.value)}
-                        className="w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"
-                        rows={5}
-                      />
-                    ) : (
-                      <div className="bg-gray-50 p-4 rounded-md overflow-auto">
-                        <pre className="whitespace-pre-wrap">{item.content}</pre>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       )}

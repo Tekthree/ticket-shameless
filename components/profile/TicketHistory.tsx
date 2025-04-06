@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { Ticket, Calendar } from 'lucide-react';
 
 interface TicketHistoryProps {
   // No props needed anymore, component fetches user data directly
@@ -100,7 +102,9 @@ export default function TicketHistory() {
   if (loading) {
     return (
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold mb-6">Your Tickets</h2>
+        <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold dark:text-white">Ticket History</h2>
+      </div>
         {[1, 2, 3].map((i) => (
           <div key={i} className="border rounded-lg p-4">
             <div className="flex gap-4">
@@ -128,23 +132,25 @@ export default function TicketHistory() {
   
   if (tickets.length === 0) {
     return (
-      <div className="text-center py-10">
-        <h2 className="text-2xl font-bold mb-6">Your Tickets</h2>
-        <p className="text-gray-500 mb-4">You haven't purchased any tickets yet.</p>
-        <Link href="/events" className="text-blue-600 hover:underline">
-          Browse events to find something you'll love!
-        </Link>
+      <div className="text-center py-10 border dark:border-gray-800 border-gray-200 rounded-lg dark:bg-gray-900/30">
+        <p className="text-gray-500 dark:text-gray-400 mb-4">You haven't purchased any tickets yet.</p>
+        <Button variant="outline" asChild className="mt-2 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+          <Link href="/events">
+            <Calendar className="h-4 w-4 mr-2" />
+            Browse events to find something you'll love!
+          </Link>
+        </Button>
       </div>
     );
   }
   
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold mb-6">Your Tickets</h2>
+      {/* Title removed as it's in the layout now */}
       
       <div className="grid gap-6">
         {tickets.map((ticket) => (
-          <Card key={ticket.id} className="overflow-hidden">
+          <Card key={ticket.id} className="overflow-hidden dark:bg-gray-900/50 dark:border-gray-800 border">
             <div className="flex flex-col md:flex-row">
               <div className="relative w-full md:w-48 h-40">
                 <div 
@@ -169,42 +175,39 @@ export default function TicketHistory() {
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-gray-500">Order Date</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Order Date</p>
                       <p>{format(new Date(ticket.created_at), 'MMM d, yyyy')}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Tickets</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Tickets</p>
                       <p>{ticket.quantity}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Order ID</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Order ID</p>
                       <p className="font-mono text-xs">{ticket.id.substring(0, 8)}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Total</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Total</p>
                       <p>${(ticket.amount_total / 100).toFixed(2)}</p>
                     </div>
                   </div>
                 </CardContent>
                 
                 <CardFooter className="flex justify-between">
-                  <Link 
-                    href={`/events/${ticket.events.slug}`} 
-                    className="text-blue-600 hover:underline text-sm"
-                  >
-                    View Event
-                  </Link>
+                  <Button variant="link" asChild className="p-0 h-auto text-blue-600 dark:text-blue-400">
+                    <Link href={`/events/${ticket.events.slug}`}>
+                      <Calendar className="h-4 w-4 mr-1" />
+                      View Event
+                    </Link>
+                  </Button>
                   
                   {(ticket.status.toLowerCase() === 'complete' || ticket.status.toLowerCase() === 'completed') && (
-                    <Link
-                      href={`/tickets/${ticket.id}`}
-                      className="inline-flex items-center gap-2 text-sm bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                      </svg>
-                      View Ticket
-                    </Link>
+                    <Button variant="default" asChild className="bg-red-600 hover:bg-red-700">
+                      <Link href={`/tickets/${ticket.id}`}>
+                        <Ticket className="h-4 w-4 mr-2" />
+                        View Ticket
+                      </Link>
+                    </Button>
                   )}
                 </CardFooter>
               </div>

@@ -158,9 +158,11 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
           </Avatar>
           
           <div className="flex flex-col items-center">
-            <Label htmlFor="avatar" className="cursor-pointer text-sm font-medium text-blue-600 hover:text-blue-800">
-              Change Avatar
-            </Label>
+            <Button variant="outline" asChild className="text-sm dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+              <Label htmlFor="avatar" className="cursor-pointer text-sm font-medium">
+                Change Avatar
+              </Label>
+            </Button>
             <Input 
               id="avatar"
               type="file"
@@ -174,7 +176,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         <div className="flex-1 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="display_name">Display Name</Label>
+              <Label htmlFor="display_name" className="dark:text-white">Display Name</Label>
               <Input
                 id="display_name"
                 name="display_name"
@@ -185,7 +187,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="full_name">Full Name</Label>
+              <Label htmlFor="full_name" className="dark:text-white">Full Name</Label>
               <Input
                 id="full_name"
                 name="full_name"
@@ -197,7 +199,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="phone_number">Phone Number</Label>
+            <Label htmlFor="phone_number" className="dark:text-white">Phone Number</Label>
             <Input
               id="phone_number"
               name="phone_number"
@@ -208,7 +210,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="bio">Bio</Label>
+            <Label htmlFor="bio" className="dark:text-white">Bio</Label>
             <Textarea
               id="bio"
               name="bio"
@@ -221,13 +223,13 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         </div>
       </div>
       
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium">Notification Preferences</h3>
+      <div className="mt-8 space-y-4 border dark:border-gray-800 border-gray-200 p-6 rounded-lg dark:bg-gray-900/30 bg-gray-50">
+        <h3 className="text-lg font-medium dark:text-white">Notification Preferences</h3>
         
         <div className="flex items-center justify-between">
           <div>
-            <Label htmlFor="email_notifications" className="font-medium">Email Notifications</Label>
-            <p className="text-sm text-gray-500">Receive updates about your tickets and events</p>
+            <Label htmlFor="email_notifications" className="font-medium dark:text-white">Email Notifications</Label>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Receive updates about your tickets and events</p>
           </div>
           <Switch
             id="email_notifications"
@@ -238,8 +240,8 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         
         <div className="flex items-center justify-between">
           <div>
-            <Label htmlFor="sms_notifications" className="font-medium">SMS Notifications</Label>
-            <p className="text-sm text-gray-500">Receive text messages about upcoming events</p>
+            <Label htmlFor="sms_notifications" className="font-medium dark:text-white">SMS Notifications</Label>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Receive text messages about upcoming events</p>
           </div>
           <Switch
             id="sms_notifications"
@@ -249,9 +251,11 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         </div>
       </div>
       
-      <Button type="submit" disabled={loading} className="mt-8">
-        {loading ? 'Saving...' : 'Save Changes'}
-      </Button>
+      <div className="flex justify-end mt-8">
+        <Button type="submit" disabled={loading} className="bg-red-600 hover:bg-red-700 text-white">
+          {loading ? 'Saving...' : 'Save Changes'}
+        </Button>
+      </div>
     </form>
   );
 }

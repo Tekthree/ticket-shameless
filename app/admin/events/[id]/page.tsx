@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import EventForm from '@/components/EventForm'
 import { getEventById } from '@/lib/events'
+import { Card } from '@/components/ui/card'
 
 export async function generateMetadata({ 
   params 
@@ -37,9 +38,9 @@ export default async function EditEventPage({
     <div className="container mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold mb-8">Edit Event: {event.title}</h1>
       
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <Card className="p-6">
         <EventForm event={event} />
-      </div>
+      </Card>
     </div>
   )
 }

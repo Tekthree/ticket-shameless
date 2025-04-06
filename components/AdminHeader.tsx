@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/ui/icons';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { ModeToggle } from '@/components/mode-toggle';
 
 export default function AdminHeader() {
   const pathname = usePathname();
@@ -60,6 +61,8 @@ export default function AdminHeader() {
           </div>
           
           <div className="flex items-center space-x-2">
+            <ModeToggle />
+            
             <Button 
               onClick={handleSignOut}
               variant="ghost"
@@ -116,7 +119,10 @@ export default function AdminHeader() {
                     Site Content
                   </MobileNavLink>
                   
-                  <div className="pt-4 mt-4 border-t">
+                  <div className="pt-4 mt-4 border-t flex flex-col space-y-2">
+                    <div className="px-3">
+                      <ModeToggle />
+                    </div>
                     <Button 
                       onClick={() => {
                         handleSignOut();
