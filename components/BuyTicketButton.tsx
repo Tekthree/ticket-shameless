@@ -3,6 +3,10 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Icons } from '@/components/ui/icons'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 interface BuyTicketButtonProps {
   eventId: string
@@ -12,7 +16,7 @@ interface BuyTicketButtonProps {
 
 export default function BuyTicketButton({ eventId, price, title }: BuyTicketButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const [quantity, setQuantity] = useState(1)
+  const [quantity, setQuantity] = useState("1")
   const router = useRouter()
   
   const handleBuyTicket = async () => {
@@ -26,7 +30,7 @@ export default function BuyTicketButton({ eventId, price, title }: BuyTicketButt
         },
         body: JSON.stringify({
           eventId,
-          quantity,
+          quantity: parseInt(quantity),
         }),
       })
       
@@ -48,33 +52,47 @@ export default function BuyTicketButton({ eventId, price, title }: BuyTicketButt
   }
   
   return (
-    <div>
-      <div className="mb-4">
-        <label htmlFor="quantity" className="block text-sm font-medium text-gray-300 mb-1">
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="quantity" className="text-white">
           Quantity
-        </label>
-        <select
-          id="quantity"
+        </Label>
+        <Select
           value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
-          className="block w-full p-2 border border-gray-700 rounded-full bg-gray-800 text-white focus:ring-red-500 focus:border-red-500"
+          onValueChange={setQuantity}
           disabled={isLoading}
         >
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
-            <option key={num} value={num} className="bg-gray-800 text-white">
-              {num} {num === 1 ? 'ticket' : 'tickets'} (${(price * num).toFixed(2)})
-            </option>
-          ))}
-        </select>
+          <SelectTrigger className="w-full bg-background/10 text-white border-gray-700 focus:ring-shameless-red">
+            <SelectValue placeholder="Select quantity" />
+          </SelectTrigger>
+          <SelectContent>
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+              <SelectItem key={num} value={num.toString()}>
+                {num} {num === 1 ? 'ticket' : 'tickets'} (${(price * num).toFixed(2)})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       
-      <button
+      <Button
         onClick={handleBuyTicket}
         disabled={isLoading}
-        className="w-full py-3 bg-red-600 text-white font-bold rounded-full hover:bg-red-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+        variant="shameless"
+        className="w-full py-6 text-lg rounded-full"
       >
-        {isLoading ? 'Processing...' : `Buy ${quantity > 1 ? `${quantity} tickets` : 'ticket'}`}
-      </button>
+        {isLoading ? (
+          <>
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            Processing...
+          </>
+        ) : (
+          <>
+            <Icons.ticket className="mr-2 h-5 w-5" />
+            Buy {parseInt(quantity) > 1 ? `${quantity} tickets` : 'ticket'}
+          </>
+        )}
+      </Button>
     </div>
   )
 }

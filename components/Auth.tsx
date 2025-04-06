@@ -3,7 +3,13 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import toast from 'react-hot-toast'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Icons } from '@/components/ui/icons'
+import { useToast } from '@/components/ui/use-toast'
 
 export default function Auth() {
   const router = useRouter()
@@ -11,6 +17,7 @@ export default function Auth() {
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [view, setView] = useState<'sign-in' | 'sign-up'>('sign-in')
+  const { toast } = useToast()
   
   const supabase = createClient()
   
@@ -28,12 +35,20 @@ export default function Auth() {
         throw error
       }
       
-      toast.success('Signed in successfully')
+      toast({
+        title: "Success",
+        description: "Signed in successfully",
+        variant: "success"
+      })
       router.push('/admin')
       router.refresh()
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to sign in'
-      toast.error(errorMessage)
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive"
+      })
     } finally {
       setIsLoading(false)
     }
@@ -56,10 +71,18 @@ export default function Auth() {
         throw error
       }
       
-      toast.success('Check your email for the confirmation link')
+      toast({
+        title: "Check your email",
+        description: "We've sent you a confirmation link",
+        variant: "success"
+      })
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to sign up'
-      toast.error(errorMessage)
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive"
+      })
     } finally {
       setIsLoading(false)
     }
@@ -67,86 +90,119 @@ export default function Auth() {
   
   return (
     <div className="max-w-md w-full mx-auto">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold">
-          {view === 'sign-in' ? 'Sign In' : 'Create Account'}
-        </h1>
-        <p className="text-gray-600 mt-2">
-          {view === 'sign-in'
-            ? 'Sign in to manage your Shameless events'
-            : 'Create an account to manage Shameless events'}
-        </p>
-      </div>
-      
-      <form onSubmit={view === 'sign-in' ? handleSignIn : handleSignUp} className="space-y-6">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
-            placeholder="your@email.com"
-          />
-        </div>
-        
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
-            placeholder="••••••••"
-          />
-        </div>
-        
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full p-3 bg-red-600 text-white font-bold rounded-md hover:bg-red-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
-          {isLoading
-            ? 'Loading...'
-            : view === 'sign-in'
-            ? 'Sign In'
-            : 'Create Account'}
-        </button>
-        
-        <div className="text-center">
-          {view === 'sign-in' ? (
-            <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <button
-                type="button"
-                onClick={() => setView('sign-up')}
-                className="text-red-600 hover:text-red-700 transition"
-              >
-                Create one
-              </button>
-            </p>
-          ) : (
-            <p className="text-sm text-gray-600">
-              Already have an account?{' '}
-              <button
-                type="button"
-                onClick={() => setView('sign-in')}
-                className="text-red-600 hover:text-red-700 transition"
-              >
-                Sign in
-              </button>
-            </p>
-          )}
-        </div>
-      </form>
+      <Card>
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl text-center">
+            {view === 'sign-in' ? 'Sign In' : 'Create Account'}
+          </CardTitle>
+          <CardDescription className="text-center">
+            {view === 'sign-in'
+              ? 'Sign in to manage your Shameless events'
+              : 'Create an account to manage Shameless events'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="sign-in" value={view} onValueChange={(value) => setView(value as 'sign-in' | 'sign-up')}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="sign-in">Sign In</TabsTrigger>
+              <TabsTrigger value="sign-up">Sign Up</TabsTrigger>
+            </TabsList>
+            <TabsContent value="sign-in">
+              <form onSubmit={handleSignIn} className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="signin-email">Email</Label>
+                  <Input
+                    id="signin-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="your@email.com"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signin-password">Password</Label>
+                  <Input
+                    id="signin-password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    placeholder="••••••••"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  variant="shameless"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                      Signing in...
+                    </>
+                  ) : (
+                    <>
+                      <Icons.logIn className="mr-2 h-4 w-4" />
+                      Sign In
+                    </>
+                  )}
+                </Button>
+              </form>
+            </TabsContent>
+            <TabsContent value="sign-up">
+              <form onSubmit={handleSignUp} className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="signup-email">Email</Label>
+                  <Input
+                    id="signup-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="your@email.com"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signup-password">Password</Label>
+                  <Input
+                    id="signup-password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    placeholder="••••••••"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  variant="shameless"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                      Creating account...
+                    </>
+                  ) : (
+                    <>
+                      <Icons.user className="mr-2 h-4 w-4" />
+                      Create Account
+                    </>
+                  )}
+                </Button>
+              </form>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+        <CardFooter>
+          <p className="text-sm text-muted-foreground text-center w-full">
+            By continuing, you agree to our Terms of Service and Privacy Policy.
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   )
 }

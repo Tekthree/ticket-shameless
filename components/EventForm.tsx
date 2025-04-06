@@ -6,6 +6,14 @@ import Image from 'next/image'
 import { Event, Artist } from '@/lib/events'
 import { useDebounce } from '@/lib/hooks'
 import toast from 'react-hot-toast'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Icons } from '@/components/ui/icons'
+import { cn } from '@/lib/utils'
 
 interface EventFormProps {
   event?: Event
@@ -96,8 +104,8 @@ export default function EventForm({ event }: EventFormProps) {
     searchArtists()
   }, [debouncedSearch])
   
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target as HTMLInputElement
     
     // Handle number inputs
     if (type === 'number') {
@@ -111,6 +119,13 @@ export default function EventForm({ event }: EventFormProps) {
         [name]: value,
       })
     }
+  }
+  
+  const handleSelectChange = (value: string, name: string) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    })
   }
   
   // Function to add an artist to the lineup
@@ -230,241 +245,245 @@ export default function EventForm({ event }: EventFormProps) {
   }
   
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="space-y-6">
-        {/* Basic Information */}
-        <div>
-          <h2 className="text-xl font-bold mb-4">Basic Information</h2>
-          
+    <form onSubmit={handleSubmit} className="space-y-8">
+      {/* Basic Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Icons.calendar className="h-5 w-5" />
+            Basic Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-                Event Title*
-              </label>
-              <input
-                type="text"
+            <div className="space-y-2">
+              <Label htmlFor="title">Event Title*</Label>
+              <Input
                 id="title"
                 name="title"
                 value={formData.title}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
               />
             </div>
             
-            <div>
-              <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
-                Image URL*
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="image">Image URL*</Label>
+              <Input
                 type="url"
                 id="image"
                 name="image"
                 value={formData.image}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
               />
             </div>
             
-            <div>
-              <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
-                Date*
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="date">Date*</Label>
+              <Input
                 type="date"
                 id="date"
                 name="date"
                 value={formData.date}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
               />
             </div>
             
-            <div>
-              <label htmlFor="time" className="block text-sm font-medium text-gray-700 mb-1">
-                Time*
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="time">Time*</Label>
+              <Input
                 type="time"
                 id="time"
                 name="time"
                 value={formData.time}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
               />
             </div>
           </div>
-        </div>
-        
-        {/* Description */}
-        <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-            Description*
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-            rows={6}
-            className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
-          ></textarea>
-          <p className="mt-1 text-sm text-gray-500">
-            HTML formatting is supported for rich text.
-          </p>
-        </div>
-        
-        {/* Venue Information */}
-        <div>
-          <h2 className="text-xl font-bold mb-4">Venue Information</h2>
-          
+        </CardContent>
+      </Card>
+      
+      {/* Description */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Icons.fileText className="h-5 w-5" />
+            Description
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <Label htmlFor="description">Description*</Label>
+            <Textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              required
+              rows={6}
+            />
+            <p className="text-sm text-muted-foreground">
+              HTML formatting is supported for rich text.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Venue Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Icons.mapPin className="h-5 w-5" />
+            Venue Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="venue" className="block text-sm font-medium text-gray-700 mb-1">
-                Venue Name*
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="venue">Venue Name*</Label>
+              <Input
                 type="text"
                 id="venue"
                 name="venue"
                 value={formData.venue}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
               />
             </div>
             
-            <div>
-              <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-                Address*
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="address">Address*</Label>
+              <Input
                 type="text"
                 id="address"
                 name="address"
                 value={formData.address}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
               />
             </div>
           </div>
-        </div>
-        
-        {/* Ticket Information */}
-        <div>
-          <h2 className="text-xl font-bold mb-4">Ticket Information</h2>
-          
+        </CardContent>
+      </Card>
+      
+      {/* Ticket Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Icons.ticket className="h-5 w-5" />
+            Ticket Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
-                Price ($)*
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="price">Price ($)*</Label>
+              <Input
                 type="number"
                 id="price"
                 name="price"
                 value={formData.price}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
                 min="0"
                 step="0.01"
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
               />
             </div>
             
-            <div>
-              <label htmlFor="ticketsTotal" className="block text-sm font-medium text-gray-700 mb-1">
-                Total Tickets*
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="ticketsTotal">Total Tickets*</Label>
+              <Input
                 type="number"
                 id="ticketsTotal"
                 name="ticketsTotal"
                 value={formData.ticketsTotal}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
                 min="0"
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
               />
             </div>
             
-            <div>
-              <label htmlFor="ticketsRemaining" className="block text-sm font-medium text-gray-700 mb-1">
-                Tickets Remaining*
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="ticketsRemaining">Tickets Remaining*</Label>
+              <Input
                 type="number"
                 id="ticketsRemaining"
                 name="ticketsRemaining"
                 value={formData.ticketsRemaining}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
                 min="0"
                 max={formData.ticketsTotal}
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
               />
             </div>
           </div>
-        </div>
-        
-        {/* Additional Information */}
-        <div>
-          <h2 className="text-xl font-bold mb-4">Additional Information</h2>
-          
+        </CardContent>
+      </Card>
+      
+      {/* Additional Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Icons.info className="h-5 w-5" />
+            Additional Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="promoter" className="block text-sm font-medium text-gray-700 mb-1">
-                Promoter*
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="promoter">Promoter*</Label>
+              <Input
                 type="text"
                 id="promoter"
                 name="promoter"
                 value={formData.promoter}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
               />
             </div>
             
-            <div>
-              <label htmlFor="ageRestriction" className="block text-sm font-medium text-gray-700 mb-1">
-                Age Restriction
-              </label>
-              <select
-                id="ageRestriction"
-                name="ageRestriction"
+            <div className="space-y-2">
+              <Label htmlFor="ageRestriction">Age Restriction</Label>
+              <Select
                 value={formData.ageRestriction}
-                onChange={handleChange}
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+                onValueChange={(value) => handleSelectChange(value, 'ageRestriction')}
               >
-                <option value="21+">21+</option>
-                <option value="18+">18+</option>
-                <option value="All Ages">All Ages</option>
-              </select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select age restriction" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="21+">21+</SelectItem>
+                  <SelectItem value="18+">18+</SelectItem>
+                  <SelectItem value="All Ages">All Ages</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
-        </div>
-        
-        {/* Lineup Section */}
-        <div>
-          <h2 className="text-xl font-bold mb-4">Event Lineup</h2>
-          
+        </CardContent>
+      </Card>
+      
+      {/* Lineup Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Icons.music className="h-5 w-5" />
+            Event Lineup
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
           {/* Current Lineup */}
           {formData.lineup.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">Current Lineup</h3>
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Current Lineup</h3>
               <div className="space-y-2">
                 {formData.lineup.map((artist) => (
-                  <div key={artist.id} className="flex items-center justify-between bg-gray-100 p-3 rounded">
+                  <div key={artist.id} className="flex items-center justify-between bg-muted p-3 rounded">
                     <div className="flex items-center gap-3">
                       {artist.image && (
-                        <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-300">
+                        <div className="w-10 h-10 rounded-full overflow-hidden bg-muted-foreground/20">
                           <Image
                             src={artist.image}
                             alt={artist.name}
@@ -476,16 +495,19 @@ export default function EventForm({ event }: EventFormProps) {
                       )}
                       <div>
                         <p className="font-medium">{artist.name}</p>
-                        {artist.time && <p className="text-sm text-gray-500">{artist.time}</p>}
+                        {artist.time && <p className="text-sm text-muted-foreground">{artist.time}</p>}
                       </div>
                     </div>
-                    <button
+                    <Button
                       type="button"
                       onClick={() => removeArtistFromLineup(artist.id)}
-                      className="text-red-600 hover:text-red-800"
+                      variant="ghost"
+                      size="sm"
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
                     >
+                      <Icons.trash className="h-4 w-4 mr-1" />
                       Remove
-                    </button>
+                    </Button>
                   </div>
                 ))}
               </div>
@@ -493,46 +515,43 @@ export default function EventForm({ event }: EventFormProps) {
           )}
           
           {/* Add Artist Section */}
-          <div className="border p-4 rounded-md mb-4">
+          <div className="border rounded-md p-4">
             {!showNewArtistForm ? (
               <>
                 <h3 className="text-lg font-semibold mb-3">Add Artist to Lineup</h3>
                 <div className="space-y-3">
-                  <div>
-                    <label htmlFor="artistSearch" className="block text-sm font-medium text-gray-700 mb-1">
-                      Search Artists
-                    </label>
+                  <div className="space-y-2">
+                    <Label htmlFor="artistSearch">Search Artists</Label>
                     <div className="relative">
-                      <input
+                      <Input
                         type="text"
                         id="artistSearch"
                         value={artistSearch}
                         onChange={(e) => setArtistSearch(e.target.value)}
                         placeholder="Start typing to search artists..."
-                        className="block w-full p-2 border border-gray-300 rounded-md"
                       />
                       {isSearching && (
-                        <div className="absolute right-3 top-2">
-                          <svg className="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
+                        <div className="absolute right-3 top-3">
+                          <Icons.spinner className="animate-spin h-4 w-4 text-muted-foreground" />
                         </div>
                       )}
                     </div>
                     
                     {/* Search Results */}
                     {searchResults.length > 0 && (
-                      <div className="mt-2 border border-gray-200 rounded-md overflow-hidden max-h-40 overflow-y-auto">
+                      <div className="mt-2 border rounded-md overflow-hidden max-h-40 overflow-y-auto">
                         {searchResults.map(artist => (
                           <div 
                             key={artist.id}
-                            className={`p-2 cursor-pointer hover:bg-gray-100 ${selectedArtist?.id === artist.id ? 'bg-gray-100' : ''}`}
+                            className={cn(
+                              "p-2 cursor-pointer hover:bg-accent",
+                              selectedArtist?.id === artist.id ? 'bg-accent' : ''
+                            )}
                             onClick={() => setSelectedArtist(artist)}
                           >
                             <div className="flex items-center gap-2">
                               {artist.image && (
-                                <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-300">
+                                <div className="w-8 h-8 rounded-full overflow-hidden bg-muted">
                                   <Image
                                     src={artist.image}
                                     alt={artist.name}
@@ -550,45 +569,45 @@ export default function EventForm({ event }: EventFormProps) {
                     )}
                     
                     {searchResults.length === 0 && artistSearch.trim() !== '' && !isSearching && (
-                      <div className="mt-2 text-sm text-gray-500">
+                      <div className="mt-2 text-sm text-muted-foreground flex items-center gap-2">
+                        <Icons.warning className="h-4 w-4 text-amber-500" />
                         No artists found.
-                        <button
+                        <Button
                           type="button"
                           onClick={() => {
                             setShowNewArtistForm(true)
                             setNewArtist(prev => ({ ...prev, name: artistSearch }))
                           }}
-                          className="ml-2 text-red-600 hover:text-red-800"
+                          variant="link"
+                          className="h-auto p-0"
                         >
                           Create new artist
-                        </button>
+                        </Button>
                       </div>
                     )}
                   </div>
                   
                   {selectedArtist && (
                     <>
-                      <div>
-                        <label htmlFor="performanceTime" className="block text-sm font-medium text-gray-700 mb-1">
-                          Performance Time
-                        </label>
-                        <input
+                      <div className="space-y-2">
+                        <Label htmlFor="performanceTime">Performance Time</Label>
+                        <Input
                           type="text"
                           id="performanceTime"
                           value={performanceTime}
                           onChange={(e) => setPerformanceTime(e.target.value)}
                           placeholder="e.g., 9:00 PM - 10:30 PM"
-                          className="block w-full p-2 border border-gray-300 rounded-md"
                         />
                       </div>
                       
-                      <button
+                      <Button
                         type="button"
                         onClick={addArtistToLineup}
-                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                        variant="shameless"
                       >
+                        <Icons.add className="h-4 w-4 mr-2" />
                         Add to Lineup
-                      </button>
+                      </Button>
                     </>
                   )}
                 </div>
@@ -597,86 +616,88 @@ export default function EventForm({ event }: EventFormProps) {
               <>
                 <h3 className="text-lg font-semibold mb-3">Create New Artist</h3>
                 <div className="space-y-3">
-                  <div>
-                    <label htmlFor="newArtistName" className="block text-sm font-medium text-gray-700 mb-1">
-                      Artist Name
-                    </label>
-                    <input
+                  <div className="space-y-2">
+                    <Label htmlFor="newArtistName">Artist Name</Label>
+                    <Input
                       type="text"
                       id="newArtistName"
                       value={newArtist.name}
                       onChange={(e) => setNewArtist(prev => ({ ...prev, name: e.target.value }))}
-                      className="block w-full p-2 border border-gray-300 rounded-md"
                       required
                     />
                   </div>
                   
-                  <div>
-                    <label htmlFor="newArtistImage" className="block text-sm font-medium text-gray-700 mb-1">
-                      Artist Image URL
-                    </label>
-                    <input
+                  <div className="space-y-2">
+                    <Label htmlFor="newArtistImage">Artist Image URL</Label>
+                    <Input
                       type="url"
                       id="newArtistImage"
                       value={newArtist.image}
                       onChange={(e) => setNewArtist(prev => ({ ...prev, image: e.target.value }))}
-                      className="block w-full p-2 border border-gray-300 rounded-md"
                     />
                   </div>
                   
-                  <div>
-                    <label htmlFor="newArtistPerformanceTime" className="block text-sm font-medium text-gray-700 mb-1">
-                      Performance Time
-                    </label>
-                    <input
+                  <div className="space-y-2">
+                    <Label htmlFor="newArtistPerformanceTime">Performance Time</Label>
+                    <Input
                       type="text"
                       id="newArtistPerformanceTime"
                       value={performanceTime}
                       onChange={(e) => setPerformanceTime(e.target.value)}
                       placeholder="e.g., 9:00 PM - 10:30 PM"
-                      className="block w-full p-2 border border-gray-300 rounded-md"
                     />
                   </div>
                   
                   <div className="flex space-x-2">
-                    <button
+                    <Button
                       type="button"
                       onClick={createNewArtist}
-                      className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                      variant="shameless"
                     >
+                      <Icons.add className="h-4 w-4 mr-2" />
                       Create and Add
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
                       onClick={() => setShowNewArtistForm(false)}
-                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                      variant="outline"
                     >
                       Cancel
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </>
             )}
           </div>
-        </div>
-        
-        {/* Submit Button */}
-        <div className="flex justify-end space-x-4">
-          <button
-            type="button"
-            onClick={() => router.push('/admin')}
-            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? 'Saving...' : event ? 'Update Event' : 'Create Event'}
-          </button>
-        </div>
+        </CardContent>
+      </Card>
+      
+      {/* Submit Button */}
+      <div className="flex justify-end space-x-4">
+        <Button
+          type="button"
+          onClick={() => router.push('/admin')}
+          variant="outline"
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          variant="shameless"
+        >
+          {isSubmitting ? (
+            <>
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Icons.check className="mr-2 h-4 w-4" />
+              {event ? 'Update Event' : 'Create Event'}
+            </>
+          )}
+        </Button>
       </div>
     </form>
   )

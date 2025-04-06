@@ -1,94 +1,53 @@
-'use client';
+import * as React from "react"
+import * as TabsPrimitive from "@radix-ui/react-tabs"
 
-import React, { createContext, useContext, useState } from 'react';
+import { cn } from "@/lib/utils"
 
-type TabsContextValue = {
-  activeTab: string;
-  setActiveTab: (value: string) => void;
-};
+const Tabs = TabsPrimitive.Root
 
-const TabsContext = createContext<TabsContextValue | null>(null);
+const TabsList = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.List
+    ref={ref}
+    className={cn(
+      "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
+      className
+    )}
+    {...props}
+  />
+))
+TabsList.displayName = TabsPrimitive.List.displayName
 
-function useTabs() {
-  const context = useContext(TabsContext);
-  if (!context) {
-    throw new Error('Tabs components must be used within a TabsProvider');
-  }
-  return context;
-}
+const TabsTrigger = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",
+      className
+    )}
+    {...props}
+  />
+))
+TabsTrigger.displayName = TabsPrimitive.Trigger.displayName
 
-interface TabsProps {
-  defaultValue: string;
-  className?: string;
-  children: React.ReactNode;
-}
+const TabsContent = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Content
+    ref={ref}
+    className={cn(
+      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      className
+    )}
+    {...props}
+  />
+))
+TabsContent.displayName = TabsPrimitive.Content.displayName
 
-export function Tabs({ defaultValue, className = '', children }: TabsProps) {
-  const [activeTab, setActiveTab] = useState(defaultValue);
-  
-  return (
-    <TabsContext.Provider value={{ activeTab, setActiveTab }}>
-      <div className={className}>
-        {children}
-      </div>
-    </TabsContext.Provider>
-  );
-}
-
-interface TabsListProps {
-  className?: string;
-  children: React.ReactNode;
-}
-
-export function TabsList({ className = '', children }: TabsListProps) {
-  return (
-    <div className={`flex space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-md ${className}`}>
-      {children}
-    </div>
-  );
-}
-
-interface TabsTriggerProps {
-  value: string;
-  className?: string;
-  children: React.ReactNode;
-}
-
-export function TabsTrigger({ value, className = '', children }: TabsTriggerProps) {
-  const { activeTab, setActiveTab } = useTabs();
-  const isActive = activeTab === value;
-  
-  return (
-    <button
-      type="button"
-      className={`flex-1 px-3 py-1.5 text-sm font-medium rounded-md transition-all
-        ${isActive 
-          ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow'
-          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-        } ${className}`}
-      onClick={() => setActiveTab(value)}
-    >
-      {children}
-    </button>
-  );
-}
-
-interface TabsContentProps {
-  value: string;
-  className?: string;
-  children: React.ReactNode;
-}
-
-export function TabsContent({ value, className = '', children }: TabsContentProps) {
-  const { activeTab } = useTabs();
-  
-  if (activeTab !== value) {
-    return null;
-  }
-  
-  return (
-    <div className={`mt-2 ${className}`}>
-      {children}
-    </div>
-  );
-}
+export { Tabs, TabsList, TabsTrigger, TabsContent }

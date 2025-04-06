@@ -5,6 +5,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { Button } from '@/components/ui/button'
+import { Icons } from '@/components/ui/icons'
+import { cn } from '@/lib/utils'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -40,113 +43,116 @@ export default function Header() {
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            <Link 
-              href="/events" 
-              className={`hover:text-red-500 transition ${
-                pathname === '/events' ? 'text-red-500' : ''
-              }`}
-            >
+            <NavLink href="/events" isActive={pathname === '/events'}>
+              <Icons.calendar className="mr-2 h-4 w-4" />
               Events
-            </Link>
-            <Link 
-              href="/about" 
-              className={`hover:text-red-500 transition ${
-                pathname === '/about' ? 'text-red-500' : ''
-              }`}
-            >
+            </NavLink>
+            <NavLink href="/about" isActive={pathname === '/about'}>
+              <Icons.info className="mr-2 h-4 w-4" />
               About
-            </Link>
-            <Link 
-              href="/contact" 
-              className={`hover:text-red-500 transition ${
-                pathname === '/contact' ? 'text-red-500' : ''
-              }`}
-            >
+            </NavLink>
+            <NavLink href="/contact" isActive={pathname === '/contact'}>
+              <Icons.mail className="mr-2 h-4 w-4" />
               Contact
-            </Link>
+            </NavLink>
             
             {/* Admin links would be conditionally rendered based on auth state */}
-            <Link 
-              href="/admin" 
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
-            >
-              Admin
-            </Link>
+            <Button asChild variant="shameless">
+              <Link href="/admin">
+                <Icons.settings className="mr-2 h-4 w-4" />
+                Admin
+              </Link>
+            </Button>
           </nav>
           
           {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden text-white focus:outline-none"
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={toggleMenu}
+            className="md:hidden text-white"
           >
-            <svg 
-              className="w-6 h-6" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {isMenuOpen ? (
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M6 18L18 6M6 6l12 12" 
-                />
-              ) : (
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M4 6h16M4 12h16M4 18h16" 
-                />
-              )}
-            </svg>
-          </button>
+            {isMenuOpen ? (
+              <Icons.close className="h-6 w-6" />
+            ) : (
+              <Icons.menu className="h-6 w-6" />
+            )}
+          </Button>
         </div>
         
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 pt-4 border-t border-gray-700">
             <nav className="flex flex-col space-y-4">
-              <Link 
+              <MobileNavLink 
                 href="/events" 
-                className={`hover:text-red-500 transition ${
-                  pathname === '/events' ? 'text-red-500' : ''
-                }`}
+                isActive={pathname === '/events'}
                 onClick={() => setIsMenuOpen(false)}
               >
+                <Icons.calendar className="mr-2 h-4 w-4" />
                 Events
-              </Link>
-              <Link 
+              </MobileNavLink>
+              <MobileNavLink 
                 href="/about" 
-                className={`hover:text-red-500 transition ${
-                  pathname === '/about' ? 'text-red-500' : ''
-                }`}
+                isActive={pathname === '/about'}
                 onClick={() => setIsMenuOpen(false)}
               >
+                <Icons.info className="mr-2 h-4 w-4" />
                 About
-              </Link>
-              <Link 
+              </MobileNavLink>
+              <MobileNavLink 
                 href="/contact" 
-                className={`hover:text-red-500 transition ${
-                  pathname === '/contact' ? 'text-red-500' : ''
-                }`}
+                isActive={pathname === '/contact'}
                 onClick={() => setIsMenuOpen(false)}
               >
+                <Icons.mail className="mr-2 h-4 w-4" />
                 Contact
-              </Link>
-              <Link 
-                href="/admin" 
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition w-fit"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Admin
-              </Link>
+              </MobileNavLink>
+              <div className="pt-2">
+                <Button asChild variant="shameless" size="sm">
+                  <Link 
+                    href="/admin"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Icons.settings className="mr-2 h-4 w-4" />
+                    Admin
+                  </Link>
+                </Button>
+              </div>
             </nav>
           </div>
         )}
       </div>
     </header>
+  )
+}
+
+function NavLink({ href, isActive, children, className }) {
+  return (
+    <Link 
+      href={href} 
+      className={cn(
+        "flex items-center hover:text-shameless-red transition",
+        isActive ? "text-shameless-red" : "",
+        className
+      )}
+    >
+      {children}
+    </Link>
+  )
+}
+
+function MobileNavLink({ href, isActive, onClick, children }) {
+  return (
+    <Link 
+      href={href} 
+      className={cn(
+        "flex items-center hover:text-shameless-red transition px-2 py-1.5 rounded",
+        isActive ? "text-shameless-red bg-gray-800" : ""
+      )}
+      onClick={onClick}
+    >
+      {children}
+    </Link>
   )
 }

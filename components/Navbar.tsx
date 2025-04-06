@@ -6,6 +6,9 @@ import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import SignOutButton from './SignOutButton';
 import { useUserRoles } from '@/hooks/useUserRoles';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Icons } from '@/components/ui/icons';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,138 +47,140 @@ export default function Navbar() {
 
   return (
     <nav className="bg-black text-white shadow-lg">
-      <div className="container mx-auto px-4 py-6"> {/* Increased padding for height */}
+      <div className="container mx-auto px-4 py-6">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center">
             <Image
               src={logoUrl}
               alt="Shameless Productions"
-              width={250} /* Increased from 150 */
-              height={75} /* Increased from 45 */
-              className="h-16 w-auto object-contain" /* Increased from h-10 */
+              width={250}
+              height={75}
+              className="h-16 w-auto object-contain"
             />
           </Link>
           
           <div className="hidden md:flex space-x-8 items-center">
-            <Link href="/" className="text-lg hover:text-indigo-300 transition"> {/* Increased text size */}
+            <NavLink href="/">
+              <Icons.home className="mr-2 h-5 w-5" />
               Home
-            </Link>
-            <Link href="/events" className="text-lg hover:text-indigo-300 transition">
+            </NavLink>
+            <NavLink href="/events">
+              <Icons.calendar className="mr-2 h-5 w-5" />
               Events
-            </Link>
-            <Link href="/#about" className="text-lg hover:text-indigo-300 transition">
+            </NavLink>
+            <NavLink href="/#about">
+              <Icons.info className="mr-2 h-5 w-5" />
               About
-            </Link>
-            <Link href="#contact" className="text-lg hover:text-indigo-300 transition">
+            </NavLink>
+            <NavLink href="#contact">
+              <Icons.mail className="mr-2 h-5 w-5" />
               Contact
-            </Link>
+            </NavLink>
             {user ? (
               <>
-                <Link href="/profile" className="text-lg hover:text-indigo-300 transition">
+                <NavLink href="/profile">
+                  <Icons.user className="mr-2 h-5 w-5" />
                   Profile
-                </Link>
+                </NavLink>
                 {(isAdmin() || isEventManager() || isBoxOffice() || isArtist()) && (
-                  <Link href="/admin" className="text-lg hover:text-indigo-300 transition">
+                  <NavLink href="/admin">
+                    <Icons.settings className="mr-2 h-5 w-5" />
                     Dashboard
-                  </Link>
+                  </NavLink>
                 )}
                 <SignOutButton />
               </>
             ) : (
-              <Link href="/auth/enhanced-login" className="text-lg hover:text-indigo-300 transition">
+              <NavLink href="/auth/enhanced-login">
+                <Icons.logIn className="mr-2 h-5 w-5" />
                 Login
-              </Link>
+              </NavLink>
             )}
           </div>
           
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white focus:outline-none"
-            >
-              <svg
-                className="h-8 w-8" /* Increased from h-6 w-6 */
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                {isMenuOpen ? (
-                  <path d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-          </div>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden text-white"
+          >
+            {isMenuOpen ? (
+              <Icons.close className="h-6 w-6" />
+            ) : (
+              <Icons.menu className="h-6 w-6" />
+            )}
+          </Button>
         </div>
         
         {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 space-y-3"> {/* Increased spacing */}
-            <Link
-              href="/"
-              className="block py-3 px-4 text-lg hover:bg-gray-800 rounded transition" /* Increased padding and text size */
-              onClick={() => setIsMenuOpen(false)}
-            >
+          <div className="md:hidden mt-4 pb-4 space-y-3">
+            <MobileNavLink href="/" onClick={() => setIsMenuOpen(false)}>
+              <Icons.home className="mr-2 h-5 w-5" />
               Home
-            </Link>
-            <Link
-              href="/events"
-              className="block py-3 px-4 text-lg hover:bg-gray-800 rounded transition"
-              onClick={() => setIsMenuOpen(false)}
-            >
+            </MobileNavLink>
+            <MobileNavLink href="/events" onClick={() => setIsMenuOpen(false)}>
+              <Icons.calendar className="mr-2 h-5 w-5" />
               Events
-            </Link>
-            <Link
-              href="/#about"
-              className="block py-3 px-4 text-lg hover:bg-gray-800 rounded transition"
-              onClick={() => setIsMenuOpen(false)}
-            >
+            </MobileNavLink>
+            <MobileNavLink href="/#about" onClick={() => setIsMenuOpen(false)}>
+              <Icons.info className="mr-2 h-5 w-5" />
               About
-            </Link>
-            <Link
-              href="#contact"
-              className="block py-3 px-4 text-lg hover:bg-gray-800 rounded transition"
-              onClick={() => setIsMenuOpen(false)}
-            >
+            </MobileNavLink>
+            <MobileNavLink href="#contact" onClick={() => setIsMenuOpen(false)}>
+              <Icons.mail className="mr-2 h-5 w-5" />
               Contact
-            </Link>
+            </MobileNavLink>
             {user ? (
               <>
-                <Link
-                  href="/profile"
-                  className="block py-3 px-4 text-lg hover:bg-gray-800 rounded transition"
-                  onClick={() => setIsMenuOpen(false)}
-                >
+                <MobileNavLink href="/profile" onClick={() => setIsMenuOpen(false)}>
+                  <Icons.user className="mr-2 h-5 w-5" />
                   Profile
-                </Link>
+                </MobileNavLink>
                 {(isAdmin() || isEventManager() || isBoxOffice() || isArtist()) && (
-                  <Link
-                    href="/admin"
-                    className="block py-3 px-4 text-lg hover:bg-gray-800 rounded transition"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
+                  <MobileNavLink href="/admin" onClick={() => setIsMenuOpen(false)}>
+                    <Icons.settings className="mr-2 h-5 w-5" />
                     Dashboard
-                  </Link>
+                  </MobileNavLink>
                 )}
                 <div className="py-3 px-4">
                   <SignOutButton />
                 </div>
               </>
             ) : (
-              <Link
-                href="/auth/enhanced-login"
-                className="block py-3 px-4 text-lg hover:bg-gray-800 rounded transition"
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <MobileNavLink href="/auth/enhanced-login" onClick={() => setIsMenuOpen(false)}>
+                <Icons.logIn className="mr-2 h-5 w-5" />
                 Login
-              </Link>
+              </MobileNavLink>
             )}
           </div>
         )}
       </div>
     </nav>
+  );
+}
+
+function NavLink({ href, children, className }) {
+  return (
+    <Link 
+      href={href} 
+      className={cn(
+        "flex items-center text-lg hover:text-indigo-300 transition", 
+        className
+      )}
+    >
+      {children}
+    </Link>
+  );
+}
+
+function MobileNavLink({ href, onClick, children }) {
+  return (
+    <Link
+      href={href}
+      className="flex items-center py-3 px-4 text-lg hover:bg-gray-800 rounded transition"
+      onClick={onClick}
+    >
+      {children}
+    </Link>
   );
 }

@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Icons } from '@/components/ui/icons';
 
 export default function SignOutButton() {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,12 +26,23 @@ export default function SignOutButton() {
   };
   
   return (
-    <button
+    <Button
       onClick={handleSignOut}
       disabled={isLoading}
-      className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+      variant="shameless"
+      className="flex items-center"
     >
-      {isLoading ? 'Signing out...' : 'Sign Out'}
-    </button>
+      {isLoading ? (
+        <>
+          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          Signing out...
+        </>
+      ) : (
+        <>
+          <Icons.logOut className="mr-2 h-4 w-4" />
+          Sign Out
+        </>
+      )}
+    </Button>
   );
 }

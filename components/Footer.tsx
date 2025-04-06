@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
+import { Icons } from '@/components/ui/icons';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 
 export default function Footer() {
   const [logoUrl, setLogoUrl] = useState('/images/logo.png'); // Default logo
@@ -30,44 +33,49 @@ export default function Footer() {
     fetchLogo();
   }, []);
 
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="bg-black text-white" id="contact">
-      <div className="container mx-auto px-4 py-16"> {/* Increased padding */}
+      <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-1">
             <Link href="/">
               <Image
                 src={logoUrl}
                 alt="Shameless Productions"
-                width={250} /* Increased from 150 */
-                height={75} /* Increased from 45 */
-                className="h-20 w-auto object-contain mb-4" /* Increased from h-10 */
+                width={250}
+                height={75}
+                className="h-20 w-auto object-contain mb-4"
               />
             </Link>
-            <p className="text-md text-gray-400 mt-4"> {/* Increased from text-sm */}
+            <p className="text-md text-muted-foreground mt-4">
               Keeping it Weird Since 2003
             </p>
           </div>
           
           <div>
-            <h3 className="text-xl font-semibold mb-4"> {/* Increased from text-lg */}
+            <h3 className="text-xl font-semibold mb-4">
               Navigation
             </h3>
-            <ul className="space-y-3"> {/* Increased from space-y-2 */}
+            <ul className="space-y-3">
               <li>
-                <Link href="/" className="text-lg text-gray-400 hover:text-white transition"> {/* Increased from default text size */}
+                <FooterLink href="/">
+                  <Icons.home className="mr-2 h-4 w-4" />
                   Home
-                </Link>
+                </FooterLink>
               </li>
               <li>
-                <Link href="/events" className="text-lg text-gray-400 hover:text-white transition">
+                <FooterLink href="/events">
+                  <Icons.calendar className="mr-2 h-4 w-4" />
                   Events
-                </Link>
+                </FooterLink>
               </li>
               <li>
-                <Link href="/#about" className="text-lg text-gray-400 hover:text-white transition">
+                <FooterLink href="/#about">
+                  <Icons.info className="mr-2 h-4 w-4" />
                   About
-                </Link>
+                </FooterLink>
               </li>
             </ul>
           </div>
@@ -78,32 +86,30 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <a 
+                <FooterLink 
                   href="https://www.facebook.com/shamelessseattle" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-lg text-gray-400 hover:text-white transition"
+                  external={true}
                 >
+                  <FacebookIcon className="mr-2 h-4 w-4" />
                   Facebook
-                </a>
+                </FooterLink>
               </li>
               <li>
-                <a 
+                <FooterLink 
                   href="https://www.instagram.com/shamelessseattle" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-lg text-gray-400 hover:text-white transition"
+                  external={true}
                 >
+                  <InstagramIcon className="mr-2 h-4 w-4" />
                   Instagram
-                </a>
+                </FooterLink>
               </li>
               <li>
-                <a 
+                <FooterLink 
                   href="mailto:info@shamelessproductions.com"
-                  className="text-lg text-gray-400 hover:text-white transition"
                 >
+                  <Icons.mail className="mr-2 h-4 w-4" />
                   Email Us
-                </a>
+                </FooterLink>
               </li>
             </ul>
           </div>
@@ -114,25 +120,94 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/privacy" className="text-lg text-gray-400 hover:text-white transition">
+                <FooterLink href="/privacy">
+                  <Icons.shield className="mr-2 h-4 w-4" />
                   Privacy Policy
-                </Link>
+                </FooterLink>
               </li>
               <li>
-                <Link href="/terms" className="text-lg text-gray-400 hover:text-white transition">
+                <FooterLink href="/terms">
+                  <Icons.fileText className="mr-2 h-4 w-4" />
                   Terms of Service
-                </Link>
+                </FooterLink>
               </li>
             </ul>
           </div>
         </div>
         
-        <div className="border-t border-gray-800 mt-12 pt-8 text-center">
-          <p className="text-lg text-gray-400"> {/* Increased from default text size */}
-            &copy; {new Date().getFullYear()} Shameless Productions. All rights reserved.
+        <Separator className="my-8 bg-gray-800" />
+        
+        <div className="text-center">
+          <p className="text-lg text-muted-foreground">
+            &copy; {currentYear} Shameless Productions. All rights reserved.
           </p>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterLink({ href, children, external = false }) {
+  if (external) {
+    return (
+      <a 
+        href={href} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="text-lg text-muted-foreground hover:text-white transition flex items-center"
+      >
+        {children}
+      </a>
+    );
+  }
+  
+  return (
+    <Link 
+      href={href} 
+      className="text-lg text-muted-foreground hover:text-white transition flex items-center"
+    >
+      {children}
+    </Link>
+  );
+}
+
+// Custom Social Media Icons
+function FacebookIcon(props) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+    </svg>
+  );
+}
+
+function InstagramIcon(props) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
   );
 }
