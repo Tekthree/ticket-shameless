@@ -65,6 +65,23 @@ export async function POST(request: Request) {
             persistSession: false
           }
         })
+        
+        // Try to find the user ID based on the email
+        let userId = null
+        if (session.customer_details?.email) {
+          const { data: userData } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('email', session.customer_details.email)
+            .single()
+            
+          if (userData) {
+            userId = userData.id
+            console.log(`Found user ID ${userId} for email ${session.customer_details.email}`)
+          }
+        }
+        
+        // Insert the order record
         const { error: orderError } = await supabase
           .from('orders')
           .insert({
@@ -75,6 +92,7 @@ export async function POST(request: Request) {
             amount_total: session.amount_total ? session.amount_total / 100 : 0,
             status: 'completed',
             quantity: parseInt(session.metadata?.quantity || '1'),
+            user_id: userId, // Link to user profile if found
           })
         
         if (orderError) {
@@ -84,13 +102,29 @@ export async function POST(request: Request) {
         
         // Update ticket count for the event
         const quantity = parseInt(session.metadata?.quantity || '1')
+        
+        // First, get current tickets remaining
+        const { data: eventData, error: fetchError } = await supabase
+          .from('events')
+          .select('tickets_remaining')
+          .eq('id', eventId)
+          .single()
+        
+        if (fetchError) {
+          console.error('Error fetching event data:', fetchError)
+          return NextResponse.json({ error: 'Failed to fetch event data' }, { status: 500 })
+        }
+        
+        // Calculate new tickets remaining
+        const newTicketsRemaining = Math.max(0, eventData.tickets_remaining - quantity)
+        const soldOut = newTicketsRemaining <= 0
+        
+        // Update the event
         const { error: eventError } = await supabase
           .from('events')
           .update({
-            tickets_remaining: supabase.rpc('decrement', { 
-              row_id: eventId,
-              amount: quantity
-            })
+            tickets_remaining: newTicketsRemaining,
+            sold_out: soldOut
           })
           .eq('id', eventId)
         
@@ -98,6 +132,8 @@ export async function POST(request: Request) {
           console.error('Error updating event ticket count:', eventError)
           return NextResponse.json({ error: 'Failed to update ticket count' }, { status: 500 })
         }
+        
+        console.log(`Updated event ${eventId}: tickets_remaining=${newTicketsRemaining}, sold_out=${soldOut}`)
         
         break
         

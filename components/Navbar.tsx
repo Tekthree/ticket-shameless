@@ -4,10 +4,14 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
+import SignOutButton from './SignOutButton';
+import { useUserRoles } from '@/hooks/useUserRoles';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoUrl, setLogoUrl] = useState('/images/logo.png'); // Default logo
+  const [user, setUser] = useState(null);
+  const { isAdmin, isEventManager, isBoxOffice, isArtist } = useUserRoles();
   
   useEffect(() => {
     const fetchLogo = async () => {
@@ -28,7 +32,14 @@ export default function Navbar() {
       }
     };
     
+    const checkUser = async () => {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user || null);
+    };
+    
     fetchLogo();
+    checkUser();
   }, []);
 
   return (
@@ -45,7 +56,7 @@ export default function Navbar() {
             />
           </Link>
           
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex space-x-8 items-center">
             <Link href="/" className="text-lg hover:text-indigo-300 transition"> {/* Increased text size */}
               Home
             </Link>
@@ -58,6 +69,23 @@ export default function Navbar() {
             <Link href="#contact" className="text-lg hover:text-indigo-300 transition">
               Contact
             </Link>
+            {user ? (
+              <>
+                <Link href="/profile" className="text-lg hover:text-indigo-300 transition">
+                  Profile
+                </Link>
+                {(isAdmin() || isEventManager() || isBoxOffice() || isArtist()) && (
+                  <Link href="/admin" className="text-lg hover:text-indigo-300 transition">
+                    Dashboard
+                  </Link>
+                )}
+                <SignOutButton />
+              </>
+            ) : (
+              <Link href="/auth/enhanced-login" className="text-lg hover:text-indigo-300 transition">
+                Login
+              </Link>
+            )}
           </div>
           
           <div className="md:hidden">
@@ -114,6 +142,37 @@ export default function Navbar() {
             >
               Contact
             </Link>
+            {user ? (
+              <>
+                <Link
+                  href="/profile"
+                  className="block py-3 px-4 text-lg hover:bg-gray-800 rounded transition"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Profile
+                </Link>
+                {(isAdmin() || isEventManager() || isBoxOffice() || isArtist()) && (
+                  <Link
+                    href="/admin"
+                    className="block py-3 px-4 text-lg hover:bg-gray-800 rounded transition"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Dashboard
+                  </Link>
+                )}
+                <div className="py-3 px-4">
+                  <SignOutButton />
+                </div>
+              </>
+            ) : (
+              <Link
+                href="/auth/enhanced-login"
+                className="block py-3 px-4 text-lg hover:bg-gray-800 rounded transition"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Login
+              </Link>
+            )}
           </div>
         )}
       </div>

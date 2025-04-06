@@ -1,551 +1,199 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { toast } from 'react-hot-toast';
-import { getSiteContent, updateSiteContent, SiteContent } from '@/lib/site-content';
-import AdminHeader from '@/components/AdminHeader';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
-import Image from 'next/image';
 
-export default function SiteContentManager() {
-  const [content, setContent] = useState<SiteContent | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [activeSection, setActiveSection] = useState('hero');
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const videoInputRef = useRef<HTMLInputElement>(null);
+export default function SiteContentPage() {
+  const [content, setContent] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [editingItem, setEditingItem] = useState<any | null>(null);
+  const [updatedContent, setUpdatedContent] = useState('');
+  const supabase = createClient();
   
   useEffect(() => {
-    const fetchContent = async () => {
+    async function loadContent() {
       try {
-        const data = await getSiteContent();
-        setContent(data);
-      } catch (error) {
-        console.error('Error fetching content:', error);
-        toast.error('Failed to load site content');
+        // Check authentication
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session) {
+          setError('You need to be logged in');
+          return;
+        }
+        
+        console.log('User authenticated:', session.user.email);
+        
+        // Load all site content
+        const { data: contentData, error: contentError } = await supabase
+          .from('site_content')
+          .select('*')
+          .order('section', { ascending: true });
+          
+        if (contentError) {
+          console.error('Error loading content:', contentError);
+          setError('Failed to load content');
+          return;
+        }
+        
+        console.log('Content loaded:', contentData?.length || 0);
+        setContent(contentData || []);
+        
+      } catch (e) {
+        console.error('Unhandled error:', e);
+        setError('An unexpected error occurred');
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
-    };
+    }
     
-    fetchContent();
+    loadContent();
   }, []);
   
-  const handleTextChange = (section: string, field: string, value: string) => {
-    if (!content) return;
-    
-    setContent({
-      ...content,
-      [section]: {
-        ...content[section],
-        [field]: {
-          ...content[section][field],
-          content: value
-        }
-      }
-    });
+  const startEdit = (item: any) => {
+    setEditingItem(item);
+    setUpdatedContent(item.content);
   };
   
-  const handleUploadFile = async (section: string, field: string, file: File) => {
-    setLoading(true);
-    
+  const cancelEdit = () => {
+    setEditingItem(null);
+    setUpdatedContent('');
+  };
+  
+  const saveEdit = async () => {
     try {
-      // Create FormData for file upload
-      const formData = new FormData();
-      formData.append('file', file);
+      if (!editingItem) return;
       
-      // Call API to upload the file
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to upload file');
-      }
-      
-      const data = await response.json();
-      
-      // Update the content with the new file URL
-      await updateSiteContent(
-        section,
-        field,
-        data.url,
-        field.includes('video') ? 'video' : 'image'
-      );
+      const { error } = await supabase
+        .from('site_content')
+        .update({ content: updatedContent })
+        .eq('id', editingItem.id);
+        
+      if (error) throw error;
       
       // Update local state
-      if (content) {
-        setContent({
-          ...content,
-          [section]: {
-            ...content[section],
-            [field]: {
-              ...content[section][field],
-              content: data.url,
-              type: field.includes('video') ? 'video' : 'image'
-            }
-          }
-        });
-      }
+      setContent(content.map(item => 
+        item.id === editingItem.id 
+          ? { ...item, content: updatedContent }
+          : item
+      ));
       
-      toast.success('File uploaded successfully');
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      toast.error('Failed to upload file');
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  const handleSave = async (section: string, field: string) => {
-    if (!content) return;
-    
-    setLoading(true);
-    
-    try {
-      await updateSiteContent(
-        section,
-        field,
-        content[section][field].content,
-        content[section][field].type
-      );
+      setEditingItem(null);
+      setUpdatedContent('');
       
-      toast.success('Content saved successfully');
     } catch (error) {
-      console.error('Error saving content:', error);
-      toast.error('Failed to save content');
-    } finally {
-      setLoading(false);
+      console.error('Error updating content:', error);
+      alert('Failed to update content');
     }
   };
   
-  const handleFileButtonClick = (inputRef: React.RefObject<HTMLInputElement>) => {
-    if (inputRef.current) {
-      inputRef.current.click();
-    }
-  };
-  
-  if (loading && !content) {
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-100 p-8">
-        <AdminHeader />
-        <div className="flex justify-center items-center h-64">
-          <p className="text-xl">Loading...</p>
+      <div className="container mx-auto p-8">
+        <h1 className="text-3xl font-bold mb-6">Site Content Management</h1>
+        <div className="animate-pulse space-y-4">
+          <div className="h-10 bg-gray-200 rounded w-1/4"></div>
+          <div className="h-64 bg-gray-200 rounded"></div>
         </div>
       </div>
     );
   }
   
-  return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8">
-      <AdminHeader />
-      
-      <div className="bg-white rounded-lg shadow p-6 mb-8">
-        <h1 className="text-3xl font-bold mb-2">Site Content Manager</h1>
-        <p className="text-gray-600 mb-4">
-          Edit your site's content including text, images, and videos.
-        </p>
-        
-        <div className="flex flex-wrap border-b mb-6">
-          <button
-            className={`px-4 py-2 ${activeSection === 'hero' ? 'border-b-2 border-indigo-500 text-indigo-600' : 'text-gray-500'}`}
-            onClick={() => setActiveSection('hero')}
-          >
-            Hero Section
-          </button>
-          <button
-            className={`px-4 py-2 ${activeSection === 'about' ? 'border-b-2 border-indigo-500 text-indigo-600' : 'text-gray-500'}`}
-            onClick={() => setActiveSection('about')}
-          >
-            About Section
-          </button>
-          <button
-            className={`px-4 py-2 ${activeSection === 'motto' ? 'border-b-2 border-indigo-500 text-indigo-600' : 'text-gray-500'}`}
-            onClick={() => setActiveSection('motto')}
-          >
-            Motto Section
-          </button>
-          <button
-            className={`px-4 py-2 ${activeSection === 'logos' ? 'border-b-2 border-indigo-500 text-indigo-600' : 'text-gray-500'}`}
-            onClick={() => setActiveSection('logos')}
-          >
-            Logos
-          </button>
-        </div>
-        
-        {content && activeSection === 'hero' && (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-xl font-semibold mb-2">Hero Title</h2>
-              <input
-                type="text"
-                value={content.hero.title.content}
-                onChange={(e) => handleTextChange('hero', 'title', e.target.value)}
-                className="w-full p-2 border rounded"
-              />
-              <button
-                onClick={() => handleSave('hero', 'title')}
-                className="mt-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                disabled={loading}
-              >
-                Save
-              </button>
-            </div>
-            
-            <div>
-              <h2 className="text-xl font-semibold mb-2">Hero Subtitle</h2>
-              <input
-                type="text"
-                value={content.hero.subtitle.content}
-                onChange={(e) => handleTextChange('hero', 'subtitle', e.target.value)}
-                className="w-full p-2 border rounded"
-              />
-              <button
-                onClick={() => handleSave('hero', 'subtitle')}
-                className="mt-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                disabled={loading}
-              >
-                Save
-              </button>
-            </div>
-            
-            <div>
-              <h2 className="text-xl font-semibold mb-2">Background Image</h2>
-              {content.hero.background.content && (
-                <div className="mb-4">
-                  <p className="text-sm text-gray-500 mb-2">Current image:</p>
-                  <img
-                    src={content.hero.background.content}
-                    alt="Hero background"
-                    className="h-40 object-cover rounded mb-2"
-                  />
-                </div>
-              )}
-              <input
-                type="file"
-                ref={fileInputRef}
-                className="hidden"
-                accept="image/*"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    handleUploadFile('hero', 'background', e.target.files[0]);
-                  }
-                }}
-              />
-              <button
-                onClick={() => handleFileButtonClick(fileInputRef)}
-                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                disabled={loading}
-              >
-                Upload New Image
-              </button>
-            </div>
-            
-            <div>
-              <h2 className="text-xl font-semibold mb-2">Background Video (optional)</h2>
-              {content.hero.video.content && (
-                <div className="mb-4">
-                  <p className="text-sm text-gray-500 mb-2">Current video:</p>
-                  <video
-                    src={content.hero.video.content}
-                    controls
-                    className="h-40 object-cover rounded mb-2"
-                  />
-                </div>
-              )}
-              <input
-                type="file"
-                ref={videoInputRef}
-                className="hidden"
-                accept="video/mp4,video/quicktime"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    handleUploadFile('hero', 'video', e.target.files[0]);
-                  }
-                }}
-              />
-              <button
-                onClick={() => handleFileButtonClick(videoInputRef)}
-                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                disabled={loading}
-              >
-                Upload Video
-              </button>
-              {content.hero.video.content && (
-                <button
-                  onClick={async () => {
-                    await updateSiteContent('hero', 'video', '', 'video');
-                    if (content) {
-                      setContent({
-                        ...content,
-                        hero: {
-                          ...content.hero,
-                          video: {
-                            ...content.hero.video,
-                            content: ''
-                          }
-                        }
-                      });
-                    }
-                    toast.success('Video removed');
-                  }}
-                  className="ml-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                  disabled={loading}
-                >
-                  Remove Video
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-        
-        {content && activeSection === 'about' && (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-xl font-semibold mb-2">About Title</h2>
-              <input
-                type="text"
-                value={content.about.title.content}
-                onChange={(e) => handleTextChange('about', 'title', e.target.value)}
-                className="w-full p-2 border rounded"
-              />
-              <button
-                onClick={() => handleSave('about', 'title')}
-                className="mt-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                disabled={loading}
-              >
-                Save
-              </button>
-            </div>
-            
-            <div>
-              <h2 className="text-xl font-semibold mb-2">About Description</h2>
-              <textarea
-                value={content.about.description.content}
-                onChange={(e) => handleTextChange('about', 'description', e.target.value)}
-                className="w-full p-2 border rounded h-40"
-              />
-              <button
-                onClick={() => handleSave('about', 'description')}
-                className="mt-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                disabled={loading}
-              >
-                Save
-              </button>
-            </div>
-            
-            <div>
-              <h2 className="text-xl font-semibold mb-2">About Image</h2>
-              {content.about.image.content && (
-                <div className="mb-4">
-                  <p className="text-sm text-gray-500 mb-2">Current image:</p>
-                  <img
-                    src={content.about.image.content}
-                    alt="About section"
-                    className="h-40 object-cover rounded mb-2"
-                  />
-                </div>
-              )}
-              <input
-                type="file"
-                className="hidden"
-                accept="image/*"
-                id="about-image-input"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    handleUploadFile('about', 'image', e.target.files[0]);
-                  }
-                }}
-              />
-              <button
-                onClick={() => document.getElementById('about-image-input')?.click()}
-                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                disabled={loading}
-              >
-                Upload New Image
-              </button>
-            </div>
-          </div>
-        )}
-        
-        {content && activeSection === 'motto' && (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-xl font-semibold mb-2">Motto Title</h2>
-              <input
-                type="text"
-                value={content.motto.title.content}
-                onChange={(e) => handleTextChange('motto', 'title', e.target.value)}
-                className="w-full p-2 border rounded"
-              />
-              <button
-                onClick={() => handleSave('motto', 'title')}
-                className="mt-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                disabled={loading}
-              >
-                Save
-              </button>
-            </div>
-            
-            <div>
-              <h2 className="text-xl font-semibold mb-2">Motto Description</h2>
-              <textarea
-                value={content.motto.description.content}
-                onChange={(e) => handleTextChange('motto', 'description', e.target.value)}
-                className="w-full p-2 border rounded h-40"
-              />
-              <button
-                onClick={() => handleSave('motto', 'description')}
-                className="mt-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                disabled={loading}
-              >
-                Save
-              </button>
-            </div>
-            
-            <div>
-              <h2 className="text-xl font-semibold mb-2">Motto Image</h2>
-              {content.motto.image.content && (
-                <div className="mb-4">
-                  <p className="text-sm text-gray-500 mb-2">Current image:</p>
-                  <img
-                    src={content.motto.image.content}
-                    alt="Motto section"
-                    className="h-40 object-cover rounded mb-2"
-                  />
-                </div>
-              )}
-              <input
-                type="file"
-                className="hidden"
-                accept="image/*"
-                id="motto-image-input"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    handleUploadFile('motto', 'image', e.target.files[0]);
-                  }
-                }}
-              />
-              <button
-                onClick={() => document.getElementById('motto-image-input')?.click()}
-                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                disabled={loading}
-              >
-                Upload New Image
-              </button>
-            </div>
-          </div>
-        )}
-        
-        {content && activeSection === 'logos' && (
-          <div className="space-y-8">
-            <div className="border-b pb-6">
-              <h2 className="text-xl font-semibold mb-4">Navigation Logo</h2>
-              <div className="bg-gray-50 p-4 rounded-lg mb-4">
-                <p className="text-gray-600 mb-2">This logo appears in the navigation bar at the top of every page.</p>
-                <p className="text-gray-600 mb-2">Recommended size: 200px x 60px</p>
-              </div>
-              
-              {content.navigation?.logo?.content ? (
-                <div className="mb-4">
-                  <p className="text-sm text-gray-500 mb-2">Current logo:</p>
-                  <div className="bg-gray-100 p-4 rounded-lg inline-block">
-                    <img
-                      src={content.navigation.logo.content}
-                      alt="Navigation logo"
-                      className="h-16 object-contain"
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="mb-4">
-                  <p className="text-sm text-gray-500">No navigation logo set</p>
-                </div>
-              )}
-              
-              <input
-                type="file"
-                className="hidden"
-                accept="image/*"
-                id="nav-logo-input"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    handleUploadFile('navigation', 'logo', e.target.files[0]);
-                  }
-                }}
-              />
-              <button
-                onClick={() => document.getElementById('nav-logo-input')?.click()}
-                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                disabled={loading}
-              >
-                Upload Navigation Logo
-              </button>
-            </div>
-            
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Footer Logo</h2>
-              <div className="bg-gray-50 p-4 rounded-lg mb-4">
-                <p className="text-gray-600 mb-2">This logo appears in the footer at the bottom of every page.</p>
-                <p className="text-gray-600 mb-2">Recommended size: 200px x 60px</p>
-              </div>
-              
-              {content.footer?.logo?.content ? (
-                <div className="mb-4">
-                  <p className="text-sm text-gray-500 mb-2">Current logo:</p>
-                  <div className="bg-gray-800 p-4 rounded-lg inline-block">
-                    <img
-                      src={content.footer.logo.content}
-                      alt="Footer logo"
-                      className="h-16 object-contain"
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="mb-4">
-                  <p className="text-sm text-gray-500">No footer logo set</p>
-                </div>
-              )}
-              
-              <input
-                type="file"
-                className="hidden"
-                accept="image/*"
-                id="footer-logo-input"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    handleUploadFile('footer', 'logo', e.target.files[0]);
-                  }
-                }}
-              />
-              <button
-                onClick={() => document.getElementById('footer-logo-input')?.click()}
-                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                disabled={loading}
-              >
-                Upload Footer Logo
-              </button>
-            </div>
-          </div>
-        )}
-        
-        <div className="mt-12 pt-6 border-t">
-          <Link
-            href="/admin"
-            className="text-indigo-600 hover:text-indigo-800"
-          >
-            ← Back to Admin Dashboard
-          </Link>
-          
-          <Link
-            href="/"
-            className="ml-6 text-gray-600 hover:text-gray-800"
-            target="_blank"
-          >
-            View Live Site →
-          </Link>
-        </div>
+  if (error) {
+    return (
+      <div className="container mx-auto p-8">
+        <h1 className="text-3xl font-bold text-red-600 mb-4">Error</h1>
+        <p className="mb-4">{error}</p>
+        <Link href="/simple-admin" className="text-blue-500 hover:underline">
+          Return to Admin Dashboard
+        </Link>
       </div>
+    );
+  }
+  
+  // Group content by section
+  const contentBySection: {[key: string]: any[]} = {};
+  content.forEach(item => {
+    if (!contentBySection[item.section]) {
+      contentBySection[item.section] = [];
+    }
+    contentBySection[item.section].push(item);
+  });
+  
+  return (
+    <div className="container mx-auto p-8">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Site Content Management</h1>
+        <Link 
+          href="/simple-admin" 
+          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition"
+        >
+          Back to Dashboard
+        </Link>
+      </div>
+      
+      {Object.keys(contentBySection).length === 0 ? (
+        <div className="bg-white rounded-lg shadow p-8 text-center">
+          <p className="text-lg text-gray-500">No content found.</p>
+        </div>
+      ) : (
+        <div className="space-y-8">
+          {Object.entries(contentBySection).map(([section, items]) => (
+            <div key={section} className="bg-white rounded-lg shadow overflow-hidden">
+              <div className="bg-gray-50 px-6 py-4 border-b">
+                <h2 className="text-xl font-semibold capitalize">{section} Section</h2>
+              </div>
+              
+              <div className="divide-y">
+                {items.map(item => (
+                  <div key={item.id} className="p-6">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="text-lg font-medium capitalize">{item.field}</h3>
+                      {editingItem?.id === item.id ? (
+                        <div className="space-x-2">
+                          <button 
+                            onClick={saveEdit}
+                            className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition"
+                          >
+                            Save
+                          </button>
+                          <button 
+                            onClick={cancelEdit}
+                            className="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 transition"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <button 
+                          onClick={() => startEdit(item)}
+                          className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition"
+                        >
+                          Edit
+                        </button>
+                      )}
+                    </div>
+                    
+                    {editingItem?.id === item.id ? (
+                      <textarea
+                        value={updatedContent}
+                        onChange={e => setUpdatedContent(e.target.value)}
+                        className="w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        rows={5}
+                      />
+                    ) : (
+                      <div className="bg-gray-50 p-4 rounded-md overflow-auto">
+                        <pre className="whitespace-pre-wrap">{item.content}</pre>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
-  )
+  );
 }

@@ -105,6 +105,13 @@ NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_api_key_here
    supabase/artists-schema.sql (artist management)
    ```
    
+   - **Run migrations:** You can also run the latest database migrations with:
+   ```bash
+   npm run migrate
+   ```
+   
+   This will apply any updates to the database schema in the `supabase/migrations` directory.
+   
    - **Set up site content:** Run this SQL in your Supabase SQL editor:
    ```sql
    -- Create a site_content table to store configurable content
