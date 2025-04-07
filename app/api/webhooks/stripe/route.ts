@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
-import { createClient } from '@/lib/supabase/server'
+import { createServerClient } from '@supabase/ssr'
 import Stripe from 'stripe'
 
 // Initialize the Stripe client with your secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
-  apiVersion: '2023-10-16',
+  apiVersion: '2022-11-15',
 })
 
 // This is your Stripe CLI webhook secret for testing your endpoint locally
@@ -58,13 +58,18 @@ export async function POST(request: Request) {
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
         const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
         
-        // Create a supabase client with the service role key
-        const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-          auth: {
-            autoRefreshToken: false,
-            persistSession: false
+        // Create a supabase admin client with the service role key for webhook operations
+        const supabase = createServerClient(
+          supabaseUrl,
+          supabaseServiceKey,
+          {
+            cookies: {
+              get: () => undefined,
+              set: () => {},
+              remove: () => {}
+            }
           }
-        })
+        )
         
         // Try to find the user ID based on the email
         let userId = null
@@ -89,6 +94,7 @@ export async function POST(request: Request) {
             stripe_session_id: session.id,
             customer_email: session.customer_details?.email,
             customer_name: session.customer_details?.name,
+            // Store the amount in dollars (Stripe sends cents)
             amount_total: session.amount_total ? session.amount_total / 100 : 0,
             status: 'completed',
             quantity: parseInt(session.metadata?.quantity || '1'),

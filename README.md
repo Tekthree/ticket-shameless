@@ -11,6 +11,8 @@ Ticket Shameless is a full-stack web application built with Next.js and Supabase
 ### Public Features
 
 - **Event Browsing & Discovery**: Users can browse upcoming events, view details, and purchase tickets.
+- **Ticket Purchasing**: Secure checkout process with Stripe integration for payment processing.
+- **Ticket Management**: Digital tickets with QR codes for event entry.
 - **User Accounts**: Personalized accounts with ticket purchase history and profile management.
 - **Responsive Design**: Fully responsive layout that works on mobile, tablet, and desktop devices.
 - **Dark/Light Mode**: Built-in theme toggle for user preference.
@@ -27,6 +29,7 @@ Ticket Shameless is a full-stack web application built with Next.js and Supabase
 
 - **Frontend**: Next.js, React, Tailwind CSS, shadcn/ui
 - **Authentication & Backend**: Supabase (Auth, Database, Storage)
+- **Payment Processing**: Stripe API with webhook integration
 - **Styling**: Tailwind CSS with custom theme support
 - **Icons**: Lucide React icons
 - **State Management**: React context and Supabase realtime subscriptions
@@ -74,7 +77,17 @@ yarn install
 ```bash
 cp .env.example .env.local
 ```
-Then edit `.env.local` with your Supabase credentials.
+Then edit `.env.local` with your Supabase and Stripe credentials:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+
+STRIPE_SECRET_KEY=your-stripe-secret-key
+STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
 
 4. Apply database migrations
 ```bash
@@ -120,6 +133,25 @@ ticket-shameless/
 ```
 
 ## Features in Detail
+
+### Ticket Purchasing System
+
+The application includes a comprehensive ticket purchasing system:
+- Secure checkout process using Stripe
+- Real-time ticket inventory management
+- Automatic ticket count updates when purchases are completed
+- Digital tickets with QR codes for event entry
+- Ticket history in user profiles
+- Email confirmations for purchases
+
+### Stripe Integration
+
+Payment processing is handled through Stripe:
+- Secure checkout sessions for ticket purchases
+- Webhook handling for purchase confirmations
+- Automatic inventory updates on successful purchases
+- Support for multiple ticket quantities
+- Order history tracking
 
 ### Artist Profiles
 
@@ -188,7 +220,27 @@ CREATE TABLE IF NOT EXISTS events (
   slug TEXT NOT NULL UNIQUE,
   description TEXT,
   date TIMESTAMP WITH TIME ZONE NOT NULL,
+  price NUMERIC NOT NULL,
+  tickets_total INTEGER NOT NULL,
+  tickets_remaining INTEGER NOT NULL,
+  sold_out BOOLEAN DEFAULT FALSE,
   -- Additional fields omitted for brevity
+);
+```
+
+#### Orders Table
+```sql
+CREATE TABLE IF NOT EXISTS orders (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  event_id UUID REFERENCES events(id) ON DELETE SET NULL,
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  stripe_session_id TEXT,
+  customer_email TEXT,
+  customer_name TEXT,
+  amount_total NUMERIC NOT NULL,
+  quantity INTEGER NOT NULL DEFAULT 1,
+  status TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 ```
 

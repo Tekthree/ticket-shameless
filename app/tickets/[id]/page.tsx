@@ -242,7 +242,7 @@ export default function TicketPage() {
                   )}
                   <div className="flex justify-between font-bold mt-4 pt-2 border-t border-gray-200">
                     <p>Total</p>
-                    <p>${(ticket.amount_total / 100).toFixed(2)}</p>
+                    <p>${ticket.amount_total.toFixed(2)}</p>
                   </div>
                 </div>
               </div>

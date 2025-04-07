@@ -188,7 +188,7 @@ export default function TicketHistory() {
                     </div>
                     <div>
                       <p className="text-sm text-gray-500 dark:text-gray-400">Total</p>
-                      <p>${(ticket.amount_total / 100).toFixed(2)}</p>
+                      <p>${ticket.amount_total.toFixed(2)}</p>
                     </div>
                   </div>
                 </CardContent>
