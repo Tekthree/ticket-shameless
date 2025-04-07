@@ -27,7 +27,7 @@ export default function ArtistsPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [newArtist, setNewArtist] = useState({ name: '', image: '', bio: '' });
+  const [newArtist, setNewArtist] = useState({ name: '', image: '', bio: '', mix_url: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const supabase = createClient();
@@ -92,7 +92,7 @@ export default function ArtistsPage() {
       if (error) throw error;
       
       // Reset form and close dialog
-      setNewArtist({ name: '', image: '', bio: '' });
+      setNewArtist({ name: '', image: '', bio: '', mix_url: '' });
       setIsAddDialogOpen(false);
       
       // Add the new artist to the list
@@ -202,6 +202,19 @@ export default function ArtistsPage() {
                       rows={4}
                     />
                   </div>
+                  
+                  <div className="grid gap-2">
+                    <Label htmlFor="mix_url">Mix URL</Label>
+                    <Input
+                      id="mix_url"
+                      value={newArtist.mix_url}
+                      onChange={e => setNewArtist({...newArtist, mix_url: e.target.value})}
+                      placeholder="https://soundcloud.com/artist/mix"
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      SoundCloud, Mixcloud or other embeddable audio link
+                    </p>
+                  </div>
                 </div>
                 
                 <DialogFooter>
@@ -291,6 +304,13 @@ export default function ArtistsPage() {
                   <p className="text-muted-foreground text-sm line-clamp-3">{artist.bio}</p>
                 ) : (
                   <p className="text-muted-foreground text-sm italic">No bio provided</p>
+                )}
+                
+                {artist.mix_url && (
+                  <div className="mt-2 flex items-center">
+                    <Icons.music className="h-4 w-4 mr-2 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">Mix available</span>
+                  </div>
                 )}
                 <div className="flex justify-end mt-4">
                   <Button asChild size="sm" variant="outline">

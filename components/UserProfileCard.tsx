@@ -66,12 +66,20 @@ export default function UserProfileCard() {
   // Guest user view (not logged in)
   if (!profile) {
     return (
-      <Button asChild variant="ghost" className="text-white hover:text-indigo-300">
-        <Link href="/auth/enhanced-login">
-          <Icons.logIn className="mr-2 h-5 w-5" />
-          Login
-        </Link>
-      </Button>
+      <div className="flex items-center space-x-2">
+        <Button asChild variant="ghost" className="text-white hover:text-indigo-300">
+          <Link href="#contact">
+            <Icons.mail className="mr-2 h-5 w-5" />
+            Contact
+          </Link>
+        </Button>
+        <Button asChild variant="ghost" className="text-white hover:text-indigo-300">
+          <Link href="/auth/enhanced-login">
+            <Icons.logIn className="mr-2 h-5 w-5" />
+            Login
+          </Link>
+        </Button>
+      </div>
     );
   }
   
@@ -112,6 +120,13 @@ export default function UserProfileCard() {
           <Link href="/profile/tickets" className="cursor-pointer">
             <Icons.ticket className="mr-2 h-4 w-4" />
             <span>My Tickets</span>
+          </Link>
+        </DropdownMenuItem>
+        
+        <DropdownMenuItem asChild>
+          <Link href="#contact" className="cursor-pointer">
+            <Icons.mail className="mr-2 h-4 w-4" />
+            <span>Contact Us</span>
           </Link>
         </DropdownMenuItem>
         

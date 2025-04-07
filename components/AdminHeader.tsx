@@ -57,6 +57,13 @@ export default function AdminHeader() {
                 <Icons.fileText className="mr-2 h-4 w-4" />
                 Site Content
               </NavLink>
+              <NavLink 
+                href="/admin/users" 
+                isActive={pathname.startsWith('/admin/users')}
+              >
+                <Icons.users className="mr-2 h-4 w-4" />
+                Users
+              </NavLink>
             </nav>
           </div>
           
@@ -117,6 +124,14 @@ export default function AdminHeader() {
                   >
                     <Icons.fileText className="mr-2 h-5 w-5" />
                     Site Content
+                  </MobileNavLink>
+                  <MobileNavLink 
+                    href="/admin/users" 
+                    isActive={pathname.startsWith('/admin/users')} 
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Icons.users className="mr-2 h-5 w-5" />
+                    Users
                   </MobileNavLink>
                   
                   <div className="pt-4 mt-4 border-t flex flex-col space-y-2">

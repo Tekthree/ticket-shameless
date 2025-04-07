@@ -62,10 +62,6 @@ export default function Navbar() {
           </Link>
           
           <div className="hidden md:flex space-x-8 items-center">
-            <NavLink href="/">
-              <Icons.home className="mr-2 h-5 w-5" />
-              Home
-            </NavLink>
             <NavLink href="/events">
               <Icons.calendar className="mr-2 h-5 w-5" />
               Events
@@ -74,10 +70,6 @@ export default function Navbar() {
             <NavLink href="/#about">
               <Icons.info className="mr-2 h-5 w-5" />
               About
-            </NavLink>
-            <NavLink href="#contact">
-              <Icons.mail className="mr-2 h-5 w-5" />
-              Contact
             </NavLink>
             <UserProfileCard />
           </div>
@@ -98,10 +90,6 @@ export default function Navbar() {
         
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4 space-y-3">
-            <MobileNavLink href="/" onClick={() => setIsMenuOpen(false)}>
-              <Icons.home className="mr-2 h-5 w-5" />
-              Home
-            </MobileNavLink>
             <MobileNavLink href="/events" onClick={() => setIsMenuOpen(false)}>
               <Icons.calendar className="mr-2 h-5 w-5" />
               Events
@@ -109,10 +97,6 @@ export default function Navbar() {
             <MobileNavLink href="/#about" onClick={() => setIsMenuOpen(false)}>
               <Icons.info className="mr-2 h-5 w-5" />
               About
-            </MobileNavLink>
-            <MobileNavLink href="#contact" onClick={() => setIsMenuOpen(false)}>
-              <Icons.mail className="mr-2 h-5 w-5" />
-              Contact
             </MobileNavLink>
             {user ? (
               <>

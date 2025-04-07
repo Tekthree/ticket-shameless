@@ -27,7 +27,7 @@ export default function SimpleAuth() {
       }
       
       toast.success('Signed in successfully')
-      router.push('/simple-admin')
+      router.push('/admin')
       router.refresh()
     } catch (error) {
       console.error('Login error:', error)

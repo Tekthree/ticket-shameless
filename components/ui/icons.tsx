@@ -43,6 +43,8 @@ import {
   Edit,
   Upload,
   Video,
+  Save,
+  Play,
   type Icon as LucideIcon,
 } from "lucide-react"
 
@@ -92,4 +94,6 @@ export const Icons = {
   edit: Edit,
   upload: Upload,
   video: Video,
+  save: Save,
+  play: Play,
 }

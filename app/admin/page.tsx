@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -19,51 +20,79 @@ import { ActionCard } from '@/components/admin/ActionCard'
 import { StatCard } from '@/components/admin/StatCard'
 
 export default function AdminDashboard() {
-  // Sample data - in a real app, this would come from an API or database
-  const events = [
-    {
-      id: '1',
-      title: 'Memorial Day Hijinks',
-      slug: 'memorial-day-hijinks',
-      date: 'Sunday, April 27, 2025',
-      time: '18:53',
-      venue: 'Monkey Loft',
-      price: 35.00,
-      ticketsAvailable: 200,
-      ticketsTotal: 200,
-      status: 'Available'
-    },
-    {
-      id: '2',
-      title: 'Deck\'d Out',
-      slug: 'deckd-out',
-      date: 'Tuesday, May 6, 2025',
-      time: '21:49',
-      venue: 'Monkey Loft',
-      price: 20.00,
-      ticketsAvailable: 200,
-      ticketsTotal: 200,
-      status: 'Available'
-    },
-    {
-      id: '3',
-      title: 'bum the bum',
-      slug: 'bum-the-bum',
-      date: 'Thursday, May 29, 2025',
-      time: '10:22',
-      venue: 'Monkey Loft',
-      price: 10.00,
-      ticketsAvailable: 1,
-      ticketsTotal: 350,
-      status: 'Available'
-    },
-  ]
+  const [events, setEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const supabase = createClient();
+  
+  useEffect(() => {
+    async function loadEvents() {
+      try {
+        // Check authentication
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session) {
+          setError('You need to be logged in');
+          return;
+        }
+        
+        // Load all events
+        const { data: eventsData, error: eventsError } = await supabase
+          .from('events')
+          .select('*')
+          .order('date', { ascending: true })
+          .limit(6); // Get up to 6 events for the dashboard
+          
+        if (eventsError) {
+          console.error('Error loading events:', eventsError);
+          setError('Failed to load events');
+          return;
+        }
+        
+        console.log('Dashboard events loaded:', eventsData?.length || 0);
+        
+        // Format the events for display
+        const formattedEvents = eventsData?.map(event => {
+          // Format date for display
+          const eventDate = new Date(event.date);
+          const formattedDate = eventDate.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
+          
+          return {
+            id: event.id,
+            title: event.title,
+            slug: event.slug,
+            date: formattedDate,
+            time: event.time,
+            venue: event.venue,
+            price: event.price,
+            ticketsAvailable: event.tickets_remaining,
+            ticketsTotal: event.tickets_total,
+            status: event.tickets_remaining > 0 ? 'Available' : 'Sold Out'
+          };
+        }) || [];
+        
+        setEvents(formattedEvents);
+      } catch (e) {
+        console.error('Unhandled error:', e);
+        setError('An unexpected error occurred');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    loadEvents();
+  }, []);
 
   const stats = {
-    totalEvents: 6,
-    upcomingEvents: 6,
-    activeTickets: '-',
-    totalSales: '-'
+    totalEvents: events.length,
+    upcomingEvents: events.length,
+    activeTickets: events.reduce((total, event) => total + event.ticketsAvailable, 0),
+    totalSales: events.reduce((total, event) => total + (event.ticketsTotal - event.ticketsAvailable), 0)
   }
 
   const [searchTerm, setSearchTerm] = useState('')
@@ -164,6 +193,25 @@ export default function AdminDashboard() {
         </div>
         
         <Card>
+          {isLoading ? (
+            <div className="p-8 text-center">
+              <div className="animate-spin mx-auto h-8 w-8 border-4 border-primary border-t-transparent rounded-full mb-4"></div>
+              <p>Loading events...</p>
+            </div>
+          ) : error ? (
+            <div className="p-8 text-center text-destructive">
+              <Icons.alertCircle className="mx-auto h-8 w-8 mb-4" />
+              <p>{error}</p>
+            </div>
+          ) : events.length === 0 ? (
+            <div className="p-8 text-center">
+              <Icons.calendar className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+              <p className="text-lg text-muted-foreground">No events found.</p>
+              <Button asChild variant="shameless" className="mt-4">
+                <Link href="/admin/events/new">Create your first event</Link>
+              </Button>
+            </div>
+          ) : (
           <Table>
             <TableHeader>
               <TableRow>
@@ -222,6 +270,15 @@ export default function AdminDashboard() {
               ))}
             </TableBody>
           </Table>
+          )}
+          <div className="p-4 text-center border-t">
+            <Button asChild variant="outline">
+              <Link href="/admin/events">
+                View All Events
+                <Icons.arrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </Card>
       </div>
     </div>

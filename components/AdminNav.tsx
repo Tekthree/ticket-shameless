@@ -30,6 +30,12 @@ export default function AdminNav() {
       active: pathname.startsWith('/admin/artists')
     },
     {
+      title: "Users",
+      href: "/admin/users",
+      icon: <Icons.users className="h-4 w-4 mr-2" />,
+      active: pathname.startsWith('/admin/users')
+    },
+    {
       title: "Site Content",
       href: "/admin/content",
       icon: <Icons.fileText className="h-4 w-4 mr-2" />,

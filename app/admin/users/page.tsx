@@ -148,7 +148,7 @@ export default function UserManagementPage() {
       <div className="container mx-auto p-8">
         <h1 className="text-3xl font-bold text-red-600 mb-4">Error</h1>
         <p className="mb-4">{error}</p>
-        <Link href="/simple-admin" className="text-blue-500 hover:underline">
+        <Link href="/admin" className="text-blue-500 hover:underline">
           Return to Admin Dashboard
         </Link>
       </div>
@@ -160,7 +160,7 @@ export default function UserManagementPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">User Management</h1>
         <Link 
-          href="/simple-admin" 
+          href="/admin" 
           className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition"
         >
           Back to Dashboard

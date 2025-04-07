@@ -37,7 +37,7 @@ export default function EventsManagementPage() {
         
         console.log('User authenticated:', session.user.email);
         
-        // Load all events
+        // Load ALL events
         const { data: eventsData, error: eventsError } = await supabase
           .from('events')
           .select('*')
@@ -49,7 +49,10 @@ export default function EventsManagementPage() {
           return;
         }
         
-        console.log('Events loaded:', eventsData?.length || 0);
+        console.log('Total events in database:', eventsData?.length || 0);
+        console.log('Full events data:', eventsData);
+        
+        // Store all events
         setEvents(eventsData || []);
         
       } catch (e) {
@@ -74,10 +77,21 @@ export default function EventsManagementPage() {
   };
   
   // Filter events based on search term
-  const filteredEvents = events.filter(event => 
-    event.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    event.venue?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredEvents = events.filter(event => {
+    if (searchTerm.trim() === '') {
+      return true; // Show all events when no search term
+    }
+    
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      event.title?.toLowerCase().includes(searchLower) ||
+      event.venue?.toLowerCase().includes(searchLower) ||
+      (event.date && new Date(event.date).toLocaleDateString().includes(searchLower)) ||
+      (event.id && event.id.toString().includes(searchLower))
+    );
+  });
+  
+  console.log('Filtered events:', filteredEvents.length);
   
   if (isLoading) {
     return (
@@ -126,13 +140,30 @@ export default function EventsManagementPage() {
       </div>
       
       <div className="mb-4">
-        <Input
-          type="search"
-          placeholder="Search events..."
-          className="max-w-md"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="flex items-center gap-2 max-w-md">
+          <Input
+            type="search"
+            placeholder="Search by title, venue, date or ID..."
+            className="w-full"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          {searchTerm && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setSearchTerm('')}
+              className="h-10 w-10"
+            >
+              <Icons.close className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+        <p className="text-sm text-muted-foreground mt-1">
+          {searchTerm ? 
+            `Found ${filteredEvents.length} of ${events.length} total events` : 
+            `Showing all ${events.length} events`}
+        </p>
       </div>
       
       <Card>
@@ -140,7 +171,7 @@ export default function EventsManagementPage() {
           <div className="p-8 text-center">
             <Icons.calendar className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-lg text-muted-foreground">No events found.</p>
-            {events.length > 0 && searchTerm ? (
+            {events.length > 0 && searchTerm !== '' ? (
               <p className="mt-2 text-sm text-muted-foreground">
                 Try adjusting your search.
               </p>
