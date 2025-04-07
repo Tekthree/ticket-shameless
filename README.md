@@ -18,7 +18,7 @@ Ticket Shameless is a full-stack web application built with Next.js and Supabase
 ### Admin Dashboard
 
 - **Event Management**: Create, edit, and manage events including venue, date, time, ticket pricing, and capacity.
-- **Artist Management**: Manage artist profiles, bookings, and event assignments.
+- **Artist Management**: Manage artist profiles including bios, images, and music links. Preview artists' mixes directly in the admin interface.
 - **Content Management**: Edit site content including landing pages and promotional materials.
 - **User Management**: Manage user accounts, roles, and permissions.
 - **Sales Reports**: View and export ticket sales data and analytics.
@@ -76,7 +76,12 @@ cp .env.example .env.local
 ```
 Then edit `.env.local` with your Supabase credentials.
 
-4. Run the development server
+4. Apply database migrations
+```bash
+npm run migrate
+```
+
+5. Run the development server
 ```bash
 npm run dev
 # or
@@ -116,6 +121,15 @@ ticket-shameless/
 
 ## Features in Detail
 
+### Artist Profiles
+
+The application includes a comprehensive artist management system with the following features:
+- Detailed artist profiles with biographical information
+- Links to music mixes (SoundCloud, Mixcloud, etc.)
+- Embedded mix previewer for quick audio assessment
+- Image management for artist photos
+- Connection to events through the event_artists junction table
+
 ### Theme Toggle
 
 The application supports both light and dark modes, with a convenient toggle in the navigation bar. The theme system is built on next-themes and persists user preferences across sessions.
@@ -136,6 +150,54 @@ The application supports multiple user roles:
 - **Box Office**: Can view and manage ticket sales
 - **Artist**: Can view own events and information
 - **User**: Basic access to ticket purchases and profile
+
+## Database Structure
+
+### Key Tables
+
+#### Artists Table
+```sql
+CREATE TABLE IF NOT EXISTS artists (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  image TEXT,
+  bio TEXT,
+  mix_url TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+```
+
+#### Event Artists Junction Table
+```sql
+CREATE TABLE IF NOT EXISTS event_artists (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  event_id UUID REFERENCES events(id) ON DELETE CASCADE,
+  artist_id UUID REFERENCES artists(id) ON DELETE CASCADE,
+  performance_time TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(event_id, artist_id)
+);
+```
+
+#### Events Table
+```sql
+-- Main structure, see schema.sql for full details
+CREATE TABLE IF NOT EXISTS events (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  title TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,
+  description TEXT,
+  date TIMESTAMP WITH TIME ZONE NOT NULL,
+  -- Additional fields omitted for brevity
+);
+```
+
+## Migrations
+
+The application includes a migration system to manage database schema changes. Migrations are located in the `supabase/migrations` directory and can be applied using the `npm run migrate` command.
+
+Recent migrations include:
+- `20250406_update_artists.sql`: Added bio and mix_url fields to the artists table
 
 ## License
 

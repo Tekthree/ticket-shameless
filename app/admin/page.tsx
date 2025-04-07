@@ -21,6 +21,12 @@ import { StatCard } from '@/components/admin/StatCard'
 
 export default function AdminDashboard() {
   const [events, setEvents] = useState([]);
+  const [stats, setStats] = useState({
+    totalEvents: 0,
+    upcomingEvents: 0,
+    activeTickets: 0,
+    totalSales: 0
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const supabase = createClient();
@@ -36,20 +42,18 @@ export default function AdminDashboard() {
           return;
         }
         
-        // Load all events
+        // Load events for display
         const { data: eventsData, error: eventsError } = await supabase
           .from('events')
           .select('*')
           .order('date', { ascending: true })
-          .limit(6); // Get up to 6 events for the dashboard
+          .limit(6); // Get up to 6 events for the dashboard display
           
         if (eventsError) {
           console.error('Error loading events:', eventsError);
           setError('Failed to load events');
           return;
         }
-        
-        console.log('Dashboard events loaded:', eventsData?.length || 0);
         
         // Format the events for display
         const formattedEvents = eventsData?.map(event => {
@@ -77,6 +81,10 @@ export default function AdminDashboard() {
         }) || [];
         
         setEvents(formattedEvents);
+        
+        // Get accurate statistics counts
+        await loadStats();
+        
       } catch (e) {
         console.error('Unhandled error:', e);
         setError('An unexpected error occurred');
@@ -85,15 +93,68 @@ export default function AdminDashboard() {
       }
     }
     
+    async function loadStats() {
+      try {
+        // Get total events count
+        const { count: totalCount, error: totalError } = await supabase
+          .from('events')
+          .select('*', { count: 'exact', head: true });
+          
+        if (totalError) {
+          console.error('Error counting events:', totalError);
+          return;
+        }
+        
+        // Get upcoming events count (events with dates in the future)
+        const { count: upcomingCount, error: upcomingError } = await supabase
+          .from('events')
+          .select('*', { count: 'exact', head: true })
+          .gte('date', new Date().toISOString());
+          
+        if (upcomingError) {
+          console.error('Error counting upcoming events:', upcomingError);
+          return;
+        }
+        
+        // Get ticket stats
+        const { data: ticketData, error: ticketError } = await supabase
+          .from('events')
+          .select('tickets_remaining, tickets_total');
+          
+        if (ticketError) {
+          console.error('Error getting ticket stats:', ticketError);
+          return;
+        }
+        
+        // Calculate ticket statistics
+        const activeTickets = ticketData?.reduce((total, event) => 
+          total + (event.tickets_remaining || 0), 0) || 0;
+          
+        const totalSales = ticketData?.reduce((total, event) => 
+          total + ((event.tickets_total || 0) - (event.tickets_remaining || 0)), 0) || 0;
+        
+        // Update stats state
+        setStats({
+          totalEvents: totalCount || 0,
+          upcomingEvents: upcomingCount || 0,
+          activeTickets,
+          totalSales
+        });
+        
+        console.log('Stats loaded:', { 
+          totalEvents: totalCount, 
+          upcomingEvents: upcomingCount,
+          activeTickets,
+          totalSales
+        });
+        
+      } catch (e) {
+        console.error('Error loading stats:', e);
+      }
+    }
+    
     loadEvents();
   }, []);
-
-  const stats = {
-    totalEvents: events.length,
-    upcomingEvents: events.length,
-    activeTickets: events.reduce((total, event) => total + event.ticketsAvailable, 0),
-    totalSales: events.reduce((total, event) => total + (event.ticketsTotal - event.ticketsAvailable), 0)
-  }
 
   const [searchTerm, setSearchTerm] = useState('')
   
