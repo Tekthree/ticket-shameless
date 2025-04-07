@@ -5,6 +5,8 @@ export type Artist = {
   name: string
   image?: string
   time?: string
+  bio?: string
+  mix_url?: string
 }
 
 export type Event = {
@@ -49,7 +51,9 @@ const mockEvents: Event[] = [
       {
         id: '101',
         name: 'DJ Shameless',
-        time: '20:00 - 22:00'
+        time: '20:00 - 22:00',
+        bio: 'Founder of Shameless Productions and Seattle underground dance music legend.',
+        mix_url: 'https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3'
       },
       {
         id: '102',
@@ -79,7 +83,9 @@ const mockEvents: Event[] = [
       {
         id: '201',
         name: 'Deep State',
-        time: '21:00 - 22:30'
+        time: '21:00 - 22:30',
+        bio: 'Deep State brings the underground techno vibes with dark, hypnotic beats.',
+        mix_url: 'https://soundcloud.com/deepstate/deep-techno-mix-2025'
       },
       {
         id: '202',
@@ -127,7 +133,7 @@ const mockEvents: Event[] = [
 ];
 
 // Fetch lineup for an event
-async function getEventLineup(supabase, eventId: string): Promise<Artist[]> {
+async function getEventLineup(supabase: any, eventId: string): Promise<Artist[]> {
   const { data, error } = await supabase
     .from('event_artists')
     .select(`
@@ -136,7 +142,9 @@ async function getEventLineup(supabase, eventId: string): Promise<Artist[]> {
       artists:artist_id (
         id,
         name,
-        image
+        image,
+        bio,
+        mix_url
       )
     `)
     .eq('event_id', eventId);
@@ -147,16 +155,18 @@ async function getEventLineup(supabase, eventId: string): Promise<Artist[]> {
   }
   
   // Transform the data to the expected format
-  return data.map(item => ({
+  return data.map((item: any) => ({
     id: item.artist_id,
     name: item.artists.name,
     image: item.artists.image,
-    time: item.performance_time
+    time: item.performance_time,
+    bio: item.artists.bio,
+    mix_url: item.artists.mix_url
   }));
 }
 
 // Parse the event data from Supabase into the expected format
-async function parseEventData(supabase, event: any): Promise<Event> {
+async function parseEventData(supabase: any, event: any): Promise<Event> {
   // Fetch lineup for this event
   const lineup = await getEventLineup(supabase, event.id);
   
@@ -331,7 +341,7 @@ export async function updateEvent(id: string, eventData: Partial<Event>) {
     const { lineup, ...eventDataWithoutLineup } = eventData;
     
     // Map our client-side data structure to the database column names
-    const dbData = {
+    const dbData: { [key: string]: any } = {
       title: eventDataWithoutLineup.title,
       description: eventDataWithoutLineup.description,
       date: eventDataWithoutLineup.date,

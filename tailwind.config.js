@@ -61,6 +61,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ["Inter", ...fontFamily.sans],
+        qikober: ["NCLQikober", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {

@@ -5,6 +5,8 @@ import { getEventBySlug } from '@/lib/events'
 import BuyTicketButton from '@/components/BuyTicketButton'
 import GoogleMap from '@/components/GoogleMap'
 import { formatDate } from '@/lib/utils'
+import AudioPlayer from '@/components/AudioPlayer'
+import { Music } from 'lucide-react'
 
 export async function generateMetadata({ 
   params 
@@ -58,8 +60,8 @@ export default async function EventPage({
           {/* Left Column - Event Details */}
           <div className="md:col-span-2">
             {/* Event Title & Info */}
-            <div className="mb-8">
-              <h1 className="text-4xl md:text-5xl font-bold mb-2">{event.title}</h1>
+            <div className="mb-8 event-title">
+              <h1 className="text-6xl md:text-7xl mb-4 font-qikober">{event.title}</h1>
               <div className="mb-4">
                 <p className="text-xl">{event.venue}</p>
                 <p className="text-red-600 font-medium">
@@ -130,27 +132,38 @@ export default async function EventPage({
             {/* Lineup Section */}
             <div className="mb-8">
               <h2 className="text-xl font-bold mb-4">Lineup</h2>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {event.lineup.map((artist) => (
-                  <div key={artist.id} className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gray-700 rounded-full overflow-hidden flex-shrink-0">
-                      {artist.image ? (
-                        <Image
-                          src={artist.image}
-                          alt={artist.name}
-                          width={48}
-                          height={48}
-                          className="object-cover w-full h-full"
+                  <div key={artist.id} className="relative border-b border-gray-800 py-4 last:border-b-0">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gray-900 rounded-full overflow-hidden flex-shrink-0">
+                        {artist.image ? (
+                          <Image
+                            src={artist.image}
+                            alt={artist.name}
+                            width={48}
+                            height={48}
+                            className="object-cover w-full h-full"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <span className="text-lg">{artist.name.substring(0, 1)}</span>
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-bold text-lg">{artist.name}</p>
+                        {artist.time && <p className="text-gray-400">{artist.time}</p>}
+                      </div>
+                      
+                      {artist.mix_url && (
+                        <AudioPlayer 
+                          url={artist.mix_url} 
+                          size="sm" 
+                          position="top-right"
+                          className="relative top-auto right-auto ml-auto"
                         />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <span className="text-lg">{artist.name.substring(0, 1)}</span>
-                        </div>
                       )}
-                    </div>
-                    <div>
-                      <p className="font-bold text-lg">{artist.name}</p>
-                      {artist.time && <p className="text-gray-400">{artist.time}</p>}
                     </div>
                   </div>
                 ))}

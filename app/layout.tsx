@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/toaster'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { ThemeProvider } from '@/components/theme-provider'
+import { AudioProvider } from '@/components/AudioPlayer'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,10 +23,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`min-h-screen flex flex-col ${inter.className}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Navbar />
-          <main className="flex-grow">{children}</main>
-          <Footer />
-          <Toaster />
+          <AudioProvider>
+            <Navbar />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+            <Toaster />
+          </AudioProvider>
         </ThemeProvider>
       </body>
     </html>

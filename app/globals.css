@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'NCLQikober';
+  src: url('/fonts/NCLQikober-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -77,6 +85,14 @@
     @apply bg-background text-foreground;
     color: rgb(var(--foreground-rgb));
     background: rgb(var(--background-rgb));
+  }
+  h1 {
+    font-family: 'NCLQikober', sans-serif;
+    text-transform: uppercase;
+  }
+  .hero h1, .event-title h1 {
+    font-family: 'NCLQikober', sans-serif;
+    text-transform: uppercase;
   }
 }
 

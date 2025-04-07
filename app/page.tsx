@@ -55,8 +55,8 @@ export default async function Home() {
           )}
         </div>
         
-        <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center items-center text-center text-white">
-          <h1 className="text-6xl md:text-8xl font-bold mb-6">
+        <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center items-center text-center text-white hero">
+          <h1 className="text-8xl md:text-[10rem] mb-6 font-qikober">
             {heroTitle}
           </h1>
           <p className="text-xl md:text-2xl mb-12">
