@@ -89,10 +89,12 @@
   h1 {
     font-family: 'NCLQikober', sans-serif;
     text-transform: uppercase;
+    font-weight: normal;
   }
   .hero h1, .event-title h1 {
     font-family: 'NCLQikober', sans-serif;
     text-transform: uppercase;
+    font-weight: normal;
   }
 }
 

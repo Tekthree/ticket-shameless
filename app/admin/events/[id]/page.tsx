@@ -36,7 +36,7 @@ export default async function EditEventPage({
   
   return (
     <div className="container mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-8">Edit Event: {event.title}</h1>
+      <h1 className="text-3xl mb-8 font-qikober">Edit Event: {event.title}</h1>
       
       <Card className="p-6">
         <EventForm event={event} />

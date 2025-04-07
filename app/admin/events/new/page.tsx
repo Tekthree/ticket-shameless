@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function CreateEventPage() {
   return (
     <div className="container mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-8">Create New Event</h1>
+      <h1 className="text-3xl mb-8 font-qikober">Create New Event</h1>
       
       <Card className="p-6">
         <EventForm />
