@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
 export type Role = 'admin' | 'event_manager' | 'box_office' | 'artist' | 'guest_list_manager' | 'customer';
 
 export function useUserRoles() {
+  const router = useRouter();
   const [roles, setRoles] = useState<string[]>([]);
   const [primaryRole, setPrimaryRole] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -69,6 +71,20 @@ export function useUserRoles() {
     }
     
     fetchUserRoles();
+    
+    // Watch for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
+          fetchUserRoles();
+        }
+      }
+    );
+    
+    // Clean up subscription
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
   
   return { 

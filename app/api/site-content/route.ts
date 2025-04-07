@@ -30,7 +30,8 @@ export async function GET() {
       acc[item.section][item.field] = {
         content: item.content,
         type: item.content_type,
-        id: item.id
+        id: item.id,
+        is_uploaded: item.is_uploaded || false
       };
       return acc;
     }, {});
@@ -49,7 +50,7 @@ export async function PUT(request: Request) {
   try {
     const data = await request.json();
     
-    const { section, field, content, content_type } = data;
+    const { section, field, content, content_type, is_uploaded = false, original_filename = null } = data;
     
     // Check if the item exists
     const { data: existingData, error: queryError } = await supabase
@@ -72,6 +73,8 @@ export async function PUT(request: Request) {
         .update({ 
           content, 
           content_type,
+          is_uploaded,
+          original_filename,
           updated_at: new Date().toISOString()
         })
         .eq('section', section)
@@ -87,7 +90,7 @@ export async function PUT(request: Request) {
       // Insert new item
       const { data: insertData, error: insertError } = await supabase
         .from('site_content')
-        .insert({ section, field, content, content_type })
+        .insert({ section, field, content, content_type, is_uploaded, original_filename })
         .select();
         
       if (insertError) {

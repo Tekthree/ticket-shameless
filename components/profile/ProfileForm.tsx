@@ -152,8 +152,8 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="flex flex-col md:flex-row gap-8">
         <div className="flex flex-col items-center space-y-4">
-          <Avatar className="w-24 h-24">
-            <AvatarImage src={formData.avatar_url} alt={formData.display_name} />
+          <Avatar className="w-24 h-24 relative overflow-hidden">
+            <AvatarImage src={formData.avatar_url} alt={formData.display_name} className="object-cover" />
             <AvatarFallback>{formData.display_name?.[0] || profile?.email?.[0] || '?'}</AvatarFallback>
           </Avatar>
           

@@ -4,6 +4,8 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  ChevronUp,
+  ChevronDown,
   Command,
   CreditCard,
   File,
@@ -39,6 +41,8 @@ import {
   Shield,
   Eye,
   Edit,
+  Upload,
+  Video,
   type Icon as LucideIcon,
 } from "lucide-react"
 
@@ -50,6 +54,8 @@ export const Icons = {
   spinner: Loader2,
   chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
+  chevronUp: ChevronUp,
+  chevronDown: ChevronDown,
   trash: Trash,
   post: FileText,
   page: File,
@@ -84,4 +90,6 @@ export const Icons = {
   fileText: FileText,
   eye: Eye,
   edit: Edit,
+  upload: Upload,
+  video: Video,
 }

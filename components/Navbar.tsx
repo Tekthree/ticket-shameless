@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
-import SignOutButton from './SignOutButton';
+import UserProfileCard from './UserProfileCard';
 import { useUserRoles } from '@/hooks/useUserRoles';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -14,6 +15,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoUrl, setLogoUrl] = useState('/images/logo.png'); // Default logo
   const [user, setUser] = useState(null);
+  const router = useRouter();
   const { isAdmin, isEventManager, isBoxOffice, isArtist } = useUserRoles();
   
   useEffect(() => {
@@ -68,6 +70,7 @@ export default function Navbar() {
               <Icons.calendar className="mr-2 h-5 w-5" />
               Events
             </NavLink>
+
             <NavLink href="/#about">
               <Icons.info className="mr-2 h-5 w-5" />
               About
@@ -76,26 +79,7 @@ export default function Navbar() {
               <Icons.mail className="mr-2 h-5 w-5" />
               Contact
             </NavLink>
-            {user ? (
-              <>
-                <NavLink href="/profile">
-                  <Icons.user className="mr-2 h-5 w-5" />
-                  Profile
-                </NavLink>
-                {(isAdmin() || isEventManager() || isBoxOffice() || isArtist()) && (
-                  <NavLink href="/admin">
-                    <Icons.settings className="mr-2 h-5 w-5" />
-                    Dashboard
-                  </NavLink>
-                )}
-                <SignOutButton />
-              </>
-            ) : (
-              <NavLink href="/auth/enhanced-login">
-                <Icons.logIn className="mr-2 h-5 w-5" />
-                Login
-              </NavLink>
-            )}
+            <UserProfileCard />
           </div>
           
           <Button 
@@ -136,15 +120,37 @@ export default function Navbar() {
                   <Icons.user className="mr-2 h-5 w-5" />
                   Profile
                 </MobileNavLink>
-                {(isAdmin() || isEventManager() || isBoxOffice() || isArtist()) && (
+                <MobileNavLink href="/profile/tickets" onClick={() => setIsMenuOpen(false)}>
+                  <Icons.ticket className="mr-2 h-5 w-5" />
+                  My Tickets
+                </MobileNavLink>
+                {(isAdmin() || isEventManager() || isBoxOffice()) && (
                   <MobileNavLink href="/admin" onClick={() => setIsMenuOpen(false)}>
                     <Icons.settings className="mr-2 h-5 w-5" />
-                    Dashboard
+                    Admin Dashboard
                   </MobileNavLink>
                 )}
-                <div className="py-3 px-4">
-                  <SignOutButton />
-                </div>
+                {isArtist() && (
+                  <MobileNavLink href="/artist" onClick={() => setIsMenuOpen(false)}>
+                    <Icons.music className="mr-2 h-5 w-5" />
+                    Artist Portal
+                  </MobileNavLink>
+                )}
+                <MobileNavLink 
+                  href="#" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsMenuOpen(false);
+                    const supabase = createClient();
+                    supabase.auth.signOut().then(() => {
+                      router.push('/auth/enhanced-login');
+                      router.refresh();
+                    });
+                  }}
+                >
+                  <Icons.logOut className="mr-2 h-5 w-5" />
+                  Sign Out
+                </MobileNavLink>
               </>
             ) : (
               <MobileNavLink href="/auth/enhanced-login" onClick={() => setIsMenuOpen(false)}>
