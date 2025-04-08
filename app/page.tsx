@@ -88,7 +88,7 @@ export default async function Home() {
               <div className="md:w-1/2">
                 <h2 className="text-4xl font-bold mb-6">{aboutTitle}</h2>
                 <div className="text-lg mb-4">
-                  {aboutDesc.split('\n').map((paragraph, i) => (
+                  {aboutDesc.split('\n').map((paragraph: string, i: number) => (
                     <p key={i} className="mb-4">{paragraph}</p>
                   ))}
                 </div>
@@ -127,7 +127,7 @@ export default async function Home() {
             <div className="md:w-1/2">
               <h2 className="text-4xl font-bold mb-6">{mottoTitle}</h2>
               <div className="text-lg mb-4">
-                {mottoDesc.split('\n').map((paragraph, i) => (
+                {mottoDesc.split('\n').map((paragraph: string, i: number) => (
                   <p key={i} className="mb-4">{paragraph}</p>
                 ))}
               </div>

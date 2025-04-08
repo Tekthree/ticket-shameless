@@ -20,7 +20,7 @@ import { ActionCard } from '@/components/admin/ActionCard'
 import { StatCard } from '@/components/admin/StatCard'
 
 export default function AdminDashboard() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<any[]>([]);
   const [stats, setStats] = useState({
     totalEvents: 0,
     upcomingEvents: 0,
@@ -28,7 +28,7 @@ export default function AdminDashboard() {
     totalSales: 0
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
   
   useEffect(() => {

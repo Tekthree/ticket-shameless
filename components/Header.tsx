@@ -43,15 +43,15 @@ export default function Header() {
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            <NavLink href="/events" isActive={pathname === '/events'}>
+            <NavLink href="/events" isActive={pathname === '/events'} className="">
               <Icons.calendar className="mr-2 h-4 w-4" />
               Events
             </NavLink>
-            <NavLink href="/about" isActive={pathname === '/about'}>
+            <NavLink href="/about" isActive={pathname === '/about'} className="">
               <Icons.info className="mr-2 h-4 w-4" />
               About
             </NavLink>
-            <NavLink href="/contact" isActive={pathname === '/contact'}>
+            <NavLink href="/contact" isActive={pathname === '/contact'} className="">
               <Icons.mail className="mr-2 h-4 w-4" />
               Contact
             </NavLink>
@@ -127,7 +127,14 @@ export default function Header() {
   )
 }
 
-function NavLink({ href, isActive, children, className }) {
+interface NavLinkProps {
+  href: string;
+  isActive: boolean;
+  children: React.ReactNode;
+  className: string;
+}
+
+function NavLink({ href, isActive, children, className }: NavLinkProps) {
   return (
     <Link 
       href={href} 
@@ -142,7 +149,14 @@ function NavLink({ href, isActive, children, className }) {
   )
 }
 
-function MobileNavLink({ href, isActive, onClick, children }) {
+interface MobileNavLinkProps {
+  href: string;
+  isActive: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}
+
+function MobileNavLink({ href, isActive, onClick, children }: MobileNavLinkProps) {
   return (
     <Link 
       href={href} 

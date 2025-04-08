@@ -12,6 +12,13 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/components/ui/use-toast';
 import MediaUpload from '@/components/ui/media-upload';
 
+// Define the structure of the user role data returned from Supabase
+interface UserRoleData {
+  roles: {
+    name: string;
+  }
+}
+
 export default function SiteContentPage() {
   const [content, setContent] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -42,7 +49,9 @@ export default function SiteContentPage() {
         }
         
         if (rolesData && rolesData.length > 0) {
-          const roles = rolesData.map(r => r.roles.name);
+          // Use type assertion with unknown as intermediate step
+          const rolesList = rolesData as unknown as UserRoleData[];
+          const roles = rolesList.map(r => r.roles.name);
           console.log('User roles:', roles);
           setUserRoles(roles);
         }
@@ -143,7 +152,7 @@ export default function SiteContentPage() {
   const ensureSortOrder = async () => {
     // This function ensures all items have a sort_order value
     // If any items are missing sort_order, we'll assign incremental values
-    const sectionMap = {};
+    const sectionMap: Record<string, any[]> = {};
     let updates = [];
     
     // Group by section and check if sort_order exists
@@ -314,7 +323,7 @@ export default function SiteContentPage() {
         toast({
           title: "Warning",
           description: "Data URLs may be too large to save. Please use a hosted image URL instead.",
-          variant: "warning"
+          variant: "default"
         });
         return;
       }

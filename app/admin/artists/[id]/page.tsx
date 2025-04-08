@@ -24,8 +24,18 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 
+// Define the Artist interface
+interface Artist {
+  id: string;
+  name: string;
+  image?: string | null;
+  bio?: string | null;
+  mix_url?: string | null;
+  [key: string]: any; // Allow for dynamic property access
+}
+
 export default function EditArtistPage({ params }: { params: { id: string } }) {
-  const [artist, setArtist] = useState<any>(null);
+  const [artist, setArtist] = useState<Artist | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -82,12 +92,15 @@ export default function EditArtistPage({ params }: { params: { id: string } }) {
   // Handle form field changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setArtist(prev => ({ ...prev, [name]: value }));
+    setArtist((prev: Artist | null) => {
+      if (!prev) return null;
+      return { ...prev, [name]: value };
+    });
   };
   
   // Save artist changes
   const handleSave = async () => {
-    if (!artist.name.trim()) {
+    if (!artist || !artist.name.trim()) {
       toast({
         title: "Error",
         description: "Artist name is required",

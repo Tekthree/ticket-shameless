@@ -105,7 +105,22 @@ export async function middleware(request: NextRequest) {
       
       if (path.startsWith('/box-office') && 
           !roles.includes('admin') && 
-          !roles.includes('box_office')) {
+          !roles.includes('box_office') &&
+          !roles.includes('event_manager')) {
+        return NextResponse.redirect(new URL('/unauthorized', request.url));
+      }
+      
+      // New specific box-office route checks
+      if ((path.startsWith('/box-office/pos') || path.startsWith('/box-office/scanning')) && 
+          !roles.includes('admin') && 
+          !roles.includes('box_office') &&
+          !roles.includes('event_manager')) {
+        return NextResponse.redirect(new URL('/unauthorized', request.url));
+      }
+      
+      // New admin tickets reporting route check
+      if (path.startsWith('/admin/tickets') && 
+          !roles.includes('admin')) {
         return NextResponse.redirect(new URL('/unauthorized', request.url));
       }
       

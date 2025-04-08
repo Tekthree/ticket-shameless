@@ -14,6 +14,26 @@ declare global {
   }
 }
 
+// Define Google Maps API types
+interface GeocoderResult {
+  geometry: {
+    location: {
+      lat: () => number;
+      lng: () => number;
+    }
+  };
+  [key: string]: any;
+}
+
+type GeocoderStatus = 
+  | 'OK'
+  | 'ZERO_RESULTS'
+  | 'OVER_DAILY_LIMIT'
+  | 'OVER_QUERY_LIMIT'
+  | 'REQUEST_DENIED'
+  | 'INVALID_REQUEST'
+  | 'UNKNOWN_ERROR';
+
 export default function GoogleMap({ address, venueTitle }: GoogleMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const [isLoaded, setIsLoaded] = useState(false)
@@ -29,7 +49,7 @@ export default function GoogleMap({ address, venueTitle }: GoogleMapProps) {
       
       const geocoder = new window.google.maps.Geocoder()
       
-      geocoder.geocode({ address }, (results, status) => {
+      geocoder.geocode({ address }, (results: GeocoderResult[] | null, status: GeocoderStatus) => {
         if (status === 'OK' && results && results[0]) {
           const map = new window.google.maps.Map(mapRef.current, {
             center: results[0].geometry.location,

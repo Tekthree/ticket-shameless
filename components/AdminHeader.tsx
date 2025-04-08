@@ -32,13 +32,14 @@ export default function AdminHeader() {
             </Link>
             
             <nav className="hidden md:flex space-x-1">
-              <NavLink href="/admin" isActive={pathname === '/admin'}>
+              <NavLink href="/admin" isActive={pathname === '/admin'} className="">
                 <Icons.home className="mr-2 h-4 w-4" />
                 Dashboard
               </NavLink>
               <NavLink 
                 href="/admin/events" 
                 isActive={pathname === '/admin/events' || pathname.startsWith('/admin/events/')}
+                className=""
               >
                 <Icons.calendar className="mr-2 h-4 w-4" />
                 Events
@@ -46,6 +47,7 @@ export default function AdminHeader() {
               <NavLink 
                 href="/admin/artists" 
                 isActive={pathname === '/admin/artists'}
+                className=""
               >
                 <Icons.music className="mr-2 h-4 w-4" />
                 Artists
@@ -53,6 +55,7 @@ export default function AdminHeader() {
               <NavLink 
                 href="/admin/site-content" 
                 isActive={pathname === '/admin/site-content'}
+                className=""
               >
                 <Icons.fileText className="mr-2 h-4 w-4" />
                 Site Content
@@ -60,6 +63,7 @@ export default function AdminHeader() {
               <NavLink 
                 href="/admin/users" 
                 isActive={pathname.startsWith('/admin/users')}
+                className=""
               >
                 <Icons.users className="mr-2 h-4 w-4" />
                 Users
@@ -160,7 +164,14 @@ export default function AdminHeader() {
   );
 }
 
-function NavLink({ href, isActive, children, className }) {
+interface NavLinkProps {
+  href: string;
+  isActive: boolean;
+  children: React.ReactNode;
+  className: string;
+}
+
+function NavLink({ href, isActive, children, className }: NavLinkProps) {
   return (
     <Link
       href={href}
@@ -177,7 +188,14 @@ function NavLink({ href, isActive, children, className }) {
   );
 }
 
-function MobileNavLink({ href, isActive, onClick, children }) {
+interface MobileNavLinkProps {
+  href: string;
+  isActive: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}
+
+function MobileNavLink({ href, isActive, onClick, children }: MobileNavLinkProps) {
   return (
     <Link
       href={href}

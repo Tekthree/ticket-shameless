@@ -54,7 +54,7 @@ export async function PUT(
     }
     
     // Map our client-side data structure to the database column names
-    const dbData = {
+    const dbData: Record<string, any> = {
       title: eventUpdatesWithoutLineup.title,
       description: eventUpdatesWithoutLineup.description,
       date: eventUpdatesWithoutLineup.date,

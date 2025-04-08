@@ -4,7 +4,7 @@ import Stripe from 'stripe'
 
 // Initialize Stripe with the secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
-  apiVersion: '2023-10-16',
+  apiVersion: '2022-11-15',
 })
 
 export async function POST(request: Request) {

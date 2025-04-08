@@ -137,7 +137,13 @@ export default function Footer() {
   );
 }
 
-function FooterLink({ href, children, external = false }) {
+interface FooterLinkProps {
+  href: string;
+  children: React.ReactNode;
+  external?: boolean;
+}
+
+function FooterLink({ href, children, external = false }: FooterLinkProps) {
   if (external) {
     return (
       <a
@@ -159,8 +165,12 @@ function FooterLink({ href, children, external = false }) {
   );
 }
 
+interface IconProps extends React.SVGProps<SVGSVGElement> {
+  className?: string;
+}
+
 // Custom Social Media Icons
-function FacebookIcon(props) {
+function FacebookIcon(props: IconProps) {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -178,7 +188,7 @@ function FacebookIcon(props) {
   );
 }
 
-function InstagramIcon(props) {
+function InstagramIcon(props: IconProps) {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'

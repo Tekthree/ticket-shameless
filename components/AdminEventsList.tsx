@@ -164,7 +164,7 @@ export default function AdminEventsList({ events }: AdminEventsListProps) {
                       {event.soldOut ? (
                         <Badge variant="destructive">Sold Out</Badge>
                       ) : (
-                        <Badge variant="success">Available</Badge>
+                        <Badge variant="secondary">Available</Badge>
                       )}
                     </div>
                   </TableCell>
