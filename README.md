@@ -1,5 +1,7 @@
 # Ticket Shameless
 
+[![Run Tests](https://github.com/tekthree/ticket-shameless/actions/workflows/run-tests.yml/badge.svg)](https://github.com/tekthree/ticket-shameless/actions/workflows/run-tests.yml)
+
 A modern ticketing and event management platform for Shameless Productions, Seattle's premier electronic music event collective.
 
 ## Overview
