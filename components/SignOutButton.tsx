@@ -16,7 +16,7 @@ export default function SignOutButton() {
     
     try {
       await supabase.auth.signOut();
-      router.push('/auth/enhanced-login');
+      router.push('/auth/login');
       router.refresh();
     } catch (error) {
       console.error('Error signing out:', error);

@@ -20,7 +20,7 @@ export default function ProfilePage() {
         
         if (!session) {
           // We need to use window.location instead of redirect() in useEffect
-          window.location.href = '/auth/enhanced-login';
+          window.location.href = '/auth/login';
           return;
         }
         

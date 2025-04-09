@@ -127,7 +127,7 @@ export default function Navbar() {
                     setIsMenuOpen(false);
                     const supabase = createClient();
                     supabase.auth.signOut().then(() => {
-                      router.push('/auth/enhanced-login');
+                      router.push('/auth/login');
                       router.refresh();
                     });
                   }}
@@ -137,7 +137,7 @@ export default function Navbar() {
                 </MobileNavLink>
               </>
             ) : (
-              <MobileNavLink href="/auth/enhanced-login" onClick={() => setIsMenuOpen(false)}>
+              <MobileNavLink href="/auth/login" onClick={() => setIsMenuOpen(false)}>
                 <Icons.logIn className="mr-2 h-5 w-5" />
                 Login
               </MobileNavLink>

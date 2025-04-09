@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import Auth from '@/components/Auth'
+import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: 'Login - Shameless Productions',
@@ -7,11 +7,9 @@ export const metadata: Metadata = {
 }
 
 export default function LoginPage() {
-  return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
-        <Auth />
-      </div>
-    </div>
-  )
+  // Redirect to the new login page
+  redirect('/auth/login')
+  
+  // This won't be rendered due to the redirect
+  return null
 }

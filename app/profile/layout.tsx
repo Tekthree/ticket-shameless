@@ -24,7 +24,7 @@ export default function ProfileLayout({
         const { data: { session } } = await supabase.auth.getSession();
         
         if (!session) {
-          window.location.href = '/auth/enhanced-login';
+          window.location.href = '/auth/login';
           return;
         }
         

@@ -54,7 +54,7 @@ export default function UserProfileCard() {
     
     try {
       await supabase.auth.signOut();
-      router.push('/auth/enhanced-login');
+      router.push('/auth/login');
       router.refresh();
     } catch (error) {
       console.error('Error signing out:', error);
@@ -74,7 +74,7 @@ export default function UserProfileCard() {
           </Link>
         </Button>
         <Button asChild variant="ghost" className="text-white hover:text-indigo-300">
-          <Link href="/auth/enhanced-login">
+          <Link href="/auth/login">
             <Icons.logIn className="mr-2 h-5 w-5" />
             Login
           </Link>
