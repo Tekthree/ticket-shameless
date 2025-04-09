@@ -42,6 +42,18 @@ export default function TicketHistory() {
         }
         
         // Fetch orders using a more general query without reference to auth.users
+        // First, construct the filter conditions properly
+        let filter = '';
+        if (userEmail) {
+          filter += `customer_email.eq."${userEmail}"`;
+        }
+        if (currentUserId) {
+          if (filter) filter += ',';
+          filter += `user_id.eq."${currentUserId}"`;
+        }
+        
+        console.log('Using filter:', filter);
+        
         const { data, error } = await supabase
           .from('orders')
           .select(`
@@ -60,8 +72,19 @@ export default function TicketHistory() {
               image
             )
           `)
-          .or(`customer_email.eq.${userEmail},user_id.eq.${currentUserId}`)
+          .or(filter)
           .order('created_at', { ascending: false });
+        
+        console.log('Tickets query result:', { 
+          count: data?.length || 0, 
+          hasError: !!error,
+          firstTicket: data && data.length > 0 ? {
+            id: data[0].id,
+            event_id: data[0].event_id,
+            hasEventData: !!data[0].events,
+            eventImage: data[0].events?.image ? 'Present' : 'Missing'
+          } : null
+        });
 
         
         if (error) throw error;
@@ -153,9 +176,15 @@ export default function TicketHistory() {
           <Card key={ticket.id} className="overflow-hidden dark:bg-gray-900/50 dark:border-gray-800 border">
             <div className="flex flex-col md:flex-row">
               <div className="relative w-full md:w-48 h-40">
+                {/* Add debugging info */}
+                {process.env.NODE_ENV === 'development' && !ticket.events?.image && (
+                  <div className="absolute top-0 left-0 bg-red-500 text-white text-xs p-1 z-10">
+                    Missing image (event_id: {ticket.event_id?.substring(0, 8)})
+                  </div>
+                )}
                 <div 
                   className="w-full h-full bg-cover bg-center" 
-                  style={{ backgroundImage: `url(${ticket.events.image})` }}
+                  style={{ backgroundImage: ticket.events?.image ? `url(${ticket.events.image})` : 'url(/images/placeholder-event.jpg)' }}
                 />
               </div>
               
@@ -163,9 +192,11 @@ export default function TicketHistory() {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle>{ticket.events.title}</CardTitle>
+                      <CardTitle>{ticket.events?.title || 'Event Not Found'}</CardTitle>
                       <CardDescription>
-                        {format(new Date(ticket.events.date), 'EEEE, MMMM d, yyyy')} • {ticket.events.venue}
+                        {ticket.events?.date ? 
+                          `${format(new Date(ticket.events.date), 'EEEE, MMMM d, yyyy')} • ${ticket.events.venue || 'Unknown Venue'}` : 
+                          'Event details not available'}
                       </CardDescription>
                     </div>
                     {getStatusBadge(ticket.status)}
@@ -194,12 +225,19 @@ export default function TicketHistory() {
                 </CardContent>
                 
                 <CardFooter className="flex justify-between">
-                  <Button variant="link" asChild className="p-0 h-auto text-blue-600 dark:text-blue-400">
-                    <Link href={`/events/${ticket.events.slug}`}>
+                  {ticket.events?.slug ? (
+                    <Button variant="link" asChild className="p-0 h-auto text-blue-600 dark:text-blue-400">
+                      <Link href={`/events/${ticket.events.slug}`}>
+                        <Calendar className="h-4 w-4 mr-1" />
+                        View Event
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button variant="link" disabled className="p-0 h-auto text-gray-400">
                       <Calendar className="h-4 w-4 mr-1" />
-                      View Event
-                    </Link>
-                  </Button>
+                      Event Unavailable
+                    </Button>
+                  )}
                   
                   {(ticket.status.toLowerCase() === 'complete' || ticket.status.toLowerCase() === 'completed') && (
                     <Button variant="default" asChild className="bg-red-600 hover:bg-red-700">

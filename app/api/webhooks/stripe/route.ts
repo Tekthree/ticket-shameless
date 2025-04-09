@@ -106,6 +106,27 @@ export async function POST(request: Request) {
         // Get quantity from metadata or default to 1
         const quantity = parseInt(session.metadata?.quantity || '1')
         
+        // Try to find the user ID based on the email
+        let userId = null
+        if (session.customer_details?.email) {
+          try {
+            const { data: userData, error: userError } = await supabase
+              .from('profiles')
+              .select('id')
+              .eq('email', session.customer_details.email)
+              .single()
+              
+            if (userError) {
+              console.log(`No user found for email ${session.customer_details.email}:`, userError)
+            } else if (userData) {
+              userId = userData.id
+              console.log(`Found user ID ${userId} for email ${session.customer_details.email}`)
+            }
+          } catch (userLookupError) {
+            console.error('Error looking up user:', userLookupError)
+          }
+        }
+        
         // Prepare order data
         const orderData = {
           event_id: isValidUuid ? eventId : null,
@@ -114,7 +135,8 @@ export async function POST(request: Request) {
           customer_name: session.customer_details?.name || 'Unknown Customer',
           amount_total: session.amount_total ? session.amount_total / 100 : 0,
           status: 'completed',
-          quantity: quantity
+          quantity: quantity,
+          user_id: userId
         }
         
         console.log('Attempting to insert order with data:', orderData)
