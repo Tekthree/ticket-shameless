@@ -1,7 +1,7 @@
 "use client"
 
 import Image from 'next/image'
-import { notFound } from 'next/navigation'
+import { notFound, useSearchParams } from 'next/navigation'
 import BuyTicketButton from '@/components/BuyTicketButton'
 import GoogleMap from '@/components/GoogleMap'
 import { formatDate } from '@/lib/utils'
@@ -9,9 +9,36 @@ import AudioPlayer from '@/components/AudioPlayer'
 import { useEffect, useRef, useState } from 'react'
 import SocialShareButtons from '@/components/SocialShareButtons'
 import ArtistTrackCard from '@/components/ArtistTrackCard'
+import PurchaseSuccess from '@/components/PurchaseSuccess'
+
+interface Artist {
+  id?: string;
+  name: string;
+  image?: string;
+  time?: string;
+  mix_url?: string;
+  description?: string;
+}
 
 interface EventPageClientProps {
-  event: any
+  event: {
+    id: string;
+    title: string;
+    slug: string;
+    image: string;
+    date: string;
+    time: string;
+    venue: string;
+    address: string;
+    price: number;
+    ticketsRemaining: number;
+    ticketsTotal?: number;
+    soldOut: boolean;
+    ageRestriction?: string;
+    description?: string;
+    promoter?: string;
+    lineup?: Artist[];
+  }
 }
 
 const EventPageClient = ({ event }: EventPageClientProps) => {
@@ -20,6 +47,10 @@ const EventPageClient = ({ event }: EventPageClientProps) => {
     notFound()
   }
   
+  // Get search params to check for success parameter
+  const searchParams = useSearchParams();
+  const success = searchParams.get('success');
+  
   // Use a default image if the event image is an external URL that might cause issues
   const imageUrl = event.image.startsWith('http') ? event.image : '/images/logo.png';
   const eventUrl = typeof window !== 'undefined' ? window.location.href : '';
@@ -27,6 +58,7 @@ const EventPageClient = ({ event }: EventPageClientProps) => {
   // Ref for scroll tracking
   const contentRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [showSuccess, setShowSuccess] = useState(false);
   
   // Track scroll position to adjust blur and scale
   useEffect(() => {
@@ -42,6 +74,15 @@ const EventPageClient = ({ event }: EventPageClientProps) => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  
+  // Check for success parameter and show success message
+  useEffect(() => {
+    if (success === 'true') {
+      setShowSuccess(true);
+      // Scroll to top to show the success message
+      window.scrollTo(0, 0);
+    }
+  }, [success]);
   
   return (
     <div className="bg-transparent text-white min-h-screen pb-20" ref={contentRef}>
@@ -62,6 +103,13 @@ const EventPageClient = ({ event }: EventPageClientProps) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/90 to-black/30" />
       </div>
+      
+      {/* Success Message */}
+      {showSuccess && (
+        <div className="pt-12">
+          <PurchaseSuccess eventSlug={event.slug} eventTitle={event.title} />
+        </div>
+      )}
       
       {/* Hero Section with event image card */}
       <div className="relative pt-12 pb-12 bg-transparent">
@@ -214,12 +262,19 @@ const EventPageClient = ({ event }: EventPageClientProps) => {
             </div>
             
             {/* Artist Tracks Section */}
-            {event.lineup && event.lineup.some(artist => artist.mix_url) && (
+            {event.lineup && event.lineup.length > 0 && event.lineup.some(artist => artist.mix_url) && (
               <div className="mb-8">
                 <h2 className="text-xl font-bold mb-4">Listen to the Artists</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {event.lineup.filter(artist => artist.mix_url).map((artist, index) => (
-                    <ArtistTrackCard key={`track-${index}`} artist={artist} />
+                    <ArtistTrackCard 
+                      key={`track-${index}`} 
+                      artist={{
+                        name: artist.name,
+                        image: artist.image,
+                        mix_url: artist.mix_url || ''
+                      }} 
+                    />
                   ))}
                 </div>
               </div>

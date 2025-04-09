@@ -85,36 +85,14 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: 'Database client initialization failed' }, { status: 500 })
         }
         
-        // Extract event ID from metadata
-        const eventId = session.metadata?.eventId
-        console.log('Event ID from metadata:', eventId)
-        
-        if (!eventId) {
-          console.error('No event ID found in session metadata')
-          return NextResponse.json({ error: 'Missing event ID in metadata' }, { status: 400 })
-        }
-        
-        // Validate that the event ID is a valid UUID (important for foreign key constraint)
-        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-        const isValidUuid = uuidRegex.test(eventId)
-        
-        if (!isValidUuid) {
-          console.error(`Invalid event ID format: ${eventId} is not a valid UUID`)
-          console.log('Will attempt to process order with null event_id')
-        }
-        
-        // Get quantity from metadata or default to 1
-        const quantity = parseInt(session.metadata?.quantity || '1')
-        
-        // Prepare order data
+        // SIMPLIFIED ORDER DATA - just the essentials for testing
         const orderData = {
-          event_id: isValidUuid ? eventId : null,
           stripe_session_id: session.id,
           customer_email: session.customer_details?.email || 'unknown@example.com',
           customer_name: session.customer_details?.name || 'Unknown Customer',
           amount_total: session.amount_total ? session.amount_total / 100 : 0,
           status: 'completed',
-          quantity: quantity
+          quantity: 1
         }
         
         console.log('Attempting to insert order with data:', orderData)
@@ -132,51 +110,6 @@ export async function POST(request: Request) {
           }
           
           console.log('Order recorded successfully:', insertData)
-          
-          // Now update the ticket count for the event
-          if (isValidUuid) {
-            console.log(`Attempting to update tickets for event: ${eventId}`)
-            
-            try {
-              // First, get current tickets remaining
-              const { data: eventData, error: fetchError } = await supabase
-                .from('events')
-                .select('tickets_remaining')
-                .eq('id', eventId)
-                .single()
-              
-              if (fetchError) {
-                console.error('Error fetching event data:', fetchError)
-                console.log('Will skip updating event ticket count due to error')
-                // Don't fail the webhook, we've already recorded the order
-              } else {
-                // Calculate new tickets remaining
-                const newTicketsRemaining = Math.max(0, eventData.tickets_remaining - quantity)
-                const soldOut = newTicketsRemaining <= 0
-                
-                // Update the event
-                const { error: eventError } = await supabase
-                  .from('events')
-                  .update({
-                    tickets_remaining: newTicketsRemaining,
-                    sold_out: soldOut
-                  })
-                  .eq('id', eventId)
-                
-                if (eventError) {
-                  console.error('Error updating event ticket count:', eventError)
-                  console.log('Order was recorded, but ticket count update failed')
-                } else {
-                  console.log(`Updated event ${eventId}: tickets_remaining=${newTicketsRemaining}, sold_out=${soldOut}`)
-                }
-              }
-            } catch (eventUpdateError) {
-              console.error('Error during event update process:', eventUpdateError)
-              console.log('Order was recorded, but event update failed')
-            }
-          } else {
-            console.log('Skipping event update because event ID is not a valid UUID')
-          }
         } catch (insertError) {
           console.error('Exception during order insertion:', insertError)
           return NextResponse.json({ error: 'Exception during order insertion' }, { status: 500 })

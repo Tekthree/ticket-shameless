@@ -9,7 +9,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder'
 
 export async function POST(request: Request) {
   try {
-    const { eventId, quantity = 1 } = await request.json()
+    const { eventId, quantity = 1, email } = await request.json()
     
     if (!eventId) {
       return NextResponse.json({ error: 'Event ID is required' }, { status: 400 })
@@ -60,7 +60,19 @@ export async function POST(request: Request) {
         eventId: event.id,
         eventSlug: event.slug,
         quantity: quantity.toString(),
+        customerEmail: email || '', // Store email in metadata if provided
       },
+      // Add these lines to collect customer information
+      billing_address_collection: 'required',
+      phone_number_collection: {
+        enabled: true,
+      },
+      customer_email: email || null, // Use provided email if available
+      locale: 'en', // Use English locale
+      // Default to United States
+      shipping_address_collection: {
+        allowed_countries: ['US'],
+      }
     })
     
     return NextResponse.json({ url: session.url })
