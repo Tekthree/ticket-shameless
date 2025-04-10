@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
 import { useUserRoles } from '@/hooks/useUserRoles';
 import toast from 'react-hot-toast';
 
@@ -36,14 +36,14 @@ export default function GuestListManager({ eventId }: GuestListManagerProps) {
       }
       
       // Check if user is an artist for this event
-      const { data: { session } } = await supabase.auth.getSession();
+      const user = await getAuthenticatedUser();
       
-      if (session) {
+      if (user) {
         const { data: artistData } = await supabase
           .from('event_artists')
           .select('*')
           .eq('event_id', eventId)
-          .eq('user_id', session.user.id)
+          .eq('user_id', user.id)
           .eq('can_manage_guestlist', true)
           .maybeSingle();
           
@@ -62,9 +62,9 @@ export default function GuestListManager({ eventId }: GuestListManagerProps) {
     async function loadGuestList() {
       if (!canManage) return;
       
-      const { data: { session } } = await supabase.auth.getSession();
+      const user = await getAuthenticatedUser();
       
-      if (!session) return;
+      if (!user) return;
       
       let query = supabase
         .from('guest_lists')
@@ -73,7 +73,7 @@ export default function GuestListManager({ eventId }: GuestListManagerProps) {
         
       // If not admin, only show user's own guests
       if (!hasRole('admin') && !hasRole('event_manager') && !hasRole('box_office')) {
-        query = query.eq('created_by', session.user.id);
+        query = query.eq('created_by', user.id);
       }
       
       const { data, error } = await query.order('created_at', { ascending: false });
@@ -111,9 +111,9 @@ export default function GuestListManager({ eventId }: GuestListManagerProps) {
     }
     
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const user = await getAuthenticatedUser();
       
-      if (!session) {
+      if (!user) {
         toast.error('You must be logged in');
         return;
       }
@@ -122,7 +122,7 @@ export default function GuestListManager({ eventId }: GuestListManagerProps) {
         .from('guest_lists')
         .insert({
           event_id: eventId,
-          created_by: session.user.id,
+          created_by: user.id,
           ...newGuest
         })
         .select()
@@ -169,16 +169,16 @@ export default function GuestListManager({ eventId }: GuestListManagerProps) {
   // Check in guest
   async function checkInGuest(id: number) {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const user = await getAuthenticatedUser();
       
-      if (!session) return;
+      if (!user) return;
       
       const { error } = await supabase
         .from('guest_lists')
         .update({
           is_checked_in: true,
           checked_in_at: new Date().toISOString(),
-          checked_in_by: session.user.id
+          checked_in_by: user.id
         })
         .eq('id', id);
         
@@ -191,7 +191,7 @@ export default function GuestListManager({ eventId }: GuestListManagerProps) {
               ...guest, 
               is_checked_in: true, 
               checked_in_at: new Date().toISOString(),
-              checked_in_by: session.user.id 
+              checked_in_by: user.id 
             } 
           : guest
       ));

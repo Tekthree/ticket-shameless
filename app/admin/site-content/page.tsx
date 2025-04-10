@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -32,16 +32,16 @@ export default function SiteContentPage() {
   useEffect(() => {
     async function fetchUserRoles() {
       try {
-        // Get current session
-        const { data: { session } } = await supabase.auth.getSession();
+        // Get authenticated user securely
+        const user = await getAuthenticatedUser();
         
-        if (!session) return;
+        if (!user) return;
         
         // Fetch user roles from the database
         const { data: rolesData, error: rolesError } = await supabase
           .from('user_roles')
           .select('roles(name)')
-          .eq('user_id', session.user.id);
+          .eq('user_id', user.id);
           
         if (rolesError) {
           console.error('Error fetching user roles:', rolesError);
@@ -209,15 +209,15 @@ export default function SiteContentPage() {
   // Function to load content
   async function loadContent() {
       try {
-        // Check authentication
-        const { data: { session } } = await supabase.auth.getSession();
+        // Check authentication securely
+        const user = await getAuthenticatedUser();
         
-        if (!session) {
+        if (!user) {
           setError('You need to be logged in');
           return;
         }
         
-        console.log('User authenticated:', session.user.email);
+        console.log('User authenticated:', user.email);
         
         // Load all site content
         const { data: contentData, error: contentError } = await supabase

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -27,15 +27,15 @@ export default function EventsManagementPage() {
   useEffect(() => {
     async function loadEvents() {
       try {
-        // Check authentication
-        const { data: { session } } = await supabase.auth.getSession();
+        // Check authentication securely
+        const user = await getAuthenticatedUser();
         
-        if (!session) {
+        if (!user) {
           setError('You need to be logged in');
           return;
         }
         
-        console.log('User authenticated:', session.user.email);
+        console.log('User authenticated:', user.email);
         
         // Load ALL events
         const { data: eventsData, error: eventsError } = await supabase

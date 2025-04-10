@@ -5,6 +5,8 @@ const createJestConfig = nextJest({
 });
 
 const customJestConfig = {
+  // Suppress deprecation warnings
+  setupFiles: ['<rootDir>/jest.env.js'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {

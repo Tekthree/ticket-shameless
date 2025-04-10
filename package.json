@@ -4,16 +4,16 @@
   "private": true,
   "description": "A ticketing platform for Shameless Productions with event management, artist management, and site content management",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "NODE_NO_WARNINGS=1 next dev",
+    "build": "NODE_NO_WARNINGS=1 next build",
+    "start": "NODE_NO_WARNINGS=1 next start",
     "lint": "next lint",
     "seed": "node scripts/seed-database.js",
     "setup-content": "node scripts/setup-site-content.js",
     "migrate": "node scripts/run-migrations.js",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test": "NODE_NO_WARNINGS=1 jest",
+    "test:watch": "NODE_NO_WARNINGS=1 jest --watch",
+    "test:coverage": "NODE_NO_WARNINGS=1 jest --coverage"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.0.5",

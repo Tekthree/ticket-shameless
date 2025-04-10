@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
 import UserProfileCard from './UserProfileCard';
 import { useUserRoles } from '@/hooks/useUserRoles';
 import { cn } from '@/lib/utils';
@@ -14,7 +14,7 @@ import { Icons } from '@/components/ui/icons';
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoUrl, setLogoUrl] = useState('/images/logo.png'); // Default logo
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
   const router = useRouter();
   const { isAdmin, isEventManager, isBoxOffice, isArtist } = useUserRoles();
   
@@ -38,9 +38,8 @@ export default function Navbar() {
     };
     
     const checkUser = async () => {
-      const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user || null);
+      const authUser = await getAuthenticatedUser();
+      setUser(authUser);
     };
     
     fetchLogo();
@@ -122,8 +121,7 @@ export default function Navbar() {
                 )}
                 <MobileNavLink 
                   href="#" 
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onClick={() => {
                     setIsMenuOpen(false);
                     const supabase = createClient();
                     supabase.auth.signOut().then(() => {
@@ -149,7 +147,7 @@ export default function Navbar() {
   );
 }
 
-function NavLink({ href, children, className }) {
+function NavLink({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) {
   return (
     <Link 
       href={href} 
@@ -163,12 +161,15 @@ function NavLink({ href, children, className }) {
   );
 }
 
-function MobileNavLink({ href, onClick, children }) {
+function MobileNavLink({ href, onClick, children }: { href: string; onClick?: () => void; children: React.ReactNode }) {
   return (
     <Link
       href={href}
       className="flex items-center py-3 px-4 text-lg hover:bg-gray-800 rounded transition"
-      onClick={onClick}
+      onClick={(e) => {
+        if (href === '#') e.preventDefault();
+        if (onClick) onClick();
+      }}
     >
       {children}
     </Link>

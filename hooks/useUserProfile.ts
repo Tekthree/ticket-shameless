@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser, onSecureAuthStateChange } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 
 export interface UserProfile {
@@ -23,9 +23,10 @@ export function useUserProfile() {
       try {
         setIsLoading(true);
         
-        const { data: { session } } = await supabase.auth.getSession();
+        // Use secure authentication helper
+        const user = await getAuthenticatedUser();
         
-        if (!session) {
+        if (!user) {
           setProfile(null);
           return;
         }
@@ -33,7 +34,7 @@ export function useUserProfile() {
         const { data, error: profileError } = await supabase
           .from('profiles')
           .select('id, email, full_name, display_name, avatar_url, bio')
-          .eq('id', session.user.id)
+          .eq('id', user.id)
           .single();
           
         if (profileError) {
@@ -51,9 +52,10 @@ export function useUserProfile() {
     
     fetchUserProfile();
     
-    // Set up auth state change listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+    // Set up auth state change listener using our secure wrapper
+    // This uses getAuthenticatedUser() internally for security
+    const { subscription } = onSecureAuthStateChange(
+      (event) => {
         if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
           fetchUserProfile();
           router.refresh();

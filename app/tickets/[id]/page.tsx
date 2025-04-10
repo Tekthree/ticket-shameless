@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -46,10 +46,10 @@ export default function TicketPage() {
   useEffect(() => {
     async function fetchTicketData() {
       try {
-        // Check if user is authenticated
-        const { data: { session } } = await supabase.auth.getSession();
+        // Check if user is authenticated securely
+        const user = await getAuthenticatedUser();
         
-        if (!session) {
+        if (!user) {
           router.push('/auth/login');
           return;
         }
@@ -88,7 +88,7 @@ export default function TicketPage() {
         const { data: profile } = await supabase
           .from('profiles')
           .select('email')
-          .eq('id', session.user.id)
+          .eq('id', user.id)
           .single();
           
         if (profile?.email !== data.customer_email) {

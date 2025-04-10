@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useUserRoles } from '@/hooks/useUserRoles';
 import { useUserProfile } from '@/hooks/useUserProfile';
@@ -49,17 +49,31 @@ export default function UserProfileCard() {
     setHasArtistAccess(isArtist());
   }, [isAdmin, isEventManager, isBoxOffice, isArtist, profile]);
   
-  const handleSignOut = async () => {
+  const handleSignOut = () => {
     setIsLoading(true);
     
     try {
-      await supabase.auth.signOut();
-      router.push('/auth/login');
-      router.refresh();
+      // Clear all cookies related to Supabase auth
+      document.cookie.split(';').forEach(cookie => {
+        const [name] = cookie.trim().split('=');
+        if (name.includes('supabase') || name.includes('sb-')) {
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+        }
+      });
+      
+      // Clear localStorage items related to Supabase
+      Object.keys(localStorage).forEach(key => {
+        if (key.includes('supabase') || key.includes('sb-')) {
+          localStorage.removeItem(key);
+        }
+      });
+      
+      // Force redirect to login page
+      window.location.replace('http://localhost:3000/auth/login');
     } catch (error) {
-      console.error('Error signing out:', error);
-    } finally {
-      setIsLoading(false);
+      console.error('Error during manual sign out:', error);
+      // Force redirect anyway
+      window.location.replace('http://localhost:3000/auth/login');
     }
   };
   

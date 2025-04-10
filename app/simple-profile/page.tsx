@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 
 export default function SimpleProfilePage() {
@@ -13,14 +13,15 @@ export default function SimpleProfilePage() {
   useEffect(() => {
     async function getUserData() {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        // Get authenticated user securely
+        const user = await getAuthenticatedUser();
         
-        if (!session) {
+        if (!user) {
           router.push('/simple-login');
           return;
         }
         
-        setUser(session.user);
+        setUser(user);
       } catch (error) {
         console.error('Error fetching user:', error);
       } finally {

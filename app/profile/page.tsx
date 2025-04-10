@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
 import ProfileForm from '@/components/profile/ProfileForm';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
@@ -15,10 +15,10 @@ export default function ProfilePage() {
   useEffect(() => {
     async function getProfile() {
       try {
-        // Get session
-        const { data: { session } } = await supabase.auth.getSession();
+        // Get authenticated user securely
+        const user = await getAuthenticatedUser();
         
-        if (!session) {
+        if (!user) {
           // We need to use window.location instead of redirect() in useEffect
           window.location.href = '/auth/login';
           return;
@@ -28,7 +28,7 @@ export default function ProfilePage() {
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('*')
-          .eq('id', session.user.id)
+          .eq('id', user.id)
           .single();
         
         if (profileError) {
@@ -37,7 +37,7 @@ export default function ProfilePage() {
           // If profile doesn't exist, create it
           if (profileError.code === 'PGRST116') {
             console.log('Profile not found, creating new profile');
-            await createProfile(session);
+            await createProfile(user);
           }
         } else {
           console.log('Profile found:', profile);
@@ -50,18 +50,18 @@ export default function ProfilePage() {
       }
     }
     
-    async function createProfile(session: any) {
+    async function createProfile(user: any) {
       try {
         // Get user info to create profile
-        console.log('Creating profile for user ID:', session.user.id);
+        console.log('Creating profile for user ID:', user.id);
         
         // Create a new profile for the user
         const { data, error } = await supabase
           .from('profiles')
           .insert({
-            id: session.user.id,
-            email: session.user.email,
-            full_name: session.user.user_metadata?.full_name || '',
+            id: user.id,
+            email: user.email,
+            full_name: user.user_metadata?.full_name || '',
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
           })

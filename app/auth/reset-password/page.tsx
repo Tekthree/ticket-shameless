@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,10 +19,11 @@ export default function ResetPasswordPage() {
   useEffect(() => {
     // Check if we have a session when the component mounts
     const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
+      // Get authenticated user securely
+      const user = await getAuthenticatedUser();
       
-      // If no session, the reset link might have expired
-      if (!data.session) {
+      // If no user, the reset link might have expired
+      if (!user) {
         toast.error('Password reset link has expired or is invalid');
         router.push('/auth/login');
       }

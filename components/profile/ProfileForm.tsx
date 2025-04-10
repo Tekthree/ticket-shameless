@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -87,10 +87,10 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
     setLoading(true);
     
     try {
-      // Get the current user ID
-      const { data: { session } } = await supabase.auth.getSession();
+      // Get the current user ID securely
+      const user = await getAuthenticatedUser();
       
-      if (!session) {
+      if (!user) {
         throw new Error('You must be logged in to update your profile');
       }
       
@@ -104,8 +104,8 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         }
       }
       
-      // Use the session user ID instead of profile.id (which might be null)
-      const userId = session.user.id;
+      // Use the authenticated user ID
+      const userId = user.id;
       
       // Log the update operation
       console.log('Updating profile for user ID:', userId);

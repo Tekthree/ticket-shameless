@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -39,10 +39,10 @@ export default function ArtistsPage() {
   
   const loadArtists = async () => {
     try {
-      // Check authentication
-      const { data: { session } } = await supabase.auth.getSession();
+      // Check authentication securely
+      const user = await getAuthenticatedUser();
       
-      if (!session) {
+      if (!user) {
         setError('You need to be logged in');
         return;
       }

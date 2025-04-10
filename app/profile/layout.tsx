@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
 import ProfileNav from '@/components/profile/ProfileNav';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
@@ -20,10 +20,10 @@ export default function ProfileLayout({
   useEffect(() => {
     async function getUserRoles() {
       try {
-        // Get session
-        const { data: { session } } = await supabase.auth.getSession();
+        // Get authenticated user securely
+        const user = await getAuthenticatedUser();
         
-        if (!session) {
+        if (!user) {
           window.location.href = '/auth/login';
           return;
         }
@@ -32,7 +32,7 @@ export default function ProfileLayout({
         const { data: rolesData } = await supabase
           .from('user_roles')
           .select('roles(name)')
-          .eq('user_id', session.user.id);
+          .eq('user_id', user.id);
           
         const roleNames = rolesData?.map((role: any) => role.roles?.name) || [];
         setUserRoles(roleNames);

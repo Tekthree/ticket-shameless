@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser, onSecureAuthStateChange } from '@/lib/supabase/client';
 
 export type Role = 'admin' | 'event_manager' | 'box_office' | 'artist' | 'guest_list_manager' | 'customer';
 
@@ -14,9 +14,10 @@ export function useUserRoles() {
   useEffect(() => {
     async function fetchUserRoles() {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        // Get authenticated user securely
+        const user = await getAuthenticatedUser();
         
-        if (!session) {
+        if (!user) {
           setRoles([]);
           setPrimaryRole(null);
           setIsLoading(false);
@@ -33,7 +34,7 @@ export function useUserRoles() {
               description
             )
           `)
-          .eq('user_id', session.user.id);
+          .eq('user_id', user.id);
           
         if (userRolesError) {
           console.error('Error fetching user roles:', userRolesError);
@@ -49,7 +50,7 @@ export function useUserRoles() {
               name
             )
           `)
-          .eq('id', session.user.id)
+          .eq('id', user.id)
           .single();
           
         if (profileError && profileError.code !== 'PGRST116') { // Ignore "not found" errors
@@ -57,12 +58,12 @@ export function useUserRoles() {
         }
         
         // Extract role names
-        const roleNames = userRolesData 
-          ? userRolesData.map(item => item.roles.name) 
+        const roleNames = userRolesData && Array.isArray(userRolesData)
+          ? userRolesData.map(item => item.roles?.name as string).filter(Boolean)
           : [];
         
         setRoles(roleNames);
-        setPrimaryRole(profileData?.roles?.name || null);
+        setPrimaryRole(profileData?.roles?.name as string || null);
       } catch (error) {
         console.error('Error in fetchUserRoles:', error);
       } finally {
@@ -72,9 +73,10 @@ export function useUserRoles() {
     
     fetchUserRoles();
     
-    // Watch for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+    // Watch for auth state changes using our secure wrapper
+    // This uses getAuthenticatedUser() internally for security
+    const { subscription } = onSecureAuthStateChange(
+      (event) => {
         if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
           fetchUserRoles();
         }

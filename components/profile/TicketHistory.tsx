@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import {
@@ -32,14 +32,16 @@ export default function TicketHistory() {
       try {
         setLoading(true);
         
-        // Get current user's information first
-        const { data: { session } } = await supabase.auth.getSession();
-        const userEmail = session?.user?.email;
-        const currentUserId = session?.user?.id;
+        // Get current user's information securely
+        const user = await getAuthenticatedUser();
         
-        if (!userEmail && !currentUserId) {
+        if (!user) {
           throw new Error('No user information found');
+          return;
         }
+        
+        const userEmail = user.email;
+        const currentUserId = user.id;
         
         // Fetch orders using a more general query without reference to auth.users
         // First, construct the filter conditions properly

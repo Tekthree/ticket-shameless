@@ -27,27 +27,32 @@ export async function middleware(request: NextRequest) {
     }
   )
   
-  // Get the session from Supabase
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  // Get the user directly from the server for better security
+  // This is more secure than using getSession() as it validates with the Supabase Auth server
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  // We'll use the validated user object exclusively for authentication
+  // This eliminates security warnings related to using session data from storage
+  
+  // If no validated user, they're not authenticated
+  if (!user) {
+    // Check if they're trying to access a protected route
+    const path = request.nextUrl.pathname
+    if (path.startsWith('/admin') || 
+        path.startsWith('/profile') || 
+        path.startsWith('/artist') || 
+        path.startsWith('/box-office') || 
+        path.startsWith('/event-manager')) {
+      return NextResponse.redirect(new URL('/auth/login', request.url))
+    }
+  }
   
   // Get the path from the request URL
   const path = request.nextUrl.pathname
   
-  // Check if user is trying to access a protected route without being authenticated
-  if ((path.startsWith('/admin') || 
-       path.startsWith('/profile') || 
-       path.startsWith('/artist') || 
-       path.startsWith('/box-office') || 
-       path.startsWith('/event-manager')) && !session) {
-    return NextResponse.redirect(new URL('/auth/enhanced-login', request.url))
-  }
-  
   // If user is authenticated and trying to access login page, redirect to appropriate dashboard
   if ((path.startsWith('/login') || 
-       path.startsWith('/auth/login') || 
-       path.startsWith('/auth/enhanced-login')) && session) {
+       path.startsWith('/auth/login')) && user) {
     
     // Check user roles to determine where to redirect
     try {
@@ -55,7 +60,7 @@ export async function middleware(request: NextRequest) {
       const { data: userRolesData } = await supabase
         .from('user_roles')
         .select('roles(name)')
-        .eq('user_id', session.user.id);
+        .eq('user_id', user.id);
       
       // Extract role names
       const roles = (userRolesData || []).map((ur: any) => ur.roles?.name);
@@ -81,13 +86,13 @@ export async function middleware(request: NextRequest) {
   }
   
   // Role-based access control for specific sections
-  if (session) {
+  if (user) {
     try {
       // Get user roles
       const { data: userRolesData } = await supabase
         .from('user_roles')
         .select('roles(name)')
-        .eq('user_id', session.user.id);
+        .eq('user_id', user.id);
       
       // Extract role names
       const roles = (userRolesData || []).map((ur: any) => ur.roles?.name);
@@ -146,7 +151,6 @@ export const config = {
     '/box-office/:path*',
     '/event-manager/:path*',
     '/login',
-    '/auth/login',
-    '/auth/enhanced-login'
+    '/auth/login'
   ],
 }

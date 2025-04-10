@@ -90,8 +90,7 @@ describe('Direct Register Page', () => {
     expect(screen.getByText(/already have an account/i)).toBeInTheDocument();
   });
   
-  // Skip this test for now as it's causing issues
-  test.skip('handles successful registration', async () => {
+  test('handles successful registration', async () => {
     // Mock successful API response
     global.fetch.mockResolvedValueOnce({
       ok: true,
@@ -129,6 +128,7 @@ describe('Direct Register Page', () => {
     // Verify success actions
     await waitFor(() => {
       expect(mockToast.success).toHaveBeenCalledWith(expect.stringContaining('Account created successfully'));
+      expect(screen.getByText(/email verification required/i)).toBeInTheDocument();
     });
   });
   
@@ -177,7 +177,7 @@ describe('Direct Register Page', () => {
     });
   });
   
-  test.skip('navigates to login page after successful registration', async () => {
+  test('navigates to login page after successful registration', async () => {
     // Mock successful API response
     global.fetch.mockResolvedValueOnce({
       ok: true,

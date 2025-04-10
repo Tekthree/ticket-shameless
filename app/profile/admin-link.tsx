@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { LayoutDashboard, Settings } from 'lucide-react';
 
@@ -14,15 +14,16 @@ export default function AdminLink() {
     async function checkAdminRole() {
       try {
         const supabase = createClient();
-        const { data: { session } } = await supabase.auth.getSession();
+        // Get authenticated user securely
+        const user = await getAuthenticatedUser();
         
-        if (!session) return;
+        if (!user) return;
         
         // Fetch user roles
         const { data: rolesData } = await supabase
           .from('user_roles')
           .select('roles(name)')
-          .eq('user_id', session.user.id);
+          .eq('user_id', user.id);
           
         const roleNames = rolesData?.map((role: any) => role.roles?.name) || [];
         setHasAdminRole(roleNames.includes('admin'));

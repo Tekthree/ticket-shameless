@@ -90,8 +90,17 @@ console.error = (...args) => {
   if (
     args[0]?.includes('Warning:') ||
     args[0]?.includes('React does not recognize the') ||
-    args[0]?.includes('Invalid DOM property')
+    args[0]?.includes('Invalid DOM property') ||
+    // Suppress expected auth error messages in tests
+    args[0]?.includes('Sign in error:') ||
+    args[0]?.includes('Registration error:') ||
+    args[0]?.includes('Email already in use') ||
+    args[0]?.includes('Invalid credentials')
   ) {
+    // Still log these during development if needed
+    if (process.env.DEBUG_TEST_ERRORS) {
+      originalConsoleError('Suppressed error in test:', ...args);
+    }
     return;
   }
   originalConsoleError(...args);
