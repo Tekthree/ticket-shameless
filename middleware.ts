@@ -42,7 +42,9 @@ export async function middleware(request: NextRequest) {
         path.startsWith('/profile') || 
         path.startsWith('/artist') || 
         path.startsWith('/box-office') || 
-        path.startsWith('/event-manager')) {
+        path.startsWith('/event-manager') ||
+        path.startsWith('/auth/enhanced-login')) {
+      // Always redirect to the standard login page
       return NextResponse.redirect(new URL('/auth/login', request.url))
     }
   }
@@ -62,17 +64,31 @@ export async function middleware(request: NextRequest) {
         .select('roles(name)')
         .eq('user_id', user.id);
       
-      // Extract role names
-      const roles = (userRolesData || []).map((ur: any) => ur.roles?.name);
+      // Extract role names and normalize to lowercase for comparison
+      const roleObjects = userRolesData || [];
+      console.log('User role data objects:', roleObjects);
+      
+      // Extract both original roles and lowercase versions for flexible matching
+      const roles = roleObjects.map((ur: any) => ur.roles?.name);
+      const rolesLower = roles.map(role => (typeof role === 'string' ? role.toLowerCase() : ''));
+      
+      console.log('User roles (original):', roles);
+      console.log('User roles (lowercase):', rolesLower);
+      
+      // Function to check if user has a specific role (case insensitive)
+      const hasRole = (roleToCheck: string) => {
+        const roleLower = roleToCheck.toLowerCase();
+        return rolesLower.includes(roleLower) || roles.includes(roleToCheck);
+      };
       
       // Determine redirect based on role hierarchy
-      if (roles.includes('admin')) {
+      if (hasRole('admin') || hasRole('ADMIN')) {
         return NextResponse.redirect(new URL('/admin', request.url));
-      } else if (roles.includes('event_manager')) {
+      } else if (hasRole('event_manager') || hasRole('EVENT_MANAGER')) {
         return NextResponse.redirect(new URL('/admin/events', request.url));
-      } else if (roles.includes('box_office')) {
+      } else if (hasRole('box_office') || hasRole('BOX_OFFICE')) {
         return NextResponse.redirect(new URL('/box-office', request.url));
-      } else if (roles.includes('artist')) {
+      } else if (hasRole('artist') || hasRole('ARTIST')) {
         return NextResponse.redirect(new URL('/artist/dashboard', request.url));
       } else {
         // Default redirect for authenticated users
@@ -94,44 +110,65 @@ export async function middleware(request: NextRequest) {
         .select('roles(name)')
         .eq('user_id', user.id);
       
-      // Extract role names
-      const roles = (userRolesData || []).map((ur: any) => ur.roles?.name);
+      // Extract role names and normalize to lowercase for comparison
+      const roleObjects = userRolesData || [];
+      console.log('RBAC - User role data objects:', roleObjects);
+      
+      // Extract both original roles and lowercase versions for flexible matching
+      const roles = roleObjects.map((ur: any) => ur.roles?.name);
+      const rolesLower = roles.map(role => (typeof role === 'string' ? role.toLowerCase() : ''));
+      
+      console.log('RBAC - User roles (original):', roles);
+      console.log('RBAC - User roles (lowercase):', rolesLower);
+      console.log('RBAC - Requested path:', path);
+      
+      // Function to check if user has a specific role (case insensitive)
+      const hasRole = (roleToCheck: string) => {
+        const roleLower = roleToCheck.toLowerCase();
+        return rolesLower.includes(roleLower) || roles.includes(roleToCheck);
+      };
       
       // Check if user has access to the requested path based on roles
-      if (path.startsWith('/admin') && !roles.includes('admin')) {
-        return NextResponse.redirect(new URL('/unauthorized', request.url));
-      }
-      
-      if (path.startsWith('/admin/events') && 
-          !roles.includes('admin') && 
-          !roles.includes('event_manager')) {
-        return NextResponse.redirect(new URL('/unauthorized', request.url));
+      if (path.startsWith('/admin') && !hasRole('admin') && !hasRole('ADMIN')) {
+        // Special case for /admin/events and /admin/artists for event managers
+        if ((path.startsWith('/admin/events') || path.startsWith('/admin/artists')) && 
+            (hasRole('event_manager') || hasRole('EVENT_MANAGER'))) {
+          // Allow event managers to access these specific routes
+          console.log('RBAC - Allowing event manager access to:', path);
+        } else {
+          console.log('RBAC - Unauthorized admin access, redirecting to /unauthorized');
+          return NextResponse.redirect(new URL('/unauthorized', request.url));
+        }
       }
       
       if (path.startsWith('/box-office') && 
-          !roles.includes('admin') && 
-          !roles.includes('box_office') &&
-          !roles.includes('event_manager')) {
+          !hasRole('admin') && !hasRole('ADMIN') && 
+          !hasRole('box_office') && !hasRole('BOX_OFFICE') &&
+          !hasRole('event_manager') && !hasRole('EVENT_MANAGER')) {
+        console.log('RBAC - Unauthorized box office access, redirecting to /unauthorized');
         return NextResponse.redirect(new URL('/unauthorized', request.url));
       }
       
       // New specific box-office route checks
       if ((path.startsWith('/box-office/pos') || path.startsWith('/box-office/scanning')) && 
-          !roles.includes('admin') && 
-          !roles.includes('box_office') &&
-          !roles.includes('event_manager')) {
+          !hasRole('admin') && !hasRole('ADMIN') && 
+          !hasRole('box_office') && !hasRole('BOX_OFFICE') &&
+          !hasRole('event_manager') && !hasRole('EVENT_MANAGER')) {
+        console.log('RBAC - Unauthorized box office POS/scanning access, redirecting to /unauthorized');
         return NextResponse.redirect(new URL('/unauthorized', request.url));
       }
       
       // New admin tickets reporting route check
       if (path.startsWith('/admin/tickets') && 
-          !roles.includes('admin')) {
+          !hasRole('admin') && !hasRole('ADMIN')) {
+        console.log('RBAC - Unauthorized tickets reporting access, redirecting to /unauthorized');
         return NextResponse.redirect(new URL('/unauthorized', request.url));
       }
       
       if (path.startsWith('/artist') && 
-          !roles.includes('admin') && 
-          !roles.includes('artist')) {
+          !hasRole('admin') && !hasRole('ADMIN') && 
+          !hasRole('artist') && !hasRole('ARTIST')) {
+        console.log('RBAC - Unauthorized artist access, redirecting to /unauthorized');
         return NextResponse.redirect(new URL('/unauthorized', request.url));
       }
     } catch (error) {

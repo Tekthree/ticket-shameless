@@ -84,7 +84,7 @@ export default function TicketHistory() {
             id: data[0].id,
             event_id: data[0].event_id,
             hasEventData: !!data[0].events,
-            eventImage: data[0].events?.image ? 'Present' : 'Missing'
+            eventImage: data[0].events && 'image' in data[0].events ? 'Present' : 'Missing'
           } : null
         });
 

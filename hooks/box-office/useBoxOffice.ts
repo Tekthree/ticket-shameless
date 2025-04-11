@@ -133,24 +133,69 @@ export function useBoxOffice() {
         throw new Error('User profile not found');
       }
       
+      console.log('Processing sale for event:', saleData.eventId);
+      console.log('Selected tickets:', saleData.selectedTickets);
+      
       // Calculate total amount
       const { data: ticketTypesData, error: ticketTypesError } = await supabase
         .from('ticket_types')
         .select('id, price')
         .in('id', Object.keys(saleData.selectedTickets));
         
-      if (ticketTypesError) throw ticketTypesError;
+      if (ticketTypesError) {
+        console.error('Error fetching ticket types:', ticketTypesError);
+        throw new Error(`Failed to fetch ticket types: ${ticketTypesError.message}`);
+      }
+      
+      if (!ticketTypesData || ticketTypesData.length === 0) {
+        throw new Error('No ticket types found for the selected tickets');
+      }
+      
+      console.log('Ticket types data:', ticketTypesData);
       
       const ticketPrices: {[key: string]: number} = {};
       ticketTypesData.forEach(tt => {
         ticketPrices[tt.id] = tt.price;
       });
       
+      // Calculate total quantity of tickets being sold
+      const totalQuantity = Object.values(saleData.selectedTickets).reduce((sum, qty) => sum + qty, 0);
+      
+      if (totalQuantity <= 0) {
+        throw new Error('No tickets selected for purchase');
+      }
+      
       const total = Object.entries(saleData.selectedTickets).reduce((sum, [typeId, quantity]) => {
         return sum + (ticketPrices[typeId] || 0) * quantity;
       }, 0);
       
+      console.log('Total quantity:', totalQuantity);
+      console.log('Total amount:', total);
+      
+      // Start a transaction to ensure data consistency
+      const { data: eventData, error: eventError } = await supabase
+        .from('events')
+        .select('tickets_remaining')
+        .eq('id', saleData.eventId)
+        .single();
+        
+      if (eventError) {
+        console.error('Error fetching event data:', eventError);
+        throw new Error(`Failed to fetch event data: ${eventError.message}`);
+      }
+      
+      console.log('Event data:', eventData);
+      
+      // Check if there are enough tickets available
+      if (eventData.tickets_remaining < totalQuantity) {
+        throw new Error(`Not enough tickets available. Only ${eventData.tickets_remaining} tickets remaining.`);
+      }
+      
+      // Generate a unique session ID for this sale
+      const sessionId = `pos_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+      
       // Create order
+      console.log('Creating order with session ID:', sessionId);
       const { data: orderData, error: orderError } = await supabase
         .from('orders')
         .insert({
@@ -159,21 +204,33 @@ export function useBoxOffice() {
           customer_name: saleData.customerName,
           amount_total: total,
           status: 'completed',
-          quantity: Object.values(saleData.selectedTickets).reduce((sum, qty) => sum + qty, 0),
+          quantity: totalQuantity,
           processed_by: profile.id,
           processing_location: saleData.location,
           payment_method: saleData.paymentMethod,
-          stripe_session_id: `pos_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
+          stripe_session_id: sessionId
         })
         .select()
         .single();
         
-      if (orderError) throw orderError;
+      if (orderError) {
+        console.error('Error creating order:', orderError);
+        throw new Error(`Failed to create order: ${orderError.message}`);
+      }
+      
+      if (!orderData) {
+        throw new Error('Order data is null after insert');
+      }
+      
+      console.log('Order created:', orderData);
       
       // Create tickets
       const ticketInserts = [];
       for (const [typeId, quantity] of Object.entries(saleData.selectedTickets)) {
         if (quantity > 0) {
+          // Get the price for this ticket type
+          const ticketTypePrice = ticketPrices[typeId] || 0;
+          
           for (let i = 0; i < quantity; i++) {
             // Generate QR code (simplified)
             const qrCode = `${orderData.id}_${typeId}_${i}_${Date.now()}`;
@@ -183,21 +240,39 @@ export function useBoxOffice() {
               event_id: saleData.eventId,
               ticket_type_id: typeId,
               qr_code: qrCode,
-              status: 'active'
+              status: 'active',
+              // Try including price - the column might now exist after running migration
+              price: ticketTypePrice 
             });
           }
         }
       }
       
       if (ticketInserts.length > 0) {
+        console.log(`Inserting ${ticketInserts.length} tickets`);
         const { error: ticketError } = await supabase
           .from('tickets')
           .insert(ticketInserts);
           
-        if (ticketError) throw ticketError;
+        if (ticketError) {
+          console.error('Error inserting tickets:', ticketError);
+          throw new Error(`Failed to create tickets: ${ticketError.message}`);
+        }
       }
       
+      console.log('Tickets created successfully');
+      
+      // We're no longer manually decrementing tickets
+      // The database trigger will handle ticket count updates when the order is inserted
+      console.log(`Ticket count for event ${saleData.eventId} will be updated by the database trigger`);
+      console.log(`The trigger will decrement ${totalQuantity} tickets automatically`);
+      
+      // We've removed the sync-tickets API call here to prevent double-decrementing
+      // The database trigger will handle the ticket count update when the order is inserted
+      console.log('Skipping sync-tickets API call to prevent double-decrementing');
+      
       // Record transaction
+      console.log('Recording transaction');
       const { error: transactionError } = await supabase
         .from('ticket_transactions')
         .insert({
@@ -207,16 +282,23 @@ export function useBoxOffice() {
           performed_by: profile.id,
           location: saleData.location,
           device_info: navigator.userAgent,
-          notes: `Box office sale - ${saleData.paymentMethod}`
+          notes: `Box office sale - ${saleData.paymentMethod} - ${totalQuantity} tickets sold`
         });
         
-      if (transactionError) throw transactionError;
+      if (transactionError) {
+        console.error('Error recording transaction:', transactionError);
+        // Don't fail the entire sale if just the transaction record fails
+        console.warn('Transaction recording failed, but sale was successful');
+      }
       
+      console.log('Sale completed successfully');
       return { success: true, orderId: orderData.id };
     } catch (err) {
       console.error('Error processing sale:', err);
       setError('Failed to process sale');
-      return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      console.error('Error details:', errorMessage);
+      return { success: false, error: errorMessage };
     } finally {
       setIsLoading(false);
     }

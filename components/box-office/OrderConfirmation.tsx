@@ -78,23 +78,37 @@ export default function OrderConfirmation({ orderId }: { orderId: string }) {
         
         setEvent(eventData);
         
-        // Get tickets
+        // Get tickets with their ticket types
         const { data: ticketData, error: ticketError } = await supabase
           .from('tickets')
           .select(`
             id,
             ticket_type_id,
             qr_code,
-            ticket_type:ticket_types (
-              name,
-              price
-            )
+            price,
+            ticket_types(name, price)
           `)
           .eq('order_id', orderId);
           
         if (ticketError) throw ticketError;
         
-        setTickets(ticketData);
+        console.log('Raw ticket data:', ticketData);
+        
+        // Transform the data to match the Ticket interface
+        const formattedTickets = ticketData.map((ticket: any) => ({
+          id: ticket.id,
+          ticket_type_id: ticket.ticket_type_id,
+          qr_code: ticket.qr_code,
+          ticket_type: {
+            name: ticket.ticket_types?.name || '',
+            // Try to get price from ticket first, then fall back to ticket_type
+            price: ticket.price || ticket.ticket_types?.price || 0
+          }
+        }));
+        
+        console.log('Formatted tickets:', formattedTickets);
+        
+        setTickets(formattedTickets);
       } catch (err) {
         console.error('Error fetching order details:', err);
         setError('Failed to load order details');

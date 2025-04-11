@@ -85,6 +85,18 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: 'Database client initialization failed' }, { status: 500 })
         }
         
+        // Check if this order already exists (to prevent duplicate processing)
+        const existingOrderCheck = await supabase
+          .from('orders')
+          .select('id')
+          .eq('stripe_session_id', session.id)
+          .maybeSingle()
+        
+        if (existingOrderCheck.data) {
+          console.log(`Order for session ${session.id} already exists, skipping creation`)
+          return NextResponse.json({ received: true, note: 'Order already processed' })
+        }
+        
         // Extract event ID from metadata
         const eventId = session.metadata?.eventId
         console.log('Event ID from metadata:', eventId)
@@ -155,50 +167,10 @@ export async function POST(request: Request) {
           
           console.log('Order recorded successfully:', insertData)
           
-          // Now update the ticket count for the event
-          if (isValidUuid) {
-            console.log(`Attempting to update tickets for event: ${eventId}`)
-            
-            try {
-              // First, get current tickets remaining
-              const { data: eventData, error: fetchError } = await supabase
-                .from('events')
-                .select('tickets_remaining')
-                .eq('id', eventId)
-                .single()
-              
-              if (fetchError) {
-                console.error('Error fetching event data:', fetchError)
-                console.log('Will skip updating event ticket count due to error')
-                // Don't fail the webhook, we've already recorded the order
-              } else {
-                // Calculate new tickets remaining
-                const newTicketsRemaining = Math.max(0, eventData.tickets_remaining - quantity)
-                const soldOut = newTicketsRemaining <= 0
-                
-                // Update the event
-                const { error: eventError } = await supabase
-                  .from('events')
-                  .update({
-                    tickets_remaining: newTicketsRemaining,
-                    sold_out: soldOut
-                  })
-                  .eq('id', eventId)
-                
-                if (eventError) {
-                  console.error('Error updating event ticket count:', eventError)
-                  console.log('Order was recorded, but ticket count update failed')
-                } else {
-                  console.log(`Updated event ${eventId}: tickets_remaining=${newTicketsRemaining}, sold_out=${soldOut}`)
-                }
-              }
-            } catch (eventUpdateError) {
-              console.error('Error during event update process:', eventUpdateError)
-              console.log('Order was recorded, but event update failed')
-            }
-          } else {
-            console.log('Skipping event update because event ID is not a valid UUID')
-          }
+          // REMOVED: Ticket count updating code
+          // The database trigger will handle this automatically now
+          console.log('Ticket count will be updated by the database trigger')
+          
         } catch (insertError) {
           console.error('Exception during order insertion:', insertError)
           return NextResponse.json({ error: 'Exception during order insertion' }, { status: 500 })

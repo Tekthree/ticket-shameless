@@ -75,6 +75,10 @@ const EventPageClient = ({ event }: EventPageClientProps) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
+  // State for real-time ticket count
+  const [ticketsRemaining, setTicketsRemaining] = useState(event.ticketsRemaining);
+  const [isSoldOut, setIsSoldOut] = useState(event.soldOut);
+  
   // Check for success parameter and show success message
   useEffect(() => {
     if (success === 'true') {
@@ -83,6 +87,42 @@ const EventPageClient = ({ event }: EventPageClientProps) => {
       window.scrollTo(0, 0);
     }
   }, [success]);
+  
+  // Refresh ticket count periodically or after coming back to the page
+  useEffect(() => {
+    const fetchTicketCount = async () => {
+      try {
+        const response = await fetch(`/api/events/${event.id}/tickets-remaining`);
+        if (response.ok) {
+          const data = await response.json();
+          setTicketsRemaining(data.ticketsRemaining);
+          setIsSoldOut(data.soldOut);
+        }
+      } catch (error) {
+        console.error('Error fetching ticket count:', error);
+      }
+    };
+    
+    // Run once on initial load
+    fetchTicketCount();
+    
+    // Run when user returns to the tab
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchTicketCount();
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Run every 30 seconds to keep the count updated
+    const interval = setInterval(fetchTicketCount, 30000);
+    
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [event.id]);
   
   return (
     <div className="bg-transparent text-white min-h-screen pb-20" ref={contentRef}>
@@ -167,7 +207,7 @@ const EventPageClient = ({ event }: EventPageClientProps) => {
             {/* Event Description */}
             <div className="mb-8">
               <h2 className="text-2xl font-bold mb-4">About This Event</h2>
-              <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: event.description }} />
+              <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: event.description || '' }} />
             </div>
             
             {/* Divider */}
@@ -177,7 +217,7 @@ const EventPageClient = ({ event }: EventPageClientProps) => {
             <div className="mb-8">
               <h2 className="text-xl font-bold mb-4">Event Information</h2>
               <div className="space-y-2 text-gray-300">
-                {event.ticketsTotal > 0 && (
+                {event.ticketsTotal && event.ticketsTotal > 0 && (
                   <div className="flex items-center">
                     <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M21.41 11.58L12.41 2.58C12.05 2.22 11.55 2 11 2H4C2.9 2 2 2.9 2 4V11C2 11.55 2.22 12.05 2.59 12.42L11.59 21.42C11.95 21.78 12.45 22 13 22C13.55 22 14.05 21.78 14.41 21.41L21.41 14.41C21.78 14.05 22 13.55 22 13C22 12.45 21.77 11.94 21.41 11.58ZM5.5 7C4.67 7 4 6.33 4 5.5C4 4.67 4.67 4 5.5 4C6.33 4 7 4.67 7 5.5C7 6.33 6.33 7 5.5 7Z" fill="currentColor"/>
@@ -207,7 +247,7 @@ const EventPageClient = ({ event }: EventPageClientProps) => {
             <div className="mb-8">
               <h2 className="text-xl font-bold mb-4">Lineup</h2>
               <div className="space-y-3">
-                {event.lineup.map((artist) => (
+                {event.lineup?.map((artist) => (
                   <div key={artist.id} className="relative border-b border-gray-800 py-4 last:border-b-0">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-gray-900 rounded-full overflow-hidden flex-shrink-0">
@@ -288,13 +328,13 @@ const EventPageClient = ({ event }: EventPageClientProps) => {
               <div className="mb-6">
                 <div className="text-3xl font-bold mb-2">${event.price.toFixed(2)}</div>
                 <div className="text-gray-400 mb-4">
-                  {event.ticketsRemaining > 0 
-                    ? `${event.ticketsRemaining} tickets remaining` 
-                    : 'Sold out'}
+                  {isSoldOut 
+                    ? 'Sold out' 
+                    : `${ticketsRemaining} tickets remaining`}
                 </div>
               </div>
               
-              {event.soldOut ? (
+              {isSoldOut ? (
                 <button className="w-full py-3 bg-gray-700 text-white font-bold rounded-full cursor-not-allowed mb-4" disabled>
                   Sold Out
                 </button>

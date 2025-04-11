@@ -50,7 +50,7 @@ export default function POSInterface() {
         const { ticketTypes: fetchedTypes } = await fetchTicketTypes(selectedEvent.id);
         
         if (fetchedTypes.length === 0) {
-          toast.info('Creating default ticket types for this event...');
+          toast('Creating default ticket types for this event...', { icon: 'ℹ️' });
           const { ticketTypes: createdTypes } = await createDefaultTicketTypes(selectedEvent.id);
           setTicketTypes(createdTypes);
         } else {
@@ -100,20 +100,27 @@ export default function POSInterface() {
     
     if (!selectedEvent) return;
     
-    const result = await processSale({
-      eventId: selectedEvent.id,
-      customerEmail,
-      customerName,
-      paymentMethod,
-      location,
-      selectedTickets
-    });
-    
-    if (result.success) {
-      toast.success('Sale completed successfully!');
-      router.push(`/box-office/confirmation/${result.orderId}`);
-    } else {
-      toast.error(`Failed to process sale: ${result.error || 'Unknown error'}`);
+    try {
+      const result = await processSale({
+        eventId: selectedEvent.id,
+        customerEmail,
+        customerName,
+        paymentMethod,
+        location,
+        selectedTickets
+      });
+      
+      if (result.success) {
+        toast.success('Sale completed successfully!');
+        router.push(`/box-office/confirmation/${result.orderId}`);
+      } else {
+        // Display a more detailed error message
+        toast.error(`Failed to process sale: ${result.error || 'Unknown error'}`, { duration: 5000 });
+        console.error('Sale processing error:', result.error);
+      }
+    } catch (err) {
+      console.error('Exception during sale processing:', err);
+      toast.error(`An unexpected error occurred: ${err instanceof Error ? err.message : 'Unknown error'}`, { duration: 5000 });
     }
   };
 

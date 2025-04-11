@@ -68,16 +68,19 @@ export default function FixedImageUpload({
       const filePath = `site-content/${fileName}`;
 
       // Upload the file to Supabase Storage
+      // Note: We can't use onUploadProgress as it's not in the FileOptions type
+      // So we'll set a fixed progress value instead
+      setUploadProgress(50); // Set to 50% to show some progress
+      
       const { data, error } = await supabase.storage
         .from('public')
         .upload(filePath, file, {
           cacheControl: '3600',
-          upsert: false,
-          onUploadProgress: (progress) => {
-            const percent = (progress.loaded / progress.total) * 100;
-            setUploadProgress(Math.round(percent));
-          }
+          upsert: false
         });
+      
+      // Once upload is complete, set to 100%
+      setUploadProgress(100);
 
       if (error) throw error;
 

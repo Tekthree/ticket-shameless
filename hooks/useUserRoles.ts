@@ -62,6 +62,10 @@ export function useUserRoles() {
           ? userRolesData.map(item => item.roles?.name as string).filter(Boolean)
           : [];
         
+        console.log('Client - User role data:', userRolesData);
+        console.log('Client - Extracted role names:', roleNames);
+        console.log('Client - Primary role from profile:', profileData?.roles?.name);
+        
         setRoles(roleNames);
         setPrimaryRole(profileData?.roles?.name as string || null);
       } catch (error) {
@@ -89,16 +93,22 @@ export function useUserRoles() {
     };
   }, []);
   
+  // Helper function to check role case-insensitively
+  const hasRoleCaseInsensitive = (roleToCheck: string) => {
+    const roleLower = roleToCheck.toLowerCase();
+    return roles.some(role => role.toLowerCase() === roleLower);
+  };
+  
   return { 
     roles, 
     primaryRole,
     isLoading, 
-    hasRole: (role: string) => roles.includes(role),
-    isAdmin: () => roles.includes('admin'),
-    isEventManager: () => roles.includes('event_manager') || roles.includes('admin'),
-    isBoxOffice: () => roles.includes('box_office') || roles.includes('admin'),
-    isArtist: () => roles.includes('artist'),
-    isGuestListManager: () => roles.includes('guest_list_manager') || roles.includes('admin') || roles.includes('event_manager'),
-    isCustomer: () => roles.includes('customer') || roles.length > 0, // Everyone with any role can do customer things
+    hasRole: (role: string) => hasRoleCaseInsensitive(role),
+    isAdmin: () => hasRoleCaseInsensitive('admin'),
+    isEventManager: () => hasRoleCaseInsensitive('event_manager') || hasRoleCaseInsensitive('admin'),
+    isBoxOffice: () => hasRoleCaseInsensitive('box_office') || hasRoleCaseInsensitive('admin'),
+    isArtist: () => hasRoleCaseInsensitive('artist'),
+    isGuestListManager: () => hasRoleCaseInsensitive('guest_list_manager') || hasRoleCaseInsensitive('admin') || hasRoleCaseInsensitive('event_manager'),
+    isCustomer: () => hasRoleCaseInsensitive('customer') || roles.length > 0, // Everyone with any role can do customer things
   };
 }

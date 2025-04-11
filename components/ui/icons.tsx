@@ -53,10 +53,10 @@ import {
   Play,
   Pause,
   AlertCircle,
-  type Icon as LucideIcon,
+  LucideIcon,
 } from "lucide-react"
 
-export type Icon = LucideIcon
+export type Icon = typeof AlertCircle
 
 export const Icons = {
   logo: Command,

@@ -60,9 +60,63 @@ export async function fetchSiteContent() {
   return organizedContent;
 }
 
-// Function to synchronize ticket counts
+// Function to check ticket counts only - does NOT update them
+// This allows us to verify if counts are correct without changing them
+export async function checkTicketCounts(eventId: string) {
+  'use server';
+  
+  const supabase = await getServerSideSupabaseClient();
+  
+  try {
+    // Get total tickets from orders
+    const { data: orderData, error: orderError } = await supabase
+      .from('orders')
+      .select('quantity')
+      .eq('event_id', eventId)
+      .eq('status', 'completed');
+    
+    if (orderError) {
+      console.error('Error getting order quantities:', orderError);
+      return { success: false, error: orderError.message };
+    }
+    
+    // Calculate total sold tickets
+    const soldTickets = orderData.reduce((total, order) => total + order.quantity, 0);
+    
+    // Get the event
+    const { data: eventData, error: eventError } = await supabase
+      .from('events')
+      .select('tickets_total, tickets_remaining')
+      .eq('id', eventId)
+      .single();
+    
+    if (eventError) {
+      console.error('Error getting event:', eventError);
+      return { success: false, error: eventError.message };
+    }
+    
+    // Calculate expected tickets remaining
+    const expectedRemaining = Math.max(0, eventData.tickets_total - soldTickets);
+    const currentRemaining = eventData.tickets_remaining;
+    
+    return { 
+      success: true,
+      current: currentRemaining,
+      expected: expectedRemaining,
+      isCorrect: currentRemaining === expectedRemaining
+    };
+  } catch (err) {
+    console.error('Exception in checkTicketCounts:', err);
+    return { success: false, error: String(err) };
+  }
+}
+
+// DEPRECATED - Use with caution, may cause double-counting issues
+// This function is kept for backward compatibility but should be phased out
 export async function syncTicketCounts(eventId: string) {
   'use server';
+  
+  console.warn('Warning: syncTicketCounts is deprecated and may cause double-counting issues');
   
   const supabase = await getServerSideSupabaseClient();
   
