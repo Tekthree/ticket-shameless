@@ -134,10 +134,10 @@ export async function middleware(request: NextRequest) {
       if (cachedRoles && (Date.now() - cachedRoles.timestamp < ROLES_CACHE_TTL)) {
         roles = cachedRoles.roles
       } else {
-        // Fetch user roles with a single query
+        // Fetch user roles with a single query using the correct structure
         const { data: userRoles, error: rolesError } = await supabase
           .from('user_roles')
-          .select('role')
+          .select('roles(name)')
           .eq('user_id', userId)
         
         if (rolesError) {
@@ -147,7 +147,7 @@ export async function middleware(request: NextRequest) {
         }
         
         // Extract roles from the query result and normalize to lowercase
-        roles = new Set((userRoles || []).map(r => r.role.toLowerCase()))
+        roles = new Set((userRoles || []).map(r => r.roles?.name?.toLowerCase() || '').filter(Boolean))
         
         // Cache the roles
         userRolesCache.set(userId, { roles, timestamp: Date.now() })
