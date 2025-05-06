@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/optimized-client';
 import { useRouter } from 'next/navigation';
 import { useUserRoles } from '@/hooks/useUserRoles';
 import { useUserProfile } from '@/hooks/useUserProfile';

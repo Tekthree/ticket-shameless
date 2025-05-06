@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { createClient, getAuthenticatedUser, onSecureAuthStateChange } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { useSupabaseQuery } from './useSupabaseQuery';
 
 export interface UserProfile {
   id: string;
@@ -13,51 +14,31 @@ export interface UserProfile {
 
 export function useUserProfile() {
   const router = useRouter();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const supabase = createClient();
+  const [userId, setUserId] = useState<string | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
   
+  // Fetch the authenticated user
   useEffect(() => {
-    async function fetchUserProfile() {
+    async function checkUser() {
       try {
-        setIsLoading(true);
-        
-        // Use secure authentication helper
+        setIsAuthLoading(true);
         const user = await getAuthenticatedUser();
-        
-        if (!user) {
-          setProfile(null);
-          return;
-        }
-        
-        const { data, error: profileError } = await supabase
-          .from('profiles')
-          .select('id, email, full_name, display_name, avatar_url, bio')
-          .eq('id', user.id)
-          .single();
-          
-        if (profileError) {
-          throw profileError;
-        }
-        
-        setProfile(data as UserProfile);
+        setUserId(user?.id || null);
       } catch (err) {
-        console.error('Error fetching user profile:', err);
-        setError(err instanceof Error ? err : new Error('Unknown error'));
+        console.error('Error checking authenticated user:', err);
       } finally {
-        setIsLoading(false);
+        setIsAuthLoading(false);
       }
     }
     
-    fetchUserProfile();
+    checkUser();
     
     // Set up auth state change listener using our secure wrapper
-    // This uses getAuthenticatedUser() internally for security
     const { subscription } = onSecureAuthStateChange(
-      (event) => {
+      async (event) => {
         if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
-          fetchUserProfile();
+          const user = await getAuthenticatedUser();
+          setUserId(user?.id || null);
           router.refresh();
         }
       }
@@ -69,6 +50,45 @@ export function useUserProfile() {
     };
   }, [router]);
   
+  // Create a cache key based on the user ID
+  const cacheKey = useMemo(() => userId ? `profile_${userId}` : 'no_profile', [userId]);
   
-  return { profile, isLoading, error };
+  // Use the optimized query hook to fetch the profile
+  const { 
+    data: profile, 
+    error, 
+    isLoading: isProfileLoading,
+    refetch 
+  } = useSupabaseQuery<UserProfile>(
+    async (supabase) => {
+      if (!userId) {
+        // Skip query if no user ID by returning an empty result
+        return { data: null, error: null, count: null, status: 200, statusText: 'OK' };
+      }
+      
+      // Execute the query and return the result
+      return await supabase
+        .from('profiles')
+        .select('id, email, full_name, display_name, avatar_url, bio')
+        .eq('id', userId)
+        .single();
+    },
+    cacheKey,
+    {
+      enabled: !!userId, // Only run the query if we have a user ID
+      cacheTime: 60000, // Cache for 1 minute
+      staleTime: 30000, // Consider data stale after 30 seconds
+      retries: 3
+    }
+  );
+  
+  // Combine the loading states
+  const isLoading = isAuthLoading || isProfileLoading;
+  
+  return { 
+    profile, 
+    isLoading, 
+    error,
+    refetchProfile: refetch
+  };
 }

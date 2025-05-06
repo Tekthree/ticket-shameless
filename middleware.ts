@@ -2,42 +2,102 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
+// Cache constants
+const ROLES_CACHE_TTL = 300000 // 5 minutes in milliseconds
+const COOKIE_CACHE_TTL = 300000 // 5 minutes in milliseconds
+
+// Cache for user roles to reduce database queries
+const userRolesCache = new Map<string, { roles: Set<string>; timestamp: number }>()
+const cookieCache = new Map<string, { value: string; timestamp: number }>()
+
+// Set cookie options for auth
+const cookieOptions = {
+  name: 'sb-auth-token',
+  httpOnly: true,
+  sameSite: 'lax' as const,
+  path: '/',
+}
+
+// Define protected routes and their required roles
+const protectedRoutes = {
+  '/admin': ['admin'],
+  '/profile': ['admin', 'event_manager', 'box_office', 'artist'],
+  '/artist': ['admin', 'artist'],
+  '/box-office': ['admin', 'box_office', 'event_manager'],
+  '/event-manager': ['admin', 'event_manager'],
+}
+
 export async function middleware(request: NextRequest) {
   // Create a response object that we can manipulate
   const response = NextResponse.next()
   
-  // Create a Supabase client
+  // Create a Supabase client with optimized cookie handling
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         get(name: string) {
-          return request.cookies.get(name)?.value
+          // Check if we have a cached cookie value
+          const cacheKey = `${request.url}_${name}`
+          const cachedCookie = cookieCache.get(cacheKey)
+          
+          if (cachedCookie && (Date.now() - cachedCookie.timestamp < COOKIE_CACHE_TTL)) {
+            return cachedCookie.value
+          }
+          
+          // Get the cookie value from the request
+          const cookieValue = request.cookies.get(name)?.value
+          
+          // Cache the cookie value if it exists
+          if (cookieValue) {
+            cookieCache.set(cacheKey, { value: cookieValue, timestamp: Date.now() })
+          }
+          
+          return cookieValue
         },
         set(name: string, value: string, options: Record<string, any>) {
+          // Update the cookie in the request and response
           request.cookies.set({ name, value, ...options })
           response.cookies.set({ name, value, ...options })
+          
+          // Update the cache
+          const cacheKey = `${request.url}_${name}`
+          cookieCache.set(cacheKey, { value, timestamp: Date.now() })
         },
         remove(name: string, options: Record<string, any>) {
+          // Remove the cookie from the request and response
           request.cookies.set({ name, value: '', ...options })
           response.cookies.set({ name, value: '', ...options })
+          
+          // Remove from cache
+          const cacheKey = `${request.url}_${name}`
+          cookieCache.delete(cacheKey)
         },
       },
     }
   )
   
+  // Get the path from the request URL early to avoid redundant processing
+  const path = request.nextUrl.pathname
+  
+  // Skip middleware for static assets to improve performance
+  if (
+    path.startsWith('/_next/') || 
+    path.startsWith('/images/') || 
+    path.startsWith('/fonts/') || 
+    path.includes('.') // Skip files with extensions
+  ) {
+    return response;
+  }
+  
   // Get the user directly from the server for better security
   // This is more secure than using getSession() as it validates with the Supabase Auth server
   const { data: { user } } = await supabase.auth.getUser()
   
-  // We'll use the validated user object exclusively for authentication
-  // This eliminates security warnings related to using session data from storage
-  
   // If no validated user, they're not authenticated
   if (!user) {
     // Check if they're trying to access a protected route
-    const path = request.nextUrl.pathname
     if (path.startsWith('/admin') || 
         path.startsWith('/profile') || 
         path.startsWith('/artist') || 
@@ -47,132 +107,89 @@ export async function middleware(request: NextRequest) {
       // Always redirect to the standard login page
       return NextResponse.redirect(new URL('/auth/login', request.url))
     }
-  }
-  
-  // Get the path from the request URL
-  const path = request.nextUrl.pathname
-  
-  // If user is authenticated and trying to access login page, redirect to appropriate dashboard
-  if ((path.startsWith('/login') || 
-       path.startsWith('/auth/login')) && user) {
     
-    // Check user roles to determine where to redirect
-    try {
-      // Get user roles
-      const { data: userRolesData } = await supabase
-        .from('user_roles')
-        .select('roles(name)')
-        .eq('user_id', user.id);
-      
-      // Extract role names and normalize to lowercase for comparison
-      const roleObjects = userRolesData || [];
-      console.log('User role data objects:', roleObjects);
-      
-      // Extract both original roles and lowercase versions for flexible matching
-      const roles = roleObjects.map((ur: any) => ur.roles?.name);
-      const rolesLower = roles.map(role => (typeof role === 'string' ? role.toLowerCase() : ''));
-      
-      console.log('User roles (original):', roles);
-      console.log('User roles (lowercase):', rolesLower);
-      
-      // Function to check if user has a specific role (case insensitive)
-      const hasRole = (roleToCheck: string) => {
-        const roleLower = roleToCheck.toLowerCase();
-        return rolesLower.includes(roleLower) || roles.includes(roleToCheck);
-      };
-      
-      // Determine redirect based on role hierarchy
-      if (hasRole('admin') || hasRole('ADMIN')) {
-        return NextResponse.redirect(new URL('/admin', request.url));
-      } else if (hasRole('event_manager') || hasRole('EVENT_MANAGER')) {
-        return NextResponse.redirect(new URL('/admin/events', request.url));
-      } else if (hasRole('box_office') || hasRole('BOX_OFFICE')) {
-        return NextResponse.redirect(new URL('/box-office', request.url));
-      } else if (hasRole('artist') || hasRole('ARTIST')) {
-        return NextResponse.redirect(new URL('/artist/dashboard', request.url));
-      } else {
-        // Default redirect for authenticated users
-        return NextResponse.redirect(new URL('/profile', request.url));
-      }
-    } catch (error) {
-      console.error('Error checking roles:', error);
-      // Default redirect if role check fails
-      return NextResponse.redirect(new URL('/profile', request.url));
-    }
+    // For non-protected routes, allow access for non-authenticated users
+    return response;
   }
   
-  // Role-based access control for specific sections
-  if (user) {
+  // If user is authenticated and trying to access login page, redirect to home
+  if (path === '/login' || path === '/auth/login') {
+    return NextResponse.redirect(new URL('/', request.url))
+  }
+  
+  // For protected routes, check role-based access control
+  if (path.startsWith('/admin') || 
+      path.startsWith('/profile') || 
+      path.startsWith('/artist') || 
+      path.startsWith('/box-office') || 
+      path.startsWith('/event-manager')) {
+    
     try {
-      // Get user roles
-      const { data: userRolesData } = await supabase
-        .from('user_roles')
-        .select('roles(name)')
-        .eq('user_id', user.id);
+      // Check if we have cached roles for this user
+      const userId = user.id
+      const cachedRoles = userRolesCache.get(userId)
+      let roles: Set<string>
       
-      // Extract role names and normalize to lowercase for comparison
-      const roleObjects = userRolesData || [];
-      console.log('RBAC - User role data objects:', roleObjects);
+      // Use cached roles if they're still valid
+      if (cachedRoles && (Date.now() - cachedRoles.timestamp < ROLES_CACHE_TTL)) {
+        roles = cachedRoles.roles
+      } else {
+        // Fetch user roles with a single query
+        const { data: userRoles, error: rolesError } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', userId)
+        
+        if (rolesError) {
+          console.error('Error fetching user roles:', rolesError)
+          // Allow access by default if role fetch fails (graceful degradation)
+          return response
+        }
+        
+        // Extract roles from the query result and normalize to lowercase
+        roles = new Set((userRoles || []).map(r => r.role.toLowerCase()))
+        
+        // Cache the roles
+        userRolesCache.set(userId, { roles, timestamp: Date.now() })
+      }
       
-      // Extract both original roles and lowercase versions for flexible matching
-      const roles = roleObjects.map((ur: any) => ur.roles?.name);
-      const rolesLower = roles.map(role => (typeof role === 'string' ? role.toLowerCase() : ''));
+      // Helper function to check if user has a specific role
+      const hasRole = (roleName: string): boolean => {
+        return roles.has(roleName.toLowerCase())
+      }
       
-      console.log('RBAC - User roles (original):', roles);
-      console.log('RBAC - User roles (lowercase):', rolesLower);
-      console.log('RBAC - Requested path:', path);
+      // Check if user has admin role - this is a common check
+      const isAdmin = hasRole('admin')
+      const isEventManager = hasRole('event_manager')
+      const isBoxOffice = hasRole('box_office')
+      const isArtist = hasRole('artist')
       
-      // Function to check if user has a specific role (case insensitive)
-      const hasRole = (roleToCheck: string) => {
-        const roleLower = roleToCheck.toLowerCase();
-        return rolesLower.includes(roleLower) || roles.includes(roleToCheck);
-      };
-      
-      // Check if user has access to the requested path based on roles
-      if (path.startsWith('/admin') && !hasRole('admin') && !hasRole('ADMIN')) {
-        // Special case for /admin/events and /admin/artists for event managers
-        if ((path.startsWith('/admin/events') || path.startsWith('/admin/artists')) && 
-            (hasRole('event_manager') || hasRole('EVENT_MANAGER'))) {
-          // Allow event managers to access these specific routes
-          console.log('RBAC - Allowing event manager access to:', path);
-        } else {
-          console.log('RBAC - Unauthorized admin access, redirecting to /unauthorized');
-          return NextResponse.redirect(new URL('/unauthorized', request.url));
+      // Check role-based access for admin routes
+      if (path.startsWith('/admin')) {
+        // Special case for event managers to access specific admin routes
+        if (isEventManager && (path.startsWith('/admin/events') || path.startsWith('/admin/artists'))) {
+          // Allow access
+        } else if (!isAdmin) {
+          return NextResponse.redirect(new URL('/unauthorized', request.url))
         }
       }
       
-      if (path.startsWith('/box-office') && 
-          !hasRole('admin') && !hasRole('ADMIN') && 
-          !hasRole('box_office') && !hasRole('BOX_OFFICE') &&
-          !hasRole('event_manager') && !hasRole('EVENT_MANAGER')) {
-        console.log('RBAC - Unauthorized box office access, redirecting to /unauthorized');
-        return NextResponse.redirect(new URL('/unauthorized', request.url));
+      // Check role-based access for box office routes
+      if (path.startsWith('/box-office') && !isAdmin && !isBoxOffice && !isEventManager) {
+        return NextResponse.redirect(new URL('/unauthorized', request.url))
       }
       
-      // New specific box-office route checks
-      if ((path.startsWith('/box-office/pos') || path.startsWith('/box-office/scanning')) && 
-          !hasRole('admin') && !hasRole('ADMIN') && 
-          !hasRole('box_office') && !hasRole('BOX_OFFICE') &&
-          !hasRole('event_manager') && !hasRole('EVENT_MANAGER')) {
-        console.log('RBAC - Unauthorized box office POS/scanning access, redirecting to /unauthorized');
-        return NextResponse.redirect(new URL('/unauthorized', request.url));
+      // Check role-based access for artist routes
+      if (path.startsWith('/artist') && !isAdmin && !isArtist) {
+        return NextResponse.redirect(new URL('/unauthorized', request.url))
       }
       
-      // New admin tickets reporting route check
-      if (path.startsWith('/admin/tickets') && 
-          !hasRole('admin') && !hasRole('ADMIN')) {
-        console.log('RBAC - Unauthorized tickets reporting access, redirecting to /unauthorized');
-        return NextResponse.redirect(new URL('/unauthorized', request.url));
-      }
-      
-      if (path.startsWith('/artist') && 
-          !hasRole('admin') && !hasRole('ADMIN') && 
-          !hasRole('artist') && !hasRole('ARTIST')) {
-        console.log('RBAC - Unauthorized artist access, redirecting to /unauthorized');
-        return NextResponse.redirect(new URL('/unauthorized', request.url));
+      // Check role-based access for event manager routes
+      if (path.startsWith('/event-manager') && !isAdmin && !isEventManager) {
+        return NextResponse.redirect(new URL('/unauthorized', request.url))
       }
     } catch (error) {
-      console.error('Error checking roles for access control:', error);
+      console.error('Error checking roles for access control:', error)
       // Allow access by default if role check fails (graceful degradation)
     }
   }

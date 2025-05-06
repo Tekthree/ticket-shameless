@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { cachedQuery } from '@/lib/supabase/optimized-client'
 
 export type Artist = {
   id: string
@@ -193,19 +194,29 @@ async function parseEventData(supabase: any, event: any): Promise<Event> {
 
 export async function getEvents(limit?: number) {
   try {
-    const supabase = createClient();
-    console.log('Fetching events from Supabase...');
+    // Fetch events from Supabase with caching
     
-    let query = supabase
-      .from('events')
-      .select('*')
-      .order('date', { ascending: true });
+    // Generate a cache key that includes the limit if provided
+    const cacheKey = limit ? `events_limit_${limit}` : 'all_events';
     
-    if (limit) {
-      query = query.limit(limit);
-    }
-    
-    const { data, error } = await query;
+    // Use cachedQuery to reduce redundant requests
+    const { data, error } = await cachedQuery<any[]>(
+      'events',
+      async (supabase) => {
+        let query = supabase
+          .from('events')
+          .select('*')
+          .order('date', { ascending: true });
+        
+        if (limit) {
+          query = query.limit(limit);
+        }
+        
+        return await query;
+      },
+      cacheKey,
+      300000 // Cache for 5 minutes
+    );
     
     if (error) {
       console.error('Error fetching events from Supabase:', error);
@@ -218,7 +229,10 @@ export async function getEvents(limit?: number) {
       return limit ? mockEvents.slice(0, limit) : mockEvents;
     }
     
-    console.log(`Successfully fetched ${data.length} events from Supabase`);
+    // Successfully fetched events from Supabase
+    
+    // Create a Supabase client for processing lineup data
+    const supabase = createClient();
     
     // Process each event to include lineup data
     const eventsWithLineup = await Promise.all(
@@ -233,21 +247,30 @@ export async function getEvents(limit?: number) {
   }
 }
 
-export async function getPastEvents(limit?: number) {
+export async function getPastEvents(limit?: number): Promise<Event[]> {
   try {
-    const supabase = createClient();
+    // Generate a cache key that includes the limit if provided
+    const cacheKey = limit ? `past_events_limit_${limit}` : 'all_past_events';
     
-    let query = supabase
-      .from('events')
-      .select('*')
-      .order('date', { ascending: false })
-      .lt('date', new Date().toISOString()); // Only past events
-    
-    if (limit) {
-      query = query.limit(limit);
-    }
-    
-    const { data, error } = await query;
+    // Use cachedQuery to reduce redundant requests
+    const { data, error } = await cachedQuery<any[]>(
+      'past_events',
+      async (supabase) => {
+        let query = supabase
+          .from('events')
+          .select('*')
+          .order('date', { ascending: false })
+          .lt('date', new Date().toISOString()); // Only past events
+        
+        if (limit) {
+          query = query.limit(limit);
+        }
+        
+        return await query;
+      },
+      cacheKey,
+      300000 // Cache for 5 minutes
+    );
     
     if (error) {
       console.error('Error fetching past events:', error);
@@ -257,6 +280,9 @@ export async function getPastEvents(limit?: number) {
     if (!data || data.length === 0) {
       return [];
     }
+    
+    // Create a Supabase client for processing lineup data
+    const supabase = createClient();
     
     // Process each event to include lineup data
     const eventsWithLineup = await Promise.all(
@@ -364,7 +390,7 @@ export async function updateEvent(id: string, eventData: Partial<Event>) {
       }
     });
     
-    console.log('Updating event in Supabase:', id, dbData);
+    // Update event in Supabase
     
     const { data, error } = await supabase
       .from('events')
@@ -409,7 +435,7 @@ export async function updateEvent(id: string, eventData: Partial<Event>) {
       }
     }
     
-    console.log('Event updated successfully:', data);
+    // Event updated successfully
     
     // Get the updated event with lineup
     const updatedEvent = await getEventById(id);

@@ -1,5 +1,8 @@
 import '@testing-library/jest-dom';
 
+// Import ticket test environment setup
+import './__tests__/tickets/setup-test-env';
+
 // Only mock window-specific APIs in jsdom environment
 if (typeof window !== 'undefined') {
   // Mock window.matchMedia which is not available in Jest
@@ -38,7 +41,8 @@ jest.mock('next/navigation', () => ({
   }),
 }));
 
-// Mock Supabase client
+// Mock Supabase client for component tests
+// Note: We'll use actual Supabase client for ticket tests
 jest.mock('@/lib/supabase/client', () => ({
   createClient: jest.fn().mockReturnValue({
     auth: {
@@ -95,7 +99,11 @@ console.error = (...args) => {
     args[0]?.includes('Sign in error:') ||
     args[0]?.includes('Registration error:') ||
     args[0]?.includes('Email already in use') ||
-    args[0]?.includes('Invalid credentials')
+    args[0]?.includes('Invalid credentials') ||
+    // Suppress Supabase credential warnings in ticket tests
+    args[0]?.includes('Missing Supabase credentials') ||
+    args[0]?.includes('supabaseUrl is required') ||
+    args[0]?.includes('Failed to create test')
   ) {
     // Still log these during development if needed
     if (process.env.DEBUG_TEST_ERRORS) {

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { createClient, getAuthenticatedUser } from '@/lib/supabase/client';
+import { getAuthenticatedUser, cachedQuery, createClient } from '@/lib/supabase/optimized-client';
 import UserProfileCard from './UserProfileCard';
 import { useUserRoles } from '@/hooks/useUserRoles';
 import { cn } from '@/lib/utils';
@@ -21,13 +21,20 @@ export default function Navbar() {
   useEffect(() => {
     const fetchLogo = async () => {
       try {
-        const supabase = createClient();
-        const { data, error } = await supabase
-          .from('site_content')
-          .select('content')
-          .eq('section', 'navigation')
-          .eq('field', 'logo')
-          .single();
+        // Use cachedQuery to reduce redundant requests
+        const { data, error } = await cachedQuery<{ content: string }>(
+          'site_content',
+          async (supabase) => {
+            return await supabase
+              .from('site_content')
+              .select('content')
+              .eq('section', 'navigation')
+              .eq('field', 'logo')
+              .single();
+          },
+          'navbar_logo',
+          300000 // Cache for 5 minutes
+        );
           
         if (data && !error) {
           setLogoUrl(data.content);

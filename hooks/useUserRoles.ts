@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient, getAuthenticatedUser, onSecureAuthStateChange } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser, onSecureAuthStateChange, cachedQuery } from '@/lib/supabase/optimized-client';
 
 export type Role = 'admin' | 'event_manager' | 'box_office' | 'artist' | 'guest_list_manager' | 'customer';
 
@@ -11,9 +11,35 @@ export function useUserRoles() {
   const [isLoading, setIsLoading] = useState(true);
   const supabase = createClient();
   
+  // Create a memoized user ID for stable cache keys
+  const [userId, setUserId] = useState<string | null>(null);
+  
+  // Update userId when authenticated user changes
+  useEffect(() => {
+    const updateUserId = async () => {
+      const user = await getAuthenticatedUser();
+      setUserId(user?.id || null);
+    };
+    
+    updateUserId();
+  }, []);
+  
+  // Create cache keys based on user ID
+  const userRolesCacheKey = useMemo(() => 
+    userId ? `user_roles_${userId}` : 'no_user_roles', 
+    [userId]
+  );
+  
+  const profileCacheKey = useMemo(() => 
+    userId ? `user_profile_${userId}` : 'no_user_profile', 
+    [userId]
+  );
+  
   useEffect(() => {
     async function fetchUserRoles() {
       try {
+        setIsLoading(true);
+        
         // Get authenticated user securely
         const user = await getAuthenticatedUser();
         
@@ -24,34 +50,48 @@ export function useUserRoles() {
           return;
         }
         
-        // Fetch the user's roles
-        const { data: userRolesData, error: userRolesError } = await supabase
-          .from('user_roles')
-          .select(`
-            roles (
-              id,
-              name,
-              description
-            )
-          `)
-          .eq('user_id', user.id);
+        // Fetch the user's roles with caching
+        const { data: userRolesData, error: userRolesError } = await cachedQuery<any[]>(
+          'user_roles',
+          async (supabase) => {
+            return await supabase
+              .from('user_roles')
+              .select(`
+                roles (
+                  id,
+                  name,
+                  description
+                )
+              `)
+              .eq('user_id', user.id);
+          },
+          userRolesCacheKey,
+          300000 // Cache for 5 minutes
+        );
           
         if (userRolesError) {
           console.error('Error fetching user roles:', userRolesError);
           throw userRolesError;
         }
         
-        // Fetch the user's primary role from profiles
-        const { data: profileData, error: profileError } = await supabase
-          .from('profiles')
-          .select(`
-            primary_role_id,
-            roles:primary_role_id (
-              name
-            )
-          `)
-          .eq('id', user.id)
-          .single();
+        // Fetch the user's primary role from profiles with caching
+        const { data: profileData, error: profileError } = await cachedQuery<any>(
+          'profiles',
+          async (supabase) => {
+            return await supabase
+              .from('profiles')
+              .select(`
+                primary_role_id,
+                roles:primary_role_id (
+                  name
+                )
+              `)
+              .eq('id', user.id)
+              .single();
+          },
+          profileCacheKey,
+          300000 // Cache for 5 minutes
+        );
           
         if (profileError && profileError.code !== 'PGRST116') { // Ignore "not found" errors
           console.error('Error fetching user profile:', profileError);
@@ -59,15 +99,18 @@ export function useUserRoles() {
         
         // Extract role names
         const roleNames = userRolesData && Array.isArray(userRolesData)
-          ? userRolesData.map(item => item.roles?.name as string).filter(Boolean)
+          ? userRolesData.map(item => {
+              // Handle the nested roles structure
+              const role = item.roles as { name: string };
+              return role?.name;
+            }).filter(Boolean)
           : [];
         
-        console.log('Client - User role data:', userRolesData);
-        console.log('Client - Extracted role names:', roleNames);
-        console.log('Client - Primary role from profile:', profileData?.roles?.name);
+        // Get primary role name safely
+        const primaryRoleName = profileData?.roles?.name as string || null;
         
         setRoles(roleNames);
-        setPrimaryRole(profileData?.roles?.name as string || null);
+        setPrimaryRole(primaryRoleName);
       } catch (error) {
         console.error('Error in fetchUserRoles:', error);
       } finally {
