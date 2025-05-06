@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/server'
 import Stripe from 'stripe'
 
 // Initialize Stripe with the secret key
@@ -35,6 +35,10 @@ export async function POST(request: Request) {
         { status: 400 }
       )
     }
+
+    // Get the authenticated user if available
+    const user = await getAuthenticatedUser()
+    const userId = user?.id || null
     
     // Create a Stripe checkout session
     const session = await stripe.checkout.sessions.create({
@@ -60,20 +64,36 @@ export async function POST(request: Request) {
         eventId: event.id,
         eventSlug: event.slug,
         quantity: quantity.toString(),
-        customerEmail: email || '', // Store email in metadata if provided
+        customerEmail: email || (user?.email || ''), // Use authenticated user email as fallback
+        userId: userId || '', // Store user ID in metadata if available
       },
       // Add these lines to collect customer information
       billing_address_collection: 'required',
       phone_number_collection: {
         enabled: true,
       },
-      customer_email: email || null, // Use provided email if available
+      customer_email: email || (user?.email || null), // Use provided email, then user email as fallback
       locale: 'en', // Use English locale
       // Default to United States
       shipping_address_collection: {
         allowed_countries: ['US'],
       }
     })
+
+    // Temporarily decrement ticket count to prevent overselling
+    // The final update will be done by the webhook/trigger
+    const { error: updateError } = await supabase
+      .from('events')
+      .update({
+        tickets_remaining: Math.max(0, event.tickets_remaining - quantity),
+        sold_out: event.tickets_remaining - quantity <= 0
+      })
+      .eq('id', eventId)
+
+    if (updateError) {
+      console.error('Warning: Failed to temporarily update ticket count:', updateError)
+      // Continue anyway as the webhook will handle the final update
+    }
     
     return NextResponse.json({ url: session.url })
   } catch (error) {

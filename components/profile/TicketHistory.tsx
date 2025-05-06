@@ -43,19 +43,15 @@ export default function TicketHistory() {
         const userEmail = user.email;
         const currentUserId = user.id;
         
-        // Fetch orders using a more general query without reference to auth.users
-        // First, construct the filter conditions properly
-        let filter = '';
-        if (userEmail) {
-          filter += `customer_email.eq."${userEmail}"`;
-        }
-        if (currentUserId) {
-          if (filter) filter += ',';
-          filter += `user_id.eq."${currentUserId}"`;
-        }
+        console.log('Fetching tickets for user:', { 
+          id: currentUserId, 
+          email: userEmail 
+        });
         
-        console.log('Using filter:', filter);
-        
+        // Improved query to find all orders associated with this user
+        // This handles both cases:
+        // 1. Orders made while logged in (user_id matches)
+        // 2. Orders made with the same email address (customer_email matches)
         const { data, error } = await supabase
           .from('orders')
           .select(`
@@ -66,6 +62,7 @@ export default function TicketHistory() {
             quantity,
             status,
             customer_email,
+            user_id,
             events:event_id (
               title, 
               slug, 
@@ -74,7 +71,7 @@ export default function TicketHistory() {
               image
             )
           `)
-          .or(filter)
+          .or(`user_id.eq.${currentUserId},customer_email.eq.${userEmail}`)
           .order('created_at', { ascending: false });
         
         console.log('Tickets query result:', { 

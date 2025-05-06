@@ -118,9 +118,12 @@ export async function POST(request: Request) {
         // Get quantity from metadata or default to 1
         const quantity = parseInt(session.metadata?.quantity || '1')
         
-        // Try to find the user ID based on the email
-        let userId = null
-        if (session.customer_details?.email) {
+        // First, check if user ID is provided in metadata
+        let userId = session.metadata?.userId || null
+        console.log('User ID from metadata:', userId)
+        
+        // If no user ID in metadata, try to find the user ID based on the email
+        if (!userId && session.customer_details?.email) {
           try {
             const { data: userData, error: userError } = await supabase
               .from('profiles')
