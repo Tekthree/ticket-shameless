@@ -6,6 +6,10 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { ThemeProvider } from '@/components/theme-provider'
 import { AudioProvider } from '@/components/AudioPlayer'
+import dynamic from 'next/dynamic'
+
+// Import AuthDebug dynamically with no SSR to prevent hydration issues
+const AuthDebug = dynamic(() => import('@/components/debug/AuthDebug'), { ssr: false })
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -28,6 +32,7 @@ export default function RootLayout({
             <main className="flex-grow">{children}</main>
             <Footer />
             <Toaster />
+            <AuthDebug />
           </AudioProvider>
         </ThemeProvider>
       </body>

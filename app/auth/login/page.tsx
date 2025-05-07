@@ -22,7 +22,11 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      // Clear any previous session data to prevent conflicts
+      await supabase.auth.signOut();
+      
+      // Attempt to sign in
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
@@ -31,13 +35,33 @@ export default function LoginPage() {
         throw error;
       }
 
-      toast.success('You have been signed in');
+      if (!data.user || !data.session) {
+        throw new Error('Authentication succeeded but no user or session was returned');
+      }
 
-      router.push('/profile');
-      router.refresh();
+      // Store session in localStorage for debugging purposes
+      sessionStorage.setItem('lastLoginAttempt', new Date().toISOString());
+      sessionStorage.setItem('lastLoginEmail', email);
+
+      toast.success('You have been signed in');
+      console.log('Login successful, redirecting to profile page');
+
+      // Use a slight delay to ensure the session is properly set
+      setTimeout(() => {
+        router.push('/profile');
+        router.refresh();
+      }, 500);
     } catch (error: any) {
       console.error('Sign in error:', error);
-      toast.error(error.message || 'Failed to sign in');
+      
+      // Provide more specific error messages
+      if (error.message.includes('Invalid login credentials')) {
+        toast.error('Invalid email or password. Please try again.');
+      } else if (error.message.includes('Email not confirmed')) {
+        toast.error('Please verify your email address before logging in.');
+      } else {
+        toast.error(error.message || 'Failed to sign in. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }

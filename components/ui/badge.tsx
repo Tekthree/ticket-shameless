@@ -9,13 +9,16 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80", // Red badge with white text
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "border-transparent bg-[#333333] text-white hover:bg-[#444444]", // Dark grey badge with white text
         destructive:
-          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-        outline: "text-foreground",
-        shameless: "border-transparent bg-shameless-red text-white hover:bg-red-700",
+          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80", // Darker red for destructive actions
+        outline: "border-primary text-primary bg-transparent", // Red outline with red text
+        ghost: "border-[#333333] bg-transparent text-foreground hover:bg-[#333333]/10", // Subtle badge with hover effect
+        success: "border-transparent bg-green-600 text-white hover:bg-green-700", // Green for success states
+        info: "border-transparent bg-blue-600 text-white hover:bg-blue-700", // Blue for information
+        warning: "border-transparent bg-yellow-600 text-white hover:bg-yellow-700", // Yellow for warnings
       },
     },
     defaultVariants: {

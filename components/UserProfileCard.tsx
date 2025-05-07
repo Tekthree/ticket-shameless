@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { createClient, getAuthenticatedUser } from '@/lib/supabase/optimized-client';
+import { createClient, getAuthenticatedUser, clearCaches } from '@/lib/supabase/optimized-client';
 import { useRouter } from 'next/navigation';
 import { useUserRoles } from '@/hooks/useUserRoles';
 import { useUserProfile } from '@/hooks/useUserProfile';
@@ -45,6 +45,17 @@ export default function UserProfileCard() {
   const [hasArtistAccess, setHasArtistAccess] = useState(false);
   
   useEffect(() => {
+    // Force clear any stale caches when component mounts
+    clearCaches();
+    
+    // Check authentication status directly
+    const checkAuth = async () => {
+      const user = await getAuthenticatedUser();
+      console.log('UserProfileCard auth check:', !!user);
+    };
+    
+    checkAuth();
+    
     setHasAdminAccess(isAdmin() || isEventManager() || isBoxOffice());
     setHasArtistAccess(isArtist());
   }, [isAdmin, isEventManager, isBoxOffice, isArtist, profile]);
@@ -79,6 +90,15 @@ export default function UserProfileCard() {
   
   // Guest user view (not logged in)
   if (!profile) {
+    // Check authentication status directly when profile is missing
+    getAuthenticatedUser().then(user => {
+      console.log('UserProfileCard missing profile but auth check:', !!user);
+      if (user) {
+        // If authenticated but no profile, force refresh to try to get profile
+        window.location.reload();
+      }
+    });
+    
     return (
       <div className="flex items-center space-x-2">
         <Button asChild variant="ghost" className="text-white hover:text-indigo-300">

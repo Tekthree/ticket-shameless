@@ -93,7 +93,14 @@ export async function middleware(request: NextRequest) {
   
   // Get the user directly from the server for better security
   // This is more secure than using getSession() as it validates with the Supabase Auth server
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user }, error: userError } = await supabase.auth.getUser()
+  
+  // Log authentication attempt for debugging
+  console.log(`Auth check for path: ${path}, User authenticated: ${!!user}`)
+  
+  if (userError) {
+    console.error('Error in middleware auth check:', userError)
+  }
   
   // If no validated user, they're not authenticated
   if (!user) {
@@ -104,6 +111,9 @@ export async function middleware(request: NextRequest) {
         path.startsWith('/box-office') || 
         path.startsWith('/event-manager') ||
         path.startsWith('/auth/enhanced-login')) {
+      // Log the redirect for debugging
+      console.log(`Redirecting unauthenticated user from ${path} to login page`)
+      
       // Always redirect to the standard login page
       return NextResponse.redirect(new URL('/auth/login', request.url))
     }
@@ -114,6 +124,7 @@ export async function middleware(request: NextRequest) {
   
   // If user is authenticated and trying to access login page, redirect to home
   if (path === '/login' || path === '/auth/login') {
+    console.log('User already authenticated, redirecting from login to home')
     return NextResponse.redirect(new URL('/', request.url))
   }
   

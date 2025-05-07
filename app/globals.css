@@ -12,68 +12,73 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Light mode with red brand color */
+    --background: 0 0% 100%; /* White background */
+    --foreground: 0 0% 10%; /* Near black text */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 98%; /* Very light grey for cards */
+    --card-foreground: 0 0% 10%; /* Near black text */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 98%; /* Very light grey for popovers */
+    --popover-foreground: 0 0% 10%; /* Near black text */
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 0 100% 50%; /* Pure red as primary/brand color */
+    --primary-foreground: 0 0% 100%; /* White text on red */
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 0 0% 92%; /* Light grey for secondary elements */
+    --secondary-foreground: 0 0% 10%; /* Near black text */
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 96%; /* Very light grey for muted elements */
+    --muted-foreground: 0 0% 45%; /* Medium grey text for muted elements */
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 0 100% 50%; /* Red accent matching primary */
+    --accent-foreground: 0 0% 100%; /* White text on accent */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 100% 45%; /* Slightly darker red for destructive actions */
+    --destructive-foreground: 0 0% 100%; /* White text on destructive */
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 0 0% 90%; /* Light grey for borders */
+    --input: 0 0% 90%; /* Light grey for input borders */
+    --ring: 0 100% 50%; /* Red for focus rings */
 
     --radius: 0.5rem;
     
-    --foreground-rgb: 0, 0, 0;
-    --background-rgb: 255, 255, 255;
+    --foreground-rgb: 20, 20, 20; /* Near black text */
+    --background-rgb: 255, 255, 255; /* White background */
   }
 
+  /* Dark mode with red brand color */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 0 0% 7%; /* Very dark grey background */
+    --foreground: 0 0% 95%; /* Light grey text */
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 10%; /* Dark grey cards */
+    --card-foreground: 0 0% 95%; /* Light grey text */
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 10%; /* Dark grey popovers */
+    --popover-foreground: 0 0% 95%; /* Light grey text */
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 0 100% 50%; /* Pure red as primary/brand color */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 0 0% 15%; /* Darker grey for secondary elements */
+    --secondary-foreground: 0 0% 95%; /* Light grey text */
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 0 0% 15%; /* Darker grey for muted elements */
+    --muted-foreground: 0 0% 65%; /* Medium grey text for muted elements */
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 0 100% 50%; /* Red accent matching primary */
+    --accent-foreground: 0 0% 100%; /* White text on accent */
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 100% 45%; /* Slightly darker red for destructive actions */
+    --destructive-foreground: 0 0% 100%; /* White text on destructive */
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 0 0% 20%; /* Darker grey for borders */
+    --input: 0 0% 20%; /* Darker grey for input borders */
+    --ring: 0 100% 50%; /* Red for focus rings */
+    
+    --foreground-rgb: 242, 242, 242; /* Light grey text */
+    --background-rgb: 18, 18, 18; /* Very dark grey background */
   }
 }
 
@@ -100,14 +105,38 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-red-600 text-white font-bold py-2 px-4 rounded hover:bg-red-700 transition duration-300;
+    @apply bg-[#FF0000] text-white font-bold py-2 px-4 rounded hover:bg-[#D10000] transition duration-300;
   }
   
   .btn-secondary {
-    @apply bg-black text-white font-bold py-2 px-4 rounded hover:bg-gray-800 transition duration-300;
+    @apply bg-[#333333] text-white font-bold py-2 px-4 rounded hover:bg-[#444444] transition duration-300;
+  }
+  
+  .btn-outline {
+    @apply border-2 border-[#FF0000] text-[#FF0000] font-bold py-2 px-4 rounded hover:bg-[#FF0000] hover:text-white transition duration-300;
   }
   
   .card {
-    @apply bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300;
+    @apply bg-[#1E1E1E] rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300 border border-[#333333];
+  }
+  
+  .nav-link {
+    @apply text-gray-300 hover:text-[#FF0000] transition duration-300;
+  }
+  
+  .nav-link-active {
+    @apply text-[#FF0000] font-medium;
+  }
+  
+  .input-field {
+    @apply bg-[#262626] border border-[#444444] text-gray-200 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#FF0000] focus:border-transparent;
+  }
+  
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#FF0000] text-white;
+  }
+  
+  .badge-secondary {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#333333] text-white;
   }
 }

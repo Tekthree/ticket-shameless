@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { createClient, getAuthenticatedUser } from '@/lib/supabase/client'
+import { createClient, getAuthenticatedUser, clearCaches } from '@/lib/supabase/optimized-client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -34,13 +34,19 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function loadEvents() {
       try {
+        // Clear any cached data to ensure fresh fetch
+        clearCaches();
+        
         // Check authentication securely
         const user = await getAuthenticatedUser();
         
         if (!user) {
+          console.error('Admin dashboard: User not authenticated');
           setError('You need to be logged in');
           return;
         }
+        
+        console.log('Admin dashboard: User authenticated', user.id);
         
         // Load events for display
         const { data: eventsData, error: eventsError } = await supabase

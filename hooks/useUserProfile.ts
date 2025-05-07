@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { createClient, getAuthenticatedUser, onSecureAuthStateChange } from '@/lib/supabase/client';
+import { createClient, getAuthenticatedUser, onSecureAuthStateChange, clearCaches } from '@/lib/supabase/optimized-client';
 import { useRouter } from 'next/navigation';
 import { useSupabaseQuery } from './useSupabaseQuery';
 
@@ -22,8 +22,18 @@ export function useUserProfile() {
     async function checkUser() {
       try {
         setIsAuthLoading(true);
+        // Clear caches to ensure fresh data
+        clearCaches();
+        
         const user = await getAuthenticatedUser();
-        setUserId(user?.id || null);
+        console.log('useUserProfile: User authenticated:', !!user);
+        
+        if (user) {
+          console.log('useUserProfile: User ID:', user.id);
+          setUserId(user.id);
+        } else {
+          setUserId(null);
+        }
       } catch (err) {
         console.error('Error checking authenticated user:', err);
       } finally {

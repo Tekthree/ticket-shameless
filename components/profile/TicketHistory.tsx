@@ -21,9 +21,47 @@ interface TicketHistoryProps {
   // No props needed anymore, component fetches user data directly
 }
 
+// Define interfaces for our data types
+interface Event {
+  title?: string;
+  slug?: string;
+  date?: string;
+  venue?: string;
+  image?: string;
+}
+
+interface Order {
+  id: string;
+  event_id?: string;
+  created_at: string;
+  amount_total: number;
+  quantity: number;
+  status: string;
+  customer_email?: string;
+  user_id?: string;
+  events?: Event;
+}
+
+interface Ticket {
+  id: string;
+  order_id?: string;
+  event_id?: string;
+  created_at: string;
+  status?: string;
+  price?: number;
+  orders?: {
+    customer_email?: string;
+    customer_name?: string;
+    amount_total?: number;
+    quantity?: number;
+    order_status?: string;
+  };
+  events?: Event;
+}
+
 export default function TicketHistory() {
   const supabase = createClient();
-  const [tickets, setTickets] = useState<any[]>([]);
+  const [tickets, setTickets] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -48,11 +86,8 @@ export default function TicketHistory() {
           email: userEmail 
         });
         
-        // Improved query to find all orders associated with this user
-        // This handles both cases:
-        // 1. Orders made while logged in (user_id matches)
-        // 2. Orders made with the same email address (customer_email matches)
-        const { data, error } = await supabase
+        // APPROACH 1: Query the orders table by email
+        const { data: ordersData, error: ordersError } = await supabase
           .from('orders')
           .select(`
             id, 
@@ -71,26 +106,105 @@ export default function TicketHistory() {
               image
             )
           `)
-          .or(`user_id.eq.${currentUserId},customer_email.eq.${userEmail}`)
+          .eq('customer_email', userEmail)
           .order('created_at', { ascending: false });
         
-        console.log('Tickets query result:', { 
-          count: data?.length || 0, 
-          hasError: !!error,
-          firstTicket: data && data.length > 0 ? {
-            id: data[0].id,
-            event_id: data[0].event_id,
-            hasEventData: !!data[0].events,
-            eventImage: data[0].events && 'image' in data[0].events ? 'Present' : 'Missing'
-          } : null
+        console.log('Orders query results:', { 
+          count: ordersData?.length || 0, 
+          hasError: !!ordersError,
+          errorMessage: ordersError ? ordersError.message : null
         });
+        
+        // APPROACH 2: Query the tickets table for tickets associated with this user
+        const { data: ticketsData, error: ticketsError } = await supabase
+          .from('tickets')
+          .select(`
+            id,
+            order_id,
+            event_id,
+            created_at,
+            status,
+            price,
+            orders:order_id (
+              customer_email,
+              customer_name,
+              amount_total,
+              quantity,
+              status as order_status
+            ),
+            events:event_id (
+              title,
+              slug,
+              date,
+              venue,
+              image
+            )
+          `)
+          .order('created_at', { ascending: false });
+        
+        console.log('Tickets query results:', { 
+          count: ticketsData?.length || 0, 
+          hasError: !!ticketsError,
+          errorMessage: ticketsError ? ticketsError.message : null
+        });
+        
+        // Combine and deduplicate results from both queries
+        let combinedTickets: Order[] = [];
+        
+        // Process orders data
+        if (ordersData && ordersData.length > 0) {
+          combinedTickets = [...ordersData] as Order[];
+        }
+        
+        // Process tickets data and add any that aren't already included via orders
+        if (ticketsData && ticketsData.length > 0) {
+          // Filter tickets to only include those where the order email matches the user's email
+          const userTickets = ticketsData.filter((ticket: any) => 
+            ticket.orders && ticket.orders.customer_email === userEmail
+          );
+          
+          // Group tickets by order_id to avoid duplicates
+          const orderIds = new Set(combinedTickets.map(order => order.id));
+          
+          // Add tickets from orders not already included
+          userTickets.forEach((ticket: any) => {
+            if (ticket.order_id && !orderIds.has(ticket.order_id)) {
+              // Convert ticket to order-like format
+              combinedTickets.push({
+                id: ticket.order_id,
+                event_id: ticket.event_id,
+                created_at: ticket.created_at,
+                amount_total: ticket.orders?.amount_total || ticket.price || 0,
+                quantity: ticket.orders?.quantity || 1,
+                status: ticket.orders?.order_status || ticket.status || 'unknown',
+                customer_email: ticket.orders?.customer_email || userEmail,
+                events: ticket.events
+              });
+              orderIds.add(ticket.order_id);
+            }
+          });
+        }
+        
+        // Sort combined results by created_at date (newest first)
+        combinedTickets.sort((a, b) => {
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        });
+        
+        console.log('Combined results:', {
+          count: combinedTickets.length,
+          sources: {
+            fromOrders: ordersData?.length || 0,
+            fromTickets: ticketsData?.filter((t: any) => t.orders?.customer_email === userEmail).length || 0
+          }
+        });
+        
+        // Set the tickets state with the combined results
+        setTickets(combinedTickets);
 
         
-        if (error) throw error;
-        
-        // Only set tickets from the first query if results were found or if we didn't do the fallback query
-        if (data && data.length > 0) {
-          setTickets(data);
+        if (ordersError || ticketsError) {
+          const errorMessage = ordersError?.message || ticketsError?.message || 'Error fetching tickets';
+          setError(errorMessage);
         }
       } catch (err: any) {
         console.error('Error fetching tickets:', err);

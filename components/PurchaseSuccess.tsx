@@ -8,19 +8,23 @@ import { useRouter } from 'next/navigation'
 interface PurchaseSuccessProps {
   eventSlug: string
   eventTitle: string
+  email?: string | null
 }
 
-export default function PurchaseSuccess({ eventSlug, eventTitle }: PurchaseSuccessProps) {
+export default function PurchaseSuccess({ eventSlug, eventTitle, email: propEmail }: PurchaseSuccessProps) {
   const router = useRouter()
-  const [email, setEmail] = useState<string | null>(null)
+  const [email, setEmail] = useState<string | null>(propEmail || null)
   
-  // Try to retrieve the customer email from localStorage if it was saved during checkout
+  // If no email was provided as a prop, try to get it from session storage
   useEffect(() => {
-    const storedEmail = localStorage.getItem('lastPurchaseEmail')
-    if (storedEmail) {
-      setEmail(storedEmail)
+    if (!email) {
+      // Try to get from session storage (not localStorage to avoid persistence between sessions)
+      const storedEmail = sessionStorage.getItem('purchaseEmail')
+      if (storedEmail) {
+        setEmail(storedEmail)
+      }
     }
-  }, [])
+  }, [email])
   
   return (
     <div className="bg-gray-900/90 backdrop-blur-sm rounded-lg p-6 border border-gray-800 max-w-md mx-auto my-8 text-center">

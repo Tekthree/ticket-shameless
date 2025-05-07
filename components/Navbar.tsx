@@ -10,6 +10,7 @@ import { useUserRoles } from '@/hooks/useUserRoles';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/ui/icons';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -66,8 +67,8 @@ export default function Navbar() {
               className="h-16 w-auto object-contain"
             />
           </Link>
-          
-          <div className="hidden md:flex space-x-8 items-center">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex space-x-6 items-center">
             <NavLink href="/events">
               <Icons.calendar className="mr-2 h-5 w-5" />
               Events
@@ -77,6 +78,7 @@ export default function Navbar() {
               <Icons.info className="mr-2 h-5 w-5" />
               About
             </NavLink>
+            <ThemeToggle />
             <UserProfileCard />
           </div>
           

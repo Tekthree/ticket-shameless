@@ -15,6 +15,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Event ID is required' }, { status: 400 })
     }
     
+    // Validate email if provided and user is not authenticated
     const supabase = createClient()
     
     // Get event details
@@ -40,6 +41,11 @@ export async function POST(request: Request) {
     const user = await getAuthenticatedUser()
     const userId = user?.id || null
     
+    // Determine the correct email to use
+    // If user is authenticated, always use their email from the auth system
+    // Otherwise use the provided email from the request
+    const customerEmail = user?.email || email
+    
     // Create a Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -58,21 +64,23 @@ export async function POST(request: Request) {
         },
       ],
       mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/events/${event.slug}?success=true`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/events/${event.slug}?success=true&email=${encodeURIComponent(customerEmail || '')}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/events/${event.slug}?canceled=true`,
       metadata: {
         eventId: event.id,
         eventSlug: event.slug,
         quantity: quantity.toString(),
-        customerEmail: email || (user?.email || ''), // Use authenticated user email as fallback
+        customerEmail: customerEmail || '', // Use the determined email
         userId: userId || '', // Store user ID in metadata if available
       },
+      // Store client reference ID for better tracking
+      client_reference_id: userId || undefined,
       // Add these lines to collect customer information
       billing_address_collection: 'required',
       phone_number_collection: {
         enabled: true,
       },
-      customer_email: email || (user?.email || null), // Use provided email, then user email as fallback
+      customer_email: customerEmail, // Use the determined email
       locale: 'en', // Use English locale
       // Default to United States
       shipping_address_collection: {

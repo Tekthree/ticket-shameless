@@ -125,14 +125,16 @@ export async function POST(request: Request) {
         // If no user ID in metadata, try to find the user ID based on the email
         if (!userId && session.customer_details?.email) {
           try {
+            // Try to find the user by email in the profiles table
+            // This should work because profiles are synced with auth.users
             const { data: userData, error: userError } = await supabase
               .from('profiles')
               .select('id')
               .eq('email', session.customer_details.email)
-              .single()
-              
+              .maybeSingle()
+            
             if (userError) {
-              console.log(`No user found for email ${session.customer_details.email}:`, userError)
+              console.log(`Error looking up user profile for email ${session.customer_details.email}:`, userError)
             } else if (userData) {
               userId = userData.id
               console.log(`Found user ID ${userId} for email ${session.customer_details.email}`)

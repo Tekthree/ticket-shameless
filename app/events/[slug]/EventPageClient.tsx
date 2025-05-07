@@ -79,14 +79,23 @@ const EventPageClient = ({ event }: EventPageClientProps) => {
   const [ticketsRemaining, setTicketsRemaining] = useState(event.ticketsRemaining);
   const [isSoldOut, setIsSoldOut] = useState(event.soldOut);
   
+  // State for storing the purchase email
+  const [purchaseEmail, setPurchaseEmail] = useState<string | null>(null);
+  
   // Check for success parameter and show success message
   useEffect(() => {
     if (success === 'true') {
       setShowSuccess(true);
       // Scroll to top to show the success message
       window.scrollTo(0, 0);
+      
+      // Try to get the email from URL parameters
+      const email = searchParams.get('email');
+      if (email) {
+        setPurchaseEmail(email);
+      }
     }
-  }, [success]);
+  }, [success, searchParams]);
   
   // Refresh ticket count periodically or after coming back to the page
   useEffect(() => {
@@ -126,6 +135,14 @@ const EventPageClient = ({ event }: EventPageClientProps) => {
   
   return (
     <div className="bg-transparent text-white min-h-screen pb-20" ref={contentRef}>
+      {/* Success Message */}
+      {showSuccess && (
+        <PurchaseSuccess 
+          eventSlug={event.slug} 
+          eventTitle={event.title} 
+          email={purchaseEmail} 
+        />
+      )}
       {/* Sticky Background Image with Blur and Scale Effect */}
       <div className="fixed inset-0 w-full h-full -z-10 overflow-hidden">
         <div className="absolute inset-0 bg-black/50"></div> {/* Dark overlay to reduce image prominence */}
@@ -144,12 +161,7 @@ const EventPageClient = ({ event }: EventPageClientProps) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/90 to-black/30" />
       </div>
       
-      {/* Success Message */}
-      {showSuccess && (
-        <div className="pt-12">
-          <PurchaseSuccess eventSlug={event.slug} eventTitle={event.title} />
-        </div>
-      )}
+      {/* Main content starts here */}
       
       {/* Hero Section with event image card */}
       <div className="relative pt-12 pb-12 bg-transparent">

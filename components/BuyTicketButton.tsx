@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Icons } from '@/components/ui/icons'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useUserProfile } from '@/hooks/useUserProfile'
+import { createClient, getAuthenticatedUser } from '@/lib/supabase/client'
 
 interface BuyTicketButtonProps {
   eventId: string
@@ -24,6 +25,23 @@ export default function BuyTicketButton({ eventId, price, title }: BuyTicketButt
   const router = useRouter()
   const { profile, isLoading: isLoadingProfile } = useUserProfile()
   
+  // Check authentication status on component mount and clear any stored email
+  useEffect(() => {
+    const checkAuthAndClearEmail = async () => {
+      const user = await getAuthenticatedUser()
+      
+      // If user is not authenticated, clear any stored email
+      if (!user) {
+        // Clear from both localStorage (legacy) and sessionStorage (new approach)
+        localStorage.removeItem('lastPurchaseEmail')
+        sessionStorage.removeItem('purchaseEmail')
+        setEmail('')
+      }
+    }
+    
+    checkAuthAndClearEmail()
+  }, [])
+  
   const handleBuyTicket = async () => {
     // If email collection is shown but not filled out, validate it first
     if (showEmailInput && !profile) {
@@ -32,14 +50,17 @@ export default function BuyTicketButton({ eventId, price, title }: BuyTicketButt
         return
       }
       
-      // Store email in localStorage for later use
-      localStorage.setItem('lastPurchaseEmail', email)
+      // Store email in sessionStorage (not localStorage) so it's available for the success page
+      // but doesn't persist between browser sessions
+      sessionStorage.setItem('purchaseEmail', email)
     }
     
-    // If user is logged in, use their profile email
-    if (profile) {
-      setEmail(profile.email)
-    }
+    // Get the current authenticated user to ensure we're using the correct email
+    const currentUser = await getAuthenticatedUser()
+    
+    // If user is logged in, always use their profile email
+    // This ensures we're using the email of the currently logged-in user
+    const emailToUse = currentUser ? profile?.email : email
     
     setIsLoading(true)
     
@@ -52,7 +73,7 @@ export default function BuyTicketButton({ eventId, price, title }: BuyTicketButt
         body: JSON.stringify({
           eventId,
           quantity: parseInt(quantity),
-          email: profile ? profile.email : email || undefined, // Use profile email if logged in
+          email: emailToUse, // Use current user's email or entered email
         }),
       })
       
@@ -74,11 +95,17 @@ export default function BuyTicketButton({ eventId, price, title }: BuyTicketButt
   }
   
   // Show email input instead of proceeding directly to checkout
-  const handleProceed = () => {
+  const handleProceed = async () => {
+    // Check authentication status again to ensure we have the latest state
+    const currentUser = await getAuthenticatedUser()
+    
     // Skip email input if user is logged in
-    if (profile) {
+    if (currentUser && profile) {
       handleBuyTicket()
     } else {
+      // Always show email input when not logged in
+      // Clear any existing email to ensure user enters a new one
+      setEmail('')
       setShowEmailInput(true)
     }
   }
