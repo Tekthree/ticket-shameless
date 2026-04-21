@@ -2,12 +2,31 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { Event, LineupArtist } from '@/lib/db'
 
-const RED = '#c9321a'
-const DARK = '#1c1917'
-const CREAM = '#f2ede5'
+const C = {
+  dark: '#1c1917',
+  darkDeep: '#111110',
+  darkCard: '#252220',
+  darkBorder: 'rgba(255,255,255,0.07)',
+  darkText: '#f0ece6',
+  darkMuted: '#7a7068',
+  red: '#c9321a',
+  redDeep: '#a82614',
+  redMuted: 'rgba(201,50,26,0.12)',
+}
+
+function useWindowWidth() {
+  const [w, setW] = useState(1200)
+  useEffect(() => {
+    setW(window.innerWidth)
+    const fn = () => setW(window.innerWidth)
+    window.addEventListener('resize', fn)
+    return () => window.removeEventListener('resize', fn)
+  }, [])
+  return w
+}
 
 function useInView() {
   const ref = useRef<HTMLDivElement>(null)
@@ -17,26 +36,70 @@ function useInView() {
     if (!el) return
     const obs = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) { setVisible(true); obs.disconnect() }
-    }, { threshold: 0.1 })
+    }, { threshold: 0.08 })
     obs.observe(el)
     return () => obs.disconnect()
   }, [])
   return [ref, visible] as const
 }
 
-function formatEventDate(dateStr: string) {
-  const d = new Date(dateStr)
-  return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase()
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('en-US', {
+    weekday: 'short', month: 'short', day: 'numeric',
+  }).toUpperCase()
 }
 
-function formatEventTime(dateStr: string) {
-  const d = new Date(dateStr)
-  return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+function formatTime(dateStr: string) {
+  return new Date(dateStr).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+}
+
+const Divider = () => <div style={{ height: 1, background: C.darkBorder, margin: '32px 0' }} />
+
+const SecLabel = ({ children }: { children: React.ReactNode }) => (
+  <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: C.red, marginBottom: 14 }}>
+    {children}
+  </div>
+)
+
+function MetaRow({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 12 }}>
+      <div style={{ color: C.darkMuted, marginTop: 2, flexShrink: 0, width: 18 }}>{icon}</div>
+      <div style={{ color: C.darkMuted, fontSize: 15, lineHeight: 1.6 }}>{children}</div>
+    </div>
+  )
+}
+
+function LineupRow({ artist }: { artist: LineupArtist }) {
+  const [hover, setHover] = useState(false)
+  return (
+    <div
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: `1px solid ${C.darkBorder}`, cursor: 'default' }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+        <div style={{ width: 40, height: 40, background: hover ? C.red : C.darkCard, border: `1px solid ${hover ? C.red : C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden', transition: 'all 0.2s', position: 'relative' }}>
+          {artist.image_url
+            ? <Image src={artist.image_url} alt={artist.name} fill style={{ objectFit: 'cover' }} />
+            : <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, color: hover ? '#fff' : C.darkMuted, textTransform: 'uppercase' }}>{artist.name[0]}</span>
+          }
+        </div>
+        <div>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 20, color: hover ? C.red : C.darkText, textTransform: 'uppercase', letterSpacing: '0.02em', transition: 'color 0.15s' }}>{artist.name}</div>
+          {artist.bio && <div style={{ color: C.darkMuted, fontSize: 12, marginTop: 2 }}>{artist.bio}</div>}
+        </div>
+      </div>
+      {artist.time_slot && (
+        <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 13, color: C.darkMuted, textAlign: 'right', flexShrink: 0, marginLeft: 12 }}>{artist.time_slot}</div>
+      )}
+    </div>
+  )
 }
 
 type RsvpStatus = 'going' | 'maybe' | 'not_going'
 
-function RsvpForm({ eventId }: { eventId: string }) {
+function RsvpCard({ event, compact = false }: { event: Event; compact?: boolean }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -49,15 +112,14 @@ function RsvpForm({ eventId }: { eventId: string }) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!name.trim()) { setError('Name is required'); return }
-    setLoading(true)
-    setError('')
+    setLoading(true); setError('')
     try {
       const res = await fetch('/api/rsvp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ event_id: eventId, name, email, phone, status, note }),
+        body: JSON.stringify({ event_id: event.id, name, email, phone, status, note }),
       })
-      if (!res.ok) throw new Error('Failed')
+      if (!res.ok) throw new Error()
       setSubmitted(true)
     } catch {
       setError('Something went wrong. Try again.')
@@ -66,270 +128,343 @@ function RsvpForm({ eventId }: { eventId: string }) {
     }
   }
 
+  const inputStyle: React.CSSProperties = {
+    width: '100%', background: C.dark, border: `1px solid ${C.darkBorder}`,
+    padding: '11px 14px', fontSize: 14, color: C.darkText, fontFamily: 'DM Sans, sans-serif',
+    outline: 'none', boxSizing: 'border-box',
+  }
+
   if (submitted) {
     return (
-      <div style={{ textAlign: 'center', padding: '32px 0' }}>
-        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 28, color: DARK, textTransform: 'uppercase', marginBottom: 10 }}>
-          You&apos;re in
-        </div>
-        <div style={{ color: '#8a8078', fontSize: 15 }}>
-          {status === 'going' ? "See you there." : status === 'maybe' ? "Hope you can make it." : "Maybe next time."}
+      <div style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, padding: '32px 24px', textAlign: 'center' }}>
+        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 28, color: C.darkText, textTransform: 'uppercase', marginBottom: 8 }}>You&apos;re in</div>
+        <div style={{ color: C.darkMuted, fontSize: 14 }}>
+          {status === 'going' ? 'See you there.' : status === 'maybe' ? 'Hope you can make it.' : 'Maybe next time.'}
         </div>
       </div>
     )
   }
 
-  const inputStyle: React.CSSProperties = {
-    width: '100%', background: '#fff', border: '1px solid rgba(28,25,23,0.15)',
-    padding: '12px 14px', fontSize: 15, color: DARK, fontFamily: 'inherit',
-    outline: 'none', boxSizing: 'border-box',
-  }
-
-  const statusOptions: { value: RsvpStatus; label: string }[] = [
+  const statusOpts: { value: RsvpStatus; label: string }[] = [
     { value: 'going', label: 'Going' },
     { value: 'maybe', label: 'Maybe' },
-    { value: 'not_going', label: "Can't Make It" },
+    { value: 'not_going', label: "Can't Go" },
   ]
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <input
-        placeholder="Name *"
-        value={name}
-        onChange={e => setName(e.target.value)}
-        style={inputStyle}
-        required
-      />
-      <input
-        placeholder="Email"
-        type="email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        style={inputStyle}
-      />
-      <input
-        placeholder="Phone"
-        type="tel"
-        value={phone}
-        onChange={e => setPhone(e.target.value)}
-        style={inputStyle}
-      />
-
-      <div style={{ display: 'flex', gap: 8 }}>
-        {statusOptions.map(opt => (
-          <button
-            key={opt.value}
-            type="button"
-            onClick={() => setStatus(opt.value)}
+    <div style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, padding: '24px' }}>
+      {event.payment_link && (
+        <div style={{ marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid ${C.darkBorder}` }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 32, color: C.darkText, lineHeight: 1 }}>
+              {event.suggested_price != null ? `$${event.suggested_price}` : 'Free'}
+              {event.suggested_price != null && <span style={{ fontSize: 15, color: C.darkMuted, fontWeight: 700 }}> suggested</span>}
+            </div>
+          </div>
+          <a
+            href={event.payment_link}
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
-              flex: 1, padding: '10px 4px', fontSize: 13, cursor: 'pointer',
-              fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800,
-              letterSpacing: '0.1em', textTransform: 'uppercase', border: 'none',
-              background: status === opt.value ? DARK : CREAM,
-              color: status === opt.value ? '#fff' : '#8a8078',
-              transition: 'background 0.15s, color 0.15s',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: '100%', background: C.red, color: '#fff', border: 'none', cursor: 'pointer',
+              fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 17,
+              letterSpacing: '0.15em', textTransform: 'uppercase', padding: '17px',
+              textDecoration: 'none', transition: 'background 0.2s',
             }}
+            onMouseEnter={e => (e.currentTarget.style.background = C.redDeep)}
+            onMouseLeave={e => (e.currentTarget.style.background = C.red)}
           >
-            {opt.label}
-          </button>
-        ))}
-      </div>
+            Pay Cover
+          </a>
+        </div>
+      )}
 
-      <textarea
-        placeholder="Leave a note (optional)"
-        value={note}
-        onChange={e => setNote(e.target.value)}
-        rows={2}
-        style={{ ...inputStyle, resize: 'none' }}
-      />
+      <SecLabel>RSVP</SecLabel>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <input placeholder="Name *" value={name} onChange={e => setName(e.target.value)} style={inputStyle} required />
+        <input placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} style={inputStyle} />
+        <input placeholder="Phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} style={inputStyle} />
 
-      {error && <div style={{ color: RED, fontSize: 13 }}>{error}</div>}
+        <div style={{ display: 'flex', borderBottom: `1px solid ${C.darkBorder}`, marginBottom: 4 }}>
+          {statusOpts.map(opt => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => setStatus(opt.value)}
+              style={{
+                flex: 1, background: 'transparent', border: 'none', cursor: 'pointer',
+                fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 13,
+                letterSpacing: '0.1em', textTransform: 'uppercase', padding: '10px 4px',
+                marginBottom: -1,
+                color: status === opt.value ? C.darkText : C.darkMuted,
+                borderBottom: status === opt.value ? `2px solid ${C.red}` : '2px solid transparent',
+                transition: 'color 0.15s',
+              }}
+            >{opt.label}</button>
+          ))}
+        </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        style={{
-          background: loading ? '#8a8078' : RED,
-          color: '#fff', border: 'none', padding: '15px',
-          fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900,
-          fontSize: 15, letterSpacing: '0.18em', textTransform: 'uppercase',
-          cursor: loading ? 'not-allowed' : 'pointer', transition: 'background 0.15s',
-        }}
-      >
-        {loading ? 'Sending...' : 'RSVP'}
-      </button>
-    </form>
+        {!compact && (
+          <textarea
+            placeholder="Leave a note (optional)"
+            value={note}
+            onChange={e => setNote(e.target.value)}
+            rows={2}
+            style={{ ...inputStyle, resize: 'none' }}
+          />
+        )}
+
+        {error && <div style={{ color: C.red, fontSize: 13 }}>{error}</div>}
+
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            background: loading ? C.darkMuted : C.red, color: '#fff', border: 'none',
+            padding: '15px', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900,
+            fontSize: 16, letterSpacing: '0.18em', textTransform: 'uppercase',
+            cursor: loading ? 'not-allowed' : 'pointer', transition: 'background 0.15s',
+          }}
+          onMouseEnter={e => { if (!loading) (e.currentTarget as HTMLButtonElement).style.background = C.redDeep }}
+          onMouseLeave={e => { if (!loading) (e.currentTarget as HTMLButtonElement).style.background = C.red }}
+        >
+          {loading ? 'Sending...' : 'RSVP Now'}
+        </button>
+      </form>
+    </div>
   )
 }
 
-export default function EventPageClient({
-  event,
-  lineup,
-}: {
-  event: Event
-  lineup: LineupArtist[]
-}) {
-  const [heroRef, heroVisible] = useInView()
-  const [detailsRef, detailsVisible] = useInView()
+function MobileBar({ event, onTap }: { event: Event; onTap: () => void }) {
+  return (
+    <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 150, background: 'rgba(17,17,16,0.97)', backdropFilter: 'blur(20px)', borderTop: `1px solid ${C.darkBorder}`, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 16 }}>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 20, color: C.darkText, lineHeight: 1 }}>
+          {event.suggested_price != null ? `$${event.suggested_price} suggested` : 'Free entry'}
+        </div>
+        <div style={{ color: C.darkMuted, fontSize: 12, marginTop: 2 }}>{event.venue || 'Seattle'}</div>
+      </div>
+      <button
+        onClick={onTap}
+        style={{ background: C.red, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '14px 28px', flexShrink: 0 }}
+      >RSVP</button>
+    </div>
+  )
+}
 
-  const dateStr = formatEventDate(event.date)
-  const timeStr = formatEventTime(event.date)
+function RsvpSheet({ event, onClose }: { event: Event; onClose: () => void }) {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
+  }, [])
 
   return (
-    <div style={{ background: DARK, minHeight: '100vh', color: '#fff' }}>
-      {/* Hero */}
-      <div style={{ position: 'relative', height: 'clamp(360px, 55vw, 600px)', overflow: 'hidden' }}>
-        {event.image_url ? (
-          <Image
-            src={event.image_url}
-            alt={event.title}
-            fill
-            style={{ objectFit: 'cover', filter: 'brightness(0.45)' }}
-            priority
-          />
-        ) : (
-          <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(45deg, #2a2520 0px, #2a2520 1px, #1c1917 1px, #1c1917 18px)' }} />
-        )}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #1c1917 0%, transparent 60%)' }} />
+    <div style={{ position: 'fixed', inset: 0, zIndex: 300, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+      <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }} />
+      <div style={{ position: 'relative', background: C.dark, borderTop: `1px solid ${C.darkBorder}`, padding: '0 20px 40px', maxHeight: '90svh', overflowY: 'auto', animation: 'slideUp 0.35s cubic-bezier(0.22,1,0.36,1)' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '14px 0 8px' }}>
+          <div style={{ width: 36, height: 4, background: C.darkBorder, borderRadius: 2 }} />
+        </div>
+        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 20, textTransform: 'uppercase', color: C.darkText, marginBottom: 20 }}>RSVP</div>
+        <RsvpCard event={event} compact />
+        <button onClick={onClose} style={{ marginTop: 12, width: '100%', background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '13px' }}>Cancel</button>
+      </div>
+    </div>
+  )
+}
 
-        <div ref={heroRef} style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 56px 48px',
-          maxWidth: 1200, margin: '0 auto',
-          opacity: heroVisible ? 1 : 0,
-          transform: heroVisible ? 'translateY(0)' : 'translateY(20px)',
-          transition: 'opacity 0.8s ease, transform 0.8s ease',
-        }}>
-          <Link href="/" style={{ color: '#8a8078', textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', display: 'inline-block', marginBottom: 20 }}>
-            ← Back
-          </Link>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 13, letterSpacing: '0.22em', color: RED, textTransform: 'uppercase', marginBottom: 10 }}>
-            {dateStr}
-          </div>
-          <h1 style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(42px, 6vw, 88px)', lineHeight: 0.9, textTransform: 'uppercase', color: '#fff', margin: 0 }}>
-            {event.title}
-          </h1>
+export default function EventPageClient({ event, lineup }: { event: Event; lineup: LineupArtist[] }) {
+  const w = useWindowWidth()
+  const isMobile = w < 768
+  const [scrolled, setScrolled] = useState(false)
+  const [sheetOpen, setSheetOpen] = useState(false)
+  const [heroRef, heroVisible] = useInView()
+  const [bodyRef, bodyVisible] = useInView()
+
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 40)
+    window.addEventListener('scroll', fn)
+    return () => window.removeEventListener('scroll', fn)
+  }, [])
+
+  const dateStr = formatDate(event.date)
+  const timeStr = formatTime(event.date)
+  const endTimeStr = event.end_date ? formatTime(event.end_date) : null
+
+  return (
+    <div style={{ minHeight: '100svh', background: C.dark, paddingBottom: isMobile ? 90 : 0 }}>
+
+      {/* Hero */}
+      <div style={{ position: 'relative', height: isMobile ? 260 : 420, overflow: 'hidden', marginTop: 60 }}>
+        {event.image_url ? (
+          <Image src={event.image_url} alt={event.title} fill style={{ objectFit: 'cover', objectPosition: 'center 30%' }} priority />
+        ) : (
+          <div style={{ position: 'absolute', inset: 0, background: `repeating-linear-gradient(45deg, #252220 0px, #252220 1px, #1c1917 1px, #1c1917 22px)` }} />
+        )}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(28,25,23,0.1) 0%, rgba(28,25,23,0.65) 60%, #1c1917 100%)' }} />
+        <div ref={heroRef} style={{ position: 'absolute', bottom: isMobile ? 20 : 28, left: isMobile ? 20 : 48, display: 'flex', gap: 6, flexWrap: 'wrap', opacity: heroVisible ? 1 : 0, transition: 'opacity 0.6s ease' }}>
+          {event.tags?.map(tag => (
+            <span key={tag} style={{ background: 'rgba(17,17,16,0.75)', backdropFilter: 'blur(8px)', border: `1px solid ${C.darkBorder}`, color: 'rgba(240,236,230,0.6)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px' }}>{tag}</span>
+          ))}
         </div>
       </div>
 
-      {/* Body */}
-      <div ref={detailsRef} style={{
-        maxWidth: 1200, margin: '0 auto', padding: '64px 56px',
-        display: 'grid', gridTemplateColumns: '1fr 380px', gap: 64,
-        opacity: detailsVisible ? 1 : 0,
-        transform: detailsVisible ? 'translateY(0)' : 'translateY(28px)',
+      {/* Main */}
+      <div ref={bodyRef} style={{
+        maxWidth: 1100, margin: '0 auto', padding: isMobile ? '0 20px 60px' : '0 48px 60px',
+        display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 380px',
+        gap: isMobile ? 0 : 60, alignItems: 'start',
+        opacity: bodyVisible ? 1 : 0, transform: bodyVisible ? 'translateY(0)' : 'translateY(20px)',
         transition: 'opacity 0.7s ease, transform 0.7s ease',
       }}>
-        {/* Left */}
-        <div>
-          {/* Event info */}
-          <div style={{ marginBottom: 48 }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <div style={{ display: 'flex', gap: 16, alignItems: 'baseline' }}>
-                <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 12, letterSpacing: '0.2em', color: '#8a8078', textTransform: 'uppercase', minWidth: 80 }}>When</span>
-                <span style={{ color: CREAM, fontSize: 16 }}>{dateStr} &bull; {timeStr}</span>
+
+        {/* LEFT */}
+        <div style={{ paddingTop: isMobile ? 28 : 40 }}>
+
+          {/* Back + Title */}
+          <div style={{ marginBottom: 28 }}>
+            <Link href="/" style={{ color: C.darkMuted, textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: 5, marginBottom: 20, transition: 'color 0.2s' }}>
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              All Events
+            </Link>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: C.red, marginBottom: 10 }}>Shameless Presents</div>
+            <h1 style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: isMobile ? 'clamp(44px,12vw,64px)' : 'clamp(52px,6vw,80px)', lineHeight: 0.88, color: C.darkText, textTransform: 'uppercase', marginBottom: 20 }}>
+              {event.title}
+            </h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="11" rx="1" stroke={C.red} strokeWidth="1.4" /><path d="M5 2V5M11 2V5M2 8H14" stroke={C.red} strokeWidth="1.4" strokeLinecap="round" /></svg>
+              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: isMobile ? 17 : 21, color: C.red, letterSpacing: '0.02em' }}>
+                {dateStr} &bull; {timeStr}{endTimeStr ? ` – ${endTimeStr}` : ''}
               </div>
-              {event.venue && (
-                <div style={{ display: 'flex', gap: 16, alignItems: 'baseline' }}>
-                  <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 12, letterSpacing: '0.2em', color: '#8a8078', textTransform: 'uppercase', minWidth: 80 }}>Where</span>
-                  <span style={{ color: CREAM, fontSize: 16 }}>{event.venue}{event.address ? `, ${event.address}` : ''}</span>
-                </div>
-              )}
-              {event.suggested_price != null && (
-                <div style={{ display: 'flex', gap: 16, alignItems: 'baseline' }}>
-                  <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 12, letterSpacing: '0.2em', color: '#8a8078', textTransform: 'uppercase', minWidth: 80 }}>Cover</span>
-                  <span style={{ color: CREAM, fontSize: 16 }}>${event.suggested_price} suggested</span>
-                </div>
-              )}
             </div>
+            {event.venue && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="6" r="3" stroke={C.darkMuted} strokeWidth="1.3" /><path d="M7 1C4.24 1 2 3.24 2 6c0 3.5 5 8 5 8s5-4.5 5-8c0-2.76-2.24-5-5-5Z" stroke={C.darkMuted} strokeWidth="1.3" /></svg>
+                <span style={{ color: C.darkMuted, fontSize: 14 }}>{event.venue}{event.address ? ` · ${event.address}` : ''}</span>
+              </div>
+            )}
           </div>
 
-          {event.description && (
+          <Divider />
+
+          {/* About */}
+          <div>
+            <SecLabel>About</SecLabel>
+            <MetaRow icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.3" /><path d="M8 5V8.5L10 10.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" /></svg>}>
+              Doors open at <strong style={{ color: C.darkText }}>{timeStr}</strong>
+            </MetaRow>
+            {event.description && (
+              <div style={{ color: C.darkMuted, fontSize: 15, lineHeight: 1.75, marginTop: 16 }}>{event.description}</div>
+            )}
+            {event.payment_link && event.suggested_price != null && (
+              <div style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, padding: '16px 20px', marginTop: 20 }}>
+                <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 14, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.darkText, marginBottom: 6 }}>Cover Charge</div>
+                <div style={{ color: C.darkMuted, fontSize: 13, lineHeight: 1.7 }}>
+                  ${event.suggested_price} suggested. Pay via the link on the right.
+                </div>
+              </div>
+            )}
+          </div>
+
+          {lineup.length > 0 && (
             <>
-              <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', marginBottom: 40 }} />
-              <div style={{ marginBottom: 48 }}>
-                <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.22em', color: '#8a8078', textTransform: 'uppercase', marginBottom: 20 }}>About</div>
-                <p style={{ color: '#c4b8aa', fontSize: 16, lineHeight: 1.75, margin: 0 }}>{event.description}</p>
+              <Divider />
+              <div>
+                <SecLabel>Lineup</SecLabel>
+                {lineup.map(a => <LineupRow key={a.id} artist={a} />)}
               </div>
             </>
           )}
 
-          {lineup.length > 0 && (
+          {event.venue && (
             <>
-              <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', marginBottom: 40 }} />
+              <Divider />
               <div>
-                <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.22em', color: '#8a8078', textTransform: 'uppercase', marginBottom: 24 }}>Lineup</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                  {lineup.map(artist => (
-                    <div key={artist.id} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                      <div style={{ width: 52, height: 52, background: '#2a2520', flexShrink: 0, overflow: 'hidden', position: 'relative' }}>
-                        {artist.image_url ? (
-                          <Image src={artist.image_url} alt={artist.name} fill style={{ objectFit: 'cover' }} />
-                        ) : (
-                          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 20, color: '#8a8078' }}>{artist.name[0]}</span>
-                          </div>
-                        )}
+                <SecLabel>Venue</SecLabel>
+                <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 26, color: C.darkText, textTransform: 'uppercase', marginBottom: 4 }}>{event.venue}</div>
+                {event.address && <div style={{ color: C.darkMuted, fontSize: 14, marginBottom: 18 }}>{event.address}</div>}
+                <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
+                  {event.address && (
+                    <a
+                      href={`https://maps.google.com/?q=${encodeURIComponent(event.address)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkText, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '10px 18px', textDecoration: 'none', transition: 'border-color 0.2s, color 0.2s' }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = C.red; (e.currentTarget as HTMLAnchorElement).style.color = C.red }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = C.darkBorder; (e.currentTarget as HTMLAnchorElement).style.color = C.darkText }}
+                    >
+                      <svg width="12" height="12" viewBox="0 0 13 13" fill="none"><path d="M6.5 12S1 7.686 1 4.5a5.5 5.5 0 1 1 11 0C12 7.686 6.5 12 6.5 12Z" stroke="currentColor" strokeWidth="1.4" /><circle cx="6.5" cy="4.5" r="1.75" stroke="currentColor" strokeWidth="1.4" /></svg>
+                      Open in Maps
+                    </a>
+                  )}
+                </div>
+                <div style={{ width: '100%', height: isMobile ? 160 : 200, background: C.darkCard, border: `1px solid ${C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                  <div style={{ position: 'absolute', inset: 0, background: `repeating-linear-gradient(0deg, ${C.darkBorder} 0, ${C.darkBorder} 1px, transparent 1px, transparent 32px), repeating-linear-gradient(90deg, ${C.darkBorder} 0, ${C.darkBorder} 1px, transparent 1px, transparent 32px)` }} />
+                  <div style={{ position: 'relative', textAlign: 'center' }}>
+                    <svg width="26" height="26" viewBox="0 0 28 28" fill="none" style={{ display: 'block', margin: '0 auto 8px' }}>
+                      <path d="M14 26S3 17.372 3 10a11 11 0 1 1 22 0c0 7.372-11 16-11 16Z" stroke={C.red} strokeWidth="1.8" fill={C.redMuted} />
+                      <circle cx="14" cy="10" r="3.5" stroke={C.red} strokeWidth="1.8" />
+                    </svg>
+                    <div style={{ fontFamily: 'monospace', fontSize: 10, color: C.darkMuted }}>{event.venue} · Seattle</div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* RIGHT — desktop sticky */}
+        {!isMobile && (
+          <div style={{ paddingTop: 40 }}>
+            <div style={{ position: 'sticky', top: 80 }}>
+              <RsvpCard event={event} />
+              <div style={{ marginTop: 14, display: 'flex', gap: 8 }}>
+                {['Share', 'Save'].map(l => (
+                  <button key={l} style={{ flex: 1, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkText, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '10px 0', transition: 'border-color 0.2s, color 0.2s' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = C.red; (e.currentTarget as HTMLButtonElement).style.color = C.red }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = C.darkBorder; (e.currentTarget as HTMLButtonElement).style.color = C.darkText }}
+                  >{l}</button>
+                ))}
+              </div>
+              {lineup.filter(a => a.sort_order === 0).length > 0 && (
+                <div style={{ marginTop: 20, background: C.darkCard, border: `1px solid ${C.darkBorder}`, padding: '20px 22px' }}>
+                  <SecLabel>Headliner</SecLabel>
+                  {lineup.filter(a => a.sort_order === 0).map(a => (
+                    <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                      <div style={{ width: 40, height: 40, background: C.dark, border: `1px solid ${C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
+                        {a.image_url
+                          ? <Image src={a.image_url} alt={a.name} fill style={{ objectFit: 'cover' }} />
+                          : <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16, color: C.darkMuted, textTransform: 'uppercase' }}>{a.name[0]}</span>
+                        }
                       </div>
                       <div>
-                        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 18, textTransform: 'uppercase', color: '#fff' }}>{artist.name}</div>
-                        {artist.time_slot && <div style={{ fontSize: 13, color: '#8a8078', marginTop: 2 }}>{artist.time_slot}</div>}
+                        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 17, color: C.darkText, textTransform: 'uppercase' }}>{a.name}</div>
+                        {a.bio && <div style={{ color: C.darkMuted, fontSize: 12 }}>{a.bio}</div>}
                       </div>
                     </div>
                   ))}
                 </div>
-              </div>
-            </>
-          )}
-
-          {event.tags && event.tags.length > 0 && (
-            <div style={{ marginTop: 48, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              {event.tags.map(tag => (
-                <span key={tag} style={{ background: 'rgba(201,50,26,0.15)', color: RED, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '5px 12px' }}>{tag}</span>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Right — sticky RSVP + payment card */}
-        <div>
-          <div style={{ position: 'sticky', top: 32 }}>
-            {/* Payment link */}
-            {event.payment_link && (
-              <div style={{ background: '#2a2520', padding: '28px 28px 24px', marginBottom: 2 }}>
-                <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.22em', color: '#8a8078', textTransform: 'uppercase', marginBottom: 10 }}>Cover</div>
-                <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 28, color: '#fff', marginBottom: 16 }}>
-                  {event.suggested_price != null ? `$${event.suggested_price}` : 'Pay what you can'}
-                  {event.suggested_price != null && <span style={{ fontSize: 14, color: '#8a8078', fontWeight: 700, marginLeft: 6 }}>suggested</span>}
-                </div>
-                <a
-                  href={event.payment_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: 'block', textAlign: 'center', background: RED, color: '#fff',
-                    fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 14,
-                    letterSpacing: '0.18em', textTransform: 'uppercase', padding: '14px',
-                    textDecoration: 'none',
-                  }}
-                >
-                  Pay Cover →
-                </a>
-              </div>
-            )}
-
-            {/* RSVP */}
-            <div style={{ background: CREAM, padding: '28px 28px 32px' }}>
-              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.22em', color: '#8a8078', textTransform: 'uppercase', marginBottom: 18 }}>RSVP</div>
-              <RsvpForm eventId={event.id} />
+              )}
             </div>
           </div>
-        </div>
+        )}
       </div>
 
+      {/* Footer */}
+      <footer style={{ background: C.darkDeep, padding: `36px ${isMobile ? '20px' : '48px'}`, borderTop: `1px solid ${C.darkBorder}` }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+          <Link href="/" style={{ color: C.darkMuted, textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Simply Shameless</Link>
+          <div style={{ color: 'rgba(240,236,230,0.2)', fontFamily: 'DM Sans, sans-serif', fontSize: 12 }}>© 2025 Simply Shameless Productions</div>
+        </div>
+      </footer>
+
+      {/* Mobile RSVP bar + sheet */}
+      {isMobile && <MobileBar event={event} onTap={() => setSheetOpen(true)} />}
+      {isMobile && sheetOpen && <RsvpSheet event={event} onClose={() => setSheetOpen(false)} />}
+
       <style>{`
-        @media (max-width: 900px) {
-          .event-body { grid-template-columns: 1fr !important; padding: 40px 24px !important; }
-        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
       `}</style>
     </div>
   )
