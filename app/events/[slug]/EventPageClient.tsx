@@ -17,17 +17,6 @@ const C = {
   redMuted: 'rgba(201,50,26,0.12)',
 }
 
-function useWindowWidth() {
-  const [w, setW] = useState(1200)
-  useEffect(() => {
-    setW(window.innerWidth)
-    const fn = () => setW(window.innerWidth)
-    window.addEventListener('resize', fn)
-    return () => window.removeEventListener('resize', fn)
-  }, [])
-  return w
-}
-
 function useInView() {
   const ref = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
@@ -165,15 +154,7 @@ function RsvpCard({ event, compact = false }: { event: Event; compact?: boolean 
             href={event.payment_link}
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              width: '100%', background: C.red, color: '#fff', border: 'none', cursor: 'pointer',
-              fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 17,
-              letterSpacing: '0.15em', textTransform: 'uppercase', padding: '17px',
-              textDecoration: 'none', transition: 'background 0.2s',
-            }}
-            onMouseEnter={e => (e.currentTarget.style.background = C.redDeep)}
-            onMouseLeave={e => (e.currentTarget.style.background = C.red)}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', background: C.red, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 17, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '17px', textDecoration: 'none' }}
           >
             Pay Cover
           </a>
@@ -192,15 +173,7 @@ function RsvpCard({ event, compact = false }: { event: Event; compact?: boolean 
               key={opt.value}
               type="button"
               onClick={() => setStatus(opt.value)}
-              style={{
-                flex: 1, background: 'transparent', border: 'none', cursor: 'pointer',
-                fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 13,
-                letterSpacing: '0.1em', textTransform: 'uppercase', padding: '10px 4px',
-                marginBottom: -1,
-                color: status === opt.value ? C.darkText : C.darkMuted,
-                borderBottom: status === opt.value ? `2px solid ${C.red}` : '2px solid transparent',
-                transition: 'color 0.15s',
-              }}
+              style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 13, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '10px 4px', marginBottom: -1, color: status === opt.value ? C.darkText : C.darkMuted, borderBottom: status === opt.value ? `2px solid ${C.red}` : '2px solid transparent', transition: 'color 0.15s' }}
             >{opt.label}</button>
           ))}
         </div>
@@ -220,35 +193,11 @@ function RsvpCard({ event, compact = false }: { event: Event; compact?: boolean 
         <button
           type="submit"
           disabled={loading}
-          style={{
-            background: loading ? C.darkMuted : C.red, color: '#fff', border: 'none',
-            padding: '15px', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900,
-            fontSize: 16, letterSpacing: '0.18em', textTransform: 'uppercase',
-            cursor: loading ? 'not-allowed' : 'pointer', transition: 'background 0.15s',
-          }}
-          onMouseEnter={e => { if (!loading) (e.currentTarget as HTMLButtonElement).style.background = C.redDeep }}
-          onMouseLeave={e => { if (!loading) (e.currentTarget as HTMLButtonElement).style.background = C.red }}
+          style={{ background: loading ? C.darkMuted : C.red, color: '#fff', border: 'none', padding: '15px', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: loading ? 'not-allowed' : 'pointer' }}
         >
           {loading ? 'Sending...' : 'RSVP Now'}
         </button>
       </form>
-    </div>
-  )
-}
-
-function MobileBar({ event, onTap }: { event: Event; onTap: () => void }) {
-  return (
-    <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 150, background: 'rgba(17,17,16,0.97)', backdropFilter: 'blur(20px)', borderTop: `1px solid ${C.darkBorder}`, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 16 }}>
-      <div style={{ flex: 1 }}>
-        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 20, color: C.darkText, lineHeight: 1 }}>
-          {event.suggested_price != null ? `$${event.suggested_price} suggested` : 'Free entry'}
-        </div>
-        <div style={{ color: C.darkMuted, fontSize: 12, marginTop: 2 }}>{event.venue || 'Seattle'}</div>
-      </div>
-      <button
-        onClick={onTap}
-        style={{ background: C.red, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '14px 28px', flexShrink: 0 }}
-      >RSVP</button>
     </div>
   )
 }
@@ -262,7 +211,7 @@ function RsvpSheet({ event, onClose }: { event: Event; onClose: () => void }) {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 300, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
       <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }} />
-      <div style={{ position: 'relative', background: C.dark, borderTop: `1px solid ${C.darkBorder}`, padding: '0 20px 40px', maxHeight: '90svh', overflowY: 'auto', animation: 'slideUp 0.35s cubic-bezier(0.22,1,0.36,1)' }}>
+      <div style={{ position: 'relative', background: C.dark, borderTop: `1px solid ${C.darkBorder}`, padding: '0 20px 40px', maxHeight: '90vh', overflowY: 'auto', animation: 'slideUp 0.35s cubic-bezier(0.22,1,0.36,1)' }}>
         <div style={{ display: 'flex', justifyContent: 'center', padding: '14px 0 8px' }}>
           <div style={{ width: 36, height: 4, background: C.darkBorder, borderRadius: 2 }} />
         </div>
@@ -275,66 +224,50 @@ function RsvpSheet({ event, onClose }: { event: Event; onClose: () => void }) {
 }
 
 export default function EventPageClient({ event, lineup }: { event: Event; lineup: LineupArtist[] }) {
-  const w = useWindowWidth()
-  const isMobile = w < 768
-  const [scrolled, setScrolled] = useState(false)
   const [sheetOpen, setSheetOpen] = useState(false)
   const [heroRef, heroVisible] = useInView()
   const [bodyRef, bodyVisible] = useInView()
-
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 40)
-    window.addEventListener('scroll', fn)
-    return () => window.removeEventListener('scroll', fn)
-  }, [])
 
   const dateStr = formatDate(event.date)
   const timeStr = formatTime(event.date)
   const endTimeStr = event.end_date ? formatTime(event.end_date) : null
 
   return (
-    <div style={{ minHeight: '100svh', background: C.dark, paddingBottom: isMobile ? 90 : 0 }}>
+    <div style={{ minHeight: '100vh', background: C.dark }}>
 
       {/* Hero */}
-      <div style={{ position: 'relative', height: isMobile ? 260 : 420, overflow: 'hidden', marginTop: 60 }}>
+      <div className="ep-hero">
         {event.image_url ? (
           <Image src={event.image_url} alt={event.title} fill style={{ objectFit: 'cover', objectPosition: 'center 30%' }} priority />
         ) : (
           <div style={{ position: 'absolute', inset: 0, background: `repeating-linear-gradient(45deg, #252220 0px, #252220 1px, #1c1917 1px, #1c1917 22px)` }} />
         )}
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(28,25,23,0.1) 0%, rgba(28,25,23,0.65) 60%, #1c1917 100%)' }} />
-        <div ref={heroRef} style={{ position: 'absolute', bottom: isMobile ? 20 : 28, left: isMobile ? 20 : 48, display: 'flex', gap: 6, flexWrap: 'wrap', opacity: heroVisible ? 1 : 0, transition: 'opacity 0.6s ease' }}>
+        <div ref={heroRef} style={{ position: 'absolute', bottom: 28, left: 48, display: 'flex', gap: 6, flexWrap: 'wrap', opacity: heroVisible ? 1 : 0, transition: 'opacity 0.6s ease' }} className="ep-hero-tags">
           {event.tags?.map(tag => (
             <span key={tag} style={{ background: 'rgba(17,17,16,0.75)', backdropFilter: 'blur(8px)', border: `1px solid ${C.darkBorder}`, color: 'rgba(240,236,230,0.6)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px' }}>{tag}</span>
           ))}
         </div>
       </div>
 
-      {/* Main */}
-      <div ref={bodyRef} style={{
-        maxWidth: 1100, margin: '0 auto', padding: isMobile ? '0 20px 60px' : '0 48px 60px',
-        display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 380px',
-        gap: isMobile ? 0 : 60, alignItems: 'start',
-        opacity: bodyVisible ? 1 : 0, transform: bodyVisible ? 'translateY(0)' : 'translateY(20px)',
-        transition: 'opacity 0.7s ease, transform 0.7s ease',
-      }}>
+      {/* Main grid */}
+      <div ref={bodyRef} className="ep-body" style={{ opacity: bodyVisible ? 1 : 0, transform: bodyVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'opacity 0.7s ease, transform 0.7s ease' }}>
 
         {/* LEFT */}
-        <div style={{ paddingTop: isMobile ? 28 : 40 }}>
+        <div style={{ paddingTop: 40 }}>
 
-          {/* Back + Title */}
           <div style={{ marginBottom: 28 }}>
-            <Link href="/" style={{ color: C.darkMuted, textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: 5, marginBottom: 20, transition: 'color 0.2s' }}>
+            <Link href="/" style={{ color: C.darkMuted, textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: 5, marginBottom: 20 }}>
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
               All Events
             </Link>
             <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: C.red, marginBottom: 10 }}>Shameless Presents</div>
-            <h1 style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: isMobile ? 'clamp(44px,12vw,64px)' : 'clamp(52px,6vw,80px)', lineHeight: 0.88, color: C.darkText, textTransform: 'uppercase', marginBottom: 20 }}>
+            <h1 style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(44px, 7vw, 80px)', lineHeight: 0.88, color: C.darkText, textTransform: 'uppercase', marginBottom: 20 }}>
               {event.title}
             </h1>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
               <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="11" rx="1" stroke={C.red} strokeWidth="1.4" /><path d="M5 2V5M11 2V5M2 8H14" stroke={C.red} strokeWidth="1.4" strokeLinecap="round" /></svg>
-              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: isMobile ? 17 : 21, color: C.red, letterSpacing: '0.02em' }}>
+              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 'clamp(16px, 2.5vw, 21px)', color: C.red }}>
                 {dateStr} &bull; {timeStr}{endTimeStr ? ` – ${endTimeStr}` : ''}
               </div>
             </div>
@@ -348,7 +281,6 @@ export default function EventPageClient({ event, lineup }: { event: Event; lineu
 
           <Divider />
 
-          {/* About */}
           <div>
             <SecLabel>About</SecLabel>
             <MetaRow icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.3" /><path d="M8 5V8.5L10 10.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" /></svg>}>
@@ -356,14 +288,6 @@ export default function EventPageClient({ event, lineup }: { event: Event; lineu
             </MetaRow>
             {event.description && (
               <div style={{ color: C.darkMuted, fontSize: 15, lineHeight: 1.75, marginTop: 16 }}>{event.description}</div>
-            )}
-            {event.payment_link && event.suggested_price != null && (
-              <div style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, padding: '16px 20px', marginTop: 20 }}>
-                <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 14, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.darkText, marginBottom: 6 }}>Cover Charge</div>
-                <div style={{ color: C.darkMuted, fontSize: 13, lineHeight: 1.7 }}>
-                  ${event.suggested_price} suggested. Pay via the link on the right.
-                </div>
-              </div>
             )}
           </div>
 
@@ -384,22 +308,20 @@ export default function EventPageClient({ event, lineup }: { event: Event; lineu
                 <SecLabel>Venue</SecLabel>
                 <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 26, color: C.darkText, textTransform: 'uppercase', marginBottom: 4 }}>{event.venue}</div>
                 {event.address && <div style={{ color: C.darkMuted, fontSize: 14, marginBottom: 18 }}>{event.address}</div>}
-                <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
-                  {event.address && (
+                {event.address && (
+                  <div style={{ marginBottom: 20 }}>
                     <a
                       href={`https://maps.google.com/?q=${encodeURIComponent(event.address)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkText, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '10px 18px', textDecoration: 'none', transition: 'border-color 0.2s, color 0.2s' }}
-                      onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = C.red; (e.currentTarget as HTMLAnchorElement).style.color = C.red }}
-                      onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = C.darkBorder; (e.currentTarget as HTMLAnchorElement).style.color = C.darkText }}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkText, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '10px 18px', textDecoration: 'none' }}
                     >
                       <svg width="12" height="12" viewBox="0 0 13 13" fill="none"><path d="M6.5 12S1 7.686 1 4.5a5.5 5.5 0 1 1 11 0C12 7.686 6.5 12 6.5 12Z" stroke="currentColor" strokeWidth="1.4" /><circle cx="6.5" cy="4.5" r="1.75" stroke="currentColor" strokeWidth="1.4" /></svg>
                       Open in Maps
                     </a>
-                  )}
-                </div>
-                <div style={{ width: '100%', height: isMobile ? 160 : 200, background: C.darkCard, border: `1px solid ${C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                  </div>
+                )}
+                <div style={{ width: '100%', height: 200, background: C.darkCard, border: `1px solid ${C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                   <div style={{ position: 'absolute', inset: 0, background: `repeating-linear-gradient(0deg, ${C.darkBorder} 0, ${C.darkBorder} 1px, transparent 1px, transparent 32px), repeating-linear-gradient(90deg, ${C.darkBorder} 0, ${C.darkBorder} 1px, transparent 1px, transparent 32px)` }} />
                   <div style={{ position: 'relative', textAlign: 'center' }}>
                     <svg width="26" height="26" viewBox="0 0 28 28" fill="none" style={{ display: 'block', margin: '0 auto 8px' }}>
@@ -414,57 +336,114 @@ export default function EventPageClient({ event, lineup }: { event: Event; lineu
           )}
         </div>
 
-        {/* RIGHT — desktop sticky */}
-        {!isMobile && (
-          <div style={{ paddingTop: 40 }}>
-            <div style={{ position: 'sticky', top: 80 }}>
-              <RsvpCard event={event} />
-              <div style={{ marginTop: 14, display: 'flex', gap: 8 }}>
-                {['Share', 'Save'].map(l => (
-                  <button key={l} style={{ flex: 1, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkText, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '10px 0', transition: 'border-color 0.2s, color 0.2s' }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = C.red; (e.currentTarget as HTMLButtonElement).style.color = C.red }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = C.darkBorder; (e.currentTarget as HTMLButtonElement).style.color = C.darkText }}
-                  >{l}</button>
+        {/* RIGHT — hidden on mobile via CSS */}
+        <div className="ep-sidebar">
+          <div style={{ position: 'sticky', top: 80 }}>
+            <RsvpCard event={event} />
+            <div style={{ marginTop: 14, display: 'flex', gap: 8 }}>
+              {['Share', 'Save'].map(l => (
+                <button key={l} style={{ flex: 1, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkText, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '10px 0' }}>
+                  {l}
+                </button>
+              ))}
+            </div>
+            {lineup.filter(a => a.sort_order === 0).length > 0 && (
+              <div style={{ marginTop: 20, background: C.darkCard, border: `1px solid ${C.darkBorder}`, padding: '20px 22px' }}>
+                <SecLabel>Headliner</SecLabel>
+                {lineup.filter(a => a.sort_order === 0).map(a => (
+                  <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <div style={{ width: 40, height: 40, background: C.dark, border: `1px solid ${C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
+                      {a.image_url
+                        ? <Image src={a.image_url} alt={a.name} fill style={{ objectFit: 'cover' }} />
+                        : <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16, color: C.darkMuted, textTransform: 'uppercase' }}>{a.name[0]}</span>
+                      }
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 17, color: C.darkText, textTransform: 'uppercase' }}>{a.name}</div>
+                      {a.bio && <div style={{ color: C.darkMuted, fontSize: 12 }}>{a.bio}</div>}
+                    </div>
+                  </div>
                 ))}
               </div>
-              {lineup.filter(a => a.sort_order === 0).length > 0 && (
-                <div style={{ marginTop: 20, background: C.darkCard, border: `1px solid ${C.darkBorder}`, padding: '20px 22px' }}>
-                  <SecLabel>Headliner</SecLabel>
-                  {lineup.filter(a => a.sort_order === 0).map(a => (
-                    <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                      <div style={{ width: 40, height: 40, background: C.dark, border: `1px solid ${C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
-                        {a.image_url
-                          ? <Image src={a.image_url} alt={a.name} fill style={{ objectFit: 'cover' }} />
-                          : <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16, color: C.darkMuted, textTransform: 'uppercase' }}>{a.name[0]}</span>
-                        }
-                      </div>
-                      <div>
-                        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 17, color: C.darkText, textTransform: 'uppercase' }}>{a.name}</div>
-                        {a.bio && <div style={{ color: C.darkMuted, fontSize: 12 }}>{a.bio}</div>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
+      {/* Mobile RSVP card — shown only on mobile via CSS, below content */}
+      <div className="ep-mobile-rsvp">
+        <RsvpCard event={event} />
+      </div>
+
+      {/* Mobile sticky bar — always rendered, shown via CSS */}
+      <div className="ep-mobile-bar">
+        <div style={{ flex: 1 }}>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 20, color: C.darkText, lineHeight: 1 }}>
+            {event.suggested_price != null ? `$${event.suggested_price} suggested` : 'Free entry'}
+          </div>
+          <div style={{ color: C.darkMuted, fontSize: 12, marginTop: 2 }}>{event.venue || 'Seattle'}</div>
+        </div>
+        <button
+          onClick={() => setSheetOpen(true)}
+          style={{ background: C.red, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '14px 28px', flexShrink: 0 }}
+        >RSVP</button>
+      </div>
+
+      {sheetOpen && <RsvpSheet event={event} onClose={() => setSheetOpen(false)} />}
+
       {/* Footer */}
-      <footer style={{ background: C.darkDeep, padding: `36px ${isMobile ? '20px' : '48px'}`, borderTop: `1px solid ${C.darkBorder}` }}>
+      <footer style={{ background: C.darkDeep, borderTop: `1px solid ${C.darkBorder}` }} className="ep-footer">
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <Link href="/" style={{ color: C.darkMuted, textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Simply Shameless</Link>
           <div style={{ color: 'rgba(240,236,230,0.2)', fontFamily: 'DM Sans, sans-serif', fontSize: 12 }}>© 2025 Simply Shameless Productions</div>
         </div>
       </footer>
 
-      {/* Mobile RSVP bar + sheet */}
-      {isMobile && <MobileBar event={event} onTap={() => setSheetOpen(true)} />}
-      {isMobile && sheetOpen && <RsvpSheet event={event} onClose={() => setSheetOpen(false)} />}
-
       <style>{`
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .ep-hero {
+          position: relative;
+          height: 420px;
+          overflow: hidden;
+          margin-top: 60px;
+        }
+
+        .ep-body {
+          max-width: 1100px;
+          margin: 0 auto;
+          padding: 0 48px 60px;
+          display: grid;
+          grid-template-columns: 1fr 380px;
+          gap: 60px;
+          align-items: start;
+        }
+
+        .ep-sidebar { padding-top: 40px; }
+        .ep-mobile-rsvp { display: none; }
+        .ep-mobile-bar { display: none; }
+        .ep-footer { padding: 36px 48px; }
+
+        @media (max-width: 768px) {
+          .ep-hero { height: 260px; }
+          .ep-hero-tags { left: 20px !important; bottom: 20px !important; }
+          .ep-body { grid-template-columns: 1fr; gap: 0; padding: 0 20px 120px; }
+          .ep-sidebar { display: none; }
+          .ep-mobile-rsvp { display: block; padding: 0 20px 40px; }
+          .ep-mobile-bar {
+            display: flex;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 150;
+            background: rgba(17,17,16,0.97);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.07);
+            padding: 14px 20px;
+            align-items: center;
+            gap: 16px;
+          }
+          .ep-footer { padding: 36px 20px; }
+        }
       `}</style>
     </div>
   )
