@@ -96,7 +96,7 @@ function EventCard({ event, delay }: { event: any; delay: number }) {
                 transition: 'background 0.15s, transform 0.1s',
                 transform: !isSoon && btnHover ? 'scale(0.98)' : 'scale(1)',
               }}
-            >{isSoon ? 'Coming Soon' : 'Buy Tickets →'}</button>
+            >{isSoon ? 'Coming Soon' : 'View Event →'}</button>
           </div>
         </div>
       </Link>
