@@ -1,270 +1,193 @@
-# Ticket Shameless
+# Simply Shameless
 
 [![Run Tests](https://github.com/tekthree/ticket-shameless/actions/workflows/run-tests.yml/badge.svg)](https://github.com/tekthree/ticket-shameless/actions/workflows/run-tests.yml)
 
-A modern ticketing and event management platform for Shameless Productions, Seattle's premier electronic music event collective.
+Event platform and merch store for Shameless Productions, a Seattle-based electronic music collective. Partiful-style architecture: shareable event pages with RSVP, payment links for cover (Venmo/Cash App), and a Stripe-powered merch store.
 
-## Overview
+**Live site (current, WordPress):** https://simplyshameless.com  
+**Repo:** https://github.com/Tekthree/ticket-shameless
 
-Ticket Shameless is a full-stack web application built with Next.js and Supabase, providing a comprehensive solution for event management, ticket sales, and user account management. The platform features both public-facing pages for event attendees and an administrative dashboard for event organizers.
+---
 
-## Features
+## What this is
 
-### Public Features
+A custom Next.js app replacing simplyshameless.com. The goal is a branded, fast, mobile-first platform where Shameless can:
 
-- **Event Browsing & Discovery**: Users can browse upcoming events, view details, and purchase tickets.
-- **Ticket Purchasing**: Secure checkout process with Stripe integration for payment processing.
-- **Ticket Management**: Digital tickets with QR codes for event entry.
-- **User Accounts**: Personalized accounts with ticket purchase history and profile management.
-- **Responsive Design**: Fully responsive layout that works on mobile, tablet, and desktop devices.
-- **Dark/Light Mode**: Built-in theme toggle for user preference.
+- Post events and collect RSVPs (no ticket purchasing)
+- Show a suggested cover price with a link to their Venmo/Cash App
+- Sell merch directly via Stripe
+- Build a newsletter subscriber list
+- Blast RSVPs via Twilio SMS with event updates (Phase 4)
 
-### Admin Dashboard
+No third-party ticketing platforms. No commission on door sales. Design is inspired by Partiful: clean event pages, minimal friction to RSVP, easy to share.
 
-- **Event Management**: Create, edit, and manage events including venue, date, time, ticket pricing, and capacity.
-- **Artist Management**: Manage artist profiles including bios, images, and music links. Preview artists' mixes directly in the admin interface.
-- **Content Management**: Edit site content including landing pages and promotional materials.
-- **User Management**: Manage user accounts, roles, and permissions.
-- **Sales Reports**: View and export ticket sales data and analytics.
+---
 
-## Technology Stack
+## Stack
 
-- **Frontend**: Next.js, React, Tailwind CSS, shadcn/ui
-- **Authentication & Backend**: Supabase (Auth, Database, Storage)
-- **Payment Processing**: Stripe API with webhook integration
-- **Styling**: Tailwind CSS with custom theme support
-- **Icons**: Lucide React icons
-- **State Management**: React context and Supabase realtime subscriptions
-- **Deployment**: [Your deployment platform]
+| Layer | Tool |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Database | Neon (serverless Postgres) |
+| Image storage | Vercel Blob |
+| Payments | Stripe (merch only) |
+| SMS | Twilio (Phase 4) |
+| Styling | Tailwind CSS + inline styles |
+| Fonts | Barlow Condensed + DM Sans (via next/font) |
+| Hosting | Vercel |
 
-## Screenshots
+---
 
-### Admin Dashboard
+## Local setup
 
-![Admin Dashboard](./docs/images/admin-dashboard.png)
-
-### Profile Page
-
-![Profile Page](./docs/images/profile-page.png)
-
-### Event Page
-
-![Event Page](./docs/images/event-page.png)
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js (v18+ recommended)
-- npm or yarn
-- Supabase account
-- [Any other dependencies]
-
-### Installation
-
-1. Clone the repository
-```bash
-git clone https://github.com/yourusername/ticket-shameless.git
-cd ticket-shameless
-```
-
-2. Install dependencies
 ```bash
 npm install
-# or
-yarn install
 ```
 
-3. Configure environment variables
+Create `.env.local`:
+
+```
+DATABASE_URL=postgresql://...           # from Neon dashboard
+BLOB_READ_WRITE_TOKEN=...               # from Vercel Blob
+STRIPE_SECRET_KEY=sk_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_...
+```
+
+The easiest way to get these is to link the project and pull:
+
 ```bash
-cp .env.example .env.local
-```
-Then edit `.env.local` with your Supabase and Stripe credentials:
-
-```
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
-
-STRIPE_SECRET_KEY=your-stripe-secret-key
-STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
+npx vercel link
+vercel env pull .env.local
 ```
 
-4. Apply database migrations
-```bash
-npm run migrate
-```
+Then run:
 
-5. Run the development server
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+---
 
-## Deployment
+## Database setup
 
-[Add deployment instructions specific to your setup]
+Schema is at `supabase/schema.sql` (pure Postgres, no Supabase-specific syntax).
 
-## Project Structure
+1. Create a project at [neon.tech](https://neon.tech)
+2. Open the SQL editor and paste/run the full schema
+3. Copy the connection string and add it to `.env.local` as `DATABASE_URL`
+
+### Tables
+
+| Table | Purpose |
+|---|---|
+| `users` | Admin and guest accounts |
+| `events` | Event pages: title, slug, date, venue, image, payment link, suggested price |
+| `lineup` | Artists per event: name, bio, image, mix URL, time slot |
+| `rsvps` | Per-event RSVPs: name, email, phone, status |
+| `products` | Merch items: name, price, sizes, stock, Stripe price ID |
+| `orders` + `order_items` | Stripe merch orders |
+| `subscribers` | Newsletter signups |
+
+### Key fields
+
+- `events.payment_link` — Venmo/Cash App handle or URL. Displayed on the event page as a pay-cover CTA.
+- `events.suggested_price` — optional suggested cover amount shown alongside the payment link.
+- `rsvps.status` — `going`, `maybe`, or `not_going`. Unique on `(event_id, email)` so re-submitting updates in place.
+
+---
+
+## Project structure
 
 ```
-ticket-shameless/
-├── app/               # Next.js app router pages
-│   ├── admin/         # Admin dashboard pages
-│   ├── api/           # API routes
-│   ├── auth/          # Authentication pages
-│   ├── events/        # Event pages
-│   ├── profile/       # User profile pages
-│   └── ...
-├── components/        # React components
-│   ├── admin/         # Admin-specific components
-│   ├── events/        # Event-related components
-│   ├── profile/       # Profile-related components
-│   ├── ui/            # UI components (shadcn)
-│   └── ...
-├── hooks/             # Custom React hooks
-├── lib/               # Utility functions and libraries
-│   ├── supabase/      # Supabase client and utilities
-│   └── utils.ts       # Helper utilities
-├── public/            # Static files
-└── ...
+app/
+  page.tsx                # Homepage (server component — fetches events from DB)
+  events/[slug]/          # Individual event pages
+  api/
+    checkout/             # Stripe merch checkout
+    webhooks/             # Stripe webhook handler
+    upload/               # Vercel Blob upload endpoint
+
+components/
+  home/
+    HeroSection.tsx       # Full-screen hero
+    Ticker.tsx            # Scrolling text marquee
+    EventsSection.tsx     # Upcoming events grid
+    GallerySection.tsx    # Asymmetric dark photo grid
+    AboutSection.tsx      # Brand description block
+    NewsletterSection.tsx # Email signup
+    PageLoader.tsx        # Full-screen logo reveal animation
+    HomeClient.tsx        # Client wrapper for PageLoader (needs useState)
+  SSNavbar.tsx            # Branded scroll-aware navigation
+  SSFooter.tsx            # Branded footer
+
+lib/
+  db.ts                   # All database queries via Neon
+  events.ts               # Re-exports from db.ts
+
+supabase/
+  schema.sql              # Postgres schema — run in Neon SQL editor
 ```
 
-## Features in Detail
+---
 
-### Ticket Purchasing System
+## Phases
 
-The application includes a comprehensive ticket purchasing system:
-- Secure checkout process using Stripe
-- Real-time ticket inventory management
-- Automatic ticket count updates when purchases are completed
-- Digital tickets with QR codes for event entry
-- Ticket history in user profiles
-- Email confirmations for purchases
+### Phase 1 — Homepage (in progress)
 
-### Stripe Integration
+- [x] Hero section
+- [x] Scrolling ticker
+- [x] Events section (reads from DB)
+- [x] Gallery section
+- [x] About section
+- [x] Newsletter signup
+- [x] Page loader animation
+- [ ] Mobile responsive polish
 
-Payment processing is handled through Stripe:
-- Secure checkout sessions for ticket purchases
-- Webhook handling for purchase confirmations
-- Automatic inventory updates on successful purchases
-- Support for multiple ticket quantities
-- Order history tracking
+### Phase 2 — Event pages + RSVP
 
-### Artist Profiles
+- [ ] `/events/[slug]` — full event detail page with lineup
+- [ ] RSVP form (name, email, phone, status: going/maybe/not_going)
+- [ ] Payment link display (Venmo/Cash App CTA with suggested price)
+- [ ] Neon DB wired in production
 
-The application includes a comprehensive artist management system with the following features:
-- Detailed artist profiles with biographical information
-- Links to music mixes (SoundCloud, Mixcloud, etc.)
-- Embedded mix previewer for quick audio assessment
-- Image management for artist photos
-- Connection to events through the event_artists junction table
+### Phase 3 — Merch store
 
-### Theme Toggle
+- [ ] `/merch` — product grid
+- [ ] Stripe checkout for merch items
+- [ ] Order confirmation page
+- [ ] Admin: add/edit products, manage stock
 
-The application supports both light and dark modes, with a convenient toggle in the navigation bar. The theme system is built on next-themes and persists user preferences across sessions.
+### Phase 4 — SMS
 
-### Authentication
+- [ ] Twilio integration
+- [ ] Blast to all RSVPs for a given event (updates, reminders)
+- [ ] Opt-out handling
 
-User authentication is handled through Supabase Auth, providing:
-- Email/password login
-- Social login options (if configured)
-- JWT token management
-- Role-based access control
+### Later
 
-### Role-Based Access
+- [ ] Admin dashboard (create/edit events, view RSVPs, manage merch inventory)
+- [ ] Photo upload via Vercel Blob
+- [ ] Artist profile pages
 
-The application supports multiple user roles:
-- **Admin**: Full access to all features
-- **Event Manager**: Can manage events and artists
-- **Box Office**: Can view and manage ticket sales
-- **Artist**: Can view own events and information
-- **User**: Basic access to ticket purchases and profile
+---
 
-## Database Structure
+## Design reference
 
-### Key Tables
+Two designs were merged to build the current app.
 
-#### Artists Table
-```sql
-CREATE TABLE IF NOT EXISTS artists (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  name TEXT NOT NULL,
-  image TEXT,
-  bio TEXT,
-  mix_url TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-```
+**Design A** — `design-files/Simply Shameless.html`  
+HTML/CSS prototype. Source for the page loader animation, gallery grid layout, and merch section visual style.
 
-#### Event Artists Junction Table
-```sql
-CREATE TABLE IF NOT EXISTS event_artists (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  event_id UUID REFERENCES events(id) ON DELETE CASCADE,
-  artist_id UUID REFERENCES artists(id) ON DELETE CASCADE,
-  performance_time TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  UNIQUE(event_id, artist_id)
-);
-```
+**Design B** — the original Next.js components in this repo  
+Had the branded SSNavbar/SSFooter, Barlow Condensed + DM Sans fonts via next/font, Tailwind structure, and scroll-aware behavior.
 
-#### Events Table
-```sql
--- Main structure, see schema.sql for full details
-CREATE TABLE IF NOT EXISTS events (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  title TEXT NOT NULL,
-  slug TEXT NOT NULL UNIQUE,
-  description TEXT,
-  date TIMESTAMP WITH TIME ZONE NOT NULL,
-  price NUMERIC NOT NULL,
-  tickets_total INTEGER NOT NULL,
-  tickets_remaining INTEGER NOT NULL,
-  sold_out BOOLEAN DEFAULT FALSE,
-  -- Additional fields omitted for brevity
-);
-```
+The homepage now combines both.
 
-#### Orders Table
-```sql
-CREATE TABLE IF NOT EXISTS orders (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  event_id UUID REFERENCES events(id) ON DELETE SET NULL,
-  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
-  stripe_session_id TEXT,
-  customer_email TEXT,
-  customer_name TEXT,
-  amount_total NUMERIC NOT NULL,
-  quantity INTEGER NOT NULL DEFAULT 1,
-  status TEXT NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-```
+---
 
-## Migrations
+## Notes
 
-The application includes a migration system to manage database schema changes. Migrations are located in the `supabase/migrations` directory and can be applied using the `npm run migrate` command.
-
-Recent migrations include:
-- `20250406_update_artists.sql`: Added bio and mix_url fields to the artists table
-
-## License
-
-[Your license information]
-
-## Acknowledgements
-
-- [shadcn/ui](https://ui.shadcn.com/) for accessible UI components
-- [Lucide React](https://lucide.dev/) for icons
-- [Next.js](https://nextjs.org/) team for the framework
-- [Supabase](https://supabase.io/) for backend services
-- [Tailwind CSS](https://tailwindcss.com/) for styling
-
-## Contact
-
-[Your contact information]
+- No ticket purchasing. Events use RSVP + external payment links only. Stripe is for merch exclusively.
+- Old test directories (`__tests__/tickets/`, `__tests__/payments/`, `__tests__/supabase/`, `__tests__/auth/`) are excluded from the test runner — they reference a deleted ticketing architecture. Write new tests in `__tests__/utils/` or new feature-specific directories.
+- Some legacy components and routes still exist (`Header`, `Navbar`, `Footer`, `BuyTicketButton`, `app/box-office/`, `app/tickets/`, etc.) from the original ticketing app. These will be cleaned up as Phase 2+ is built.
