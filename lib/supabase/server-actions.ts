@@ -1,29 +1,43 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { createServerClient as createClient } from '@supabase/ssr';
-import { executeWithRetry, batchQueries } from './server';
+import { createServerClient } from '@supabase/ssr';
 
 // Default placeholder values for development
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder-url.supabase.co';
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key';
 
-export async function getServerSideSupabaseClient() {
+/**
+ * Creates a Supabase client for use in Server Actions and Route Handlers
+ * This function must ONLY be called within a Server Action or Route Handler
+ */
+export async function createServerActionClient() {
+  'use server';
+  
   const cookieStore = cookies();
   
-  return createClient(
+  return createServerClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY,
     {
       cookies: {
-        get(name: string) {
+        get(name) {
           return cookieStore.get(name)?.value;
         },
-        set(name: string, value: string, options: Record<string, any>) {
-          cookieStore.set({ name, value, ...options });
+        set(name, value, options) {
+          try {
+            // In Next.js 14, cookies can only be set in Server Actions or Route Handlers
+            cookieStore.set({ name, value, ...options });
+          } catch (error) {
+            console.warn(`Cookie set failed for ${name}:`, error);
+          }
         },
-        remove(name: string, options: Record<string, any>) {
-          cookieStore.set({ name, value: '', ...options });
+        remove(name, options) {
+          try {
+            cookieStore.set({ name, value: '', ...options });
+          } catch (error) {
+            console.warn(`Cookie remove failed for ${name}:`, error);
+          }
         },
       },
     }

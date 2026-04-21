@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
+import { createClient } from '@supabase/supabase-js'
 
 // Cache constants
 const ROLES_CACHE_TTL = 300000 // 5 minutes in milliseconds
@@ -57,21 +58,30 @@ export async function middleware(request: NextRequest) {
           return cookieValue
         },
         set(name: string, value: string, options: Record<string, any>) {
-          // Update the cookie in the request and response
-          request.cookies.set({ name, value, ...options })
-          response.cookies.set({ name, value, ...options })
-          
-          // Update the cache
-          const cacheKey = `${request.url}_${name}`
-          cookieCache.set(cacheKey, { value, timestamp: Date.now() })
+          try {
+            // Set the cookie in the response
+            response.cookies.set({
+              name,
+              value,
+              ...options,
+            })
+          } catch (error) {
+            console.warn(`Cookie set failed for ${name}:`, error)
+            // Silently fail - we'll handle cookie errors gracefully
+          }
         },
         remove(name: string, options: Record<string, any>) {
-          // Remove the cookie from the request and response
-          request.cookies.set({ name, value: '', ...options })
-          response.cookies.set({ name, value: '', ...options })
-          
-          // Remove from cache
-          const cacheKey = `${request.url}_${name}`
+          try {
+            // Remove the cookie from the response
+            response.cookies.set({
+              name,
+              value: '',
+              ...options,
+            })
+          } catch (error) {
+            console.warn(`Cookie remove failed for ${name}:`, error)
+            // Silently fail - we'll handle cookie errors gracefully
+          }
           cookieCache.delete(cacheKey)
         },
       },
