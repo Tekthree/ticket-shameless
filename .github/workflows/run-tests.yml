@@ -11,8 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      NEXT_PUBLIC_SUPABASE_URL: 'https://test-project.supabase.co'
-      SUPABASE_SERVICE_ROLE_KEY: 'test-service-key'
+      DATABASE_URL: 'postgresql://test:test@localhost/test'
       STRIPE_SECRET_KEY: 'sk_test_123'
       STRIPE_WEBHOOK_SECRET: 'whsec_test'
 

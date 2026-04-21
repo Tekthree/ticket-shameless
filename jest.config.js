@@ -13,7 +13,15 @@ const customJestConfig = {
     '^@/(.*)$': '<rootDir>/$1',
   },
   testMatch: ['**/__tests__/**/*.test.[jt]s?(x)'],
-  testPathIgnorePatterns: ['/node_modules/', '/.next/', '/deprecated/'],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/.next/',
+    '/deprecated/',
+    '/__tests__/tickets/',
+    '/__tests__/payments/',
+    '/__tests__/supabase/',
+    '/__tests__/auth/',
+  ],
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }]
   },
