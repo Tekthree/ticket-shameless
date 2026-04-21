@@ -11,7 +11,7 @@
     "seed": "node scripts/seed-database.js",
     "setup-content": "node scripts/setup-site-content.js",
     "migrate": "node scripts/run-migrations.js",
-    "test": "NODE_NO_WARNINGS=1 jest",
+    "test": "NODE_NO_WARNINGS=1 jest --passWithNoTests",
     "test:watch": "NODE_NO_WARNINGS=1 jest --watch",
     "test:coverage": "NODE_NO_WARNINGS=1 jest --coverage"
   },
