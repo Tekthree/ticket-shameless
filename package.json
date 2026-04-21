@@ -16,6 +16,7 @@
     "test:coverage": "NODE_NO_WARNINGS=1 jest --coverage"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -32,6 +33,7 @@
     "@stripe/stripe-js": "^2.2.2",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "^2.39.1",
+    "@vercel/blob": "^2.3.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "date-fns": "^2.30.0",

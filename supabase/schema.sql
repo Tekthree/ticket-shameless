@@ -1,114 +1,139 @@
--- Create extension for UUID generation
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Shameless Productions — Neon Postgres Schema
+-- Run this in Neon SQL editor after creating your project
 
--- Events Table
-CREATE TABLE IF NOT EXISTS events (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  title TEXT NOT NULL,
-  slug TEXT NOT NULL UNIQUE,
-  description TEXT NOT NULL,
-  date TIMESTAMP WITH TIME ZONE NOT NULL,
-  time TEXT NOT NULL,
-  venue TEXT NOT NULL,
-  address TEXT NOT NULL,
-  image TEXT NOT NULL,
-  price NUMERIC NOT NULL,
-  tickets_total INTEGER NOT NULL,
-  tickets_remaining INTEGER NOT NULL,
-  sold_out BOOLEAN DEFAULT FALSE,
-  promoter TEXT NOT NULL,
-  age_restriction TEXT,
-  lineup JSONB DEFAULT '[]'::jsonb,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- ── PROFILES / USERS ─────────────────────────────────────────────────────────
+create table users (
+  id          uuid primary key default gen_random_uuid(),
+  email       text unique not null,
+  name        text,
+  phone       text,
+  role        text not null default 'guest' check (role in ('guest', 'admin')),
+  created_at  timestamptz not null default now()
 );
 
--- Add trigger to update the updated_at field
-CREATE OR REPLACE FUNCTION update_modified_column()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = NOW();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_events_modified
-BEFORE UPDATE ON events
-FOR EACH ROW
-EXECUTE PROCEDURE update_modified_column();
-
--- Orders Table
-CREATE TABLE IF NOT EXISTS orders (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  event_id UUID REFERENCES events(id) ON DELETE SET NULL,
-  stripe_session_id TEXT UNIQUE NOT NULL,
-  customer_email TEXT,
-  customer_name TEXT,
-  amount_total NUMERIC NOT NULL,
-  status TEXT NOT NULL,
-  quantity INTEGER NOT NULL DEFAULT 1,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- ── EVENTS ──────────────────────────────────────────────────────────────────
+create table events (
+  id              uuid primary key default gen_random_uuid(),
+  slug            text unique not null,
+  title           text not null,
+  description     text,
+  date            timestamptz not null,
+  end_date        timestamptz,
+  venue           text,
+  address         text,
+  image_url       text,
+  tags            text[] default '{}',
+  payment_link    text,           -- Venmo/Cash App/PayPal handle or URL
+  suggested_price numeric(8,2),   -- suggested cover/donation
+  is_public       boolean not null default true,
+  is_published    boolean not null default false,
+  created_by      uuid references users(id),
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
 );
 
--- Function to decrement a value in a column
-CREATE OR REPLACE FUNCTION decrement(row_id UUID, amount INTEGER)
-RETURNS INTEGER AS $$
-DECLARE
-  current_value INTEGER;
-  new_value INTEGER;
-BEGIN
-  -- Get the current value
-  SELECT tickets_remaining INTO current_value FROM events WHERE id = row_id;
-  
-  -- Calculate the new value
-  new_value := GREATEST(0, current_value - amount);
-  
-  -- Update the tickets_remaining column
-  UPDATE events 
-  SET 
-    tickets_remaining = new_value,
-    sold_out = CASE WHEN new_value <= 0 THEN TRUE ELSE FALSE END
-  WHERE id = row_id;
-  
-  -- Return the new value
-  RETURN new_value;
-END;
-$$ LANGUAGE plpgsql;
+-- ── LINEUP (artists per event) ───────────────────────────────────────────────
+create table lineup (
+  id          uuid primary key default gen_random_uuid(),
+  event_id    uuid references events(id) on delete cascade not null,
+  name        text not null,
+  bio         text,
+  image_url   text,
+  mix_url     text,
+  time_slot   text,
+  sort_order  int default 0,
+  created_at  timestamptz not null default now()
+);
 
--- Add RLS (Row Level Security) policies
+-- ── RSVPs ────────────────────────────────────────────────────────────────────
+create table rsvps (
+  id          uuid primary key default gen_random_uuid(),
+  event_id    uuid references events(id) on delete cascade not null,
+  user_id     uuid references users(id) on delete set null,
+  name        text not null,
+  email       text,
+  phone       text,
+  status      text not null default 'going' check (status in ('going', 'maybe', 'not_going')),
+  note        text,
+  created_at  timestamptz not null default now(),
+  unique (event_id, email)
+);
 
--- Enable RLS on events table
-ALTER TABLE events ENABLE ROW LEVEL SECURITY;
+-- ── MERCH PRODUCTS ───────────────────────────────────────────────────────────
+create table products (
+  id              uuid primary key default gen_random_uuid(),
+  name            text not null,
+  description     text,
+  price           numeric(8,2) not null,
+  image_url       text,
+  category        text,
+  sizes           text[],
+  stock           int default 0,
+  is_published    boolean not null default false,
+  stripe_price_id text,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
 
--- Create policies for events table
-CREATE POLICY "Public can view events" ON events
-  FOR SELECT
-  USING (true);
+-- ── ORDERS ───────────────────────────────────────────────────────────────────
+create table orders (
+  id                  uuid primary key default gen_random_uuid(),
+  user_id             uuid references users(id) on delete set null,
+  email               text not null,
+  name                text not null,
+  status              text not null default 'pending'
+                        check (status in ('pending', 'paid', 'shipped', 'cancelled')),
+  stripe_payment_id   text,
+  stripe_session_id   text,
+  total               numeric(8,2) not null,
+  shipping_address    jsonb,
+  created_at          timestamptz not null default now(),
+  updated_at          timestamptz not null default now()
+);
 
-CREATE POLICY "Authenticated users can insert events" ON events
-  FOR INSERT
-  WITH CHECK (auth.role() = 'authenticated');
+-- ── ORDER ITEMS ──────────────────────────────────────────────────────────────
+create table order_items (
+  id          uuid primary key default gen_random_uuid(),
+  order_id    uuid references orders(id) on delete cascade not null,
+  product_id  uuid references products(id) on delete set null,
+  name        text not null,
+  price       numeric(8,2) not null,
+  quantity    int not null default 1,
+  size        text,
+  created_at  timestamptz not null default now()
+);
 
-CREATE POLICY "Authenticated users can update events" ON events
-  FOR UPDATE
-  USING (auth.role() = 'authenticated');
+-- ── NEWSLETTER SUBSCRIBERS ────────────────────────────────────────────────────
+create table subscribers (
+  id          uuid primary key default gen_random_uuid(),
+  email       text unique not null,
+  name        text,
+  phone       text,
+  source      text default 'website',
+  created_at  timestamptz not null default now()
+);
 
-CREATE POLICY "Authenticated users can delete events" ON events
-  FOR DELETE
-  USING (auth.role() = 'authenticated');
+-- ── UPDATED_AT TRIGGERS ──────────────────────────────────────────────────────
+create or replace function set_updated_at()
+returns trigger language plpgsql as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
 
--- Enable RLS on orders table
-ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+create trigger events_updated_at before update on events
+  for each row execute procedure set_updated_at();
 
--- Create policies for orders table
-CREATE POLICY "Authenticated users can view all orders" ON orders
-  FOR SELECT
-  USING (auth.role() = 'authenticated');
+create trigger products_updated_at before update on products
+  for each row execute procedure set_updated_at();
 
-CREATE POLICY "Authenticated users can insert orders" ON orders
-  FOR INSERT
-  WITH CHECK (auth.role() = 'authenticated');
+create trigger orders_updated_at before update on orders
+  for each row execute procedure set_updated_at();
 
-CREATE POLICY "Authenticated users can update orders" ON orders
-  FOR UPDATE
-  USING (auth.role() = 'authenticated');
+-- ── INDEXES ──────────────────────────────────────────────────────────────────
+create index events_date_idx on events(date);
+create index events_slug_idx on events(slug);
+create index rsvps_event_idx on rsvps(event_id);
+create index orders_user_idx on orders(user_id);
+create index order_items_order_idx on order_items(order_id);
