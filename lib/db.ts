@@ -54,7 +54,7 @@ export type LineupArtist = {
 
 export async function getEvents(limit = 10): Promise<Event[]> {
   try {
-    // Create a fresh connection each time to bypass any module-level caching
+    // Fresh connection per call — prevents Neon's HTTP client from caching responses
     const freshSql = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
     const rows = await freshSql`
       select * from events
@@ -62,10 +62,9 @@ export async function getEvents(limit = 10): Promise<Event[]> {
       order by date asc
       limit ${limit}
     `
-    console.log('[getEvents] returned:', rows.map((r: any) => r.slug))
     return rows as Event[]
   } catch (error) {
-    console.warn('[getEvents] error:', error)
+    console.warn('Failed to fetch events:', error)
     return []
   }
 }
