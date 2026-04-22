@@ -453,18 +453,10 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
       {sheetOpen && <RsvpSheet event={event} onClose={() => setSheetOpen(false)} />}
 
-      {/* Footer */}
-      <footer style={{ background: C.darkDeep, borderTop: `1px solid ${C.darkBorder}` }} className="ep-footer">
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
-          <Link href="/" style={{ color: C.darkMuted, textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Simply Shameless</Link>
-          <div style={{ color: 'rgba(240,236,230,0.2)', fontSize: 12 }}>© 2025 Simply Shameless Productions</div>
-        </div>
-      </footer>
-
       <style>{`
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        .ep-hero { position: relative; height: 420px; overflow: hidden; margin-top: 60px; }
+        .ep-hero { position: relative; height: 420px; overflow: hidden; margin-top: 72px; }
         .ep-hero-tags { left: 48px !important; bottom: 28px !important; }
 
         .ep-body {
@@ -481,11 +473,10 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
         .ep-share-mobile { display: none; }
         .ep-mobile-rsvp { display: none; }
         .ep-mobile-bar { display: none; }
-        .ep-footer { padding: 36px 48px; }
         .ep-more-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
 
         @media (max-width: 768px) {
-          .ep-hero { height: 260px; }
+          .ep-hero { height: 260px; margin-top: 72px; }
           .ep-hero-tags { left: 20px !important; bottom: 20px !important; }
 
           .ep-body {
