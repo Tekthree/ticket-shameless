@@ -10,6 +10,14 @@ export const sql = neon(DATABASE_URL)
 
 // ── EVENTS ──────────────────────────────────────────────────────────────────
 
+export type TicketTier = {
+  key: string
+  label: string
+  price: number
+  sub: string
+  badge: string
+}
+
 export type Event = {
   id: string
   slug: string
@@ -26,6 +34,7 @@ export type Event = {
   is_public: boolean
   is_published: boolean
   created_at: string
+  ticket_tiers: TicketTier[] | null
 }
 
 export type LineupArtist = {
@@ -37,6 +46,7 @@ export type LineupArtist = {
   mix_url: string | null
   time_slot: string | null
   sort_order: number
+  stage: string | null
 }
 
 export async function getEvents(limit = 10): Promise<Event[]> {
