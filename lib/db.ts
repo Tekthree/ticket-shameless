@@ -60,10 +60,11 @@ export async function getEvents(limit = 10): Promise<Event[]> {
       order by date asc
       limit ${limit}
     `
+    console.log('[getEvents] returned:', rows.map((r: any) => r.slug))
     return rows as Event[]
   } catch (error) {
-    console.warn('Failed to fetch events during build:', error)
-    return [] // Return empty array during build
+    console.warn('[getEvents] error:', error)
+    return []
   }
 }
 
