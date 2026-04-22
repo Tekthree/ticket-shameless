@@ -8,27 +8,15 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'ynyixqpdeuglzuogeqsh.supabase.co', // Supabase project domain
+        hostname: 'd85f1bb68ad7da530dccaef0eccc5e0b.r2.cloudflarestorage.com', // Cloudflare R2
       },
       {
         protocol: 'https',
-        hostname: '*.fbcdn.net', // Facebook CDN domains
+        hostname: 'pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev',
       },
       {
         protocol: 'https',
-        hostname: 'graph.facebook.com', // Graph API domain
-      },
-      {
-        protocol: 'https',
-        hostname: '*.googleapis.com', // Google domains
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com', // Unsplash
-      },
-      {
-        protocol: 'https',
-        hostname: 'res.cloudinary.com', // Cloudinary
+        hostname: 'images.unsplash.com', // Unsplash (dev placeholders)
       },
     ],
   },

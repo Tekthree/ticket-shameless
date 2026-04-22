@@ -16,11 +16,6 @@ const customJestConfig = {
   testPathIgnorePatterns: [
     '/node_modules/',
     '/.next/',
-    '/deprecated/',
-    '/__tests__/tickets/',
-    '/__tests__/payments/',
-    '/__tests__/supabase/',
-    '/__tests__/auth/',
   ],
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }]

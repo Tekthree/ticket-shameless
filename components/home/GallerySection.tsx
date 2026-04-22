@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useRef, useState, useEffect } from 'react'
 
 function useInView() {
@@ -17,7 +18,7 @@ function useInView() {
   return [ref, visible] as const
 }
 
-const cells = [
+const placeholderCells = [
   { cols: 2, rows: 2, label: 'crowd shot' },
   { cols: 1, rows: 1, label: 'DJ set' },
   { cols: 1, rows: 1, label: 'venue' },
@@ -27,7 +28,16 @@ const cells = [
 ]
 const angles = [30, 45, 60, 20, 50, 35]
 
-function GalleryCell({ cell, index }: { cell: typeof cells[0]; index: number }) {
+const imageCells = [
+  { cols: 2, rows: 2 },
+  { cols: 1, rows: 1 },
+  { cols: 1, rows: 1 },
+  { cols: 1, rows: 1 },
+  { cols: 1, rows: 1 },
+  { cols: 2, rows: 1 },
+]
+
+function GalleryCell({ cols, rows, imageUrl, index }: { cols: number; rows: number; imageUrl?: string; index: number }) {
   const [ref, visible] = useInView()
   const [hover, setHover] = useState(false)
 
@@ -37,37 +47,48 @@ function GalleryCell({ cell, index }: { cell: typeof cells[0]; index: number }) 
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
-        gridColumn: `span ${cell.cols}`,
-        gridRow: `span ${cell.rows}`,
+        gridColumn: `span ${cols}`,
+        gridRow: `span ${rows}`,
         background: '#252220',
         overflow: 'hidden',
         position: 'relative',
         cursor: 'pointer',
         transform: hover ? 'scale(1.02)' : 'scale(1)',
-        transition: 'transform 0.3s cubic-bezier(0.22,1,0.36,1)',
         opacity: visible ? 1 : 0,
-        transitionDelay: `${index * 60}ms`,
+        transition: `transform 0.3s cubic-bezier(0.22,1,0.36,1) ${index * 60}ms, opacity 0.5s ease ${index * 60}ms`,
       }}
     >
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: `repeating-linear-gradient(${angles[index]}deg, rgba(255,255,255,0.025) 0, rgba(255,255,255,0.025) 1px, transparent 1px, transparent ${14 + index * 4}px)`,
-      }} />
+      {imageUrl ? (
+        <Image
+          src={imageUrl}
+          alt={`Gallery photo ${index + 1}`}
+          fill
+          style={{ objectFit: 'cover', transition: 'transform 0.4s cubic-bezier(0.22,1,0.36,1)', transform: hover ? 'scale(1.06)' : 'scale(1)' }}
+          sizes="(max-width: 768px) 50vw, 25vw"
+        />
+      ) : (
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: `repeating-linear-gradient(${angles[index]}deg, rgba(255,255,255,0.025) 0, rgba(255,255,255,0.025) 1px, transparent 1px, transparent ${14 + index * 4}px)`,
+        }} />
+      )}
       <div style={{
         position: 'absolute', inset: 0,
         background: hover ? 'rgba(201,50,26,0.08)' : 'rgba(201,50,26,0)',
         transition: 'background 0.25s',
       }} />
-      <div style={{
-        position: 'absolute', bottom: 12, left: 12,
-        fontFamily: 'monospace', fontSize: 9,
-        color: '#7a7068', letterSpacing: '0.06em',
-      }}>{cell.label}</div>
+      {!imageUrl && (
+        <div style={{
+          position: 'absolute', bottom: 12, left: 12,
+          fontFamily: 'monospace', fontSize: 9,
+          color: '#7a7068', letterSpacing: '0.06em',
+        }}>{placeholderCells[index]?.label}</div>
+      )}
     </div>
   )
 }
 
-export default function GallerySection() {
+export default function GallerySection({ images = [] }: { images?: string[] }) {
   const [headerRef, headerVisible] = useInView()
 
   return (
@@ -83,7 +104,7 @@ export default function GallerySection() {
             fontSize: 12, letterSpacing: '0.28em', textTransform: 'uppercase',
             color: '#c9321a', marginBottom: 14,
           }}>From the Floor</div>
-          <div style={{
+          <div className="gallery-header" style={{
             display: 'flex', justifyContent: 'space-between',
             alignItems: 'flex-end', marginBottom: 48,
           }}>
@@ -111,8 +132,8 @@ export default function GallerySection() {
           gridTemplateRows: 'repeat(2, 220px)',
           gap: 3,
         }}>
-          {cells.map((cell, i) => (
-            <GalleryCell key={i} cell={cell} index={i} />
+          {imageCells.map((cell, i) => (
+            <GalleryCell key={i} cols={cell.cols} rows={cell.rows} imageUrl={images[i]} index={i} />
           ))}
         </div>
       </div>
@@ -120,6 +141,7 @@ export default function GallerySection() {
       <style>{`
         @media (max-width: 900px) {
           #gallery { padding: 60px 24px !important; }
+          #gallery .gallery-header { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
           #gallery > div > div:last-child {
             grid-template-columns: repeat(2, 1fr) !important;
             grid-template-rows: repeat(3, 180px) !important;
@@ -127,6 +149,12 @@ export default function GallerySection() {
           #gallery > div > div:last-child > div {
             grid-column: span 1 !important;
             grid-row: span 1 !important;
+          }
+        }
+        @media (max-width: 480px) {
+          #gallery > div > div:last-child {
+            grid-template-columns: 1fr !important;
+            grid-template-rows: repeat(6, 160px) !important;
           }
         }
       `}</style>

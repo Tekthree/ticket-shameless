@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import type { Event } from '@/lib/db'
 
-export default function HeroSection() {
+export default function HeroSection({ nextEvent }: { nextEvent?: Event | null }) {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
@@ -13,7 +14,7 @@ export default function HeroSection() {
   }, [])
 
   return (
-    <section style={{
+    <section data-hero style={{
       minHeight: '100vh',
       background: '#1c1917',
       display: 'grid',
@@ -22,7 +23,7 @@ export default function HeroSection() {
       overflow: 'hidden',
     }}>
       {/* LEFT */}
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '140px 72px 80px 56px' }}>
+      <div className="hero-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '140px 72px 80px 56px' }}>
         <div style={{
           fontFamily: 'var(--font-barlow), sans-serif',
           fontWeight: 900,
@@ -113,7 +114,7 @@ export default function HeroSection() {
       </div>
 
       {/* RIGHT */}
-      <div style={{
+      <div className="hero-right" style={{
         position: 'relative',
         overflow: 'hidden',
         opacity: loaded ? 1 : 0,
@@ -130,57 +131,80 @@ export default function HeroSection() {
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(28,25,23,0.55) 0%, transparent 35%, transparent 65%, rgba(28,25,23,0.3) 100%)' }} />
 
         {/* Next event card */}
-        <div style={{
-          position: 'absolute',
-          bottom: 48,
-          left: 40,
-          right: 40,
-          opacity: loaded ? 1 : 0,
-          transform: loaded ? 'translateY(0)' : 'translateY(32px)',
-          transition: 'opacity 0.9s cubic-bezier(0.22,1,0.36,1) 0.9s, transform 0.9s cubic-bezier(0.22,1,0.36,1) 0.9s',
-        }}>
+        {nextEvent && (
           <div style={{
-            background: 'rgba(17,17,16,0.88)',
-            backdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255,255,255,0.07)',
-            padding: '24px 28px',
-            display: 'flex',
-            gap: 24,
-            alignItems: 'center',
+            position: 'absolute',
+            bottom: 48,
+            left: 40,
+            right: 40,
+            opacity: loaded ? 1 : 0,
+            transform: loaded ? 'translateY(0)' : 'translateY(32px)',
+            transition: 'opacity 0.9s cubic-bezier(0.22,1,0.36,1) 0.9s, transform 0.9s cubic-bezier(0.22,1,0.36,1) 0.9s',
           }}>
-            <div style={{ width: 4, alignSelf: 'stretch', background: '#c9321a', flexShrink: 0 }} />
-            <div>
-              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.2em', color: '#c9321a', textTransform: 'uppercase', marginBottom: 6 }}>Next Event</div>
-              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 26, color: '#f0ece6', lineHeight: 1.05, textTransform: 'uppercase' }}>Desert Hearts × Shameless</div>
-              <div style={{ color: '#7a7068', fontSize: 14, marginTop: 5 }}>Mon May 25 · Monkey Loft, Seattle · 2PM–10PM</div>
+            <div style={{
+              background: 'rgba(17,17,16,0.88)',
+              backdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255,255,255,0.07)',
+              padding: '24px 28px',
+              display: 'flex',
+              gap: 24,
+              alignItems: 'center',
+            }}>
+              <div style={{ width: 4, alignSelf: 'stretch', background: '#c9321a', flexShrink: 0 }} />
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.2em', color: '#c9321a', textTransform: 'uppercase', marginBottom: 6 }}>Next Event</div>
+                <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 26, color: '#f0ece6', lineHeight: 1.05, textTransform: 'uppercase', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{nextEvent.title}</div>
+                <div style={{ color: '#7a7068', fontSize: 14, marginTop: 5 }}>
+                  {new Date(nextEvent.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                  {nextEvent.venue ? ` · ${nextEvent.venue}` : ''}
+                </div>
+              </div>
+              <Link href={`/events/${nextEvent.slug}`} style={{
+                marginLeft: 'auto',
+                display: 'inline-block',
+                background: '#c9321a',
+                color: '#fff',
+                textDecoration: 'none',
+                fontFamily: 'var(--font-barlow), sans-serif',
+                fontWeight: 800,
+                fontSize: 13,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                padding: '12px 22px',
+                flexShrink: 0,
+                transition: 'background 0.2s',
+              }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#a82614')}
+                onMouseLeave={e => (e.currentTarget.style.background = '#c9321a')}
+              >View Event</Link>
             </div>
-            <Link href="/events" style={{
-              marginLeft: 'auto',
-              display: 'inline-block',
-              background: '#c9321a',
-              color: '#fff',
-              textDecoration: 'none',
-              fontFamily: 'var(--font-barlow), sans-serif',
-              fontWeight: 800,
-              fontSize: 13,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              padding: '12px 22px',
-              flexShrink: 0,
-              transition: 'background 0.2s',
-            }}
-              onMouseEnter={e => (e.currentTarget.style.background = '#a82614')}
-              onMouseLeave={e => (e.currentTarget.style.background = '#c9321a')}
-            >Tickets</Link>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Mobile fallback — stack vertically */}
       <style>{`
         @media (max-width: 768px) {
           section[data-hero] {
             grid-template-columns: 1fr !important;
+            min-height: auto !important;
+          }
+          .hero-left {
+            padding: 120px 28px 56px !important;
+            order: 1;
+          }
+          .hero-right {
+            order: 2;
+            height: 340px !important;
+            min-height: 340px !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .hero-left {
+            padding: 110px 20px 48px !important;
+          }
+          .hero-right {
+            height: 260px !important;
+            min-height: 260px !important;
           }
         }
       `}</style>

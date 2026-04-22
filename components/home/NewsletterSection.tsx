@@ -20,6 +20,8 @@ function useInView() {
 export default function NewsletterSection() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [ref, visible] = useInView()
 
   const revealStyle = (delay = 0): React.CSSProperties => ({
@@ -27,6 +29,29 @@ export default function NewsletterSection() {
     transform: visible ? 'translateY(0)' : 'translateY(28px)',
     transition: `opacity 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
   })
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!email) return
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Something went wrong')
+      }
+      setSubmitted(true)
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <section id="signup" style={{ padding: '120px 56px', background: '#c9321a', position: 'relative', overflow: 'hidden' }}>
@@ -49,34 +74,44 @@ export default function NewsletterSection() {
               You're in. See you on the floor. ✓
             </div>
           ) : (
-            <form onSubmit={e => { e.preventDefault(); if (email) setSubmitted(true) }} style={{ display: 'flex', maxWidth: 560, margin: '0 auto' }}>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-                placeholder="your@email.com"
-                style={{
-                  flex: 1, border: 'none', borderBottom: '2px solid rgba(255,255,255,0.4)',
-                  background: 'transparent', color: '#fff', outline: 'none',
-                  fontFamily: 'var(--font-dm), sans-serif', fontSize: 17,
-                  padding: '14px 20px 14px 0', transition: 'border-color 0.25s',
+            <>
+              <form onSubmit={handleSubmit} style={{ display: 'flex', maxWidth: 560, margin: '0 auto' }}>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  required
+                  disabled={loading}
+                  placeholder="your@email.com"
+                  style={{
+                    flex: 1, border: 'none', borderBottom: '2px solid rgba(255,255,255,0.4)',
+                    background: 'transparent', color: '#fff', outline: 'none',
+                    fontFamily: 'var(--font-dm), sans-serif', fontSize: 17,
+                    padding: '14px 20px 14px 0', transition: 'border-color 0.25s',
+                    opacity: loading ? 0.6 : 1,
+                  }}
+                  onFocus={e => (e.target.style.borderBottomColor = '#fff')}
+                  onBlur={e => (e.target.style.borderBottomColor = 'rgba(255,255,255,0.4)')}
+                />
+                <button type="submit" disabled={loading} style={{
+                  background: '#fff', color: '#c9321a', border: 'none', cursor: loading ? 'default' : 'pointer',
+                  fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16,
+                  letterSpacing: '0.15em', textTransform: 'uppercase', padding: '14px 40px',
+                  marginLeft: 16, flexShrink: 0, transition: 'transform 0.12s, opacity 0.2s',
+                  opacity: loading ? 0.7 : 1,
                 }}
-                onFocus={e => (e.target.style.borderBottomColor = '#fff')}
-                onBlur={e => (e.target.style.borderBottomColor = 'rgba(255,255,255,0.4)')}
-              />
-              <button type="submit" style={{
-                background: '#fff', color: '#c9321a', border: 'none', cursor: 'pointer',
-                fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16,
-                letterSpacing: '0.15em', textTransform: 'uppercase', padding: '14px 40px',
-                marginLeft: 16, flexShrink: 0, transition: 'transform 0.12s, opacity 0.2s',
-              }}
-                onMouseEnter={e => { e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-                onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)' }}
-                onMouseDown={e => (e.currentTarget.style.transform = 'scale(0.96)')}
-                onMouseUp={e => (e.currentTarget.style.transform = 'translateY(-1px)')}
-              >Subscribe</button>
-            </form>
+                  onMouseEnter={e => { if (!loading) { e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+                  onMouseLeave={e => { e.currentTarget.style.opacity = loading ? '0.7' : '1'; e.currentTarget.style.transform = 'translateY(0)' }}
+                  onMouseDown={e => { if (!loading) e.currentTarget.style.transform = 'scale(0.96)' }}
+                  onMouseUp={e => { if (!loading) e.currentTarget.style.transform = 'translateY(-1px)' }}
+                >{loading ? '...' : 'Subscribe'}</button>
+              </form>
+              {error && (
+                <div style={{ marginTop: 14, color: 'rgba(255,255,255,0.85)', fontSize: 14, fontFamily: 'var(--font-dm), sans-serif' }}>
+                  {error}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

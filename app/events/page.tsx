@@ -74,7 +74,7 @@ export default async function EventsPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#1c1917', paddingTop: 72 }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '60px 48px' }}>
+      <div className="events-container" style={{ maxWidth: 1100, margin: '0 auto', padding: '60px 48px' }}>
         {/* Header */}
         <div style={{ marginBottom: 56 }}>
           <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 14 }}>Upcoming Shows</div>
@@ -100,6 +100,7 @@ export default async function EventsPage() {
         .event-row:hover .event-row-btn { background: #a82614; }
 
         @media (max-width: 768px) {
+          .events-container { padding: 40px 24px !important; }
           .event-row {
             grid-template-columns: 1fr !important;
             gap: 12px !important;
@@ -109,7 +110,7 @@ export default async function EventsPage() {
         }
 
         @media (max-width: 640px) {
-          .event-row > div:first-child + div + div { display: none; }
+          .events-container { padding: 32px 20px !important; }
         }
       ` }} />
     </div>

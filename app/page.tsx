@@ -1,4 +1,5 @@
 import { getEvents } from '@/lib/events'
+import { getGalleryImages } from '@/lib/r2'
 
 export const dynamic = 'force-dynamic'
 import HeroSection from '@/components/home/HeroSection'
@@ -11,6 +12,7 @@ import HomeClient from '@/components/home/HomeClient'
 
 export default async function Home() {
   let events: any[] = []
+  let galleryImages: string[] = []
   try {
     const result = await Promise.race([
       getEvents(4),
@@ -18,17 +20,22 @@ export default async function Home() {
     ])
     events = result as any[]
   } catch {
-    // Supabase not connected or timed out — renders with placeholder events
+    // DB not connected or timed out — renders with placeholder events
+  }
+  try {
+    galleryImages = await getGalleryImages()
+  } catch {
+    // R2 not configured — renders placeholder gallery
   }
 
   return (
     <div style={{ background: '#1c1917' }}>
       <HomeClient />
-      <HeroSection />
+      <HeroSection nextEvent={events[0] ?? null} />
       <Ticker />
       <EventsSection events={events} />
       <AboutSection />
-      <GallerySection />
+      <GallerySection images={galleryImages} />
       <NewsletterSection />
     </div>
   )

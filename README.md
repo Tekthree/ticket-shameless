@@ -29,7 +29,7 @@ No third-party ticketing platforms. No commission on door sales. Design is inspi
 |---|---|
 | Framework | Next.js 14 (App Router) |
 | Database | Neon (serverless Postgres) |
-| Image storage | Vercel Blob |
+| Image storage | Cloudflare R2 |
 | Payments | Stripe (merch only) |
 | SMS | Twilio (Phase 4) |
 | Styling | Tailwind CSS + inline styles |
@@ -48,17 +48,17 @@ Create `.env.local`:
 
 ```
 DATABASE_URL=postgresql://...           # from Neon dashboard
-BLOB_READ_WRITE_TOKEN=...               # from Vercel Blob
-STRIPE_SECRET_KEY=sk_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_...
-```
+STRIPE_SECRET_KEY=sk_...               # Stripe secret key (merch checkout)
+STRIPE_WEBHOOK_SECRET=whsec_...        # Stripe webhook signing secret
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_...  # Stripe publishable key
+NEXT_PUBLIC_SITE_URL=https://yourdomain.com  # Used for Stripe redirect URLs
 
-The easiest way to get these is to link the project and pull:
-
-```bash
-npx vercel link
-vercel env pull .env.local
+# Cloudflare R2 (image storage)
+R2_ACCOUNT_ID=...                      # Cloudflare account ID
+R2_ACCESS_KEY_ID=...                   # R2 API token access key
+R2_SECRET_ACCESS_KEY=...              # R2 API token secret
+R2_BUCKET=shameless-party-images       # bucket name
+R2_PUBLIC_URL=https://pub-xxxxxxxxxxxxxxxxxxxx.r2.dev  # from bucket Settings → Public Development URL
 ```
 
 Then run:
@@ -71,11 +71,20 @@ npm run dev
 
 ## Database setup
 
-Schema is at `supabase/schema.sql` (pure Postgres, no Supabase-specific syntax).
-
 1. Create a project at [neon.tech](https://neon.tech)
-2. Open the SQL editor and paste/run the full schema
-3. Copy the connection string and add it to `.env.local` as `DATABASE_URL`
+2. Copy the connection string and add it to `.env.local` as `DATABASE_URL`
+3. Run migrations to create all tables:
+
+```bash
+npm run migrate
+```
+
+4. Seed sample events and merch:
+
+```bash
+npm run seed        # real events
+npm run seed:merch  # sample products
+```
 
 ### Tables
 
@@ -102,60 +111,72 @@ Schema is at `supabase/schema.sql` (pure Postgres, no Supabase-specific syntax).
 ```
 app/
   page.tsx                # Homepage (server component — fetches events from DB)
-  events/[slug]/          # Individual event pages
+  events/
+    page.tsx              # All events list page
+    [slug]/               # Individual event detail pages
+  shop/
+    page.tsx              # Merch store grid
+    success/              # Stripe checkout success page
   api/
-    checkout/             # Stripe merch checkout
-    webhooks/             # Stripe webhook handler
-    upload/               # Vercel Blob upload endpoint
+    newsletter/           # POST — subscribe an email
+    rsvp/                 # POST — create/update an RSVP
+    checkout/merch/       # POST — create Stripe checkout session
+    webhooks/stripe/      # POST — Stripe webhook (decrements stock)
+    upload/               # POST — upload image to R2 (presign or direct)
 
 components/
   home/
-    HeroSection.tsx       # Full-screen hero
+    HeroSection.tsx       # Full-screen hero (dynamic next-event card)
     Ticker.tsx            # Scrolling text marquee
     EventsSection.tsx     # Upcoming events grid
     GallerySection.tsx    # Asymmetric dark photo grid
     AboutSection.tsx      # Brand description block
-    NewsletterSection.tsx # Email signup
+    NewsletterSection.tsx # Email signup (wired to /api/newsletter)
     PageLoader.tsx        # Full-screen logo reveal animation
-    HomeClient.tsx        # Client wrapper for PageLoader (needs useState)
+    HomeClient.tsx        # Client wrapper for PageLoader
   SSNavbar.tsx            # Branded scroll-aware navigation
   SSFooter.tsx            # Branded footer
 
 lib/
-  db.ts                   # All database queries via Neon
+  db.ts                   # All database queries + types via Neon
   events.ts               # Re-exports from db.ts
+  r2.ts                   # Cloudflare R2 client, presign helper, public URL util
 
-supabase/
-  schema.sql              # Postgres schema — run in Neon SQL editor
+scripts/
+  migrate.mjs             # Create all tables (idempotent)
+  seed-real-events.mjs    # Seed production events
+  seed-merch.mjs          # Seed sample merch products
 ```
 
 ---
 
 ## Phases
 
-### Phase 1 — Homepage (in progress)
+### Phase 1 — Homepage ✓
 
-- [x] Hero section
+- [x] Hero section (next-event card pulls from DB)
 - [x] Scrolling ticker
 - [x] Events section (reads from DB)
-- [x] Gallery section
+- [x] Gallery section (live R2 images from bucket, falls back to placeholder)
 - [x] About section
-- [x] Newsletter signup
+- [x] Newsletter signup (wired to `/api/newsletter`, saves to `subscribers` table)
 - [x] Page loader animation
-- [ ] Mobile responsive polish
+- [x] Mobile responsive polish
 
-### Phase 2 — Event pages + RSVP
+### Phase 2 — Event pages + RSVP ✓
 
-- [ ] `/events/[slug]` — full event detail page with lineup
-- [ ] RSVP form (name, email, phone, status: going/maybe/not_going)
-- [ ] Payment link display (Venmo/Cash App CTA with suggested price)
-- [ ] Neon DB wired in production
+- [x] `/events` — all events listing page
+- [x] `/events/[slug]` — full event detail page with lineup
+- [x] RSVP form (name, email, phone, status)
+- [x] Payment link display (Venmo/Cash App CTA with suggested price)
+- [x] Neon DB wired in production
 
-### Phase 3 — Merch store
+### Phase 3 — Merch store ✓
 
-- [ ] `/merch` — product grid
-- [ ] Stripe checkout for merch items
-- [ ] Order confirmation page
+- [x] `/shop` — product grid with size selector
+- [x] Stripe checkout for merch items (`/api/checkout/merch`)
+- [x] Order confirmation page (`/shop/success`)
+- [x] Stripe webhook decrements stock on purchase
 - [ ] Admin: add/edit products, manage stock
 
 ### Phase 4 — SMS
@@ -167,7 +188,7 @@ supabase/
 ### Later
 
 - [ ] Admin dashboard (create/edit events, view RSVPs, manage merch inventory)
-- [ ] Photo upload via Vercel Blob
+- [ ] Admin gallery upload UI (`/admin/gallery` — drag-and-drop to R2)
 - [ ] Artist profile pages
 
 ---
@@ -188,6 +209,10 @@ The homepage now combines both.
 
 ## Notes
 
-- No ticket purchasing. Events use RSVP + external payment links only. Stripe is for merch exclusively.
-- Old test directories (`__tests__/tickets/`, `__tests__/payments/`, `__tests__/supabase/`, `__tests__/auth/`) are excluded from the test runner — they reference a deleted ticketing architecture. Write new tests in `__tests__/utils/` or new feature-specific directories.
-- Some legacy components and routes still exist (`Header`, `Navbar`, `Footer`, `BuyTicketButton`, `app/box-office/`, `app/tickets/`, etc.) from the original ticketing app. These will be cleaned up as Phase 2+ is built.
+- No ticket purchasing. Events use RSVP + external payment links only. Stripe is merch-only.
+- To register your Stripe webhook locally, use the [Stripe CLI](https://stripe.com/docs/stripe-cli): `stripe listen --forward-to localhost:3000/api/webhooks/stripe`
+- Run `npm run migrate` before `npm run dev` on a fresh Neon database.
+- **R2 setup**: Cloudflare Dashboard → R2 Object Storage → Manage R2 API Tokens → Create Account API Token → Object Read & Write → specific bucket `shameless-party-images`. Copy the Access Key ID and Secret into `.env.local`. Your account ID is shown in the Cloudflare dashboard right sidebar.
+- **R2 public URL**: In the bucket Settings → enable **Public Development URL** — copy the `pub-xxx.r2.dev` URL as `R2_PUBLIC_URL`. Add a CORS policy (Settings → CORS Policy) allowing GET + PUT from your site origins.
+- **Upload API** supports two modes: `POST /api/upload?mode=presign` with `{ filename, contentType, folder }` → returns `{ uploadUrl, publicUrl, key }` for browser-direct upload to R2; `POST /api/upload` with `multipart/form-data` file field for server-side upload. Both return a public URL.
+- **Gallery images**: `getGalleryImages()` in `lib/r2.ts` lists all objects from R2 and passes public URLs to `GallerySection`. Upload images directly via the Cloudflare R2 dashboard or the upload API to populate the gallery. Keys with spaces are URL-encoded automatically.
