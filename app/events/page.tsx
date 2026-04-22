@@ -1,33 +1,115 @@
 import { Metadata } from 'next'
-import EventCard from '@/components/EventCard'
+import Link from 'next/link'
 import { getEvents } from '@/lib/events'
+import type { Event } from '@/lib/db'
 
 export const metadata: Metadata = {
-  title: 'Events - Shameless Productions',
-  description: 'Browse upcoming Shameless electronic music events in Seattle',
+  title: 'Events - Simply Shameless',
+  description: "Upcoming Shameless Productions events in Seattle — underground house and techno.",
+}
+
+function fmt(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase()
+}
+function fmtTime(dateStr: string) {
+  return new Date(dateStr).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+}
+
+function EventRow({ event }: { event: Event }) {
+  const dateStr = fmt(event.date)
+  const timeStr = fmtTime(event.date)
+  const endTimeStr = event.end_date ? fmtTime(event.end_date) : null
+  const tags = event.tags ?? []
+
+  return (
+    <Link href={`/events/${event.slug}`} style={{ display: 'block', textDecoration: 'none' }}>
+      <div
+        className="event-row"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '160px 1fr auto',
+          alignItems: 'center',
+          gap: 32,
+          padding: '28px 0',
+          borderBottom: '1px solid rgba(255,255,255,0.07)',
+          transition: 'background 0.15s',
+          cursor: 'pointer',
+        }}
+      >
+        {/* Date */}
+        <div>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 4 }}>{dateStr}</div>
+          <div style={{ color: '#7a7068', fontSize: 13 }}>{timeStr}{endTimeStr ? ` – ${endTimeStr}` : ''}</div>
+        </div>
+
+        {/* Title + meta */}
+        <div>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(20px, 2.5vw, 28px)', color: '#f0ece6', textTransform: 'uppercase', lineHeight: 1, marginBottom: 6 }}>{event.title}</div>
+          <div style={{ color: '#7a7068', fontSize: 14, marginBottom: 10 }}>{event.venue}{event.address ? ` · ${event.address}` : ''}</div>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {tags.map(tag => (
+              <span key={tag} style={{ background: 'rgba(201,50,26,0.12)', color: '#c9321a', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '3px 8px' }}>{tag}</span>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+          {event.suggested_price != null && (
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 22, color: '#f0ece6', marginBottom: 8 }}>${event.suggested_price}</div>
+          )}
+          <span className="event-row-btn" style={{ display: 'inline-block', background: '#c9321a', color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '10px 20px', transition: 'background 0.15s' }}>
+            View Event →
+          </span>
+        </div>
+      </div>
+    </Link>
+  )
 }
 
 export default async function EventsPage() {
-  const events = await getEvents()
-  
+  const events = await getEvents(20)
+
   return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold mb-12 text-center">Upcoming Events</h1>
-      
-      {events.length === 0 ? (
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-bold mb-4">No events currently scheduled</h2>
-          <p className="text-lg text-gray-600">
-            Check back soon for upcoming Shameless Productions events!
-          </p>
+    <div style={{ minHeight: '100vh', background: '#1c1917', paddingTop: 72 }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '60px 48px' }}>
+        {/* Header */}
+        <div style={{ marginBottom: 56 }}>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 14 }}>Upcoming Shows</div>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(52px, 8vw, 96px)', lineHeight: 0.88, color: '#f0ece6', textTransform: 'uppercase' }}>Events</div>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {events.map((event) => (
-            <EventCard key={event.id} event={event} />
-          ))}
-        </div>
-      )}
+
+        {events.length === 0 ? (
+          <div style={{ padding: '80px 0', textAlign: 'center' }}>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 22, color: '#7a7068', textTransform: 'uppercase', letterSpacing: '0.06em' }}>No events currently scheduled</div>
+            <div style={{ color: '#7a7068', fontSize: 14, marginTop: 12 }}>Check back soon.</div>
+          </div>
+        ) : (
+          <div>
+            {events.map(event => (
+              <EventRow key={event.id} event={event} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <style>{`
+        .event-row:hover { background: rgba(255,255,255,0.02); }
+        .event-row:hover .event-row-btn { background: #a82614; }
+
+        @media (max-width: 768px) {
+          .event-row {
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+            padding: 24px 0 !important;
+          }
+          .event-row > div:last-child { text-align: left !important; }
+        }
+
+        @media (max-width: 640px) {
+          .event-row > div:first-child + div + div { display: none; }
+        }
+      `}</style>
     </div>
   )
 }
