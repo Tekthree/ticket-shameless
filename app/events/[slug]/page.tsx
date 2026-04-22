@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation'
 import { getEventBySlug, getEventLineup, getEvents } from '@/lib/events'
 import EventPageClient from './EventPageClient'
 
+export const dynamic = 'force-dynamic'
+
 export async function generateMetadata({
   params,
 }: {

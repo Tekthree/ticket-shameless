@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { getEvents } from '@/lib/events'
 import type { Event } from '@/lib/db'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Events - Simply Shameless',
   description: "Upcoming Shameless Productions events in Seattle — underground house and techno.",
