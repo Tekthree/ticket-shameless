@@ -54,7 +54,9 @@ export type LineupArtist = {
 
 export async function getEvents(limit = 10): Promise<Event[]> {
   try {
-    const rows = await sql`
+    // Create a fresh connection each time to bypass any module-level caching
+    const freshSql = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
+    const rows = await freshSql`
       select * from events
       where is_published = true
       order by date asc
