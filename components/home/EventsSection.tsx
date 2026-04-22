@@ -36,21 +36,23 @@ function EventCard({ event, delay }: { event: any; delay: number }) {
     : String(event.date || '').toUpperCase()
 
   const tags = event.tags || []
-  const hasImg = event.hasImg || event.image_url
+  const imageUrl = event.image_url || null
   const href = event.slug ? `/events/${event.slug}` : '/events'
   const isSoon = event.status === 'soon'
 
   return (
     <div ref={ref} style={{
+      height: '100%',
       opacity: visible ? 1 : 0,
       transform: visible ? 'translateY(0)' : 'translateY(28px)',
       transition: `opacity 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
     }}>
-      <Link href={href} style={{ display: 'block', textDecoration: 'none' }}>
+      <Link href={href} style={{ display: 'flex', height: '100%', textDecoration: 'none' }}>
         <div
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
           style={{
+            display: 'flex', flexDirection: 'column', width: '100%',
             background: hover ? '#fff' : '#faf7f2',
             border: '1px solid rgba(28,25,23,0.1)',
             transform: hover ? 'translateY(-6px)' : 'translateY(0)',
@@ -60,9 +62,9 @@ function EventCard({ event, delay }: { event: any; delay: number }) {
           }}
         >
           {/* Image area */}
-          <div style={{ height: 190, background: '#f2ede5', overflow: 'hidden', position: 'relative', borderBottom: '1px solid rgba(28,25,23,0.1)' }}>
-            {hasImg ? (
-              <Image src="/brand-hero.jpg" fill style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1)', transform: hover ? 'scale(1.06)' : 'scale(1)' }} alt={event.title} />
+          <div style={{ height: 190, flexShrink: 0, background: '#f2ede5', overflow: 'hidden', position: 'relative', borderBottom: '1px solid rgba(28,25,23,0.1)' }}>
+            {imageUrl ? (
+              <Image src={imageUrl} fill style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1)', transform: hover ? 'scale(1.06)' : 'scale(1)' }} alt={event.title} />
             ) : (
               <div style={{ width: '100%', height: '100%', background: 'repeating-linear-gradient(45deg, rgba(28,25,23,0.04) 0px, rgba(28,25,23,0.04) 1px, transparent 1px, transparent 14px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span style={{ fontFamily: 'monospace', fontSize: 10, color: '#8a8078' }}>event art</span>
@@ -73,31 +75,32 @@ function EventCard({ event, delay }: { event: any; delay: number }) {
             )}
           </div>
 
-          {/* Content */}
-          <div style={{ padding: '22px 24px 24px' }}>
+          {/* Content — flex-grow so button always sits at the bottom */}
+          <div style={{ padding: '22px 24px 0', flex: 1, display: 'flex', flexDirection: 'column' }}>
             <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.2em', color: '#c9321a', textTransform: 'uppercase', marginBottom: 7 }}>{dateStr}</div>
             <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 24, color: '#1c1917', textTransform: 'uppercase', lineHeight: 1, marginBottom: 6 }}>{event.title}</div>
             <div style={{ color: '#8a8078', fontSize: 14, marginBottom: 14 }}>{event.venue || event.location}</div>
-            <div style={{ display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap', flex: 1 }}>
               {tags.map((tag: string) => (
-                <span key={tag} style={{ background: 'rgba(201,50,26,0.12)', color: '#c9321a', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px' }}>{tag}</span>
+                <span key={tag} style={{ background: 'rgba(201,50,26,0.12)', color: '#c9321a', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', alignSelf: 'flex-start' }}>{tag}</span>
               ))}
             </div>
-            <button
-              onMouseEnter={() => setBtnHover(true)}
-              onMouseLeave={() => setBtnHover(false)}
-              style={{
-                width: '100%', border: 'none', cursor: isSoon ? 'default' : 'pointer',
-                background: isSoon ? '#f2ede5' : (btnHover ? '#a82614' : '#c9321a'),
-                color: isSoon ? '#8a8078' : '#fff',
-                fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 14,
-                letterSpacing: '0.15em', textTransform: 'uppercase', padding: '13px',
-                borderTop: isSoon ? '1px solid rgba(28,25,23,0.1)' : 'none',
-                transition: 'background 0.15s, transform 0.1s',
-                transform: !isSoon && btnHover ? 'scale(0.98)' : 'scale(1)',
-              }}
-            >{isSoon ? 'Coming Soon' : 'View Event →'}</button>
           </div>
+          <button
+            onMouseEnter={() => setBtnHover(true)}
+            onMouseLeave={() => setBtnHover(false)}
+            style={{
+              width: '100%', border: 'none', cursor: isSoon ? 'default' : 'pointer',
+              background: isSoon ? '#f2ede5' : (btnHover ? '#a82614' : '#c9321a'),
+              color: isSoon ? '#8a8078' : '#fff',
+              fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 14,
+              letterSpacing: '0.15em', textTransform: 'uppercase', padding: '13px',
+              borderTop: isSoon ? '1px solid rgba(28,25,23,0.1)' : 'none',
+              transition: 'background 0.15s, transform 0.1s',
+              transform: !isSoon && btnHover ? 'scale(0.98)' : 'scale(1)',
+              flexShrink: 0,
+            }}
+          >{isSoon ? 'Coming Soon' : 'View Event →'}</button>
         </div>
       </Link>
     </div>
@@ -122,7 +125,7 @@ export default function EventsSection({ events }: { events: any[] }) {
             <Link href="/events" style={{ color: '#8a8078', textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase', borderBottom: '1px solid rgba(28,25,23,0.1)', paddingBottom: 2 }}>All Events →</Link>
           </div>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 2 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 2, alignItems: 'stretch' }}>
           {displayEvents.slice(0, 4).map((e, i) => (
             <EventCard key={e.id} event={e} delay={i * 80} />
           ))}

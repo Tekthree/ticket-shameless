@@ -1,4 +1,6 @@
 import { getEvents } from '@/lib/events'
+
+export const dynamic = 'force-dynamic'
 import HeroSection from '@/components/home/HeroSection'
 import Ticker from '@/components/home/Ticker'
 import EventsSection from '@/components/home/EventsSection'
