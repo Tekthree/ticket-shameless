@@ -1,10 +1,13 @@
-import { neon } from '@neondatabase/serverless'
+import { neon, neonConfig } from '@neondatabase/serverless'
 
 const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://placeholder:placeholder@localhost:5432/placeholder'
 
 if (!process.env.DATABASE_URL) {
   console.warn('DATABASE_URL is not set, using placeholder for build')
 }
+
+// Prevent Next.js from caching Neon's internal HTTP responses
+neonConfig.fetchOptions = { cache: 'no-store' }
 
 export const sql = neon(DATABASE_URL)
 
