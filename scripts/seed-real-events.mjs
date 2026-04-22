@@ -9,7 +9,7 @@ const env = Object.fromEntries(
   readFileSync(envPath, 'utf8')
     .split('\n')
     .filter(l => l && !l.startsWith('#'))
-    .map(l => l.split('=').map((v, i) => i === 0 ? v : v.replace(/^"|"$/g, '')))
+    .map(l => { const i = l.indexOf('='); return [l.slice(0, i), l.slice(i + 1).replace(/^"|"$/g, '')] })
     .filter(([k]) => k)
 )
 

@@ -93,7 +93,7 @@ export default async function EventsPage() {
         )}
       </div>
 
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .event-row:hover { background: rgba(255,255,255,0.02); }
         .event-row:hover .event-row-btn { background: #a82614; }
 
@@ -109,7 +109,7 @@ export default async function EventsPage() {
         @media (max-width: 640px) {
           .event-row > div:first-child + div + div { display: none; }
         }
-      `}</style>
+      ` }} />
     </div>
   )
 }
