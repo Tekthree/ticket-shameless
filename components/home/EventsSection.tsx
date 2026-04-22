@@ -75,32 +75,31 @@ function EventCard({ event, delay }: { event: any; delay: number }) {
             )}
           </div>
 
-          {/* Content — flex-grow so button always sits at the bottom */}
-          <div style={{ padding: '22px 24px 0', flex: 1, display: 'flex', flexDirection: 'column' }}>
+          {/* Content */}
+          <div style={{ padding: '22px 24px 24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
             <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.2em', color: '#c9321a', textTransform: 'uppercase', marginBottom: 7 }}>{dateStr}</div>
             <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 24, color: '#1c1917', textTransform: 'uppercase', lineHeight: 1, marginBottom: 6 }}>{event.title}</div>
             <div style={{ color: '#8a8078', fontSize: 14, marginBottom: 14 }}>{event.venue || event.location}</div>
-            <div style={{ display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap', flex: 1 }}>
+            <div style={{ display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap' }}>
               {tags.map((tag: string) => (
                 <span key={tag} style={{ background: 'rgba(201,50,26,0.12)', color: '#c9321a', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', alignSelf: 'flex-start' }}>{tag}</span>
               ))}
             </div>
+            <button
+              onMouseEnter={() => setBtnHover(true)}
+              onMouseLeave={() => setBtnHover(false)}
+              style={{
+                marginTop: 'auto',
+                width: '100%', border: 'none', cursor: isSoon ? 'default' : 'pointer',
+                background: isSoon ? 'rgba(28,25,23,0.06)' : (btnHover ? '#a82614' : '#c9321a'),
+                color: isSoon ? '#8a8078' : '#fff',
+                fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 14,
+                letterSpacing: '0.15em', textTransform: 'uppercase', padding: '13px',
+                transition: 'background 0.15s, transform 0.1s',
+                transform: !isSoon && btnHover ? 'scale(0.98)' : 'scale(1)',
+              }}
+            >{isSoon ? 'Coming Soon' : 'View Event →'}</button>
           </div>
-          <button
-            onMouseEnter={() => setBtnHover(true)}
-            onMouseLeave={() => setBtnHover(false)}
-            style={{
-              width: '100%', border: 'none', cursor: isSoon ? 'default' : 'pointer',
-              background: isSoon ? '#f2ede5' : (btnHover ? '#a82614' : '#c9321a'),
-              color: isSoon ? '#8a8078' : '#fff',
-              fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 14,
-              letterSpacing: '0.15em', textTransform: 'uppercase', padding: '13px',
-              borderTop: isSoon ? '1px solid rgba(28,25,23,0.1)' : 'none',
-              transition: 'background 0.15s, transform 0.1s',
-              transform: !isSoon && btnHover ? 'scale(0.98)' : 'scale(1)',
-              flexShrink: 0,
-            }}
-          >{isSoon ? 'Coming Soon' : 'View Event →'}</button>
         </div>
       </Link>
     </div>
