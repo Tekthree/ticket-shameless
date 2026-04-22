@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getEventBySlug, getEventLineup } from '@/lib/events'
+import { getEventBySlug, getEventLineup, getEvents } from '@/lib/events'
 import EventPageClient from './EventPageClient'
 
 export async function generateMetadata({
@@ -28,12 +28,15 @@ export default async function EventPage({
 }: {
   params: { slug: string }
 }) {
-  const [event, lineup] = await Promise.all([
-    getEventBySlug(params.slug),
-    getEventBySlug(params.slug).then(e => e ? getEventLineup(e.id) : []),
-  ])
-
+  const event = await getEventBySlug(params.slug)
   if (!event) notFound()
 
-  return <EventPageClient event={event} lineup={lineup} />
+  const [lineup, allEvents] = await Promise.all([
+    getEventLineup(event.id),
+    getEvents(10),
+  ])
+
+  const otherEvents = allEvents.filter(e => e.id !== event.id).slice(0, 4)
+
+  return <EventPageClient event={event} lineup={lineup} otherEvents={otherEvents} />
 }
