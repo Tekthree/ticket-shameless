@@ -166,7 +166,7 @@ function MobileTicketBar({ event }: { event: Event }) {
 
 function LineupArtistRow({ artist }: { artist: LineupArtist }) {
   const [hover, setHover] = useState(false)
-  const isHeadliner = artist.sort_order === 0 || artist.sort_order === 1
+  const isHeadliner = artist.is_headliner
   const inner = (
     <div
       onMouseEnter={() => setHover(true)}
@@ -600,7 +600,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
   const dateStr = fmt(event.date, { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase()
   const timeStr = fmtTime(event.date)
   const endTimeStr = event.end_date ? fmtTime(event.end_date) : null
-  const headliners = lineup.filter(a => a.sort_order === 0 || a.sort_order === 1)
+  const headliners = lineup.filter(a => a.is_headliner)
 
   // Split title on " × " for outline effect on second part
   const titleParts = event.title.includes(' × ') ? event.title.split(' × ') : null

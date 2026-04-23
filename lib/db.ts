@@ -53,6 +53,7 @@ export type LineupArtist = {
   dj_id: string | null
   dj_slug: string | null
   dj_profile_image_url: string | null
+  is_headliner: boolean
 }
 
 // ── DJS ──────────────────────────────────────────────────────────────────────
