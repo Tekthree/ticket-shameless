@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function ShopSuccessPage() {
   return (
-    <div style={{ minHeight: '100vh', background: '#1c1917', paddingTop: 72, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ minHeight: '100vh', background: '#1c1917', paddingTop: 64, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ maxWidth: 560, width: '100%', padding: '0 24px', textAlign: 'center' }}>
         <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(201,50,26,0.12)', border: '2px solid #c9321a', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 32px' }}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9321a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

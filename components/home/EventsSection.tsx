@@ -130,7 +130,7 @@ export default function EventsSection({ events }: { events: any[] }) {
           ))}
         </div>
       </div>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @media (max-width: 1024px) {
           #events > div > div:last-child { grid-template-columns: repeat(2,1fr) !important; }
         }
@@ -138,7 +138,7 @@ export default function EventsSection({ events }: { events: any[] }) {
           #events { padding: 60px 24px !important; }
           #events > div > div:last-child { grid-template-columns: 1fr !important; }
         }
-      `}</style>
+      ` }} />
     </section>
   )
 }

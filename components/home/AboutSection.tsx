@@ -131,7 +131,7 @@ export default function AboutSection() {
         </div>
       </div>
 
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @media (max-width: 900px) {
           #about > div { grid-template-columns: 1fr !important; gap: 48px !important; }
           #about > div > div:first-child { position: static !important; }
@@ -139,7 +139,7 @@ export default function AboutSection() {
         @media (max-width: 640px) {
           #about { padding: 60px 24px !important; }
         }
-      `}</style>
+      ` }} />
     </section>
   )
 }

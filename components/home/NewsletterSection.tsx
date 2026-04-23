@@ -115,14 +115,14 @@ export default function NewsletterSection() {
           )}
         </div>
       </div>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @media (max-width: 640px) {
           #signup { padding: 80px 24px !important; }
           #signup form { flex-direction: column !important; gap: 16px; }
           #signup form button { margin-left: 0 !important; }
         }
         #signup input::placeholder { color: rgba(255,255,255,0.5); }
-      `}</style>
+      ` }} />
     </section>
   )
 }

@@ -138,7 +138,7 @@ export default function GallerySection({ images = [] }: { images?: string[] }) {
         </div>
       </div>
 
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @media (max-width: 900px) {
           #gallery { padding: 60px 24px !important; }
           #gallery .gallery-header { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
@@ -157,7 +157,7 @@ export default function GallerySection({ images = [] }: { images?: string[] }) {
             grid-template-rows: repeat(6, 160px) !important;
           }
         }
-      `}</style>
+      ` }} />
     </section>
   )
 }

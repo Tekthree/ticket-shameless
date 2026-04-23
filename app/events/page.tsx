@@ -73,7 +73,7 @@ export default async function EventsPage() {
   const events = await getEvents(20)
 
   return (
-    <div style={{ minHeight: '100vh', background: '#1c1917', paddingTop: 72 }}>
+    <div style={{ minHeight: '100vh', background: '#1c1917', paddingTop: 64 }}>
       <div className="events-container" style={{ maxWidth: 1100, margin: '0 auto', padding: '60px 48px' }}>
         {/* Header */}
         <div style={{ marginBottom: 56 }}>

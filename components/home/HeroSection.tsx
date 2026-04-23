@@ -182,7 +182,7 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
         )}
       </div>
 
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @media (max-width: 768px) {
           section[data-hero] {
             grid-template-columns: 1fr !important;
@@ -207,7 +207,7 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
             min-height: 260px !important;
           }
         }
-      `}</style>
+      ` }} />
     </section>
   )
 }

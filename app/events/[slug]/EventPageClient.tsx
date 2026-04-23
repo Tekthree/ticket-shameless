@@ -506,14 +506,14 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
       {sheetOpen && <MobileTicketSheet event={event} onClose={() => setSheetOpen(false)} />}
 
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
         .ep-hero {
           position: relative;
           height: 420px;
           overflow: hidden;
-          margin-top: 72px;
+          margin-top: 64px;
         }
         .ep-hero-tags {
           left: 48px;
@@ -539,7 +539,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
         .btn-outline-link:hover { border-color: #c9321a !important; color: #c9321a !important; }
 
         @media (max-width: 768px) {
-          .ep-hero { height: 260px; margin-top: 72px; }
+          .ep-hero { height: 260px; margin-top: 64px; }
           .ep-hero-tags { left: 20px; bottom: 20px; }
 
           .ep-body {
@@ -568,7 +568,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
             animation: slideUp 0.35s cubic-bezier(0.22,1,0.36,1);
           }
         }
-      `}</style>
+      ` }} />
     </div>
   )
 }

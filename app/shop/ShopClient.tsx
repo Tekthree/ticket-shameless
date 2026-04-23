@@ -182,7 +182,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
   const displayProducts = products.length > 0 ? products : PLACEHOLDER_PRODUCTS
 
   return (
-    <div style={{ minHeight: '100vh', background: '#1c1917', paddingTop: 72 }}>
+    <div style={{ minHeight: '100vh', background: '#1c1917', paddingTop: 64 }}>
       <div className="shop-container" style={{ maxWidth: 1200, margin: '0 auto', padding: '60px 48px 100px' }}>
         {/* Header */}
         <div
