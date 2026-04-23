@@ -101,4 +101,8 @@ await sql`
 `
 console.log('✓ subscribers')
 
+// patch: add attendee_count to rsvps
+await sql`alter table rsvps add column if not exists attendee_count integer not null default 1`
+console.log('✓ rsvps.attendee_count')
+
 console.log('\nAll migrations complete.')

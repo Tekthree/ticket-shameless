@@ -245,11 +245,302 @@ function OtherEventCard({ event }: { event: Event }) {
   )
 }
 
+// ── RSVP ─────────────────────────────────────────────────────────────────────
+
+function rsvpKey(eventId: string) { return `ss_rsvp_${eventId}` }
+
+const inputBase: React.CSSProperties = {
+  width: '100%',
+  background: 'transparent',
+  border: 'none',
+  borderBottom: '1px solid rgba(255,255,255,0.12)',
+  color: '#f0ece6',
+  fontSize: 16,
+  padding: '8px 0',
+  outline: 'none',
+  fontFamily: 'inherit',
+  boxSizing: 'border-box',
+}
+
+function FormField({ label, value, onChange, placeholder, type, required, multiline }: {
+  label: string; value: string; onChange: (v: string) => void;
+  placeholder?: string; type?: string; required?: boolean; multiline?: boolean
+}) {
+  return (
+    <div style={{ marginBottom: 22 }}>
+      <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: C.darkMuted, marginBottom: 8 }}>
+        {label}{required && <span style={{ color: C.red }}> *</span>}
+      </div>
+      {multiline
+        ? <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={3} style={{ ...inputBase, resize: 'none', lineHeight: 1.5 }} />
+        : <input type={type ?? 'text'} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} style={inputBase} />
+      }
+    </div>
+  )
+}
+
+const RSVP_STATUSES = [
+  { key: 'going' as const, label: 'Going', emoji: '👍' },
+  { key: 'maybe' as const, label: 'Maybe', emoji: '🤔' },
+  { key: 'not_going' as const, label: "Can't Go", emoji: '😢' },
+]
+
+function RSVPModal({ event, onClose, onSuccess }: {
+  event: Event;
+  onClose: () => void;
+  onSuccess: (name: string, status: 'going' | 'maybe' | 'not_going') => void;
+}) {
+  const [status, setStatus] = useState<'going' | 'maybe' | 'not_going'>('going')
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [attendeeCount, setAttendeeCount] = useState(1)
+  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
+  }, [])
+
+  async function handleSubmit() {
+    if (!name.trim()) { setError('Name is required'); return }
+    setLoading(true)
+    setError('')
+    try {
+      const res = await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event_id: event.id, name: name.trim(), phone, status, note: message || null, attendee_count: attendeeCount }),
+      })
+      if (!res.ok) throw new Error()
+      localStorage.setItem(rsvpKey(event.id), JSON.stringify({ name: name.trim(), status }))
+      onSuccess(name.trim(), status)
+    } catch {
+      setError('Something went wrong. Try again.')
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 400, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+      <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)' }} />
+      <div style={{ position: 'relative', background: C.dark, borderTop: `1px solid ${C.darkBorder}`, padding: '0 24px 48px', maxHeight: '92vh', overflowY: 'auto', animation: 'slideUp 0.35s cubic-bezier(0.22,1,0.36,1)' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '14px 0 24px' }}>
+          <div style={{ width: 36, height: 4, background: C.darkBorder, borderRadius: 2 }} />
+        </div>
+
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 32 }}>
+          {RSVP_STATUSES.map(s => (
+            <button
+              key={s.key}
+              onClick={() => setStatus(s.key)}
+              style={{ background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: 0 }}
+            >
+              <div style={{
+                width: 72, height: 72, borderRadius: '50%',
+                background: status === s.key ? C.red : C.darkCard,
+                border: `2px solid ${status === s.key ? C.red : C.darkBorder}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 28, transition: 'all 0.2s',
+                boxShadow: status === s.key ? `0 0 0 4px ${C.redMuted}` : 'none',
+              }}>{s.emoji}</div>
+              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: status === s.key ? C.darkText : C.darkMuted, transition: 'color 0.2s' }}>{s.label}</div>
+            </button>
+          ))}
+        </div>
+
+        <FormField label="Your Name" value={name} onChange={setName} placeholder="First and last" required />
+        <FormField label="Phone Number" value={phone} onChange={setPhone} placeholder="For event updates. No spam." type="tel" />
+
+        <div style={{ marginBottom: 22 }}>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: C.darkMuted, marginBottom: 8 }}>Attendees</div>
+          <select
+            value={attendeeCount}
+            onChange={e => setAttendeeCount(Number(e.target.value))}
+            style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, color: C.darkText, fontSize: 15, padding: '10px 14px', outline: 'none', width: '100%', fontFamily: 'inherit' }}
+          >
+            {[1,2,3,4,5,6,7,8,9,10].map(n => (
+              <option key={n} value={n}>{n} {n === 1 ? 'attendee' : 'attendees'}</option>
+            ))}
+          </select>
+        </div>
+
+        <FormField label="Your Message" value={message} onChange={setMessage} placeholder="Can't wait!" multiline />
+        <div style={{ color: C.darkMuted, fontSize: 12, marginBottom: 24 }}>Your comment will be posted on this page</div>
+
+        {error && <div style={{ color: C.red, fontSize: 13, marginBottom: 14 }}>{error}</div>}
+
+        <button
+          onClick={handleSubmit}
+          disabled={loading}
+          style={{ width: '100%', background: loading ? C.darkCard : C.red, color: '#fff', border: 'none', cursor: loading ? 'default' : 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 17, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '17px', marginBottom: 12, transition: 'background 0.2s' }}
+        >{loading ? 'Sending...' : 'Continue'}</button>
+
+        <button
+          onClick={onClose}
+          style={{ width: '100%', background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '13px' }}
+        >Cancel</button>
+      </div>
+    </div>
+  )
+}
+
+type RsvpCounts = { going: number; maybe: number; not_going: number }
+type RsvpComment = { id: string; name: string; note: string | null; status: string; created_at: string }
+
+function RSVPSection({ event, onOpenModal, myRsvp }: {
+  event: Event;
+  onOpenModal: () => void;
+  myRsvp: { name: string; status: string } | null;
+}) {
+  const [counts, setCounts] = useState<RsvpCounts>({ going: 0, maybe: 0, not_going: 0 })
+
+  useEffect(() => {
+    fetch(`/api/rsvp?event_id=${event.id}`)
+      .then(r => r.json())
+      .then(d => setCounts(d.counts ?? { going: 0, maybe: 0, not_going: 0 }))
+      .catch(() => {})
+  }, [event.id, myRsvp])
+
+  const statusLabel: Record<string, string> = {
+    going: "You're going",
+    maybe: "You might go",
+    not_going: "You can't make it",
+  }
+  const avatarColors = ['#3d2b2b', '#2b3d2b', '#2b2b3d', '#3d3b2b', '#3d2b3a']
+
+  return (
+    <div>
+      <SecLabel>Guest List</SecLabel>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
+        {counts.going > 0 && (
+          <div style={{ display: 'flex' }}>
+            {Array.from({ length: Math.min(counts.going, 5) }).map((_, i) => (
+              <div key={i} style={{
+                width: 32, height: 32, borderRadius: '50%',
+                background: avatarColors[i % avatarColors.length],
+                border: `2px solid ${C.dark}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                marginLeft: i > 0 ? -10 : 0,
+                fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 12, color: C.darkMuted,
+              }}>?</div>
+            ))}
+          </div>
+        )}
+        <div style={{ color: C.darkMuted, fontSize: 14 }}>
+          {counts.going > 0 ? <span style={{ color: C.darkText, fontWeight: 600 }}>{counts.going}</span> : '0'} Going
+          {counts.maybe > 0 && <> &middot; <span style={{ color: C.darkText, fontWeight: 600 }}>{counts.maybe}</span> Maybe</>}
+        </div>
+      </div>
+
+      {myRsvp ? (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: C.darkCard, border: `1px solid ${C.darkBorder}`, padding: '14px 18px' }}>
+          <div style={{ color: C.darkText, fontSize: 14 }}>{statusLabel[myRsvp.status] ?? "You RSVPd"}</div>
+          <button onClick={onOpenModal} style={{ background: 'transparent', border: 'none', color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Change</button>
+        </div>
+      ) : (
+        <>
+          <button
+            onClick={onOpenModal}
+            style={{ width: '100%', background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkText, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 15, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '14px', transition: 'border-color 0.2s' }}
+          >RSVP</button>
+          <div style={{ marginTop: 10, color: C.darkMuted, fontSize: 13 }}>RSVP to see who else is going.</div>
+        </>
+      )}
+    </div>
+  )
+}
+
+function CommentsSection({ event, myRsvp, onOpenModal }: {
+  event: Event;
+  myRsvp: { name: string; status: string } | null;
+  onOpenModal: () => void;
+}) {
+  const [comments, setComments] = useState<RsvpComment[]>([])
+
+  useEffect(() => {
+    fetch(`/api/rsvp?event_id=${event.id}`)
+      .then(r => r.json())
+      .then(d => setComments(d.comments ?? []))
+      .catch(() => {})
+  }, [event.id, myRsvp])
+
+  function timeAgo(dateStr: string) {
+    const diff = Date.now() - new Date(dateStr).getTime()
+    const m = Math.floor(diff / 60000)
+    if (m < 60) return `${m}m ago`
+    const h = Math.floor(m / 60)
+    if (h < 24) return `${h}h ago`
+    return `${Math.floor(h / 24)}d ago`
+  }
+
+  const statusEmoji: Record<string, string> = { going: '👍', maybe: '🤔', not_going: '😢' }
+
+  return (
+    <div>
+      <SecLabel>Message Board</SecLabel>
+
+      {!myRsvp ? (
+        <div style={{ position: 'relative', minHeight: 120 }}>
+          {comments.slice(0, 2).map(c => (
+            <div key={c.id} style={{ padding: '14px 0', borderBottom: `1px solid ${C.darkBorder}`, filter: 'blur(5px)', userSelect: 'none', pointerEvents: 'none' }}>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <div style={{ width: 32, height: 32, borderRadius: '50%', background: C.darkCard, border: `1px solid ${C.darkBorder}`, flexShrink: 0 }} />
+                <div>
+                  <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, color: C.darkText }}>Someone</div>
+                  <div style={{ color: C.darkMuted, fontSize: 13, marginTop: 3 }}>{c.note}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 0%, rgba(28,25,23,0.85) 40%, #1c1917 100%)', display: 'flex', alignItems: 'flex-end', paddingBottom: 8 }}>
+            <div style={{ width: '100%', textAlign: 'center' }}>
+              <div style={{ color: C.darkMuted, fontSize: 13, marginBottom: 12 }}>RSVP to see the conversation</div>
+              <button onClick={onOpenModal} style={{ background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkText, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '10px 24px' }}>RSVP to unlock</button>
+            </div>
+          </div>
+        </div>
+      ) : comments.length === 0 ? (
+        <div style={{ color: C.darkMuted, fontSize: 14, padding: '16px 0' }}>No messages yet. Be the first.</div>
+      ) : (
+        <div>
+          {comments.map(c => (
+            <div key={c.id} style={{ padding: '14px 0', borderBottom: `1px solid ${C.darkBorder}` }}>
+              <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                <div style={{ width: 34, height: 34, borderRadius: '50%', background: C.darkCard, border: `1px solid ${C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 14, color: C.darkMuted, textTransform: 'uppercase' }}>
+                  {c.name[0]}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+                    <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, color: C.darkText }}>{c.name}</span>
+                    <span style={{ fontSize: 13 }}>{statusEmoji[c.status] ?? ''}</span>
+                    <span style={{ color: C.darkMuted, fontSize: 12 }}>{timeAgo(c.created_at)}</span>
+                  </div>
+                  <div style={{ color: C.darkMuted, fontSize: 14, lineHeight: 1.5 }}>{c.note}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── PAGE ─────────────────────────────────────────────────────────────────
 
 export default function EventPageClient({ event, lineup, otherEvents }: { event: Event; lineup: LineupArtist[]; otherEvents: Event[] }) {
   const [heroRef, heroVisible] = useInView()
   const [bodyRef, bodyVisible] = useInView(0.02)
+  const [rsvpModalOpen, setRsvpModalOpen] = useState(false)
+  const [myRsvp, setMyRsvp] = useState<{ name: string; status: string } | null>(null)
+
+  useEffect(() => {
+    const stored = localStorage.getItem(rsvpKey(event.id))
+    if (stored) setMyRsvp(JSON.parse(stored))
+  }, [event.id])
 
   const dateStr = fmt(event.date, { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase()
   const timeStr = fmtTime(event.date)
@@ -346,6 +637,10 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
             )}
           </div>
 
+          {/* RSVP */}
+          <Divider />
+          <RSVPSection event={event} onOpenModal={() => setRsvpModalOpen(true)} myRsvp={myRsvp} />
+
           {/* Lineup */}
           {lineup.length > 0 && (
             <>
@@ -394,6 +689,10 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
             </>
           )}
 
+          {/* Message Board */}
+          <Divider />
+          <CommentsSection event={event} myRsvp={myRsvp} onOpenModal={() => setRsvpModalOpen(true)} />
+
           {/* More from Simply Shameless */}
           {otherEvents.length > 0 && (
             <>
@@ -440,6 +739,17 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
       {/* Mobile sticky bar */}
       <MobileTicketBar event={event} />
+
+      {rsvpModalOpen && (
+        <RSVPModal
+          event={event}
+          onClose={() => setRsvpModalOpen(false)}
+          onSuccess={(name, status) => {
+            setMyRsvp({ name, status })
+            setRsvpModalOpen(false)
+          }}
+        />
+      )}
 
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }

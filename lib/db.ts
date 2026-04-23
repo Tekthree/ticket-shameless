@@ -163,6 +163,7 @@ export type Rsvp = {
   phone: string | null
   status: 'going' | 'maybe' | 'not_going'
   note: string | null
+  attendee_count: number
   created_at: string
 }
 
@@ -173,15 +174,34 @@ export async function createRsvp(data: {
   phone?: string
   status?: 'going' | 'maybe' | 'not_going'
   note?: string
+  attendee_count?: number
 }): Promise<Rsvp> {
   const rows = await sql`
-    insert into rsvps (event_id, name, email, phone, status, note)
-    values (${data.event_id}, ${data.name}, ${data.email ?? null}, ${data.phone ?? null}, ${data.status ?? 'going'}, ${data.note ?? null})
-    on conflict (event_id, email) do update
-      set name = excluded.name, status = excluded.status, note = excluded.note
+    insert into rsvps (event_id, name, email, phone, status, note, attendee_count)
+    values (${data.event_id}, ${data.name}, ${data.email ?? null}, ${data.phone ?? null}, ${data.status ?? 'going'}, ${data.note ?? null}, ${data.attendee_count ?? 1})
     returning *
   `
   return rows[0] as Rsvp
+}
+
+export async function getRsvpCounts(eventId: string): Promise<{ going: number; maybe: number; not_going: number }> {
+  const db = neon(process.env.DATABASE_URL!, { fetchOptions: { cache: 'no-store' } })
+  const rows = await db`
+    select status, count(*)::int as count from rsvps where event_id = ${eventId} group by status
+  `
+  const result = { going: 0, maybe: 0, not_going: 0 }
+  for (const r of rows) result[r.status as keyof typeof result] = r.count
+  return result
+}
+
+export async function getRsvpComments(eventId: string): Promise<Pick<Rsvp, 'id' | 'name' | 'note' | 'status' | 'created_at'>[]> {
+  const db = neon(process.env.DATABASE_URL!, { fetchOptions: { cache: 'no-store' } })
+  const rows = await db`
+    select id, name, note, status, created_at from rsvps
+    where event_id = ${eventId} and note is not null and note != ''
+    order by created_at desc
+  `
+  return rows as Pick<Rsvp, 'id' | 'name' | 'note' | 'status' | 'created_at'>[]
 }
 
 export async function getRsvpsForEvent(eventId: string): Promise<Rsvp[]> {
