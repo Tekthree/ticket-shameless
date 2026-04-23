@@ -7,7 +7,8 @@ if (!process.env.DATABASE_URL) {
 }
 
 // Prevent Next.js from caching Neon's internal HTTP responses
-neonConfig.fetchOptions = { cache: 'no-store' }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+;(neonConfig as any).fetchOptions = { cache: 'no-store' }
 
 export const sql = neon(DATABASE_URL)
 
@@ -156,47 +157,22 @@ export async function getEventById(id: string): Promise<Event | null> {
 
 export async function updateEvent(id: string, data: Partial<Event>): Promise<Event | null> {
   try {
-    // For now, handle basic updates - this can be expanded as needed
-    const updateFields = []
-    const updateValues = []
-    
-    if (data.title !== undefined) {
-      updateFields.push('title = ?')
-      updateValues.push(data.title)
-    }
-    if (data.description !== undefined) {
-      updateFields.push('description = ?')
-      updateValues.push(data.description)
-    }
-    if (data.date !== undefined) {
-      updateFields.push('date = ?')
-      updateValues.push(data.date)
-    }
-    if (data.venue !== undefined) {
-      updateFields.push('venue = ?')
-      updateValues.push(data.venue)
-    }
-    if (data.address !== undefined) {
-      updateFields.push('address = ?')
-      updateValues.push(data.address)
-    }
-    if (data.image_url !== undefined) {
-      updateFields.push('image_url = ?')
-      updateValues.push(data.image_url)
-    }
-    
-    if (updateFields.length === 0) {
-      return await getEventById(id) // No updates needed
-    }
-    
-    const query = `update events set ${updateFields.join(', ')} where id = ? returning *`
-    updateValues.push(id)
-    
-    const rows = await sql(query, ...updateValues)
+    const db = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
+    const rows = await db`
+      update events set
+        title = coalesce(${data.title ?? null}, title),
+        description = coalesce(${data.description ?? null}, description),
+        date = coalesce(${data.date ?? null}, date),
+        venue = coalesce(${data.venue ?? null}, venue),
+        address = coalesce(${data.address ?? null}, address),
+        image_url = coalesce(${data.image_url ?? null}, image_url)
+      where id = ${id}
+      returning *
+    `
     return (rows[0] as Event) ?? null
   } catch (error) {
-    console.warn('Failed to update event during build:', error)
-    return null // Return null during build
+    console.warn('Failed to update event:', error)
+    return null
   }
 }
 
