@@ -30,15 +30,6 @@ export default async function DJsPage() {
 
       {/* Header */}
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(40px, 6vw, 72px) clamp(20px, 4vw, 48px) 0' }}>
-        <div style={{
-          fontFamily: 'var(--font-barlow), sans-serif',
-          fontWeight: 900,
-          fontSize: 11,
-          letterSpacing: '0.25em',
-          textTransform: 'uppercase',
-          color: C.red,
-          marginBottom: 14,
-        }}>Simply Shameless</div>
         <h1 style={{
           fontFamily: 'var(--font-barlow), sans-serif',
           fontWeight: 900,

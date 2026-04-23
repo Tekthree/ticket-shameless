@@ -67,21 +67,19 @@ export function DJCard({ dj }: { dj: DJ }) {
           {dj.location && (
             <div style={{ color: C.darkMuted, fontSize: 12, letterSpacing: '0.08em' }}>{dj.location}</div>
           )}
-          {dj.genres && dj.genres.length > 0 && (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 10 }}>
-              {dj.genres.slice(0, 3).map(g => (
-                <span key={g} style={{
-                  background: 'rgba(201,50,26,0.1)',
-                  border: `1px solid rgba(201,50,26,0.2)`,
-                  color: C.red,
-                  fontFamily: 'var(--font-barlow), sans-serif',
-                  fontWeight: 700,
-                  fontSize: 10,
-                  letterSpacing: '0.15em',
-                  textTransform: 'uppercase',
-                  padding: '3px 8px',
-                }}>{g}</span>
-              ))}
+          {dj.is_resident && (
+            <div style={{ marginTop: 10 }}>
+              <span style={{
+                background: 'rgba(201,50,26,0.1)',
+                border: '1px solid rgba(201,50,26,0.2)',
+                color: C.red,
+                fontFamily: 'var(--font-barlow), sans-serif',
+                fontWeight: 700,
+                fontSize: 10,
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                padding: '3px 8px',
+              }}>Resident</span>
             </div>
           )}
         </div>

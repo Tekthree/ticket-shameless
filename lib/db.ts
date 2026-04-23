@@ -76,6 +76,7 @@ export type DJ = {
   website_url: string | null
   seo_description: string | null
   is_published: boolean
+  is_resident: boolean
   created_at: string
 }
 
