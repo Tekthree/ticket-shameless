@@ -167,11 +167,11 @@ function MobileTicketBar({ event }: { event: Event }) {
 function LineupArtistRow({ artist }: { artist: LineupArtist }) {
   const [hover, setHover] = useState(false)
   const isHeadliner = artist.sort_order === 0 || artist.sort_order === 1
-  return (
+  const inner = (
     <div
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: `1px solid ${C.darkBorder}`, cursor: 'pointer' }}
+      style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: `1px solid ${C.darkBorder}`, cursor: artist.dj_slug ? 'pointer' : 'default' }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <div style={{ width: 40, height: 40, background: hover ? C.red : C.darkCard, border: `1px solid ${hover ? C.red : C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden', position: 'relative', transition: 'all 0.2s' }}>
@@ -185,11 +185,23 @@ function LineupArtistRow({ artist }: { artist: LineupArtist }) {
           {isHeadliner && <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.red, marginTop: 1 }}>Headliner</div>}
         </div>
       </div>
-      {artist.time_slot && (
-        <div style={{ fontSize: 13, color: C.darkMuted, textAlign: 'right', flexShrink: 0, marginLeft: 12 }}>{artist.time_slot}</div>
-      )}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, marginLeft: 12 }}>
+        {artist.time_slot && (
+          <div style={{ fontSize: 13, color: C.darkMuted, textAlign: 'right' }}>{artist.time_slot}</div>
+        )}
+        {artist.dj_slug && (
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" style={{ color: hover ? C.red : C.darkMuted, transition: 'color 0.15s' }}>
+            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        )}
+      </div>
     </div>
   )
+
+  if (artist.dj_slug) {
+    return <Link href={`/djs/${artist.dj_slug}`} style={{ textDecoration: 'none', display: 'block' }}>{inner}</Link>
+  }
+  return inner
 }
 
 function LineupSection({ lineup }: { lineup: LineupArtist[] }) {

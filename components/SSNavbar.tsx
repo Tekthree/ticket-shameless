@@ -46,8 +46,8 @@ export default function SSNavbar() {
   }
 
   const navLinks = isEventPage
-    ? [['Merch', '/shop'], ['About', '/#about']]
-    : [['Events', '/events'], ['Merch', '/shop'], ['About', '/#about']]
+    ? [['DJs', '/djs'], ['Merch', '/shop'], ['About', '/#about']]
+    : [['Events', '/events'], ['DJs', '/djs'], ['Merch', '/shop'], ['About', '/#about']]
 
   return (
     <>

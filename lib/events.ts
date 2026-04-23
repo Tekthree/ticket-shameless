@@ -1,2 +1,2 @@
-export { getEvents, getEventBySlug, getEventLineup, getEventById, updateEvent, deleteEvent } from './db'
-export type { Event, LineupArtist } from './db'
+export { getEvents, getEventBySlug, getEventLineup, getEventById, updateEvent, deleteEvent, getDJs, getDJBySlug, getDJEvents } from './db'
+export type { Event, LineupArtist, DJ } from './db'

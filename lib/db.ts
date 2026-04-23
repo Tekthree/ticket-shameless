@@ -50,6 +50,30 @@ export type LineupArtist = {
   time_slot: string | null
   sort_order: number
   stage: string | null
+  dj_id: string | null
+  dj_slug: string | null
+}
+
+// ── DJS ──────────────────────────────────────────────────────────────────────
+
+export type DJ = {
+  id: string
+  slug: string
+  name: string
+  bio: string | null
+  profile_image_url: string | null
+  banner_image_url: string | null
+  location: string | null
+  genres: string[]
+  soundcloud_url: string | null
+  instagram_url: string | null
+  spotify_url: string | null
+  youtube_url: string | null
+  mixcloud_url: string | null
+  website_url: string | null
+  seo_description: string | null
+  is_published: boolean
+  created_at: string
 }
 
 export async function getEvents(limit = 10): Promise<Event[]> {
@@ -78,9 +102,41 @@ export async function getEventBySlug(slug: string): Promise<Event | null> {
 
 export async function getEventLineup(eventId: string): Promise<LineupArtist[]> {
   const rows = await sql`
-    select * from lineup where event_id = ${eventId} order by sort_order asc
+    select l.*, d.slug as dj_slug
+    from lineup l
+    left join djs d on d.id = l.dj_id
+    where l.event_id = ${eventId}
+    order by l.sort_order asc
   `
   return rows as LineupArtist[]
+}
+
+export async function getDJs(): Promise<DJ[]> {
+  const db = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
+  const rows = await db`
+    select * from djs where is_published = true order by name asc
+  `
+  return rows as DJ[]
+}
+
+export async function getDJBySlug(slug: string): Promise<DJ | null> {
+  const db = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
+  const rows = await db`
+    select * from djs where slug = ${slug} and is_published = true limit 1
+  `
+  return (rows[0] as DJ) ?? null
+}
+
+export async function getDJEvents(djId: string): Promise<Event[]> {
+  const db = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
+  const rows = await db`
+    select distinct e.*
+    from events e
+    join lineup l on l.event_id = e.id
+    where l.dj_id = ${djId} and e.is_published = true
+    order by e.date desc
+  `
+  return rows as Event[]
 }
 
 export async function getEventById(id: string): Promise<Event | null> {
