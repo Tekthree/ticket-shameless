@@ -103,7 +103,8 @@ export async function getEventBySlug(slug: string): Promise<Event | null> {
 }
 
 export async function getEventLineup(eventId: string): Promise<LineupArtist[]> {
-  const rows = await sql`
+  const db = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
+  const rows = await db`
     select l.*, d.slug as dj_slug, d.profile_image_url as dj_profile_image_url
     from lineup l
     left join djs d on d.id = l.dj_id
