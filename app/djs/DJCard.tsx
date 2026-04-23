@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { useState } from 'react'
 import type { DJ } from '@/lib/db'
 
 const C = {
@@ -11,80 +12,99 @@ const C = {
   darkText: '#f0ece6',
   darkMuted: '#7a7068',
   red: '#c9321a',
+  redMuted: 'rgba(201,50,26,0.12)',
 }
 
 export function DJCard({ dj }: { dj: DJ }) {
+  const [hover, setHover] = useState(false)
+
   return (
-    <Link href={`/djs/${dj.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
+    <Link href={`/djs/${dj.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
       <div
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
         style={{
           background: C.darkCard,
-          border: `1px solid ${C.darkBorder}`,
+          border: `1px solid ${hover ? C.red : C.darkBorder}`,
           overflow: 'hidden',
-          transition: 'border-color 0.2s',
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
+          transition: 'border-color 0.2s, transform 0.25s cubic-bezier(0.22,1,0.36,1)',
+          transform: hover ? 'translateY(-4px)' : 'translateY(0)',
         }}
-        onMouseEnter={e => (e.currentTarget.style.borderColor = C.red)}
-        onMouseLeave={e => (e.currentTarget.style.borderColor = C.darkBorder)}
       >
-        <div style={{ position: 'relative', width: '100%', paddingTop: '100%', background: C.dark, overflow: 'hidden' }}>
+        {/* Portrait image — 3:4 aspect */}
+        <div style={{ position: 'relative', width: '100%', paddingTop: '133%', background: C.dark, overflow: 'hidden' }}>
           {dj.profile_image_url ? (
             <Image
               src={dj.profile_image_url}
               alt={dj.name}
               fill
-              style={{ objectFit: 'cover', objectPosition: 'center top' }}
+              style={{
+                objectFit: 'cover',
+                objectPosition: 'center top',
+                transform: hover ? 'scale(1.05)' : 'scale(1)',
+                transition: 'transform 0.5s cubic-bezier(0.22,1,0.36,1)',
+              }}
             />
           ) : (
             <div style={{
               position: 'absolute', inset: 0,
+              background: 'repeating-linear-gradient(45deg, #252220 0px, #252220 1px, #1c1917 1px, #1c1917 24px)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'repeating-linear-gradient(45deg, #252220 0px, #252220 1px, #1c1917 1px, #1c1917 20px)',
             }}>
               <span style={{
                 fontFamily: 'var(--font-barlow), sans-serif',
                 fontWeight: 900,
-                fontSize: 'clamp(48px, 10vw, 72px)',
-                color: 'rgba(201,50,26,0.25)',
+                fontSize: 72,
+                color: 'rgba(201,50,26,0.15)',
                 textTransform: 'uppercase',
-                letterSpacing: '-0.02em',
               }}>{dj.name[0]}</span>
             </div>
           )}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '50%', background: 'linear-gradient(to top, rgba(28,25,23,0.85) 0%, transparent 100%)' }} />
-        </div>
 
-        <div style={{ padding: '14px 16px 18px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          {/* Gradient overlay at bottom */}
           <div style={{
-            fontFamily: 'var(--font-barlow), sans-serif',
-            fontWeight: 900,
-            fontSize: 'clamp(16px, 2.5vw, 20px)',
-            color: C.darkText,
-            textTransform: 'uppercase',
-            letterSpacing: '0.03em',
-            lineHeight: 1,
-            marginBottom: 6,
-          }}>{dj.name}</div>
-          {dj.location && (
-            <div style={{ color: C.darkMuted, fontSize: 12, letterSpacing: '0.08em' }}>{dj.location}</div>
-          )}
+            position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%',
+            background: 'linear-gradient(to top, rgba(28,25,23,0.95) 0%, rgba(28,25,23,0.4) 60%, transparent 100%)',
+          }} />
+
+          {/* Role badge — top right */}
           {dj.is_resident && (
-            <div style={{ marginTop: 10 }}>
-              <span style={{
-                background: 'rgba(201,50,26,0.1)',
-                border: '1px solid rgba(201,50,26,0.2)',
-                color: C.red,
-                fontFamily: 'var(--font-barlow), sans-serif',
-                fontWeight: 700,
-                fontSize: 10,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                padding: '3px 8px',
-              }}>Shameless Resident</span>
-            </div>
+            <div style={{
+              position: 'absolute', top: 12, right: 12,
+              background: C.red,
+              color: '#fff',
+              fontFamily: 'var(--font-barlow), sans-serif',
+              fontWeight: 800,
+              fontSize: 9,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              padding: '4px 10px',
+            }}>Resident</div>
           )}
+
+          {/* Name + location at bottom */}
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 14px 14px' }}>
+            <div style={{
+              fontFamily: 'var(--font-barlow), sans-serif',
+              fontWeight: 900,
+              fontSize: 'clamp(16px, 2.2vw, 20px)',
+              color: C.darkText,
+              textTransform: 'uppercase',
+              letterSpacing: '0.02em',
+              lineHeight: 1.05,
+              marginBottom: 4,
+            }}>{dj.name}</div>
+            {dj.location && (
+              <div style={{
+                color: 'rgba(240,236,230,0.5)',
+                fontSize: 11,
+                letterSpacing: '0.08em',
+                fontFamily: 'var(--font-barlow), sans-serif',
+                fontWeight: 600,
+                textTransform: 'uppercase',
+              }}>{dj.location}</div>
+            )}
+          </div>
         </div>
       </div>
     </Link>
