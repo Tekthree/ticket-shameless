@@ -239,7 +239,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
                   letterSpacing: '0.15em',
                   textTransform: 'uppercase',
                   padding: '3px 9px',
-                }}>Resident</span>
+                }}>Shameless Resident</span>
               )}
             </div>
           </div>

@@ -79,7 +79,7 @@ export function DJCard({ dj }: { dj: DJ }) {
                 letterSpacing: '0.15em',
                 textTransform: 'uppercase',
                 padding: '3px 8px',
-              }}>Resident</span>
+              }}>Shameless Resident</span>
             </div>
           )}
         </div>
