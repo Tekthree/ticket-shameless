@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
-import type { Event, LineupArtist, TicketTier } from '@/lib/db'
+import type { Event, LineupArtist } from '@/lib/db'
 
 const C = {
   dark: '#1c1917',
@@ -89,130 +89,75 @@ function OutlineBtn({ children, onClick, style }: { children: React.ReactNode; o
 // ── TICKET BOX ───────────────────────────────────────────────────────────────
 
 function TicketBox({ event, sticky = false }: { event: Event; sticky?: boolean }) {
-  const tiers: TicketTier[] = event.ticket_tiers ?? (
-    event.suggested_price != null
-      ? [{ key: 'ga', label: 'General Admission', price: event.suggested_price, sub: "Pay what you can. No surprises.", badge: 'On Sale' }]
-      : []
-  )
-  const [selectedTier, setSelectedTier] = useState(tiers[0]?.key ?? 'ga')
-  const [qty, setQty] = useState(2)
-  const activeTier = tiers.find(t => t.key === selectedTier) ?? tiers[0]
-  const total = activeTier ? (activeTier.price * qty).toFixed(2) : '0.00'
+  const [hover, setHover] = useState(false)
 
-  if (tiers.length === 0) return null
+  if (!event.payment_link) return null
 
   return (
     <div style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, padding: '24px', ...(sticky ? { position: 'sticky', top: 84 } : {}) }}>
-      {/* Tiers */}
-      {tiers.map(t => (
-        <div
-          key={t.key}
-          onClick={() => setSelectedTier(t.key)}
-          style={{ padding: '16px 0', borderBottom: `1px solid ${C.darkBorder}`, cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}
-        >
-          <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-            <div style={{ width: 18, height: 18, marginTop: 3, border: `2px solid ${selectedTier === t.key ? C.red : C.darkBorder}`, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'border-color 0.15s' }}>
-              {selectedTier === t.key && <div style={{ width: 8, height: 8, borderRadius: '50%', background: C.red }} />}
-            </div>
-            <div>
-              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 13, letterSpacing: '0.14em', textTransform: 'uppercase', color: C.darkMuted, marginBottom: 4 }}>{t.label}</div>
-              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 30, color: C.darkText, lineHeight: 1 }}>
-                ${t.price}<span style={{ fontSize: 15, color: C.darkMuted, fontWeight: 700 }}> suggested</span>
-              </div>
-              <div style={{ color: C.darkMuted, fontSize: 12, marginTop: 4 }}>{t.sub}</div>
-            </div>
-          </div>
-          <div style={{ background: C.redMuted, color: C.red, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 8px', flexShrink: 0 }}>{t.badge}</div>
-        </div>
-      ))}
-
-      {/* Qty */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: `1px solid ${C.darkBorder}` }}>
-        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.darkMuted }}>Quantity</div>
-        <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${C.darkBorder}` }}>
-          {(['−', 'qty', '+'] as const).map((l, i) => (
-            l === 'qty'
-              ? <div key="q" style={{ width: 44, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 18, color: C.darkText, borderLeft: `1px solid ${C.darkBorder}`, borderRight: `1px solid ${C.darkBorder}` }}>{qty}</div>
-              : <QtyBtn key={i} onClick={() => setQty(q => l === '−' ? Math.max(1, q - 1) : Math.min(10, q + 1))}>{l}</QtyBtn>
-          ))}
-        </div>
-      </div>
-
-      {event.payment_link ? (
-        <a
-          href={event.payment_link}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', background: C.red, color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 18, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '18px', textDecoration: 'none', marginTop: 16, marginBottom: 10 }}
-        >Pay Cover — ${total}</a>
-      ) : (
-        <button
-          style={{ width: '100%', background: C.red, color: '#fff', border: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 18, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '18px', cursor: 'pointer', marginTop: 16, marginBottom: 10 }}
-        >Pay Cover — ${total}</button>
-      )}
-
-      <div style={{ textAlign: 'center', color: C.darkMuted, fontSize: 12, lineHeight: 1.6 }}>
-        <svg width="11" height="11" viewBox="0 0 12 12" fill="none" style={{ marginRight: 4, verticalAlign: 'middle' }}><path d="M6 1L6 6M6 8.5L6 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /><circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1.2" /></svg>
-        Pay what you can via Venmo
+      <SecLabel>Tickets</SecLabel>
+      <a
+        href={event.payment_link}
+        target="_blank"
+        rel="noopener noreferrer"
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 10,
+          width: '100%',
+          background: hover ? C.redDeep : C.red,
+          color: '#fff',
+          fontFamily: 'var(--font-barlow), sans-serif',
+          fontWeight: 900,
+          fontSize: 18,
+          letterSpacing: '0.15em',
+          textTransform: 'uppercase',
+          padding: '18px',
+          textDecoration: 'none',
+          marginBottom: 12,
+          transition: 'background 0.2s',
+        }}
+      >
+        Get Tickets
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </a>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, color: C.darkMuted, fontSize: 12 }}>
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+          <path d="M10 2L2 10M6 2h4v4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        Forwarded to Eventbrite
       </div>
     </div>
   )
 }
 
-function QtyBtn({ children, onClick }: { children: string; onClick: () => void }) {
+// ── MOBILE TICKET BAR ────────────────────────────────────────────────────────
+
+function MobileTicketBar({ event }: { event: Event }) {
   const [hover, setHover] = useState(false)
-  return (
-    <button
-      onClick={onClick}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      style={{ background: hover ? 'rgba(255,255,255,0.05)' : 'transparent', border: 'none', color: C.darkText, cursor: 'pointer', width: 44, height: 40, fontSize: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.15s' }}
-    >{children}</button>
-  )
-}
+  const dateStr = fmt(event.date, { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase()
 
-// ── MOBILE TICKET BAR + SHEET ─────────────────────────────────────────────
+  if (!event.payment_link) return null
 
-function MobileTicketBar({ event, onTap }: { event: Event; onTap: () => void }) {
-  const tiers = event.ticket_tiers
-  const firstTier = tiers?.[0]
   return (
     <div className="ep-mobile-bar">
-      <div style={{ flex: 1 }}>
-        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 22, color: C.darkText, lineHeight: 1 }}>
-          {firstTier ? `From $${firstTier.price}` : event.suggested_price != null ? `$${event.suggested_price} suggested` : 'Free entry'}
-          {firstTier && <span style={{ fontSize: 14, color: C.darkMuted, fontWeight: 700 }}> suggested</span>}
-        </div>
-        <div style={{ color: C.darkMuted, fontSize: 12, marginTop: 2 }}>
-          {firstTier ? `${firstTier.label} · ${firstTier.badge}` : (event.venue || 'Seattle')}
-        </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, color: C.darkText, textTransform: 'uppercase', lineHeight: 1.2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{event.title}</div>
+        <div style={{ color: C.darkMuted, fontSize: 12, marginTop: 3 }}>{dateStr}</div>
       </div>
-      <button
-        onClick={onTap}
-        style={{ background: C.red, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '14px 28px', flexShrink: 0 }}
-      >Get Tickets</button>
-    </div>
-  )
-}
-
-function MobileTicketSheet({ event, onClose }: { event: Event; onClose: () => void }) {
-  useEffect(() => {
-    document.body.style.overflow = 'hidden'
-    return () => { document.body.style.overflow = '' }
-  }, [])
-  return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 300, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
-      <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }} />
-      <div style={{ position: 'relative', background: C.dark, borderTop: `1px solid ${C.darkBorder}`, padding: '0 20px 40px', maxHeight: '90vh', overflowY: 'auto', animation: 'slideUp 0.35s cubic-bezier(0.22,1,0.36,1)' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '14px 0 8px' }}>
-          <div style={{ width: 36, height: 4, background: C.darkBorder, borderRadius: 2 }} />
-        </div>
-        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 20, textTransform: 'uppercase', color: C.darkText, marginBottom: 20 }}>Get Tickets</div>
-        <TicketBox event={event} />
-        <button onClick={onClose} style={{ marginTop: 12, width: '100%', background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '13px' }}>
-          Cancel
-        </button>
-      </div>
+      <a
+        href={event.payment_link}
+        target="_blank"
+        rel="noopener noreferrer"
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        style={{ background: hover ? C.redDeep : C.red, color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '14px 28px', flexShrink: 0, textDecoration: 'none', transition: 'background 0.2s' }}
+      >Get Tickets</a>
     </div>
   )
 }
@@ -303,7 +248,6 @@ function OtherEventCard({ event }: { event: Event }) {
 // ── PAGE ─────────────────────────────────────────────────────────────────
 
 export default function EventPageClient({ event, lineup, otherEvents }: { event: Event; lineup: LineupArtist[]; otherEvents: Event[] }) {
-  const [sheetOpen, setSheetOpen] = useState(false)
   const [heroRef, heroVisible] = useInView()
   const [bodyRef, bodyVisible] = useInView(0.02)
 
@@ -400,13 +344,6 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
             {event.description && (
               <div style={{ color: C.darkMuted, fontSize: 15, lineHeight: 1.75, marginTop: 8 }}>{event.description}</div>
             )}
-            <div style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, padding: '16px 20px', marginTop: 20 }}>
-              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 14, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.darkText, marginBottom: 8 }}>Refund Policy</div>
-              <div style={{ color: C.darkMuted, fontSize: 13, lineHeight: 1.7 }}>
-                You can get a refund if it&apos;s within 24 hours of buying tickets, or this event is rescheduled or cancelled.
-                <span style={{ color: 'rgba(122,112,104,0.5)', fontSize: 12, display: 'block', marginTop: 5 }}>You can&apos;t get a refund within 24 hours of the event start time.</span>
-              </div>
-            </div>
           </div>
 
           {/* Lineup */}
@@ -502,9 +439,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
       </div>
 
       {/* Mobile sticky bar */}
-      <MobileTicketBar event={event} onTap={() => setSheetOpen(true)} />
-
-      {sheetOpen && <MobileTicketSheet event={event} onClose={() => setSheetOpen(false)} />}
+      <MobileTicketBar event={event} />
 
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
