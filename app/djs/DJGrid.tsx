@@ -71,6 +71,8 @@ export function DJGrid({ djs }: { djs: DJ[] }) {
         </div>
       </div>
 
+      <div style={{ height: 1, background: C.darkBorder, marginBottom: 40 }} />
+
       {/* Grid */}
       {filtered.length === 0 ? (
         <div style={{ color: C.darkMuted, fontSize: 15, padding: '40px 0' }}>No DJs found.</div>

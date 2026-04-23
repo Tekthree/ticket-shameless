@@ -40,7 +40,6 @@ export default async function DJsPage() {
           letterSpacing: '-0.01em',
           marginBottom: 20,
         }}>The DJs</h1>
-        <div style={{ height: 1, background: C.darkBorder, marginBottom: 40 }} />
       </div>
 
       {/* Grid with description + filter */}
