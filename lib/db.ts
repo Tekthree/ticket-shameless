@@ -194,14 +194,28 @@ export async function getRsvpCounts(eventId: string): Promise<{ going: number; m
   return result
 }
 
-export async function getRsvpComments(eventId: string): Promise<Pick<Rsvp, 'id' | 'name' | 'note' | 'status' | 'created_at'>[]> {
+export type Comment = {
+  id: string
+  event_id: string
+  name: string
+  message: string
+  created_at: string
+}
+
+export async function createComment(data: { event_id: string; name: string; message: string }): Promise<Comment> {
   const db = neon(process.env.DATABASE_URL!, { fetchOptions: { cache: 'no-store' } })
   const rows = await db`
-    select id, name, note, status, created_at from rsvps
-    where event_id = ${eventId} and note is not null and note != ''
-    order by created_at desc
+    insert into comments (event_id, name, message) values (${data.event_id}, ${data.name}, ${data.message}) returning *
   `
-  return rows as Pick<Rsvp, 'id' | 'name' | 'note' | 'status' | 'created_at'>[]
+  return rows[0] as Comment
+}
+
+export async function getComments(eventId: string): Promise<Comment[]> {
+  const db = neon(process.env.DATABASE_URL!, { fetchOptions: { cache: 'no-store' } })
+  const rows = await db`
+    select * from comments where event_id = ${eventId} order by created_at asc
+  `
+  return rows as Comment[]
 }
 
 export async function getRsvpsForEvent(eventId: string): Promise<Rsvp[]> {

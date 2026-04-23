@@ -1,16 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createRsvp, getRsvpCounts, getRsvpComments } from '@/lib/db'
+import { createRsvp, getRsvpCounts, createComment } from '@/lib/db'
 
 export async function GET(req: NextRequest) {
   const event_id = req.nextUrl.searchParams.get('event_id')
   if (!event_id) return NextResponse.json({ error: 'event_id required' }, { status: 400 })
 
   try {
-    const [counts, comments] = await Promise.all([
-      getRsvpCounts(event_id),
-      getRsvpComments(event_id),
-    ])
-    return NextResponse.json({ counts, comments })
+    const counts = await getRsvpCounts(event_id)
+    return NextResponse.json({ counts })
   } catch (err) {
     console.error('RSVP GET error:', err)
     return NextResponse.json({ error: 'Failed to fetch RSVPs' }, { status: 500 })
@@ -27,6 +24,9 @@ export async function POST(req: NextRequest) {
     }
 
     const rsvp = await createRsvp({ event_id, name, email, phone, status, note, attendee_count })
+    if (note?.trim()) {
+      await createComment({ event_id, name, message: note.trim() })
+    }
     return NextResponse.json(rsvp, { status: 201 })
   } catch (err) {
     console.error('RSVP error:', err)

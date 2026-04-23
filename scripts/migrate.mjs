@@ -105,4 +105,16 @@ console.log('✓ subscribers')
 await sql`alter table rsvps add column if not exists attendee_count integer not null default 1`
 console.log('✓ rsvps.attendee_count')
 
+// comments (separate from rsvps)
+await sql`
+  create table if not exists comments (
+    id uuid primary key default gen_random_uuid(),
+    event_id uuid not null references events(id) on delete cascade,
+    name text not null,
+    message text not null,
+    created_at timestamptz not null default now()
+  )
+`
+console.log('✓ comments')
+
 console.log('\nAll migrations complete.')

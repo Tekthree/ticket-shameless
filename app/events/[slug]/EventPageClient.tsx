@@ -387,7 +387,7 @@ function RSVPModal({ event, onClose, onSuccess }: {
 }
 
 type RsvpCounts = { going: number; maybe: number; not_going: number }
-type RsvpComment = { id: string; name: string; note: string | null; status: string; created_at: string }
+type CommentRow = { id: string; name: string; message: string; created_at: string }
 
 function RSVPSection({ event, onOpenModal, myRsvp }: {
   event: Event;
@@ -401,7 +401,7 @@ function RSVPSection({ event, onOpenModal, myRsvp }: {
       .then(r => r.json())
       .then(d => setCounts(d.counts ?? { going: 0, maybe: 0, not_going: 0 }))
       .catch(() => {})
-  }, [event.id, myRsvp])
+  }, [event.id, myRsvp?.status])
 
   const statusLabel: Record<string, string> = {
     going: "You're going",
@@ -458,14 +458,34 @@ function CommentsSection({ event, myRsvp, onOpenModal }: {
   myRsvp: { name: string; status: string } | null;
   onOpenModal: () => void;
 }) {
-  const [comments, setComments] = useState<RsvpComment[]>([])
+  const [comments, setComments] = useState<CommentRow[]>([])
+  const [newMsg, setNewMsg] = useState('')
+  const [posting, setPosting] = useState(false)
 
-  useEffect(() => {
-    fetch(`/api/rsvp?event_id=${event.id}`)
+  function loadComments() {
+    fetch(`/api/comment?event_id=${event.id}`)
       .then(r => r.json())
-      .then(d => setComments(d.comments ?? []))
+      .then(d => setComments(Array.isArray(d) ? d : []))
       .catch(() => {})
-  }, [event.id, myRsvp])
+  }
+
+  useEffect(() => { loadComments() }, [event.id, myRsvp?.status])
+
+  async function handlePost() {
+    if (!newMsg.trim() || !myRsvp) return
+    setPosting(true)
+    try {
+      await fetch('/api/comment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event_id: event.id, name: myRsvp.name, message: newMsg.trim() }),
+      })
+      setNewMsg('')
+      loadComments()
+    } finally {
+      setPosting(false)
+    }
+  }
 
   function timeAgo(dateStr: string) {
     const diff = Date.now() - new Date(dateStr).getTime()
@@ -475,8 +495,6 @@ function CommentsSection({ event, myRsvp, onOpenModal }: {
     if (h < 24) return `${h}h ago`
     return `${Math.floor(h / 24)}d ago`
   }
-
-  const statusEmoji: Record<string, string> = { going: '👍', maybe: '🤔', not_going: '😢' }
 
   return (
     <div>
@@ -490,7 +508,7 @@ function CommentsSection({ event, myRsvp, onOpenModal }: {
                 <div style={{ width: 32, height: 32, borderRadius: '50%', background: C.darkCard, border: `1px solid ${C.darkBorder}`, flexShrink: 0 }} />
                 <div>
                   <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, color: C.darkText }}>Someone</div>
-                  <div style={{ color: C.darkMuted, fontSize: 13, marginTop: 3 }}>{c.note}</div>
+                  <div style={{ color: C.darkMuted, fontSize: 13, marginTop: 3 }}>{c.message}</div>
                 </div>
               </div>
             </div>
@@ -502,28 +520,52 @@ function CommentsSection({ event, myRsvp, onOpenModal }: {
             </div>
           </div>
         </div>
-      ) : comments.length === 0 ? (
-        <div style={{ color: C.darkMuted, fontSize: 14, padding: '16px 0' }}>No messages yet. Be the first.</div>
       ) : (
-        <div>
-          {comments.map(c => (
-            <div key={c.id} style={{ padding: '14px 0', borderBottom: `1px solid ${C.darkBorder}` }}>
-              <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                <div style={{ width: 34, height: 34, borderRadius: '50%', background: C.darkCard, border: `1px solid ${C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 14, color: C.darkMuted, textTransform: 'uppercase' }}>
-                  {c.name[0]}
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
-                    <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, color: C.darkText }}>{c.name}</span>
-                    <span style={{ fontSize: 13 }}>{statusEmoji[c.status] ?? ''}</span>
-                    <span style={{ color: C.darkMuted, fontSize: 12 }}>{timeAgo(c.created_at)}</span>
-                  </div>
-                  <div style={{ color: C.darkMuted, fontSize: 14, lineHeight: 1.5 }}>{c.note}</div>
-                </div>
-              </div>
+        <>
+          {/* Inline post box */}
+          <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end', marginBottom: 20 }}>
+            <div style={{ width: 34, height: 34, borderRadius: '50%', background: C.red, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 14, color: '#fff', textTransform: 'uppercase' }}>
+              {myRsvp.name[0]}
             </div>
-          ))}
-        </div>
+            <div style={{ flex: 1, borderBottom: `1px solid ${C.darkBorder}`, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <input
+                value={newMsg}
+                onChange={e => setNewMsg(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handlePost()}
+                placeholder="Say something..."
+                style={{ flex: 1, background: 'transparent', border: 'none', color: C.darkText, fontSize: 15, padding: '8px 0', outline: 'none', fontFamily: 'inherit' }}
+              />
+              <button
+                onClick={handlePost}
+                disabled={posting || !newMsg.trim()}
+                style={{ background: 'transparent', border: 'none', color: newMsg.trim() ? C.red : C.darkMuted, cursor: newMsg.trim() ? 'pointer' : 'default', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '8px 0', transition: 'color 0.15s', flexShrink: 0 }}
+              >{posting ? '...' : 'Post'}</button>
+            </div>
+          </div>
+
+          {comments.length === 0 ? (
+            <div style={{ color: C.darkMuted, fontSize: 14, padding: '8px 0' }}>No messages yet. Be the first.</div>
+          ) : (
+            <div>
+              {comments.map(c => (
+                <div key={c.id} style={{ padding: '14px 0', borderBottom: `1px solid ${C.darkBorder}` }}>
+                  <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                    <div style={{ width: 34, height: 34, borderRadius: '50%', background: C.darkCard, border: `1px solid ${C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 14, color: C.darkMuted, textTransform: 'uppercase' }}>
+                      {c.name[0]}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+                        <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, color: C.darkText }}>{c.name}</span>
+                        <span style={{ color: C.darkMuted, fontSize: 12 }}>{timeAgo(c.created_at)}</span>
+                      </div>
+                      <div style={{ color: C.darkMuted, fontSize: 14, lineHeight: 1.5 }}>{c.message}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   )
@@ -535,12 +577,13 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
   const [heroRef, heroVisible] = useInView()
   const [bodyRef, bodyVisible] = useInView(0.02)
   const [rsvpModalOpen, setRsvpModalOpen] = useState(false)
-  const [myRsvp, setMyRsvp] = useState<{ name: string; status: string } | null>(null)
-
-  useEffect(() => {
-    const stored = localStorage.getItem(rsvpKey(event.id))
-    if (stored) setMyRsvp(JSON.parse(stored))
-  }, [event.id])
+  const [myRsvp, setMyRsvp] = useState<{ name: string; status: string } | null>(() => {
+    if (typeof window === 'undefined') return null
+    try {
+      const stored = localStorage.getItem(rsvpKey(event.id))
+      return stored ? JSON.parse(stored) : null
+    } catch { return null }
+  })
 
   const dateStr = fmt(event.date, { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase()
   const timeStr = fmtTime(event.date)
