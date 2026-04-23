@@ -206,15 +206,6 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
         <div className="djp-hero-inner">
           {/* Left: name + meta */}
           <div style={{ flex: 1, minWidth: 0, position: 'relative', zIndex: 1 }}>
-            <div style={{
-              fontFamily: 'var(--font-barlow), sans-serif',
-              fontWeight: 900,
-              fontSize: 11,
-              letterSpacing: '0.25em',
-              textTransform: 'uppercase',
-              color: C.red,
-              marginBottom: 12,
-            }}>Simply Shameless</div>
             <h1 style={{
               fontFamily: 'var(--font-barlow), sans-serif',
               fontWeight: 900,
@@ -237,8 +228,8 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
                   {dj.location}
                 </div>
               )}
-              {dj.genres?.map(g => (
-                <span key={g} style={{
+              {dj.is_resident && (
+                <span style={{
                   background: 'rgba(201,50,26,0.12)',
                   border: '1px solid rgba(201,50,26,0.2)',
                   color: C.red,
@@ -248,8 +239,8 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
                   letterSpacing: '0.15em',
                   textTransform: 'uppercase',
                   padding: '3px 9px',
-                }}>{g}</span>
-              ))}
+                }}>Resident</span>
+              )}
             </div>
           </div>
 
