@@ -15,13 +15,16 @@ const C = {
 
 export function DJCard({ dj }: { dj: DJ }) {
   return (
-    <Link href={`/djs/${dj.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
+    <Link href={`/djs/${dj.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
       <div
         style={{
           background: C.darkCard,
           border: `1px solid ${C.darkBorder}`,
           overflow: 'hidden',
           transition: 'border-color 0.2s',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
         }}
         onMouseEnter={e => (e.currentTarget.style.borderColor = C.red)}
         onMouseLeave={e => (e.currentTarget.style.borderColor = C.darkBorder)}
@@ -53,7 +56,7 @@ export function DJCard({ dj }: { dj: DJ }) {
           <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '50%', background: 'linear-gradient(to top, rgba(28,25,23,0.85) 0%, transparent 100%)' }} />
         </div>
 
-        <div style={{ padding: '14px 16px 18px' }}>
+        <div style={{ padding: '14px 16px 18px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div style={{
             fontFamily: 'var(--font-barlow), sans-serif',
             fontWeight: 900,

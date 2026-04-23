@@ -1,6 +1,6 @@
 import { getDJs, type DJ } from '@/lib/db'
 import type { Metadata } from 'next'
-import { DJCard } from './DJCard'
+import { DJGrid } from './DJGrid'
 
 export const dynamic = 'force-dynamic'
 
@@ -43,19 +43,9 @@ export default async function DJsPage() {
         <div style={{ height: 1, background: C.darkBorder, marginBottom: 40 }} />
       </div>
 
-      {/* Grid */}
+      {/* Grid with description + filter */}
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 clamp(20px, 4vw, 48px) 80px' }}>
-        {djs.length === 0 ? (
-          <div style={{ color: C.darkMuted, fontSize: 15, padding: '40px 0' }}>No DJs added yet.</div>
-        ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-            gap: 2,
-          }}>
-            {djs.map(dj => <DJCard key={dj.id} dj={dj} />)}
-          </div>
-        )}
+        <DJGrid djs={djs} />
       </div>
     </div>
   )
