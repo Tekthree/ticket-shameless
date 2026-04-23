@@ -175,8 +175,8 @@ function LineupArtistRow({ artist }: { artist: LineupArtist }) {
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <div style={{ width: 40, height: 40, background: hover ? C.red : C.darkCard, border: `1px solid ${hover ? C.red : C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden', position: 'relative', transition: 'all 0.2s' }}>
-          {artist.image_url
-            ? <Image src={artist.image_url} alt={artist.name} fill style={{ objectFit: 'cover' }} />
+          {(artist.image_url ?? artist.dj_profile_image_url)
+            ? <Image src={artist.image_url ?? artist.dj_profile_image_url!} alt={artist.name} fill style={{ objectFit: 'cover', objectPosition: 'center top' }} />
             : <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, color: hover ? '#fff' : C.darkMuted, textTransform: 'uppercase' }}>{artist.name[0]}</span>
           }
         </div>
@@ -776,8 +776,8 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
               {headliners.map((a, i) => (
                 <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: i < headliners.length - 1 ? 14 : 0 }}>
                   <div style={{ width: 40, height: 40, background: C.dark, border: `1px solid ${C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
-                    {a.image_url
-                      ? <Image src={a.image_url} alt={a.name} fill style={{ objectFit: 'cover' }} />
+                    {(a.image_url ?? a.dj_profile_image_url)
+                      ? <Image src={a.image_url ?? a.dj_profile_image_url!} alt={a.name} fill style={{ objectFit: 'cover', objectPosition: 'center top' }} />
                       : <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16, color: C.darkMuted, textTransform: 'uppercase' }}>{a.name[0]}</span>
                     }
                   </div>

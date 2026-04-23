@@ -52,6 +52,7 @@ export type LineupArtist = {
   stage: string | null
   dj_id: string | null
   dj_slug: string | null
+  dj_profile_image_url: string | null
 }
 
 // ── DJS ──────────────────────────────────────────────────────────────────────
@@ -102,7 +103,7 @@ export async function getEventBySlug(slug: string): Promise<Event | null> {
 
 export async function getEventLineup(eventId: string): Promise<LineupArtist[]> {
   const rows = await sql`
-    select l.*, d.slug as dj_slug
+    select l.*, d.slug as dj_slug, d.profile_image_url as dj_profile_image_url
     from lineup l
     left join djs d on d.id = l.dj_id
     where l.event_id = ${eventId}
