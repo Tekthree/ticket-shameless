@@ -11,6 +11,7 @@ const C = {
   darkMuted: '#7a7068',
   red: '#c9321a',
   redDeep: '#a82614',
+  redMuted: 'rgba(201,50,26,0.12)',
 }
 
 type Photo = {
@@ -448,11 +449,86 @@ function PhotoGrid({ photos, event, onOpen }: { photos: Photo[]; event: GalleryE
   )
 }
 
+function ReportModal({ photo, event, onClose }: { photo: Photo; event: GalleryEvent; onClose: () => void }) {
+  const [step, setStep] = useState<1 | 2>(1)
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [reason, setReason] = useState('face')
+  const [details, setDetails] = useState('')
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
+  }, [])
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(10px)' }} onClick={onClose}>
+      <div onClick={e => e.stopPropagation()} style={{ background: C.dark, border: `1px solid ${C.darkBorder}`, padding: 'clamp(28px,5vw,36px) clamp(20px,5vw,40px)', width: '100%', maxWidth: 480 }}>
+        {step === 1 ? (
+          <>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
+              <div>
+                <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: C.red, marginBottom: 8 }}>Image Removal Request</div>
+                <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 22, color: C.darkText, textTransform: 'uppercase', lineHeight: 1 }}>Report This Photo</div>
+              </div>
+              <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: C.darkMuted, cursor: 'pointer', fontSize: 22, marginLeft: 16, flexShrink: 0 }}>×</button>
+            </div>
+            <p style={{ color: C.darkMuted, fontSize: 14, lineHeight: 1.7, marginBottom: 24 }}>
+              We take privacy seriously. If you appear in this photo and would like it removed, fill out the form below and we&apos;ll respond within 48 hours.
+            </p>
+            <form onSubmit={e => { e.preventDefault(); setStep(2) }}>
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.darkMuted, display: 'block', marginBottom: 6 }}>Your Name *</label>
+                <input required className="report-input" placeholder="First Last" value={name} onChange={e => setName(e.target.value)} />
+              </div>
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.darkMuted, display: 'block', marginBottom: 6 }}>Email *</label>
+                <input required type="email" className="report-input" placeholder="you@email.com" value={email} onChange={e => setEmail(e.target.value)} />
+              </div>
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.darkMuted, display: 'block', marginBottom: 6 }}>Reason *</label>
+                <select className="report-input" value={reason} onChange={e => setReason(e.target.value)} style={{ cursor: 'pointer' }}>
+                  <option value="face">My face appears in this photo</option>
+                  <option value="consent">I did not consent to being photographed</option>
+                  <option value="minor">This photo contains a minor</option>
+                  <option value="other">Other privacy concern</option>
+                </select>
+              </div>
+              <div style={{ marginBottom: 24 }}>
+                <label style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.darkMuted, display: 'block', marginBottom: 6 }}>Additional details</label>
+                <textarea className="report-input" rows={3} placeholder="Describe where you appear in the photo or any other relevant details..." value={details} onChange={e => setDetails(e.target.value)} />
+              </div>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button type="submit" style={{ flex: 1, background: C.red, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, letterSpacing: '0.15em', textTransform: 'uppercase', padding: 15 }}>Submit Request</button>
+                <button type="button" onClick={onClose} style={{ padding: '15px 20px', background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Cancel</button>
+              </div>
+            </form>
+            <p style={{ color: 'rgba(122,112,104,0.5)', fontSize: 11, lineHeight: 1.6, marginTop: 16 }}>
+              Photo: {event.title} · {event.date} · Photographer: {event.photographer.name}<br />
+              We will never share your personal information. Requests are reviewed within 48 hours.
+            </p>
+          </>
+        ) : (
+          <div style={{ textAlign: 'center', padding: '20px 0' }}>
+            <div style={{ width: 56, height: 56, background: C.redMuted, border: `2px solid ${C.red}`, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', fontSize: 24, color: C.red }}>✓</div>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 28, color: C.darkText, textTransform: 'uppercase', marginBottom: 12 }}>Request Received</div>
+            <p style={{ color: C.darkMuted, fontSize: 15, lineHeight: 1.7, marginBottom: 28 }}>
+              Thanks {name.split(' ')[0]}. We&apos;ve logged your request and will review it within 48 hours. You&apos;ll hear from us at <strong style={{ color: C.darkText }}>{email}</strong>.
+            </p>
+            <button onClick={onClose} style={{ background: C.red, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '14px 36px' }}>Close</button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 function PhotoModal({
   photo, photoIndex, allPhotos, event, onClose, onNav,
 }: {
   photo: Photo; photoIndex: number; allPhotos: Photo[]; event: GalleryEvent; onClose: () => void; onNav: (d: number) => void
 }) {
+  const [reporting, setReporting] = useState(false)
   const hasPrev = photoIndex > 0
   const hasNext = photoIndex < allPhotos.length - 1
 
@@ -485,22 +561,33 @@ function PhotoModal({
         {/* Info bar */}
         <div style={{ background: C.dark, border: `1px solid ${C.darkBorder}`, borderTop: 'none', padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', gap: 20, alignItems: 'center', flex: 1, minWidth: 0, flexWrap: 'wrap' }}>
-            <div>
-              <span style={{ color: C.darkMuted, fontSize: 11, fontFamily: 'var(--font-barlow), sans-serif', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700 }}>Photo by </span>
-              <a href={event.photographer.url} target="_blank" rel="noopener noreferrer" style={{ color: C.darkText, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 13, textTransform: 'uppercase', textDecoration: 'none', borderBottom: `1px solid ${C.darkBorder}`, paddingBottom: 1 }}>
-                {event.photographer.name} ↗
-              </a>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke={C.red} strokeWidth="1.3"/><circle cx="8" cy="8" r="2.5" stroke={C.red} strokeWidth="1.3"/><path d="M5.5 5.5L4 4M10.5 5.5L12 4M10.5 10.5L12 12M5.5 10.5L4 12" stroke={C.red} strokeWidth="1.1" strokeLinecap="round"/></svg>
+              <div>
+                <span style={{ color: C.darkMuted, fontSize: 11, fontFamily: 'var(--font-barlow), sans-serif', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700 }}>Photo by </span>
+                <a href={event.photographer.url} target="_blank" rel="noopener noreferrer" style={{ color: C.darkText, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 13, textTransform: 'uppercase', textDecoration: 'none', borderBottom: `1px solid ${C.darkBorder}`, paddingBottom: 1 }}>
+                  {event.photographer.name} ↗
+                </a>
+              </div>
             </div>
             <span style={{ color: C.darkMuted, fontSize: 12, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
               {event.title} · {event.date}
             </span>
             <span style={{ color: 'rgba(122,112,104,0.5)', fontSize: 12 }}>{photoIndex + 1} / {allPhotos.length}</span>
           </div>
-          <button onClick={onClose} style={{ background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '8px 14px' }}>
-            Close ×
-          </button>
+          <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+            <button onClick={() => setReporting(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '8px 14px' }}>
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 1v6M7 10v.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.3"/></svg>
+              Report Image
+            </button>
+            <button onClick={onClose} style={{ background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '8px 14px' }}>
+              Close ×
+            </button>
+          </div>
         </div>
       </div>
+
+      {reporting && <ReportModal photo={photo} event={event} onClose={() => setReporting(false)} />}
 
       {/* Nav arrows */}
       {hasPrev && (
@@ -615,6 +702,7 @@ export default function GalleryClient() {
           <div style={{ color: C.darkMuted, fontSize: 14, marginTop: 4 }}>{event.date} · {event.venue}</div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke={C.red} strokeWidth="1.3"/><circle cx="8" cy="8" r="2.5" stroke={C.red} strokeWidth="1.3"/></svg>
           <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.darkMuted }}>
             Photography by{' '}
             <a href={event.photographer.url} target="_blank" rel="noopener noreferrer" style={{ color: C.red, textDecoration: 'none', borderBottom: '1px solid rgba(201,50,26,0.3)', paddingBottom: 1 }}>
@@ -660,6 +748,9 @@ export default function GalleryClient() {
         @media (max-width: 640px) {
           .ss-gallery-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
+        .report-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #f0ece6; font-family: var(--font-dm), sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.2s; resize: none; box-sizing: border-box; }
+        .report-input:focus { border-color: #c9321a; }
+        .report-input::placeholder { color: #7a7068; }
       ` }} />
     </div>
   )
