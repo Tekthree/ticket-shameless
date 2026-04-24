@@ -15,7 +15,7 @@ const C = {
   redMuted: 'rgba(201,50,26,0.12)',
 }
 
-export function DJCard({ dj }: { dj: DJ }) {
+export function DJCard({ dj, upcomingCount = 0 }: { dj: DJ; upcomingCount?: number }) {
   const [hover, setHover] = useState(false)
 
   return (
@@ -67,10 +67,10 @@ export function DJCard({ dj }: { dj: DJ }) {
             background: 'linear-gradient(to top, rgba(28,25,23,0.95) 0%, rgba(28,25,23,0.4) 60%, transparent 100%)',
           }} />
 
-          {/* Role badge — top right */}
+          {/* Role badge — top left */}
           {dj.is_resident && (
             <div style={{
-              position: 'absolute', top: 12, right: 12,
+              position: 'absolute', top: 12, left: 12,
               background: C.red,
               color: '#fff',
               fontFamily: 'var(--font-barlow), sans-serif',
@@ -80,6 +80,28 @@ export function DJCard({ dj }: { dj: DJ }) {
               textTransform: 'uppercase',
               padding: '4px 10px',
             }}>Resident</div>
+          )}
+
+          {/* Upcoming indicator — top right */}
+          {upcomingCount > 0 && (
+            <div style={{
+              position: 'absolute', top: 12, right: 12,
+              background: 'rgba(17,17,16,0.75)',
+              backdropFilter: 'blur(8px)',
+              color: C.darkText,
+              fontFamily: 'var(--font-barlow), sans-serif',
+              fontWeight: 700,
+              fontSize: 9,
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              padding: '4px 8px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+            }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: C.red, flexShrink: 0, display: 'inline-block' }} />
+              {upcomingCount} upcoming
+            </div>
           )}
 
           {/* Name + location at bottom */}

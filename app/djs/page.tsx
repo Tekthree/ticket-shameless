@@ -1,4 +1,4 @@
-import { getDJs, type DJ } from '@/lib/db'
+import { getDJs, getUpcomingCountsByDJ, type DJ } from '@/lib/db'
 import type { Metadata } from 'next'
 import { DJGrid } from './DJGrid'
 
@@ -19,8 +19,9 @@ const C = {
 
 export default async function DJsPage() {
   let djs: DJ[] = []
+  let upcomingCounts: Record<string, number> = {}
   try {
-    djs = await getDJs()
+    ;[djs, upcomingCounts] = await Promise.all([getDJs(), getUpcomingCountsByDJ()])
   } catch {
     // DB not connected
   }
@@ -65,7 +66,7 @@ export default async function DJsPage() {
       </div>
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(20px, 4vw, 56px) 80px' }}>
-        <DJGrid djs={djs} />
+        <DJGrid djs={djs} upcomingCounts={upcomingCounts} />
       </div>
     </div>
   )

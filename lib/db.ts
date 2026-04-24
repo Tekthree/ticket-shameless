@@ -124,6 +124,20 @@ export async function getDJs(): Promise<DJ[]> {
   return rows as DJ[]
 }
 
+export async function getUpcomingCountsByDJ(): Promise<Record<string, number>> {
+  const db = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
+  const rows = await db`
+    select l.dj_id, count(distinct e.id)::int as upcoming_count
+    from lineup l
+    join events e on e.id = l.event_id
+    where e.is_published = true and e.date >= current_date
+    group by l.dj_id
+  `
+  const result: Record<string, number> = {}
+  for (const row of rows) result[row.dj_id as string] = row.upcoming_count as number
+  return result
+}
+
 export async function getDJBySlug(slug: string): Promise<DJ | null> {
   const db = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
   const rows = await db`

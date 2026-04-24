@@ -15,7 +15,7 @@ const C = {
 
 type Filter = 'all' | 'residents' | 'guests'
 
-export function DJGrid({ djs }: { djs: DJ[] }) {
+export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts?: Record<string, number> }) {
   const [filter, setFilter] = useState<Filter>('all')
   const [search, setSearch] = useState('')
 
@@ -121,8 +121,8 @@ export function DJGrid({ djs }: { djs: DJ[] }) {
           </div>
 
           {/* Search */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, borderLeft: `1px solid ${C.darkBorder}`, padding: '0 16px', flexShrink: 0 }}>
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ color: C.darkMuted, flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, borderLeft: `1px solid ${C.darkBorder}`, padding: '0 20px', flex: 1, minWidth: 0 }}>
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style={{ color: C.darkMuted, flexShrink: 0 }}>
               <circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.5"/>
               <path d="M11 11L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
@@ -130,7 +130,7 @@ export function DJGrid({ djs }: { djs: DJ[] }) {
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Search..."
+              placeholder="Search artists or genres..."
               style={{
                 background: 'transparent',
                 border: 'none',
@@ -138,10 +138,9 @@ export function DJGrid({ djs }: { djs: DJ[] }) {
                 color: C.darkText,
                 fontFamily: 'var(--font-barlow), sans-serif',
                 fontWeight: 600,
-                fontSize: 13,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                width: 100,
+                fontSize: 14,
+                letterSpacing: '0.06em',
+                width: '100%',
               }}
             />
           </div>
@@ -175,12 +174,8 @@ export function DJGrid({ djs }: { djs: DJ[] }) {
           </span>
         </div>
       ) : (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-          gap: 3,
-        }}>
-          {filtered.map(dj => <DJCard key={dj.id} dj={dj} />)}
+        <div className="ss-dj-grid" style={{ display: 'grid', gap: 3 }}>
+          {filtered.map(dj => <DJCard key={dj.id} dj={dj} upcomingCount={upcomingCounts[dj.id] ?? 0} />)}
         </div>
       )}
 
@@ -191,6 +186,10 @@ export function DJGrid({ djs }: { djs: DJ[] }) {
         }
         .ss-filter-bar { scrollbar-width: none; }
         .ss-filter-bar::-webkit-scrollbar { display: none; }
+        .ss-dj-grid { grid-template-columns: repeat(4, 1fr); }
+        @media (max-width: 900px) { .ss-dj-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 600px) { .ss-dj-grid { grid-template-columns: repeat(2, 1fr); } }
+        .ss-filter-bar input::placeholder { color: rgba(122,112,104,0.6); }
       ` }} />
     </>
   )
