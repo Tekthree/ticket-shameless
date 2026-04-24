@@ -109,7 +109,7 @@ function ProductDrawer({ product, onClose, onAddToBag }: { product: Product | nu
   }
 
   async function handleBuyNow() {
-    if (!canAdd || outOfStock) return
+    if (!product || !canAdd || outOfStock) return
     setLoading(true)
     try {
       const res = await fetch('/api/checkout/merch', {
