@@ -377,7 +377,7 @@ const EVENTS: GalleryEvent[] = [
     title: 'Club Yes x Shameless',
     date: '23rd Anniversary',
     venue: 'Monkey Loft, Seattle',
-    photographer: { name: 'Manny Dan', url: '#' },
+    photographer: { name: 'Manny Dan', url: 'https://www.instagram.com/manny_dan_media/' },
     photos: ANNIV_URLS.map((src, i) => ({ id: `anniv-${i}`, src, alt: `Club Yes & Shameless 23rd Anniversary — photo ${i + 1}`, aspect: ASPECTS[i % ASPECTS.length] })),
   },
   {
@@ -385,7 +385,7 @@ const EVENTS: GalleryEvent[] = [
     title: 'The Breakfast Club',
     date: '2025',
     venue: 'Monkey Loft, Seattle',
-    photographer: { name: 'Picflow', url: '#' },
+    photographer: { name: 'Manny Dan', url: 'https://www.instagram.com/manny_dan_media/' },
     photos: PICFLOW_URLS.map((src, i) => ({ id: `picflow-${i}`, src, alt: `The Breakfast Club — photo ${i + 1}`, aspect: ASPECTS[i % ASPECTS.length] })),
   },
   {
@@ -393,7 +393,7 @@ const EVENTS: GalleryEvent[] = [
     title: 'The Breakfast Club',
     date: '2024',
     venue: 'Monkey Loft, Seattle',
-    photographer: { name: 'Manny Dan', url: '#' },
+    photographer: { name: 'Manny Dan', url: 'https://www.instagram.com/manny_dan_media/' },
     photos: TBC2024_URLS.map((src, i) => ({ id: `tbc24-${i}`, src, alt: `The Breakfast Club 2024 — photo ${i + 1}`, aspect: ASPECTS[i % ASPECTS.length] })),
   },
 ]
