@@ -1,211 +1,439 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import type { Event } from '@/lib/db'
+
+const HERO_VIDEO_URL = 'https://udanlcylpsvxqlihcppb.supabase.co/storage/v1/object/sign/Saves/deckd%20out%202025%20FINAL%20(1).mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9jYzYyMzMyYy0yYzgwLTQ4YjctYjNiYy1lZTAzZGE2ZjUwN2IiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTYXZlcy9kZWNrZCBvdXQgMjAyNSBGSU5BTCAoMSkubXA0IiwiaWF0IjoxNzU2ODM4NTY0LCJleHAiOjE3ODgzNzQ1NjR9.tsaE8yURPvlfpzt1Miz0tTLMoY1eUQYCgGYkMy7eWRc'
+
+// Design tokens (from Design System.html)
+const C = {
+  dark: '#1c1917',
+  darkDeep: '#111110',
+  darkCard: '#252220',
+  darkText: '#f0ece6',
+  darkMuted: '#7a7068',
+  red: '#c9321a',
+  redDeep: '#a82614',
+}
 
 export default function HeroSection({ nextEvent }: { nextEvent?: Event | null }) {
   const [loaded, setLoaded] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    const t = setTimeout(() => setLoaded(true), 300)
+    const t = setTimeout(() => setLoaded(true), 120)
     return () => clearTimeout(t)
   }, [])
 
+  useEffect(() => {
+    videoRef.current?.play().catch(() => {})
+  }, [])
+
+  const eventDate = nextEvent
+    ? new Date(nextEvent.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+    : ''
+
   return (
     <section data-hero style={{
-      minHeight: '100vh',
-      background: '#1c1917',
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
       position: 'relative',
+      width: '100%',
+      minHeight: '100vh',
+      background: C.darkDeep,
       overflow: 'hidden',
+      display: 'flex',
     }}>
-      {/* LEFT */}
-      <div className="hero-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '140px 72px 80px 56px' }}>
-        <div style={{
-          fontFamily: 'var(--font-barlow), sans-serif',
-          fontWeight: 900,
-          textTransform: 'uppercase',
-          lineHeight: 0.86,
-          overflow: 'hidden',
-        }}>
-          {[
-            { text: 'Simply', color: '#f0ece6', stroke: false },
-            { text: 'Shame', color: '#c9321a', stroke: false },
-            { text: 'less.', color: 'transparent', stroke: true },
-          ].map((line, i) => (
-            <div key={i} style={{
-              fontSize: 'clamp(88px, 11vw, 152px)',
-              letterSpacing: '-0.01em',
-              color: line.color,
-              WebkitTextStroke: line.stroke ? '3px #f0ece6' : undefined,
-              opacity: loaded ? 1 : 0,
-              transform: loaded ? 'translateY(0) skewY(0)' : 'translateY(48px) skewY(2deg)',
-              transition: `opacity 0.8s cubic-bezier(0.22,1,0.36,1) ${0.1 + i * 0.12}s, transform 0.8s cubic-bezier(0.22,1,0.36,1) ${0.1 + i * 0.12}s`,
-            }}>{line.text}</div>
-          ))}
-        </div>
+      {/* ── VIDEO LAYER (right on desktop, top on mobile) ── */}
+      <div className="hero-video-wrap" style={{
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: '62%',
+        height: '100%',
+        overflow: 'hidden',
+        zIndex: 1,
+      }}>
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster="/brand-hero.jpg"
+          className="hero-video"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center center',
+            opacity: loaded ? 1 : 0,
+            transform: loaded ? 'scale(1)' : 'scale(1.06)',
+            transition: 'opacity 1.4s cubic-bezier(0.22,1,0.36,1), transform 1.6s cubic-bezier(0.22,1,0.36,1)',
+          }}
+        >
+          <source src={HERO_VIDEO_URL} type="video/mp4" />
+        </video>
 
-        <div style={{
-          width: loaded ? 48 : 0,
-          height: 3,
-          background: '#c9321a',
-          margin: '28px 0',
-          transition: 'width 0.7s cubic-bezier(0.22,1,0.36,1) 0.55s',
+        {/* Soft fade of video into gradient (desktop: fade left edge; mobile handled via overlay) */}
+        <div className="hero-video-fade" style={{
+          position: 'absolute',
+          inset: 0,
+          background: `linear-gradient(to right,
+            ${C.darkDeep} 0%,
+            rgba(17,17,16,0.7) 18%,
+            rgba(17,17,16,0.25) 45%,
+            rgba(17,17,16,0.05) 75%,
+            rgba(17,17,16,0.15) 100%)`,
+          pointerEvents: 'none',
         }} />
 
-        <p style={{
-          color: '#7a7068',
-          fontSize: 18,
-          lineHeight: 1.7,
-          maxWidth: 360,
-          fontWeight: 300,
-          opacity: loaded ? 1 : 0,
-          transform: loaded ? 'translateY(0)' : 'translateY(32px)',
-          transition: 'opacity 0.8s cubic-bezier(0.22,1,0.36,1) 0.65s, transform 0.8s cubic-bezier(0.22,1,0.36,1) 0.65s',
-        }}>
-          Seattle's underground house & techno collective. We throw parties that feel like freedom.
-        </p>
+        {/* Subtle red wash over video to tie it to the brand */}
+        <div className="hero-video-tint" style={{
+          position: 'absolute',
+          inset: 0,
+          background: `radial-gradient(60% 80% at 30% 50%, rgba(201,50,26,0.18) 0%, transparent 60%)`,
+          mixBlendMode: 'overlay',
+          pointerEvents: 'none',
+        }} />
+      </div>
 
+      {/* ── GRADIENT LAYER (left on desktop, bottom on mobile) ── */}
+      <div className="hero-gradient-wrap" style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '52%',
+        height: '100%',
+        zIndex: 2,
+        pointerEvents: 'none',
+        background: `
+          linear-gradient(105deg,
+            ${C.darkDeep} 0%,
+            #2a0c06 22%,
+            #5a1308 48%,
+            rgba(168,38,20,0.85) 78%,
+            rgba(201,50,26,0.0) 100%)
+        `,
+      }}>
+        {/* Heavy blur halo to give that Partiful glow against the video edge */}
         <div style={{
+          position: 'absolute',
+          right: '-12%',
+          top: '20%',
+          width: '60%',
+          height: '70%',
+          background: `radial-gradient(circle at 70% 50%, rgba(201,50,26,0.55) 0%, rgba(122,18,8,0.35) 38%, transparent 70%)`,
+          filter: 'blur(60px)',
+        }} />
+
+        {/* Subtle 45° stripe pattern (from design system "Texture Patterns") */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 14px)',
+          opacity: 0.6,
+        }} />
+      </div>
+
+      {/* ── BOTTOM FADE INTO NEXT SECTION ── */}
+      <div style={{
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: 140,
+        background: `linear-gradient(to bottom, transparent 0%, ${C.dark} 100%)`,
+        pointerEvents: 'none',
+        zIndex: 3,
+      }} />
+
+      {/* ── CONTENT ── */}
+      <div className="hero-content-wrap" style={{
+        position: 'relative',
+        zIndex: 4,
+        width: '100%',
+        maxWidth: 1600,
+        margin: '0 auto',
+        display: 'flex',
+        alignItems: 'center',
+      }}>
+        <div className="hero-content" style={{
+          width: '52%',
+          padding: '120px 64px 120px 72px',
           display: 'flex',
-          gap: 12,
-          marginTop: 48,
-          opacity: loaded ? 1 : 0,
-          transform: loaded ? 'translateY(0)' : 'translateY(32px)',
-          transition: 'opacity 0.8s cubic-bezier(0.22,1,0.36,1) 0.8s, transform 0.8s cubic-bezier(0.22,1,0.36,1) 0.8s',
+          flexDirection: 'column',
+          justifyContent: 'center',
         }}>
-          <Link href="/events" style={{
-            display: 'inline-block',
-            background: '#c9321a',
-            color: '#fff',
-            textDecoration: 'none',
+          {/* Overline label (design system: Label/Overline) */}
+          <div style={{
             fontFamily: 'var(--font-barlow), sans-serif',
-            fontWeight: 800,
-            fontSize: 17,
-            letterSpacing: '0.12em',
+            fontWeight: 900,
+            fontSize: 12,
+            letterSpacing: '0.28em',
             textTransform: 'uppercase',
-            padding: '17px 44px',
-            transition: 'background 0.2s, transform 0.12s, box-shadow 0.2s',
-          }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#a82614'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(201,50,26,0.35)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = '#c9321a'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
-          >View Events</Link>
-          <Link href="/shop" style={{
-            display: 'inline-block',
-            background: 'transparent',
-            color: '#f0ece6',
-            border: '1px solid rgba(255,255,255,0.1)',
-            textDecoration: 'none',
+            color: C.red,
+            marginBottom: 18,
+            opacity: loaded ? 1 : 0,
+            transform: loaded ? 'translateY(0)' : 'translateY(16px)',
+            transition: 'opacity 0.7s cubic-bezier(0.22,1,0.36,1) 0.1s, transform 0.7s cubic-bezier(0.22,1,0.36,1) 0.1s',
+          }}>
+            ★★★★★ &nbsp;Underground since 2003
+          </div>
+
+          {/* Headline — outlined-type treatment from design system */}
+          <h1 style={{
             fontFamily: 'var(--font-barlow), sans-serif',
-            fontWeight: 800,
-            fontSize: 17,
-            letterSpacing: '0.12em',
+            fontWeight: 900,
             textTransform: 'uppercase',
-            padding: '17px 36px',
-            transition: 'border-color 0.2s, transform 0.12s',
-          }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.35)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.transform = 'translateY(0)' }}
-          >Shop Merch</Link>
+            lineHeight: 0.86,
+            letterSpacing: '-0.01em',
+            fontSize: 'clamp(72px, 8.6vw, 144px)',
+            margin: 0,
+            color: C.darkText,
+          }}>
+            <span style={{
+              display: 'block',
+              opacity: loaded ? 1 : 0,
+              transform: loaded ? 'translateY(0)' : 'translateY(40px)',
+              transition: 'opacity 0.85s cubic-bezier(0.22,1,0.36,1) 0.18s, transform 0.85s cubic-bezier(0.22,1,0.36,1) 0.18s',
+            }}>Simply</span>
+            <span style={{
+              display: 'block',
+              color: 'transparent',
+              WebkitTextStroke: `2.5px ${C.darkText}`,
+              opacity: loaded ? 1 : 0,
+              transform: loaded ? 'translateY(0)' : 'translateY(40px)',
+              transition: 'opacity 0.85s cubic-bezier(0.22,1,0.36,1) 0.3s, transform 0.85s cubic-bezier(0.22,1,0.36,1) 0.3s',
+            }}>Shame<span style={{ color: C.red, WebkitTextStroke: '0' }}>less.</span></span>
+          </h1>
+
+          {/* Red rule (design system motif) */}
+          <div style={{
+            width: loaded ? 56 : 0,
+            height: 3,
+            background: C.red,
+            margin: '32px 0 28px',
+            transition: 'width 0.7s cubic-bezier(0.22,1,0.36,1) 0.55s',
+          }} />
+
+          {/* Body Large — DM Sans 300, lh 1.75 */}
+          <p style={{
+            fontFamily: 'var(--font-dm), sans-serif',
+            fontWeight: 300,
+            fontSize: 'clamp(17px, 1.25vw, 20px)',
+            lineHeight: 1.7,
+            color: C.darkText,
+            opacity: 0.92,
+            maxWidth: 460,
+            margin: 0,
+            transform: loaded ? 'translateY(0)' : 'translateY(24px)',
+            transitionProperty: 'opacity, transform',
+            transitionDuration: '0.85s',
+            transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)',
+            transitionDelay: '0.45s',
+          }}>
+            Seattle's underground house &amp; techno collective. We throw parties that feel like freedom.
+          </p>
+
+          {/* CTAs — design system .btn-primary + .btn-ghost */}
+          <div style={{
+            display: 'flex',
+            gap: 12,
+            marginTop: 40,
+            flexWrap: 'wrap',
+            opacity: loaded ? 1 : 0,
+            transform: loaded ? 'translateY(0)' : 'translateY(24px)',
+            transition: 'opacity 0.85s cubic-bezier(0.22,1,0.36,1) 0.6s, transform 0.85s cubic-bezier(0.22,1,0.36,1) 0.6s',
+          }}>
+            <Link href="/events" className="hero-btn-primary" style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: C.red,
+              color: '#fff',
+              textDecoration: 'none',
+              fontFamily: 'var(--font-barlow), sans-serif',
+              fontWeight: 800,
+              fontSize: 17,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              padding: '17px 44px',
+              transition: 'background 0.2s, transform 0.12s, box-shadow 0.2s',
+            }}
+              onMouseEnter={e => { e.currentTarget.style.background = C.redDeep; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(201,50,26,0.35)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = C.red; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
+            >View Events</Link>
+
+            <Link href="/shop" className="hero-btn-ghost" style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'transparent',
+              color: C.darkText,
+              border: '1px solid rgba(255,255,255,0.18)',
+              textDecoration: 'none',
+              fontFamily: 'var(--font-barlow), sans-serif',
+              fontWeight: 800,
+              fontSize: 17,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              padding: '17px 36px',
+              transition: 'border-color 0.2s, transform 0.12s',
+            }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.45)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)'; e.currentTarget.style.transform = 'translateY(0)' }}
+            >Shop Merch</Link>
+          </div>
+
+          {/* Mono token (design system: DM Mono, technical) */}
+          <div style={{
+            fontFamily: 'var(--font-dm), monospace',
+            fontSize: 10,
+            letterSpacing: '0.06em',
+            color: 'rgba(240,236,230,0.3)',
+            marginTop: 56,
+            opacity: loaded ? 1 : 0,
+            transition: 'opacity 0.9s cubic-bezier(0.22,1,0.36,1) 0.85s',
+          }}>
+            EST · 2003 &nbsp;·&nbsp; SEATTLE WA
+          </div>
         </div>
       </div>
 
-      {/* RIGHT */}
-      <div className="hero-right" style={{
-        position: 'relative',
-        overflow: 'hidden',
-        opacity: loaded ? 1 : 0,
-        transform: loaded ? 'scale(1)' : 'scale(1.04)',
-        transition: 'opacity 1.2s cubic-bezier(0.22,1,0.36,1) 0.05s, transform 1.2s cubic-bezier(0.22,1,0.36,1) 0.05s',
-      }}>
-        <Image
-          src="/brand-hero.jpg"
-          alt="Simply Shameless"
-          fill
-          style={{ objectFit: 'cover', objectPosition: 'center' }}
-          priority
-        />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(28,25,23,0.55) 0%, transparent 35%, transparent 65%, rgba(28,25,23,0.3) 100%)' }} />
-
-        {/* Next event card */}
-        {nextEvent && (
-          <div style={{
+      {/* ── NEXT EVENT CARD (bottom-right, design-system .merch-card style) ── */}
+      {nextEvent && (
+        <Link
+          href={`/events/${nextEvent.slug}`}
+          className="hero-event-card"
+          style={{
             position: 'absolute',
-            bottom: 48,
-            left: 40,
-            right: 40,
+            right: 56,
+            bottom: 80,
+            zIndex: 5,
+            textDecoration: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 18,
+            background: C.darkCard,
+            border: `1px solid rgba(255,255,255,0.07)`,
+            color: C.darkText,
+            padding: '18px 22px',
+            maxWidth: 380,
             opacity: loaded ? 1 : 0,
             transform: loaded ? 'translateY(0)' : 'translateY(32px)',
-            transition: 'opacity 0.9s cubic-bezier(0.22,1,0.36,1) 0.9s, transform 0.9s cubic-bezier(0.22,1,0.36,1) 0.9s',
-          }}>
+            transition: 'opacity 0.9s cubic-bezier(0.22,1,0.36,1) 0.75s, transform 0.9s cubic-bezier(0.22,1,0.36,1) 0.75s, border-color 0.2s, box-shadow 0.2s',
+            boxShadow: '0 16px 50px rgba(0,0,0,0.45)',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = C.red; e.currentTarget.style.boxShadow = '0 18px 56px rgba(0,0,0,0.55), 0 4px 16px rgba(201,50,26,0.25)' }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.boxShadow = '0 16px 50px rgba(0,0,0,0.45)' }}
+        >
+          <div style={{ width: 4, alignSelf: 'stretch', background: C.red, flexShrink: 0 }} />
+          <div style={{ minWidth: 0, flex: 1 }}>
             <div style={{
-              background: 'rgba(17,17,16,0.88)',
-              backdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255,255,255,0.07)',
-              padding: '24px 28px',
-              display: 'flex',
-              gap: 24,
-              alignItems: 'center',
+              fontFamily: 'var(--font-barlow), sans-serif',
+              fontWeight: 900,
+              fontSize: 11,
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              color: C.red,
+              marginBottom: 4,
+            }}>Next Event</div>
+            <div style={{
+              fontFamily: 'var(--font-barlow), sans-serif',
+              fontWeight: 800,
+              fontSize: 22,
+              lineHeight: 1.05,
+              textTransform: 'uppercase',
+              color: C.darkText,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              marginBottom: 4,
+            }}>{nextEvent.title}</div>
+            <div style={{
+              fontFamily: 'var(--font-dm), sans-serif',
+              fontSize: 12,
+              color: C.darkMuted,
             }}>
-              <div style={{ width: 4, alignSelf: 'stretch', background: '#c9321a', flexShrink: 0 }} />
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.2em', color: '#c9321a', textTransform: 'uppercase', marginBottom: 6 }}>Next Event</div>
-                <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 26, color: '#f0ece6', lineHeight: 1.05, textTransform: 'uppercase', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{nextEvent.title}</div>
-                <div style={{ color: '#7a7068', fontSize: 14, marginTop: 5 }}>
-                  {new Date(nextEvent.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-                  {nextEvent.venue ? ` · ${nextEvent.venue}` : ''}
-                </div>
-              </div>
-              <Link href={`/events/${nextEvent.slug}`} style={{
-                marginLeft: 'auto',
-                display: 'inline-block',
-                background: '#c9321a',
-                color: '#fff',
-                textDecoration: 'none',
-                fontFamily: 'var(--font-barlow), sans-serif',
-                fontWeight: 800,
-                fontSize: 13,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                padding: '12px 22px',
-                flexShrink: 0,
-                transition: 'background 0.2s',
-              }}
-                onMouseEnter={e => (e.currentTarget.style.background = '#a82614')}
-                onMouseLeave={e => (e.currentTarget.style.background = '#c9321a')}
-              >View Event</Link>
+              {eventDate}{nextEvent.venue ? ` · ${nextEvent.venue}` : ''}
             </div>
           </div>
-        )}
-      </div>
+          <span style={{
+            fontFamily: 'var(--font-barlow), sans-serif',
+            fontWeight: 800,
+            fontSize: 12,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            color: C.darkText,
+            flexShrink: 0,
+          }}>Open →</span>
+        </Link>
+      )}
 
+      {/* Responsive overrides: large = side-by-side; mobile = video top + gradient/header bottom */}
       <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 1024px) {
+          section[data-hero] .hero-content { padding: 110px 40px 100px !important; width: 58% !important; }
+          section[data-hero] .hero-video-wrap { width: 58% !important; }
+          section[data-hero] .hero-event-card { right: 32px !important; bottom: 72px !important; max-width: 320px !important; }
+        }
         @media (max-width: 768px) {
           section[data-hero] {
-            grid-template-columns: 1fr !important;
-            min-height: auto !important;
+            min-height: 100vh !important;
+            display: block !important;
           }
-          .hero-left {
-            padding: 120px 28px 56px !important;
-            order: 1;
+          section[data-hero] .hero-video-wrap {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            height: 58% !important;
           }
-          .hero-right {
-            order: 2;
-            height: 340px !important;
-            min-height: 340px !important;
+          section[data-hero] .hero-video-fade {
+            background: linear-gradient(to bottom,
+              rgba(17,17,16,0.15) 0%,
+              rgba(17,17,16,0.05) 30%,
+              rgba(17,17,16,0.4) 70%,
+              ${'#1c0a08'} 100%) !important;
+          }
+          section[data-hero] .hero-gradient-wrap {
+            top: auto !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 56% !important;
+            background: linear-gradient(180deg,
+              rgba(28,12,8,0.0) 0%,
+              #2a0c06 14%,
+              #5a1308 38%,
+              ${C.darkDeep} 100%) !important;
+          }
+          section[data-hero] .hero-content-wrap {
+            position: absolute !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            top: 50% !important;
+            display: block !important;
+          }
+          section[data-hero] .hero-content {
+            width: 100% !important;
+            padding: 40px 28px 96px !important;
+            justify-content: flex-end !important;
+            height: 100%;
+          }
+          section[data-hero] .hero-event-card {
+            position: static !important;
+            margin: 28px 24px 0 !important;
+            transform: none !important;
+            max-width: none !important;
           }
         }
         @media (max-width: 480px) {
-          .hero-left {
-            padding: 110px 20px 48px !important;
-          }
-          .hero-right {
-            height: 260px !important;
-            min-height: 260px !important;
-          }
+          section[data-hero] .hero-content { padding: 32px 22px 80px !important; }
+          section[data-hero] h1 { font-size: clamp(56px, 16vw, 88px) !important; }
         }
       ` }} />
     </section>
