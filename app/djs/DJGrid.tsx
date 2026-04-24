@@ -33,9 +33,6 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
     return list
   }, [djs, filter, search])
 
-  // Ticker: all names repeated
-  const tickerNames = djs.map(d => d.name).join(' · ') + ' · '
-
   const tabs: { key: Filter; label: string }[] = [
     { key: 'all', label: 'All DJs' },
     { key: 'residents', label: 'Shameless Residents' },
@@ -44,29 +41,6 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
 
   return (
     <>
-      {/* Ticker */}
-      <div style={{ overflow: 'hidden', borderBottom: `1px solid ${C.darkBorder}`, marginBottom: 0 }}>
-        <div style={{
-          display: 'flex',
-          whiteSpace: 'nowrap',
-          animation: 'ss-ticker 50s linear infinite',
-          padding: '10px 0',
-        }}>
-          {/* Double for seamless loop */}
-          {[0, 1].map(n => (
-            <span key={n} style={{
-              fontFamily: 'var(--font-barlow), sans-serif',
-              fontWeight: 800,
-              fontSize: 12,
-              letterSpacing: '0.2em',
-              textTransform: 'uppercase',
-              color: C.darkMuted,
-              paddingRight: 0,
-            }}>{tickerNames}</span>
-          ))}
-        </div>
-      </div>
-
       {/* Sticky filter bar */}
       <div style={{
         position: 'sticky',
@@ -180,10 +154,6 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
       )}
 
       <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes ss-ticker {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
         .ss-filter-bar { scrollbar-width: none; }
         .ss-filter-bar::-webkit-scrollbar { display: none; }
         .ss-dj-grid { grid-template-columns: repeat(4, 1fr); }

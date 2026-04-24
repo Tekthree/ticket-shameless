@@ -39,7 +39,7 @@ export default async function DJsPage() {
           textTransform: 'uppercase',
           color: C.red,
           marginBottom: 12,
-        }}>The Artists</div>
+        }}>The Collaborators and Crew</div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16, marginBottom: 40 }}>
           <h1 style={{
@@ -51,7 +51,7 @@ export default async function DJsPage() {
             textTransform: 'uppercase',
             letterSpacing: '-0.01em',
             margin: 0,
-          }}>The DJs</h1>
+          }}>Your Selectors</h1>
           <p style={{
             color: C.darkMuted,
             fontSize: 15,
