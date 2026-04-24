@@ -309,7 +309,7 @@ const EVENTS: GalleryEvent[] = [
   {
     id: 'breakfast-club-dec',
     title: 'The Breakfast Club',
-    date: 'Dec 10',
+    date: '2025',
     venue: 'Monkey Loft, Seattle',
     photographer: { name: 'Picflow', url: '#' },
     photos: PICFLOW_URLS.map((src, i) => ({ id: `picflow-${i}`, src, alt: `The Breakfast Club — photo ${i + 1}`, aspect: ASPECTS[i % ASPECTS.length] })),
