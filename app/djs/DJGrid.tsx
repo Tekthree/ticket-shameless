@@ -95,28 +95,34 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
           </div>
 
           {/* Search */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, borderLeft: `1px solid ${C.darkBorder}`, padding: '0 20px', flex: 1, minWidth: 0 }}>
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style={{ color: C.darkMuted, flexShrink: 0 }}>
-              <circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.5"/>
-              <path d="M11 11L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          <div style={{ flex: 1, minWidth: 180, position: 'relative', padding: '10px 0', marginLeft: 'auto' }}>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: C.darkMuted }}>
+              <circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.4"/>
+              <path d="M11 11L14 14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
             </svg>
             <input
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search artists or genres..."
+              className="ss-search-input"
               style={{
-                background: 'transparent',
-                border: 'none',
-                outline: 'none',
+                background: 'rgba(255,255,255,0.04)',
+                border: `1px solid ${C.darkBorder}`,
                 color: C.darkText,
-                fontFamily: 'var(--font-barlow), sans-serif',
-                fontWeight: 600,
-                fontSize: 14,
-                letterSpacing: '0.06em',
+                fontFamily: 'var(--font-dm), sans-serif',
+                fontSize: 15,
+                padding: '10px 36px 10px 40px',
+                outline: 'none',
                 width: '100%',
               }}
             />
+            {search && (
+              <button
+                onClick={() => setSearch('')}
+                style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: C.darkMuted, cursor: 'pointer', fontSize: 18, lineHeight: 1, padding: 0 }}
+              >×</button>
+            )}
           </div>
 
           {/* Count */}
@@ -159,7 +165,8 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
         .ss-dj-grid { grid-template-columns: repeat(4, 1fr); }
         @media (max-width: 900px) { .ss-dj-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 600px) { .ss-dj-grid { grid-template-columns: repeat(2, 1fr); } }
-        .ss-filter-bar input::placeholder { color: rgba(122,112,104,0.6); }
+        .ss-search-input::placeholder { color: #7a7068; }
+        .ss-search-input:focus { border-color: #c9321a !important; background: rgba(255,255,255,0.06) !important; }
       ` }} />
     </>
   )
