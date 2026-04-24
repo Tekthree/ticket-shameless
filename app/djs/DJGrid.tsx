@@ -51,14 +51,9 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
         borderBottom: `1px solid ${C.darkBorder}`,
         marginBottom: 40,
       }}>
-        <div style={{
-          display: 'flex',
-          gap: 0,
-          alignItems: 'stretch',
-          overflowX: 'auto',
-        }} className="ss-filter-bar">
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 40, flexWrap: 'wrap' }} className="ss-filter-bar">
           {/* Tabs */}
-          <div style={{ display: 'flex', gap: 0, flex: 1 }}>
+          <div style={{ display: 'flex', gap: 28, flexShrink: 0 }}>
             {tabs.map(({ key, label }) => (
               <button
                 key={key}
@@ -69,16 +64,14 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
                   cursor: 'pointer',
                   fontFamily: 'var(--font-barlow), sans-serif',
                   fontWeight: 800,
-                  fontSize: 13,
+                  fontSize: 14,
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
                   color: filter === key ? C.darkText : 'rgba(240,236,230,0.4)',
-                  padding: '16px 0',
-                  marginRight: 24,
+                  padding: '14px 0',
                   position: 'relative',
                   transition: 'color 0.2s',
                   whiteSpace: 'nowrap',
-                  flexShrink: 0,
                 }}
               >
                 {label}
@@ -95,7 +88,7 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
           </div>
 
           {/* Search */}
-          <div style={{ flex: 1, minWidth: 180, position: 'relative', padding: '10px 0', marginLeft: 'auto' }}>
+          <div style={{ flex: 1, minWidth: 180, position: 'relative', padding: '10px 0' }}>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: C.darkMuted }}>
               <circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.4"/>
               <path d="M11 11L14 14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
@@ -126,13 +119,7 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
           </div>
 
           {/* Count */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            padding: '0 16px',
-            borderLeft: `1px solid ${C.darkBorder}`,
-            flexShrink: 0,
-          }}>
+          <div style={{ flexShrink: 0, paddingLeft: 16, borderLeft: `1px solid ${C.darkBorder}`, paddingTop: 14, paddingBottom: 14 }}>
             <span style={{
               fontFamily: 'var(--font-barlow), sans-serif',
               fontWeight: 700,

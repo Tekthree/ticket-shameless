@@ -61,40 +61,33 @@ export function DJCard({ dj, upcomingCount = 0 }: { dj: DJ; upcomingCount?: numb
             </div>
           )}
 
-          {/* Gradient overlay at bottom */}
+            {/* Role badge — top left */}
           <div style={{
-            position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%',
-            background: 'linear-gradient(to top, rgba(28,25,23,0.95) 0%, rgba(28,25,23,0.4) 60%, transparent 100%)',
-          }} />
-
-          {/* Role badge — top left */}
-          {dj.is_resident && (
-            <div style={{
-              position: 'absolute', top: 12, left: 12,
-              background: C.red,
-              color: '#fff',
-              fontFamily: 'var(--font-barlow), sans-serif',
-              fontWeight: 800,
-              fontSize: 9,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              padding: '4px 10px',
-            }}>Resident</div>
-          )}
+            position: 'absolute', top: 12, left: 12,
+            background: dj.is_resident ? C.red : C.darkCard,
+            color: '#fff',
+            fontFamily: 'var(--font-barlow), sans-serif',
+            fontWeight: 800,
+            fontSize: 10,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            padding: '4px 10px',
+            border: dj.is_resident ? 'none' : `1px solid ${C.darkBorder}`,
+          }}>{dj.is_resident ? 'Resident' : 'Guest'}</div>
 
           {/* Upcoming indicator — top right */}
           {upcomingCount > 0 && (
             <div style={{
               position: 'absolute', top: 12, right: 12,
-              background: 'rgba(17,17,16,0.75)',
-              backdropFilter: 'blur(8px)',
-              color: C.darkText,
+              background: 'rgba(17,17,16,0.85)',
+              border: `1px solid ${C.darkBorder}`,
+              color: C.darkMuted,
               fontFamily: 'var(--font-barlow), sans-serif',
-              fontWeight: 700,
-              fontSize: 9,
-              letterSpacing: '0.16em',
+              fontWeight: 800,
+              fontSize: 10,
+              letterSpacing: '0.12em',
               textTransform: 'uppercase',
-              padding: '4px 8px',
+              padding: '4px 10px',
               display: 'flex',
               alignItems: 'center',
               gap: 5,
@@ -103,30 +96,22 @@ export function DJCard({ dj, upcomingCount = 0 }: { dj: DJ; upcomingCount?: numb
               {upcomingCount} upcoming
             </div>
           )}
+        </div>
 
-          {/* Name + location at bottom */}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 14px 14px' }}>
-            <div style={{
-              fontFamily: 'var(--font-barlow), sans-serif',
-              fontWeight: 900,
-              fontSize: 'clamp(16px, 2.2vw, 20px)',
-              color: C.darkText,
-              textTransform: 'uppercase',
-              letterSpacing: '0.02em',
-              lineHeight: 1.05,
-              marginBottom: 4,
-            }}>{dj.name}</div>
-            {dj.location && (
-              <div style={{
-                color: 'rgba(240,236,230,0.5)',
-                fontSize: 11,
-                letterSpacing: '0.08em',
-                fontFamily: 'var(--font-barlow), sans-serif',
-                fontWeight: 600,
-                textTransform: 'uppercase',
-              }}>{dj.location}</div>
-            )}
-          </div>
+        {/* Info section below photo */}
+        <div style={{ padding: '16px 18px 20px', borderTop: `1px solid ${C.darkBorder}` }}>
+          <div style={{
+            fontFamily: 'var(--font-barlow), sans-serif',
+            fontWeight: 900,
+            fontSize: 22,
+            color: C.darkText,
+            textTransform: 'uppercase',
+            lineHeight: 1,
+            marginBottom: 6,
+          }}>{dj.name}</div>
+          {dj.location && (
+            <div style={{ color: C.darkMuted, fontSize: 13 }}>{dj.location}</div>
+          )}
         </div>
       </div>
     </Link>
