@@ -97,7 +97,7 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Search artists or genres..."
+              placeholder="Search artists..."
               className="ss-search-input"
               style={{
                 background: 'rgba(255,255,255,0.04)',
