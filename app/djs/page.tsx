@@ -47,11 +47,13 @@ export default async function DJsPage() {
             fontWeight: 900,
             fontSize: 'clamp(52px, 9vw, 110px)',
             lineHeight: 0.86,
-            color: C.darkText,
             textTransform: 'uppercase',
             letterSpacing: '-0.01em',
             margin: 0,
-          }}>Your Selectors</h1>
+          }}>
+            <span style={{ color: C.darkText, display: 'block' }}>Your</span>
+            <span style={{ color: C.red, display: 'block' }}>Selectors</span>
+          </h1>
           <p style={{
             color: C.darkMuted,
             fontSize: 15,
