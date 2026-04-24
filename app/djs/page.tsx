@@ -39,7 +39,7 @@ export default async function DJsPage() {
           textTransform: 'uppercase',
           color: C.red,
           marginBottom: 12,
-        }}>The Collaborators and Crew</div>
+        }}>Collaborators and Crew</div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16, marginBottom: 40 }}>
           <h1 style={{
