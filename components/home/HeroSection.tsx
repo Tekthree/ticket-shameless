@@ -137,7 +137,7 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
       </div>
 
       {/* ── BOTTOM FADE INTO NEXT SECTION ── */}
-      <div style={{
+      <div className="hero-bottom-fade" style={{
         position: 'absolute',
         left: 0,
         right: 0,
@@ -178,7 +178,7 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
             transform: loaded ? 'translateY(0)' : 'translateY(16px)',
             transition: 'opacity 0.7s cubic-bezier(0.22,1,0.36,1) 0.1s, transform 0.7s cubic-bezier(0.22,1,0.36,1) 0.1s',
           }}>
-            ★★★★★ &nbsp;Underground since 2003
+            Underground since 2003
           </div>
 
           {/* Headline — outlined-type treatment from design system */}
@@ -205,7 +205,7 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
               opacity: loaded ? 1 : 0,
               transform: loaded ? 'translateY(0)' : 'translateY(40px)',
               transition: 'opacity 0.85s cubic-bezier(0.22,1,0.36,1) 0.3s, transform 0.85s cubic-bezier(0.22,1,0.36,1) 0.3s',
-            }}>Shame<span style={{ color: C.red, WebkitTextStroke: '0' }}>less.</span></span>
+            }}>Shameless.</span>
           </h1>
 
           {/* Red rule (design system motif) */}
@@ -379,61 +379,65 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
           section[data-hero] .hero-event-card { right: 32px !important; bottom: 72px !important; max-width: 320px !important; }
         }
         @media (max-width: 768px) {
+          /* Flex column: video on top, content flows below — Partiful style */
           section[data-hero] {
-            min-height: 100vh !important;
-            display: block !important;
+            min-height: 100svh !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: visible !important;
           }
           section[data-hero] .hero-video-wrap {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
+            position: relative !important;
+            top: auto !important; left: auto !important; right: auto !important;
             width: 100% !important;
-            height: 58% !important;
+            height: 46vh !important;
+            flex-shrink: 0;
+            z-index: 1;
           }
           section[data-hero] .hero-video-fade {
             background: linear-gradient(to bottom,
-              rgba(17,17,16,0.15) 0%,
-              rgba(17,17,16,0.05) 30%,
-              rgba(17,17,16,0.4) 70%,
-              ${'#1c0a08'} 100%) !important;
+              rgba(17,17,16,0.0) 0%,
+              rgba(17,17,16,0.0) 30%,
+              rgba(17,17,16,0.55) 72%,
+              #1c0a08 100%) !important;
           }
           section[data-hero] .hero-gradient-wrap {
-            top: auto !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: 56% !important;
-            background: linear-gradient(180deg,
-              rgba(28,12,8,0.0) 0%,
-              #2a0c06 14%,
-              #5a1308 38%,
-              ${C.darkDeep} 100%) !important;
+            display: none !important;
+          }
+          section[data-hero] .hero-bottom-fade {
+            display: none !important;
           }
           section[data-hero] .hero-content-wrap {
-            position: absolute !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            top: 50% !important;
-            display: block !important;
+            position: relative !important;
+            top: auto !important; bottom: auto !important;
+            left: auto !important; right: auto !important;
+            flex: 1;
+            display: flex !important;
+            flex-direction: column !important;
+            background: linear-gradient(180deg, #1c0a08 0%, ${C.darkDeep} 28%) !important;
+            z-index: 4;
           }
           section[data-hero] .hero-content {
             width: 100% !important;
-            padding: 40px 28px 96px !important;
-            justify-content: flex-end !important;
-            height: 100%;
+            padding: 28px 24px 24px !important;
+            justify-content: flex-start !important;
+            height: auto !important;
           }
           section[data-hero] .hero-event-card {
-            position: static !important;
-            margin: 28px 24px 0 !important;
-            transform: none !important;
+            position: relative !important;
+            right: auto !important;
+            bottom: auto !important;
+            margin: 0 24px 32px !important;
+            width: calc(100% - 48px) !important;
             max-width: none !important;
+            transform: none !important;
+            opacity: 1 !important;
           }
         }
         @media (max-width: 480px) {
-          section[data-hero] .hero-content { padding: 32px 22px 80px !important; }
-          section[data-hero] h1 { font-size: clamp(56px, 16vw, 88px) !important; }
+          section[data-hero] .hero-video-wrap { height: 42vh !important; }
+          section[data-hero] .hero-content { padding: 24px 20px 20px !important; }
+          section[data-hero] h1 { font-size: clamp(52px, 15vw, 80px) !important; }
         }
       ` }} />
     </section>

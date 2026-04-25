@@ -62,10 +62,10 @@ export default function SSNavbar() {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 clamp(20px, 4vw, 56px)',
-        background: scrolled ? 'rgba(17,17,16,0.97)' : 'rgba(17,17,16,0.75)',
-        backdropFilter: 'blur(20px)',
-        borderBottom: `1px solid ${scrolled ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.04)'}`,
-        transition: 'background 0.35s, border-color 0.35s',
+        background: scrolled ? 'rgba(17,17,16,0.97)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(20px)' : 'none',
+        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.07)' : 'none',
+        transition: 'background 0.35s, border-color 0.35s, backdrop-filter 0.35s',
       }}>
         {/* Left: logo + breadcrumb */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
