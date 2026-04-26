@@ -409,24 +409,25 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
             height: 100% !important;
             z-index: 1;
           }
-          /* Clear at top, ramps to fully solid by 75% so text area is fully covered */
+          /* Natural video at top, fade kicks in right before content (~48svh) and goes solid at ~62% */
           section[data-hero] .hero-video-fade {
             background: linear-gradient(to bottom,
-              rgba(17,17,16,0.2) 0%,
-              rgba(17,17,16,0.05) 15%,
-              rgba(17,17,16,0.3) 42%,
-              rgba(17,17,16,0.88) 62%,
-              ${C.darkDeep} 75%,
+              rgba(17,17,16,0.0) 0%,
+              rgba(17,17,16,0.0) 36%,
+              rgba(17,17,16,0.45) 50%,
+              rgba(17,17,16,0.92) 60%,
+              ${C.darkDeep} 66%,
               ${C.darkDeep} 100%) !important;
           }
-          /* Brand red wash — screen blend so it glows on dark footage */
+          /* Red wash timed to the same transition zone */
           section[data-hero] .hero-video-tint {
             background: linear-gradient(to bottom,
               transparent 0%,
-              rgba(160,30,12,0.25) 28%,
-              rgba(201,50,26,0.6) 55%,
-              rgba(140,25,10,0.45) 78%,
-              transparent 100%) !important;
+              transparent 32%,
+              rgba(160,30,12,0.3) 46%,
+              rgba(201,50,26,0.65) 57%,
+              rgba(120,20,8,0.35) 64%,
+              transparent 70%) !important;
             mix-blend-mode: screen !important;
           }
           section[data-hero] .hero-gradient-wrap {
