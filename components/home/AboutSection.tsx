@@ -68,15 +68,14 @@ export default function AboutSection() {
         {/* LEFT sticky */}
         <div ref={leftRef} style={{ position: 'sticky', top: 100 }}>
           <div style={revealStyle(leftVisible)}>
-            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 4 }}>Shameless Productions</div>
-            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#8a8078', marginBottom: 18 }}>Keeping It Weird Since 2003</div>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 18 }}>Shameless Productions</div>
           </div>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(60px,7vw,96px)', lineHeight: 0.86, textTransform: 'uppercase' }}>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(48px,6vw,84px)', lineHeight: 0.9, textTransform: 'uppercase' }}>
             {[
-              { text: 'Born', color: '#1c1917', stroke: false, delay: 0 },
-              { text: 'to be', color: '#1c1917', stroke: false, delay: 80 },
-              { text: 'Shame', color: 'transparent', stroke: true, delay: 160 },
-              { text: 'less.', color: '#c9321a', stroke: false, delay: 240 },
+              { text: 'Keeping', color: '#1c1917', stroke: false, delay: 0 },
+              { text: 'It Weird', color: 'transparent', stroke: true, delay: 80 },
+              { text: 'Since', color: '#1c1917', stroke: false, delay: 160 },
+              { text: '2003', color: '#c9321a', stroke: false, delay: 240 },
             ].map((line, i) => (
               <div key={i} style={{
                 color: line.color,
