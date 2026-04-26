@@ -18,6 +18,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com', // Unsplash (dev placeholders)
       },
+      {
+        protocol: 'https',
+        hostname: 'simplyshameless.com', // Original site images
+      },
     ],
   },
 };

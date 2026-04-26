@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState, useEffect } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 function useInView() {
@@ -25,7 +26,6 @@ function StatCounter({ value, label }: { value: string; label: string }) {
   useEffect(() => {
     if (!visible) return
     const num = parseInt(value.replace(/\D/g, ''))
-    const suffix = value.replace(/[0-9]/g, '')
     let start: number | null = null
     const step = (ts: number) => {
       if (!start) start = ts
@@ -53,6 +53,7 @@ export default function AboutSection() {
   const [r2, v2] = useInView()
   const [r3, v3] = useInView()
   const [r4, v4] = useInView()
+  const [r5, v5] = useInView()
 
   const revealStyle = (visible: boolean, delay = 0): React.CSSProperties => ({
     opacity: visible ? 1 : 0,
@@ -67,7 +68,8 @@ export default function AboutSection() {
         {/* LEFT sticky */}
         <div ref={leftRef} style={{ position: 'sticky', top: 100 }}>
           <div style={revealStyle(leftVisible)}>
-            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 14 }}>Who We Are</div>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 4 }}>Shameless Productions</div>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#8a8078', marginBottom: 18 }}>Keeping It Weird Since 2003</div>
           </div>
           <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(60px,7vw,96px)', lineHeight: 0.86, textTransform: 'uppercase' }}>
             {[
@@ -95,22 +97,51 @@ export default function AboutSection() {
         {/* RIGHT */}
         <div>
           <div ref={r1} style={revealStyle(v1)}>
-            <p style={{ color: '#1c1917', fontSize: 22, lineHeight: 1.75, fontWeight: 300, marginBottom: 36 }}>
-              Simply Shameless is a Seattle-based event collective built on the belief that the underground deserves a home — where house music, community, and pure freedom of expression meet on the dance floor.
+            <p style={{ color: '#1c1917', fontSize: 20, lineHeight: 1.75, fontWeight: 300, marginBottom: 32 }}>
+              In 2003, Shameless first took shape as a weekly indie dance night in the basement of the Alibi Room located in Seattle&apos;s historic Pike Place Market. The ensemble quickly became one of the city&apos;s most respected underground dance music collectives by throwing numerous legendary club nights, open air and after parties.
             </p>
           </div>
-          <div ref={r2} style={revealStyle(v2, 100)}>
-            <p style={{ color: '#8a8078', fontSize: 18, lineHeight: 1.8, fontWeight: 300, marginBottom: 36 }}>
-              In 2003, Shameless first took shape as a weekly indie dance night in the basement of the Alibi Room in Seattle's historic Pike Place Market. It quickly became one of the city's most respected underground dance music collectives.
+
+          {/* Image 1 */}
+          <div ref={r2} style={{ ...revealStyle(v2, 80), marginBottom: 40 }}>
+            <div style={{ position: 'relative', width: '100%', aspectRatio: '1080/1528', overflow: 'hidden' }}>
+              <Image
+                src="https://simplyshameless.com/wp-content/uploads/2020/11/MAIN600.jpg"
+                alt="Shameless Productions party crowd shots"
+                fill
+                style={{ objectFit: 'cover' }}
+                sizes="(max-width: 900px) 100vw, 58vw"
+              />
+            </div>
+          </div>
+
+          {/* Pull quote */}
+          <div ref={r3} style={{ ...revealStyle(v3, 120), marginBottom: 32 }}>
+            <blockquote style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(24px, 3vw, 36px)', textTransform: 'uppercase', lineHeight: 1.1, color: '#1c1917', margin: 0, borderLeft: '4px solid #c9321a', paddingLeft: 24 }}>
+              Shake your shame off and get your game on.
+            </blockquote>
+          </div>
+
+          <div ref={r4} style={revealStyle(v4, 160)}>
+            <p style={{ color: '#8a8078', fontSize: 18, lineHeight: 1.8, fontWeight: 300, marginBottom: 40 }}>
+              From day one, each Shameless party was a special one regardless of the wide ranges of genres and bookings represented. With an eye towards the cutting edge, but deep respect for electronic music&apos;s rich history, Shameless has kept its finger on the pulse of Seattle&apos;s underground for years now and yet keeps looking forward.
             </p>
           </div>
-          <div ref={r3} style={revealStyle(v3, 160)}>
-            <p style={{ color: '#8a8078', fontSize: 18, lineHeight: 1.8, fontWeight: 300 }}>
-              Every event is handcrafted. Every lineup is intentional. And every ticket is a promise — that you'll leave changed.
-            </p>
+
+          {/* Image 2 */}
+          <div ref={r5} style={{ ...revealStyle(v5, 200), marginBottom: 40 }}>
+            <div style={{ position: 'relative', width: '100%', aspectRatio: '1080/1528', overflow: 'hidden' }}>
+              <Image
+                src="https://simplyshameless.com/wp-content/uploads/2023/03/greatjob.jpg"
+                alt="Shameless Productions Deck'd Out party"
+                fill
+                style={{ objectFit: 'cover' }}
+                sizes="(max-width: 900px) 100vw, 58vw"
+              />
+            </div>
           </div>
-          <div ref={r4} style={revealStyle(v4, 220)}>
-            <div style={{ width: 48, height: 3, background: '#c9321a', margin: '28px 0' }} />
+
+          <div style={{ ...revealStyle(v5, 240) }}>
             <Link href="/events" style={{
               display: 'inline-block',
               background: '#1c1917',
