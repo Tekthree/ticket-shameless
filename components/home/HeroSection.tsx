@@ -402,35 +402,33 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
             flex: 1;
             min-height: 48vh;
           }
+          /* Fixed height so cover crops less aggressively (58vh ≈ 490px = less portrait extreme) */
           section[data-hero] .hero-video-wrap {
             position: absolute !important;
-            top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+            top: 0 !important; left: 0 !important; right: 0 !important;
+            bottom: auto !important;
             width: 100% !important;
-            height: 100% !important;
+            height: 58vh !important;
             z-index: 1;
           }
-          /* Dark fade — solid by 62% so tagline + buttons sit on dark */
+          /* Fade relative to 58vh container — go solid at 100% (bottom of video-wrap) */
           section[data-hero] .hero-video-fade {
             background: linear-gradient(to bottom,
               rgba(17,17,16,0.0) 0%,
-              rgba(17,17,16,0.0) 30%,
-              rgba(17,17,16,0.08) 35%,
-              rgba(17,17,16,0.28) 39%,
-              rgba(17,17,16,0.55) 43%,
-              rgba(17,17,16,0.85) 52%,
-              ${C.darkDeep} 62%,
+              rgba(17,17,16,0.0) 55%,
+              rgba(17,17,16,0.25) 70%,
+              rgba(17,17,16,0.65) 85%,
               ${C.darkDeep} 100%) !important;
           }
-          /* Dark muted red tint on video — same palette as desktop (#5a1308) */
+          /* Warm red tint on video — lower half of the 58vh clip */
           section[data-hero] .hero-video-tint {
             background: linear-gradient(to bottom,
               transparent 0%,
-              transparent 26%,
-              rgba(90,19,8,0.3) 31%,
-              rgba(90,19,8,0.65) 36%,
-              rgba(90,19,8,0.55) 44%,
-              rgba(42,12,6,0.2) 53%,
-              transparent 62%) !important;
+              transparent 45%,
+              rgba(90,19,8,0.3) 65%,
+              rgba(90,19,8,0.55) 80%,
+              rgba(42,12,6,0.3) 92%,
+              transparent 100%) !important;
             mix-blend-mode: screen !important;
           }
           /* Main color layer — vertical version of desktop gradient + radial blob for non-linear feel */
