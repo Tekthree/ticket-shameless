@@ -166,7 +166,6 @@ function MobileTicketBar({ event }: { event: Event }) {
 
 function LineupArtistRow({ artist }: { artist: LineupArtist }) {
   const [hover, setHover] = useState(false)
-  const isHeadliner = artist.is_headliner
   const inner = (
     <div
       onMouseEnter={() => setHover(true)}
@@ -181,8 +180,7 @@ function LineupArtistRow({ artist }: { artist: LineupArtist }) {
           }
         </div>
         <div>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: isHeadliner ? 900 : 700, fontSize: isHeadliner ? 22 : 19, color: hover ? C.red : C.darkText, textTransform: 'uppercase', letterSpacing: '0.02em', transition: 'color 0.15s' }}>{artist.name}</div>
-          {isHeadliner && <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.red, marginTop: 1 }}>Headliner</div>}
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 19, color: hover ? C.red : C.darkText, textTransform: 'uppercase', letterSpacing: '0.02em', transition: 'color 0.15s' }}>{artist.name}</div>
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, marginLeft: 12 }}>
@@ -600,8 +598,6 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
   const dateStr = fmt(event.date, { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase()
   const timeStr = fmtTime(event.date)
   const endTimeStr = event.end_date ? fmtTime(event.end_date) : null
-  const headliners = lineup.filter(a => a.is_headliner)
-
   // Split title on " × " for outline effect on second part
   const titleParts = event.title.includes(' × ') ? event.title.split(' × ') : null
 
@@ -770,25 +766,6 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
             <OutlineBtn>Save</OutlineBtn>
             <OutlineBtn>♡ 142</OutlineBtn>
           </div>
-          {headliners.length > 0 && (
-            <div style={{ marginTop: 20, background: C.darkCard, border: `1px solid ${C.darkBorder}`, padding: '20px 22px' }}>
-              <SecLabel>{headliners.length > 1 ? 'Headliners' : 'Headliner'}</SecLabel>
-              {headliners.map((a, i) => (
-                <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: i < headliners.length - 1 ? 14 : 0 }}>
-                  <div style={{ width: 40, height: 40, background: C.dark, border: `1px solid ${C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
-                    {(a.image_url ?? a.dj_profile_image_url)
-                      ? <Image src={a.image_url ?? a.dj_profile_image_url!} alt={a.name} fill style={{ objectFit: 'cover', objectPosition: 'center top' }} />
-                      : <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16, color: C.darkMuted, textTransform: 'uppercase' }}>{a.name[0]}</span>
-                    }
-                  </div>
-                  <div>
-                    <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 17, color: C.darkText, textTransform: 'uppercase' }}>{a.name}</div>
-                    {a.bio && <div style={{ color: C.darkMuted, fontSize: 12 }}>{a.bio}</div>}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
 
