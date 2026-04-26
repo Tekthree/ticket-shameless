@@ -409,19 +409,19 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
             height: 100% !important;
             z-index: 1;
           }
-          /* Dark fade — eases in slowly so red tint has color to screen against */
+          /* Dark fade — solid by 62% so tagline + buttons sit on dark */
           section[data-hero] .hero-video-fade {
             background: linear-gradient(to bottom,
               rgba(17,17,16,0.0) 0%,
               rgba(17,17,16,0.0) 30%,
               rgba(17,17,16,0.08) 35%,
               rgba(17,17,16,0.28) 39%,
-              rgba(17,17,16,0.58) 44%,
-              rgba(17,17,16,0.82) 57%,
-              ${C.darkDeep} 70%,
+              rgba(17,17,16,0.55) 43%,
+              rgba(17,17,16,0.85) 52%,
+              ${C.darkDeep} 62%,
               ${C.darkDeep} 100%) !important;
           }
-          /* Rich brand-red wash — peaks above heading, extends vivid through full content area */
+          /* Red vivid through heading, fades fast after so text below has contrast */
           section[data-hero] .hero-video-tint {
             background: linear-gradient(to bottom,
               transparent 0%,
@@ -430,10 +430,9 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
               rgba(201,50,26,0.65) 33%,
               rgba(201,50,26,0.95) 37%,
               rgba(201,50,26,0.95) 48%,
-              rgba(160,35,15,0.82) 58%,
-              rgba(100,20,8,0.55) 70%,
-              rgba(50,10,4,0.2) 84%,
-              transparent 92%) !important;
+              rgba(201,50,26,0.45) 54%,
+              rgba(100,20,8,0.12) 60%,
+              transparent 66%) !important;
             mix-blend-mode: screen !important;
           }
           section[data-hero] .hero-gradient-wrap {
