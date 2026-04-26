@@ -421,21 +421,36 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
               ${C.darkDeep} 62%,
               ${C.darkDeep} 100%) !important;
           }
-          /* Red vivid through heading, fades fast after so text below has contrast */
+          /* Dark muted red tint on video — same palette as desktop (#5a1308) */
           section[data-hero] .hero-video-tint {
             background: linear-gradient(to bottom,
               transparent 0%,
               transparent 26%,
-              rgba(201,50,26,0.15) 30%,
-              rgba(201,50,26,0.65) 33%,
-              rgba(201,50,26,0.95) 37%,
-              rgba(201,50,26,0.95) 48%,
-              rgba(201,50,26,0.45) 54%,
-              rgba(100,20,8,0.12) 60%,
-              transparent 66%) !important;
+              rgba(90,19,8,0.3) 31%,
+              rgba(90,19,8,0.65) 36%,
+              rgba(90,19,8,0.55) 44%,
+              rgba(42,12,6,0.2) 53%,
+              transparent 62%) !important;
             mix-blend-mode: screen !important;
           }
+          /* Main color layer — vertical version of desktop gradient + radial blob for non-linear feel */
           section[data-hero] .hero-gradient-wrap {
+            display: block !important;
+            width: 100% !important;
+            background:
+              radial-gradient(ellipse 140% 20% at 35% 40%, rgba(90,19,8,0.5) 0%, transparent 100%),
+              linear-gradient(to bottom,
+                transparent 0%,
+                transparent 28%,
+                rgba(42,12,6,0.55) 34%,
+                #2a0c06 40%,
+                #3d1008 47%,
+                #2a0c06 55%,
+                rgba(26,8,5,0.4) 64%,
+                transparent 73%) !important;
+          }
+          /* Suppress desktop-positioned halo child — it's re-created by the radial above */
+          section[data-hero] .hero-gradient-wrap > div:first-child {
             display: none !important;
           }
           section[data-hero] .hero-bottom-fade {
