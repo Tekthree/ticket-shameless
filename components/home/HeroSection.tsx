@@ -409,29 +409,31 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
             height: 100% !important;
             z-index: 1;
           }
-          /* Dark fade completes just at the heading (41.9% = 55% viewport) — text sits on dark */
+          /* Dark fade — eases in slowly so red tint has color to screen against */
           section[data-hero] .hero-video-fade {
             background: linear-gradient(to bottom,
               rgba(17,17,16,0.0) 0%,
               rgba(17,17,16,0.0) 30%,
               rgba(17,17,16,0.08) 35%,
-              rgba(17,17,16,0.32) 39%,
-              rgba(17,17,16,0.75) 43%,
-              ${C.darkDeep} 47%,
+              rgba(17,17,16,0.28) 39%,
+              rgba(17,17,16,0.58) 44%,
+              rgba(17,17,16,0.82) 57%,
+              ${C.darkDeep} 70%,
               ${C.darkDeep} 100%) !important;
           }
-          /* Brand red bell curve peaking just above heading — smooth ramp in and out */
+          /* Rich brand-red wash — peaks above heading, extends vivid through full content area */
           section[data-hero] .hero-video-tint {
             background: linear-gradient(to bottom,
               transparent 0%,
               transparent 26%,
               rgba(201,50,26,0.15) 30%,
-              rgba(201,50,26,0.6) 33%,
-              rgba(201,50,26,0.92) 36%,
-              rgba(201,50,26,0.85) 40%,
-              rgba(201,50,26,0.45) 43%,
-              rgba(201,50,26,0.1) 46%,
-              transparent 50%) !important;
+              rgba(201,50,26,0.65) 33%,
+              rgba(201,50,26,0.95) 37%,
+              rgba(201,50,26,0.95) 48%,
+              rgba(160,35,15,0.82) 58%,
+              rgba(100,20,8,0.55) 70%,
+              rgba(50,10,4,0.2) 84%,
+              transparent 92%) !important;
             mix-blend-mode: screen !important;
           }
           section[data-hero] .hero-gradient-wrap {
