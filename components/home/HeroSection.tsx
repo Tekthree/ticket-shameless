@@ -413,22 +413,25 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
           section[data-hero] .hero-video-fade {
             background: linear-gradient(to bottom,
               rgba(17,17,16,0.0) 0%,
-              rgba(17,17,16,0.0) 33%,
-              rgba(17,17,16,0.18) 38%,
-              rgba(17,17,16,0.75) 42%,
-              ${C.darkDeep} 46%,
+              rgba(17,17,16,0.0) 30%,
+              rgba(17,17,16,0.08) 35%,
+              rgba(17,17,16,0.32) 39%,
+              rgba(17,17,16,0.75) 43%,
+              ${C.darkDeep} 47%,
               ${C.darkDeep} 100%) !important;
           }
-          /* Red wash peaks just ABOVE heading (30-41% section = 40-54% viewport) — gone by heading */
+          /* Brand red bell curve peaking just above heading — smooth ramp in and out */
           section[data-hero] .hero-video-tint {
             background: linear-gradient(to bottom,
               transparent 0%,
-              transparent 30%,
-              rgba(150,30,10,0.3) 34%,
-              rgba(201,50,26,0.65) 37%,
-              rgba(201,50,26,0.55) 41%,
-              rgba(100,20,8,0.2) 44%,
-              transparent 48%) !important;
+              transparent 26%,
+              rgba(201,50,26,0.15) 30%,
+              rgba(201,50,26,0.6) 33%,
+              rgba(201,50,26,0.92) 36%,
+              rgba(201,50,26,0.85) 40%,
+              rgba(201,50,26,0.45) 43%,
+              rgba(201,50,26,0.1) 46%,
+              transparent 50%) !important;
             mix-blend-mode: screen !important;
           }
           section[data-hero] .hero-gradient-wrap {
