@@ -409,27 +409,26 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
             height: 100% !important;
             z-index: 1;
           }
-          /* Dark fade — heading sits at 41.9% of section height (55% viewport). Fade starts there. */
+          /* Dark fade completes just at the heading (41.9% = 55% viewport) — text sits on dark */
           section[data-hero] .hero-video-fade {
             background: linear-gradient(to bottom,
               rgba(17,17,16,0.0) 0%,
-              rgba(17,17,16,0.0) 38%,
-              rgba(17,17,16,0.12) 43%,
-              rgba(17,17,16,0.55) 54%,
-              rgba(17,17,16,0.9) 65%,
-              ${C.darkDeep} 75%,
+              rgba(17,17,16,0.0) 33%,
+              rgba(17,17,16,0.18) 38%,
+              rgba(17,17,16,0.75) 42%,
+              ${C.darkDeep} 46%,
               ${C.darkDeep} 100%) !important;
           }
-          /* Red wash peaks at heading zone: 42-52% of section = 55-67% of viewport */
+          /* Red wash peaks just ABOVE heading (30-41% section = 40-54% viewport) — gone by heading */
           section[data-hero] .hero-video-tint {
             background: linear-gradient(to bottom,
               transparent 0%,
-              transparent 36%,
-              rgba(150,30,10,0.35) 40%,
-              rgba(201,50,26,0.7) 43%,
-              rgba(201,50,26,0.7) 53%,
-              rgba(100,20,8,0.3) 60%,
-              transparent 68%) !important;
+              transparent 30%,
+              rgba(150,30,10,0.3) 34%,
+              rgba(201,50,26,0.65) 37%,
+              rgba(201,50,26,0.55) 41%,
+              rgba(100,20,8,0.2) 44%,
+              transparent 48%) !important;
             mix-blend-mode: screen !important;
           }
           section[data-hero] .hero-gradient-wrap {
