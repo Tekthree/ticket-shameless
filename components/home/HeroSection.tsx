@@ -386,10 +386,12 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
           section[data-hero] .hero-event-card { right: 32px !important; bottom: 72px !important; max-width: 320px !important; }
         }
         @media (max-width: 768px) {
-          /* Full-overlay layout — video fills the section, content sits on top. No seam possible. */
+          /* Full-overlay layout — video is absolute background, section flex-col pushes content to bottom */
           section[data-hero] {
             min-height: 100svh !important;
-            display: block !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-end !important;
             position: relative !important;
             overflow: hidden !important;
           }
@@ -426,10 +428,10 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
           section[data-hero] .hero-bottom-fade {
             display: none !important;
           }
-          /* Content fills the section, text pinned to bottom */
+          /* Content in normal flow at bottom (section is flex-col justify-end) */
           section[data-hero] .hero-content-wrap {
-            position: absolute !important;
-            top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+            position: relative !important;
+            top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
             display: flex !important;
             flex-direction: column !important;
             justify-content: flex-end !important;
@@ -443,6 +445,7 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
             justify-content: flex-end !important;
             height: auto !important;
           }
+          /* Card flows in normal order after the buttons — no positioning tricks needed */
           section[data-hero] .hero-event-card {
             position: relative !important;
             right: auto !important;
@@ -452,6 +455,7 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
             max-width: none !important;
             transform: none !important;
             opacity: 1 !important;
+            z-index: 4;
           }
         }
         @media (max-width: 480px) {
