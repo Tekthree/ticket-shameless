@@ -386,14 +386,21 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
           section[data-hero] .hero-event-card { right: 32px !important; bottom: 72px !important; max-width: 320px !important; }
         }
         @media (max-width: 768px) {
-          /* Full-overlay layout — video is absolute background, section flex-col pushes content to bottom */
+          /* Full-overlay layout — video is absolute background, spacer pushes content down */
           section[data-hero] {
             min-height: 100svh !important;
             display: flex !important;
             flex-direction: column !important;
-            justify-content: flex-end !important;
+            justify-content: flex-start !important;
             position: relative !important;
             overflow: hidden !important;
+          }
+          /* Transparent spacer — guarantees at least 48vh of video above content */
+          section[data-hero]::before {
+            content: '';
+            display: block;
+            flex: 1;
+            min-height: 48vh;
           }
           section[data-hero] .hero-video-wrap {
             position: absolute !important;
