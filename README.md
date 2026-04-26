@@ -161,7 +161,7 @@ scripts/
 - [x] About section
 - [x] Newsletter signup (wired to `/api/newsletter`, saves to `subscribers` table)
 - [x] Page loader animation
-- [x] Mobile responsive polish
+- [x] Mobile responsive polish — hero gradient, video zoom, dark crimson palette matching desktop
 
 ### Phase 2 — Event pages + RSVP ✓
 
