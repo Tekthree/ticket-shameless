@@ -38,7 +38,7 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
     <section data-hero style={{
       position: 'relative',
       width: '100%',
-      minHeight: '100vh',
+      minHeight: '88vh',
       background: C.darkDeep,
       overflow: 'hidden',
       display: 'flex',
@@ -48,7 +48,7 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
         position: 'absolute',
         top: 0,
         right: 0,
-        width: '62%',
+        width: '70%',
         height: '100%',
         overflow: 'hidden',
         zIndex: 1,
@@ -75,25 +75,30 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
           <source src={HERO_VIDEO_URL} type="video/mp4" />
         </video>
 
-        {/* Soft fade of video into gradient (desktop: fade left edge; mobile handled via overlay) */}
+        {/* Gradual left-edge fade — wide transition zone so the blend looks natural */}
         <div className="hero-video-fade" style={{
           position: 'absolute',
           inset: 0,
           background: `linear-gradient(to right,
             ${C.darkDeep} 0%,
-            rgba(17,17,16,0.7) 18%,
-            rgba(17,17,16,0.25) 45%,
-            rgba(17,17,16,0.05) 75%,
-            rgba(17,17,16,0.15) 100%)`,
+            rgba(17,17,16,0.92) 12%,
+            rgba(17,17,16,0.65) 30%,
+            rgba(17,17,16,0.3) 52%,
+            rgba(17,17,16,0.08) 75%,
+            rgba(17,17,16,0.02) 100%)`,
           pointerEvents: 'none',
         }} />
 
-        {/* Subtle red wash over video to tie it to the brand */}
+        {/* Red color wash over video — tints left side to match the gradient color */}
         <div className="hero-video-tint" style={{
           position: 'absolute',
           inset: 0,
-          background: `radial-gradient(60% 80% at 30% 50%, rgba(201,50,26,0.18) 0%, transparent 60%)`,
-          mixBlendMode: 'overlay',
+          background: `linear-gradient(to right,
+            rgba(90,19,8,0.7) 0%,
+            rgba(168,38,20,0.45) 32%,
+            rgba(201,50,26,0.18) 58%,
+            transparent 80%)`,
+          mixBlendMode: 'multiply',
           pointerEvents: 'none',
         }} />
       </div>
@@ -103,28 +108,29 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
         position: 'absolute',
         top: 0,
         left: 0,
-        width: '52%',
+        width: '65%',
         height: '100%',
         zIndex: 2,
         pointerEvents: 'none',
         background: `
-          linear-gradient(105deg,
+          linear-gradient(to right,
             ${C.darkDeep} 0%,
-            #2a0c06 22%,
-            #5a1308 48%,
-            rgba(168,38,20,0.85) 78%,
+            #2a0c06 25%,
+            #5a1308 46%,
+            rgba(168,38,20,0.6) 66%,
+            rgba(201,50,26,0.12) 85%,
             rgba(201,50,26,0.0) 100%)
         `,
       }}>
-        {/* Heavy blur halo to give that Partiful glow against the video edge */}
+        {/* Blurred red halo at the blend edge */}
         <div style={{
           position: 'absolute',
-          right: '-12%',
-          top: '20%',
-          width: '60%',
-          height: '70%',
-          background: `radial-gradient(circle at 70% 50%, rgba(201,50,26,0.55) 0%, rgba(122,18,8,0.35) 38%, transparent 70%)`,
-          filter: 'blur(60px)',
+          right: '-5%',
+          top: '15%',
+          width: '50%',
+          height: '75%',
+          background: `radial-gradient(circle at 60% 50%, rgba(201,50,26,0.45) 0%, rgba(122,18,8,0.2) 45%, transparent 70%)`,
+          filter: 'blur(80px)',
         }} />
 
         {/* Subtle 45° stripe pattern (from design system "Texture Patterns") */}
@@ -160,7 +166,7 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
       }}>
         <div className="hero-content" style={{
           width: '52%',
-          padding: '120px 64px 120px 72px',
+          padding: '100px 64px 100px 72px',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -375,31 +381,44 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
       <style dangerouslySetInnerHTML={{ __html: `
         @media (max-width: 1024px) {
           section[data-hero] .hero-content { padding: 110px 40px 100px !important; width: 58% !important; }
-          section[data-hero] .hero-video-wrap { width: 58% !important; }
+          section[data-hero] .hero-video-wrap { width: 72% !important; }
+          section[data-hero] .hero-gradient-wrap { width: 68% !important; }
           section[data-hero] .hero-event-card { right: 32px !important; bottom: 72px !important; max-width: 320px !important; }
         }
         @media (max-width: 768px) {
-          /* Flex column: video on top, content flows below — Partiful style */
+          /* Full-overlay layout — video fills the section, content sits on top. No seam possible. */
           section[data-hero] {
             min-height: 100svh !important;
-            display: flex !important;
-            flex-direction: column !important;
-            overflow: visible !important;
+            display: block !important;
+            position: relative !important;
+            overflow: hidden !important;
           }
           section[data-hero] .hero-video-wrap {
-            position: relative !important;
-            top: auto !important; left: auto !important; right: auto !important;
+            position: absolute !important;
+            top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
             width: 100% !important;
-            height: 46vh !important;
-            flex-shrink: 0;
+            height: 100% !important;
             z-index: 1;
           }
+          /* Clear at top, ramps to fully solid by 75% so text area is fully covered */
           section[data-hero] .hero-video-fade {
             background: linear-gradient(to bottom,
-              rgba(17,17,16,0.0) 0%,
-              rgba(17,17,16,0.0) 30%,
-              rgba(17,17,16,0.55) 72%,
-              #1c0a08 100%) !important;
+              rgba(17,17,16,0.2) 0%,
+              rgba(17,17,16,0.05) 15%,
+              rgba(17,17,16,0.3) 42%,
+              rgba(17,17,16,0.88) 62%,
+              ${C.darkDeep} 75%,
+              ${C.darkDeep} 100%) !important;
+          }
+          /* Brand red wash — screen blend so it glows on dark footage */
+          section[data-hero] .hero-video-tint {
+            background: linear-gradient(to bottom,
+              transparent 0%,
+              rgba(160,30,12,0.25) 28%,
+              rgba(201,50,26,0.6) 55%,
+              rgba(140,25,10,0.45) 78%,
+              transparent 100%) !important;
+            mix-blend-mode: screen !important;
           }
           section[data-hero] .hero-gradient-wrap {
             display: none !important;
@@ -407,27 +426,28 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
           section[data-hero] .hero-bottom-fade {
             display: none !important;
           }
+          /* Content fills the section, text pinned to bottom */
           section[data-hero] .hero-content-wrap {
-            position: relative !important;
-            top: auto !important; bottom: auto !important;
-            left: auto !important; right: auto !important;
-            flex: 1;
+            position: absolute !important;
+            top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
             display: flex !important;
             flex-direction: column !important;
-            background: linear-gradient(180deg, #1c0a08 0%, ${C.darkDeep} 28%) !important;
+            justify-content: flex-end !important;
+            background: transparent !important;
             z-index: 4;
+            max-width: 100% !important;
           }
           section[data-hero] .hero-content {
             width: 100% !important;
-            padding: 28px 24px 24px !important;
-            justify-content: flex-start !important;
+            padding: 28px 24px 16px !important;
+            justify-content: flex-end !important;
             height: auto !important;
           }
           section[data-hero] .hero-event-card {
             position: relative !important;
             right: auto !important;
             bottom: auto !important;
-            margin: 0 24px 32px !important;
+            margin: 0 24px 28px !important;
             width: calc(100% - 48px) !important;
             max-width: none !important;
             transform: none !important;
