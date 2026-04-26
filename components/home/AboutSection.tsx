@@ -41,7 +41,7 @@ function StatCounter({ value, label }: { value: string; label: string }) {
 
   return (
     <div ref={ref}>
-      <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 56, color: '#c9321a', lineHeight: 1 }}>{count}{suffix}</div>
+      <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(36px, 10vw, 56px)', color: '#c9321a', lineHeight: 1 }}>{count}{suffix}</div>
       <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#8a8078', marginTop: 4 }}>{label}</div>
     </div>
   )
@@ -85,7 +85,7 @@ export default function AboutSection() {
               }}>{line.text}</div>
             ))}
           </div>
-          <div style={{ marginTop: 48, display: 'flex', gap: 56 }}>
+          <div style={{ marginTop: 48, display: 'flex', gap: 'clamp(24px, 6vw, 56px)', flexWrap: 'wrap' }}>
             {[['100+', 'Events'], ['20+', 'Years'], ['10K+', 'Community']].map(([n, l]) => (
               <StatCounter key={l} value={n} label={l} />
             ))}
