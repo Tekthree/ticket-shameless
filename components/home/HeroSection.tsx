@@ -409,26 +409,26 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
             height: 100% !important;
             z-index: 1;
           }
-          /* Natural video top, fade starts at heading level and spreads wide below */
+          /* Video clear until heading (~55%), then wide spread through content to solid at 93% */
           section[data-hero] .hero-video-fade {
             background: linear-gradient(to bottom,
               rgba(17,17,16,0.0) 0%,
-              rgba(17,17,16,0.0) 42%,
-              rgba(17,17,16,0.18) 52%,
-              rgba(17,17,16,0.55) 67%,
-              rgba(17,17,16,0.88) 82%,
-              ${C.darkDeep} 92%,
+              rgba(17,17,16,0.0) 53%,
+              rgba(17,17,16,0.12) 61%,
+              rgba(17,17,16,0.45) 73%,
+              rgba(17,17,16,0.82) 87%,
+              ${C.darkDeep} 93%,
               ${C.darkDeep} 100%) !important;
           }
-          /* Red wash — peaks in the mid-gradient zone, wide spread below heading */
+          /* Red wash aligned to the same wide spread */
           section[data-hero] .hero-video-tint {
             background: linear-gradient(to bottom,
               transparent 0%,
-              transparent 38%,
-              rgba(160,30,12,0.2) 50%,
-              rgba(201,50,26,0.58) 64%,
-              rgba(140,25,10,0.35) 78%,
-              transparent 90%) !important;
+              transparent 50%,
+              rgba(160,30,12,0.22) 60%,
+              rgba(201,50,26,0.62) 73%,
+              rgba(140,25,10,0.3) 86%,
+              transparent 93%) !important;
             mix-blend-mode: screen !important;
           }
           section[data-hero] .hero-gradient-wrap {
