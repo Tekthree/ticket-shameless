@@ -409,26 +409,27 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
             height: 100% !important;
             z-index: 1;
           }
-          /* Video fully clear until 62%, fade kicks in at heading (~68%) and goes solid at 96% */
+          /* Dark fade — heading sits at 41.9% of section height (55% viewport). Fade starts there. */
           section[data-hero] .hero-video-fade {
             background: linear-gradient(to bottom,
               rgba(17,17,16,0.0) 0%,
-              rgba(17,17,16,0.0) 62%,
-              rgba(17,17,16,0.12) 70%,
-              rgba(17,17,16,0.5) 80%,
-              rgba(17,17,16,0.88) 90%,
-              ${C.darkDeep} 96%,
+              rgba(17,17,16,0.0) 38%,
+              rgba(17,17,16,0.12) 43%,
+              rgba(17,17,16,0.55) 54%,
+              rgba(17,17,16,0.9) 65%,
+              ${C.darkDeep} 75%,
               ${C.darkDeep} 100%) !important;
           }
-          /* Red wash — starts at heading, spreads through content */
+          /* Red wash peaks at heading zone: 42-52% of section = 55-67% of viewport */
           section[data-hero] .hero-video-tint {
             background: linear-gradient(to bottom,
               transparent 0%,
-              transparent 59%,
-              rgba(160,30,12,0.22) 68%,
-              rgba(201,50,26,0.65) 78%,
-              rgba(140,25,10,0.3) 90%,
-              transparent 96%) !important;
+              transparent 36%,
+              rgba(150,30,10,0.35) 40%,
+              rgba(201,50,26,0.7) 43%,
+              rgba(201,50,26,0.7) 53%,
+              rgba(100,20,8,0.3) 60%,
+              transparent 68%) !important;
             mix-blend-mode: screen !important;
           }
           section[data-hero] .hero-gradient-wrap {
@@ -468,7 +469,6 @@ export default function HeroSection({ nextEvent }: { nextEvent?: Event | null })
           }
         }
         @media (max-width: 480px) {
-          section[data-hero] .hero-video-wrap { height: 42vh !important; }
           section[data-hero] .hero-content { padding: 24px 20px 20px !important; }
           section[data-hero] h1 { font-size: clamp(52px, 15vw, 80px) !important; }
         }
