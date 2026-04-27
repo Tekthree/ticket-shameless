@@ -5,6 +5,24 @@ import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import type { Event, LineupArtist } from '@/lib/db'
 
+const ALLOWED_IMAGE_HOSTS = [
+  'd85f1bb68ad7da530dccaef0eccc5e0b.r2.cloudflarestorage.com',
+  'pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev',
+  'images.unsplash.com',
+  'simplyshameless.com',
+]
+
+function safeImageUrl(url: string | null | undefined): string | null {
+  if (!url) return null
+  if (url.startsWith('/')) return url  // local public folder paths are always safe for next/image
+  try {
+    const { hostname } = new URL(url)
+    return ALLOWED_IMAGE_HOSTS.some(h => hostname === h || hostname.endsWith('.' + h)) ? url : null
+  } catch {
+    return null
+  }
+}
+
 const C = {
   dark: '#1c1917',
   darkDeep: '#111110',
@@ -174,8 +192,8 @@ function LineupArtistRow({ artist }: { artist: LineupArtist }) {
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <div style={{ width: 40, height: 40, background: hover ? C.red : C.darkCard, border: `1px solid ${hover ? C.red : C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden', position: 'relative', transition: 'all 0.2s' }}>
-          {(artist.image_url ?? artist.dj_profile_image_url)
-            ? <Image src={artist.image_url ?? artist.dj_profile_image_url!} alt={artist.name} fill style={{ objectFit: 'cover', objectPosition: 'center top' }} />
+          {safeImageUrl(artist.image_url ?? artist.dj_profile_image_url)
+            ? <Image src={safeImageUrl(artist.image_url ?? artist.dj_profile_image_url)!} alt={artist.name} fill style={{ objectFit: 'cover', objectPosition: 'center top' }} />
             : <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, color: hover ? '#fff' : C.darkMuted, textTransform: 'uppercase' }}>{artist.name[0]}</span>
           }
         </div>
@@ -611,8 +629,8 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
       {/* ── HERO ─────────────────────────────────────────────────────── */}
       <div className="ep-hero">
-        {event.image_url ? (
-          <Image src={event.image_url} alt={event.title} fill style={{ objectFit: 'cover', objectPosition: 'center 30%' }} priority />
+        {safeImageUrl(event.image_url) ? (
+          <Image src={safeImageUrl(event.image_url)!} alt={event.title} fill style={{ objectFit: 'cover', objectPosition: 'center 30%' }} priority />
         ) : (
           <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(45deg, #252220 0px, #252220 1px, #1c1917 1px, #1c1917 22px)' }} />
         )}

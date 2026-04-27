@@ -94,10 +94,13 @@ function EventRow({ event }: { event: Event }) {
 }
 
 // ── PAGE ──────────────────────────────────────────────────────────────────────
+const PAGE_SIZE = 12
+
 type Tab = 'upcoming' | 'past'
 
 export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[] }) {
   const [activeTab, setActiveTab] = useState<Tab>('upcoming')
+  const [pastPage, setPastPage] = useState(1)
 
   const now = new Date()
   const upcoming = events.filter(e => new Date(e.date) >= now)
@@ -242,7 +245,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
           {/* Tabs */}
           <div style={{ borderBottom: `1px solid ${C.darkBorder}`, marginBottom: 28, display: 'flex', gap: 28 }}>
             {tabs.map(({ key, label, count }) => (
-              <button key={key} onClick={() => setActiveTab(key)} style={{
+              <button key={key} onClick={() => { setActiveTab(key); if (key === 'past') setPastPage(1) }} style={{
                 background: 'transparent',
                 border: 'none',
                 cursor: 'pointer',
@@ -273,7 +276,33 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
           {activeTab === 'past' && (
             past.length === 0
               ? <div style={{ padding: '32px 0', color: C.darkMuted, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 15, letterSpacing: '0.08em', textTransform: 'uppercase' }}>No past shows</div>
-              : past.map(e => <EventRow key={e.id} event={e} />)
+              : <>
+                  {past.slice(0, pastPage * PAGE_SIZE).map(e => <EventRow key={e.id} event={e} />)}
+                  {pastPage * PAGE_SIZE < past.length && (
+                    <button
+                      onClick={() => setPastPage(p => p + 1)}
+                      style={{
+                        marginTop: 24,
+                        width: '100%',
+                        background: 'transparent',
+                        border: `1px solid ${C.darkBorder}`,
+                        color: C.darkMuted,
+                        fontFamily: 'var(--font-barlow), sans-serif',
+                        fontWeight: 700,
+                        fontSize: 13,
+                        letterSpacing: '0.12em',
+                        textTransform: 'uppercase',
+                        padding: '16px',
+                        cursor: 'pointer',
+                        transition: 'border-color 0.2s, color 0.2s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = C.red; e.currentTarget.style.color = C.red }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = C.darkBorder; e.currentTarget.style.color = C.darkMuted }}
+                    >
+                      Show more ({past.length - pastPage * PAGE_SIZE} remaining)
+                    </button>
+                  )}
+                </>
           )}
 
           {/* SoundCloud link */}

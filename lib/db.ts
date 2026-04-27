@@ -82,17 +82,35 @@ export type DJ = {
 
 export async function getEvents(limit = 10): Promise<Event[]> {
   try {
-    // Fresh connection per call — prevents Neon's HTTP client from caching responses
     const freshSql = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
     const rows = await freshSql`
       select * from events
       where is_published = true
+      and date >= now()
       order by date asc
       limit ${limit}
     `
     return rows as Event[]
   } catch (error) {
     console.warn('Failed to fetch events:', error)
+    return []
+  }
+}
+
+export async function getPastEvents(limit = 50, offset = 0): Promise<Event[]> {
+  try {
+    const freshSql = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
+    const rows = await freshSql`
+      select * from events
+      where is_published = true
+      and date < now()
+      order by date desc
+      limit ${limit}
+      offset ${offset}
+    `
+    return rows as Event[]
+  } catch (error) {
+    console.warn('Failed to fetch past events:', error)
     return []
   }
 }

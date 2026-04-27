@@ -76,9 +76,27 @@ export default async function EventsPage() {
     <div style={{ minHeight: '100vh', background: '#1c1917', paddingTop: 64 }}>
       <div className="events-container" style={{ maxWidth: 1100, margin: '0 auto', padding: '60px 48px' }}>
         {/* Header */}
-        <div style={{ marginBottom: 56 }}>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 14 }}>Upcoming Shows</div>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(52px, 8vw, 96px)', lineHeight: 0.88, color: '#f0ece6', textTransform: 'uppercase' }}>Events</div>
+        <div style={{ marginBottom: 56, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
+          <div>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 14 }}>Upcoming Shows</div>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(52px, 8vw, 96px)', lineHeight: 0.88, color: '#f0ece6', textTransform: 'uppercase' }}>Events</div>
+          </div>
+          <Link href="/events/past" style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            border: '1px solid rgba(255,255,255,0.07)',
+            color: 'rgba(240,236,230,0.5)',
+            fontFamily: 'var(--font-barlow), sans-serif',
+            fontWeight: 700,
+            fontSize: 13,
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            padding: '12px 20px',
+            textDecoration: 'none',
+          }} className="past-link">
+            Past Events →
+          </Link>
         </div>
 
         {events.length === 0 ? (
@@ -98,6 +116,7 @@ export default async function EventsPage() {
       <style dangerouslySetInnerHTML={{ __html: `
         .event-row:hover { background: rgba(255,255,255,0.02); }
         .event-row:hover .event-row-btn { background: #a82614; }
+        .past-link:hover { border-color: #c9321a !important; color: #c9321a !important; }
 
         @media (max-width: 768px) {
           .events-container { padding: 40px 24px !important; }
