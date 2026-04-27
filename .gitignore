@@ -67,6 +67,9 @@ logs
 # Sentry
 .sentryclirc
 
+# Facebook session cookies (sensitive)
+scripts/fb-cookies.json
+
 # Cache directories
 .npm
 .eslintcache
