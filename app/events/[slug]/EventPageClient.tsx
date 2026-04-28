@@ -262,10 +262,7 @@ function OtherEventCard({ event }: { event: Event }) {
         <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.red, marginBottom: 5 }}>{dateStr}</div>
         <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 20, color: C.darkText, textTransform: 'uppercase', lineHeight: 1, marginBottom: 4 }}>{event.title}</div>
         <div style={{ color: C.darkMuted, fontSize: 13, marginBottom: 14 }}>{event.venue} · Seattle</div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 18, color: C.darkText }}>
-            {event.suggested_price != null ? `$${event.suggested_price}` : 'Free'}
-          </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <span style={{ background: C.red, color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '8px 16px' }}>Tickets</span>
         </div>
       </div>
