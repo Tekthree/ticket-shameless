@@ -691,7 +691,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
               All ages
             </MetaRow>
             <MetaRow icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8a6 6 0 1 0 12 0A6 6 0 0 0 2 8Z" stroke="currentColor" strokeWidth="1.3" /><path d="M8 5v3.5l2 2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" /></svg>}>
-              Presented by Simply Shameless
+              Presented by {event.presented_by ?? 'Simply Shameless'}
             </MetaRow>
             {stagesLabel && (
               <MetaRow icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14s-6-4.686-6-8a6 6 0 1 1 12 0c0 3.314-6 8-6 8Z" stroke="currentColor" strokeWidth="1.3" /><circle cx="8" cy="6" r="2" stroke="currentColor" strokeWidth="1.3" /></svg>}>

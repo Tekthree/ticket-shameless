@@ -40,6 +40,7 @@ export type Event = {
   is_published: boolean
   created_at: string
   ticket_tiers: TicketTier[] | null
+  presented_by: string | null
 }
 
 export type LineupArtist = {
