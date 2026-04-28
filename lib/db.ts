@@ -32,6 +32,7 @@ export type Event = {
   venue: string | null
   address: string | null
   image_url: string | null
+  banner_url: string | null
   tags: string[]
   payment_link: string | null
   suggested_price: number | null
