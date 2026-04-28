@@ -1,10 +1,11 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRef, useState, useEffect } from 'react'
 
-function useInView() {
-  const ref = useRef<HTMLDivElement>(null)
+function useInView<T extends HTMLElement = HTMLDivElement>() {
+  const ref = useRef<T>(null)
   const [visible, setVisible] = useState(false)
   useEffect(() => {
     const el = ref.current
@@ -38,11 +39,12 @@ const imageCells = [
 ]
 
 function GalleryCell({ cols, rows, imageUrl, index }: { cols: number; rows: number; imageUrl?: string; index: number }) {
-  const [ref, visible] = useInView()
+  const [ref, visible] = useInView<HTMLAnchorElement>()
   const [hover, setHover] = useState(false)
 
   return (
-    <div
+    <Link
+      href="/gallery"
       ref={ref}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
@@ -53,6 +55,8 @@ function GalleryCell({ cols, rows, imageUrl, index }: { cols: number; rows: numb
         overflow: 'hidden',
         position: 'relative',
         cursor: 'pointer',
+        display: 'block',
+        textDecoration: 'none',
         transform: hover ? 'scale(1.02)' : 'scale(1)',
         opacity: visible ? 1 : 0,
         transition: `transform 0.3s cubic-bezier(0.22,1,0.36,1) ${index * 60}ms, opacity 0.5s ease ${index * 60}ms`,
@@ -84,7 +88,7 @@ function GalleryCell({ cols, rows, imageUrl, index }: { cols: number; rows: numb
           color: '#7a7068', letterSpacing: '0.06em',
         }}>{placeholderCells[index]?.label}</div>
       )}
-    </div>
+    </Link>
   )
 }
 
