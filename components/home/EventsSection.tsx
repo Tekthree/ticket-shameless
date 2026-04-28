@@ -35,8 +35,8 @@ function EventCard({ event, delay }: { event: any; delay: number }) {
     ? event.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase()
     : String(event.date || '').toUpperCase()
 
-  const tags = event.tags || []
-  const imageUrl = event.image_url || null
+  const tags = Array.isArray(event.tags) ? event.tags : []
+  const imageUrl = event.banner_url || event.image_url || null
   const href = event.slug ? `/events/${event.slug}` : '/events'
   const isSoon = event.status === 'soon'
 
