@@ -5,11 +5,10 @@ import Image from 'next/image'
 
 export default function SSFooter() {
   const socials = [
-    { label: 'Instagram', href: 'https://instagram.com/simplyshameless' },
-    { label: 'Facebook', href: '#' },
-    { label: 'SoundCloud', href: '#' },
-    { label: 'Spotify', href: '#' },
-    { label: 'Resident Advisor', href: '#' },
+    { label: 'Instagram', href: 'https://www.instagram.com/shamelessseattle/' },
+    { label: 'Facebook', href: 'https://www.facebook.com/shamelessinseattle/' },
+    { label: 'SoundCloud', href: 'https://soundcloud.com/shamelessinseattle' },
+    { label: 'Resident Advisor', href: 'https://ra.co/promoters/13758' },
   ]
 
   return (

@@ -113,7 +113,7 @@ export default function GallerySection({ images = [] }: { images?: string[] }) {
               fontSize: 'clamp(52px,6vw,88px)', lineHeight: 0.88,
               color: '#f0ece6', textTransform: 'uppercase',
             }}>Gallery</div>
-            <a href="#" style={{
+            <a href="/gallery" style={{
               color: '#7a7068', textDecoration: 'none',
               fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700,
               fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase',
