@@ -57,9 +57,6 @@ function EventRow({ event }: { event: Event }) {
 
         {/* CTA */}
         <div style={{ textAlign: 'right', flexShrink: 0 }}>
-          {event.suggested_price != null && (
-            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 22, color: '#f0ece6', marginBottom: 8 }}>${event.suggested_price}</div>
-          )}
           <span className="event-row-btn" style={{ display: 'inline-block', background: '#c9321a', color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '10px 20px', transition: 'background 0.15s' }}>
             View Event →
           </span>
