@@ -23,16 +23,16 @@ const NAV_LINKS: [string, string][] = [
 ]
 
 const SOCIALS = [
-  { label: 'Instagram',       href: 'https://www.instagram.com/shamelessseattle/' },
-  { label: 'Facebook',        href: 'https://www.facebook.com/shamelessinseattle/' },
-  { label: 'SoundCloud',      href: 'https://soundcloud.com/shamelessinseattle' },
+  { label: 'Instagram',        href: 'https://www.instagram.com/shamelessseattle/' },
+  { label: 'Facebook',         href: 'https://www.facebook.com/shamelessinseattle/' },
+  { label: 'SoundCloud',       href: 'https://soundcloud.com/shamelessinseattle' },
   { label: 'Resident Advisor', href: 'https://ra.co/promoters/13758' },
 ]
 
 export default function SSNavbar() {
-  const [scrolled, setScrolled]   = useState(false)
-  const [menuOpen, setMenuOpen]   = useState(false)
-  const [menuKey,  setMenuKey]    = useState(0)
+  const [scrolled,  setScrolled]  = useState(false)
+  const [menuOpen,  setMenuOpen]  = useState(false)
+  const [menuKey,   setMenuKey]   = useState(0)
   const pathname = usePathname()
 
   const isEventPage = !!pathname?.match(/^\/events\/.+/)
@@ -49,10 +49,8 @@ export default function SSNavbar() {
     return () => { document.body.style.overflow = '' }
   }, [menuOpen])
 
-  // Close on route change
   useEffect(() => { setMenuOpen(false) }, [pathname])
 
-  // Bump key each open so animations re-fire
   useEffect(() => {
     if (menuOpen) setMenuKey(k => k + 1)
   }, [menuOpen])
@@ -113,8 +111,8 @@ export default function SSNavbar() {
           )}
         </div>
 
-        {/* ── CENTER: nav links (desktop only, absolutely centered) ── */}
-        <div className="hidden md:flex" style={{
+        {/* ── CENTER: desktop nav links ── */}
+        <div className="ss-desktop-links" style={{
           position: 'absolute', left: '50%', transform: 'translateX(-50%)',
           gap: 36, alignItems: 'center',
         }}>
@@ -144,8 +142,9 @@ export default function SSNavbar() {
 
         {/* ── RIGHT: Get Tickets (desktop) + hamburger (mobile) ── */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-          {/* Get Tickets — desktop only */}
-          <Link href="/events" className="hidden md:inline-block" style={{
+
+          {/* Get Tickets — shown only on desktop via CSS */}
+          <Link href="/events" className="ss-get-tickets" style={{
             background: C.red, color: '#fff', textDecoration: 'none',
             fontFamily: 'var(--font-barlow), sans-serif',
             fontWeight: 900, fontSize: 14,
@@ -157,14 +156,13 @@ export default function SSNavbar() {
             onMouseLeave={e => { e.currentTarget.style.background = C.red; e.currentTarget.style.transform = 'translateY(0)' }}
           >Get Tickets</Link>
 
-          {/* Hamburger — mobile only, design-file style (24/16/24 bars, right-aligned) */}
+          {/* Hamburger — shown only on mobile via CSS (no inline display so CSS wins) */}
           <button
-            className="md:hidden"
+            className="ss-hamburger"
             onClick={() => setMenuOpen(o => !o)}
             style={{
               background: 'transparent', border: 'none', cursor: 'pointer',
-              padding: 8,
-              display: 'flex', flexDirection: 'column', gap: 5, alignItems: 'flex-end',
+              padding: 8, flexDirection: 'column', gap: 5, alignItems: 'flex-end',
             }}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           >
@@ -187,11 +185,11 @@ export default function SSNavbar() {
         </div>
       </nav>
 
-      {/* ── MOBILE FULLSCREEN OVERLAY ── */}
-      <div className="md:hidden" style={{
+      {/* ── MOBILE FULLSCREEN OVERLAY — hidden on desktop via CSS ── */}
+      <div className="ss-mobile-overlay" style={{
         position: 'fixed', inset: 0, zIndex: 290,
         background: C.darkDeep,
-        display: 'flex', flexDirection: 'column',
+        flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
         opacity: menuOpen ? 1 : 0,
         pointerEvents: menuOpen ? 'auto' : 'none',
@@ -224,7 +222,6 @@ export default function SSNavbar() {
             >{label}</Link>
           ))}
 
-          {/* Get Tickets CTA */}
           <Link href="/events" onClick={() => setMenuOpen(false)} style={{
             marginTop: 32,
             background: C.red, color: '#fff', textDecoration: 'none',
@@ -260,6 +257,20 @@ export default function SSNavbar() {
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
+        /* Mobile-first: hamburger + overlay visible, desktop links hidden */
+        .ss-hamburger      { display: flex; }
+        .ss-mobile-overlay { display: flex; }
+        .ss-desktop-links  { display: none; }
+        .ss-get-tickets    { display: none; }
+
+        /* Desktop: flip everything */
+        @media (min-width: 768px) {
+          .ss-hamburger      { display: none; }
+          .ss-mobile-overlay { display: none; }
+          .ss-desktop-links  { display: flex; }
+          .ss-get-tickets    { display: inline-block; }
+        }
+
         @keyframes ssNavFadeIn {
           from { opacity: 0; transform: translateY(-8px); }
           to   { opacity: 1; transform: translateY(0); }
