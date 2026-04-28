@@ -82,8 +82,8 @@ export default function SSNavbar() {
         {/* ── LEFT: logo + back-breadcrumb on detail pages ── */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
           <Link href="/" style={{ flexShrink: 0 }}>
-            <Image src="/shameless-logo.png" alt="Simply Shameless" width={120} height={38}
-              style={{ height: 30, width: 'auto' }} priority />
+            <Image src="/shameless-logo.png" alt="Simply Shameless" width={160} height={52}
+              style={{ height: 44, width: 'auto' }} priority />
           </Link>
           {(isEventPage || isDJPage) && (
             <>
@@ -197,8 +197,8 @@ export default function SSNavbar() {
       }}>
         {/* Logo top-left */}
         <div style={{ position: 'absolute', top: 18, left: 20 }}>
-          <Image src="/shameless-logo.png" alt="Simply Shameless" width={120} height={38}
-            style={{ height: 30, width: 'auto' }} />
+          <Image src="/shameless-logo.png" alt="Simply Shameless" width={160} height={52}
+            style={{ height: 44, width: 'auto' }} />
         </div>
 
         {/* Stagger-animated links — remount on each open via key */}
