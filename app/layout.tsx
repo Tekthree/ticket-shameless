@@ -19,8 +19,25 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'Simply Shameless — Seattle Underground',
-  description: "Seattle's underground house & techno collective. We throw parties that feel like freedom.",
+  metadataBase: new URL('https://simplyshameless.com'),
+  title: {
+    default: 'Simply Shameless — Seattle Underground House & Techno',
+    template: '%s | Simply Shameless',
+  },
+  description: "Seattle's underground house and techno collective. We throw parties that feel like freedom — live events, DJ nights, and day parties at Monkey Loft and beyond.",
+  openGraph: {
+    siteName: 'Simply Shameless',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@simplyshameless',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
