@@ -92,8 +92,22 @@ function GalleryCell({ cols, rows, imageUrl, index }: { cols: number; rows: numb
   )
 }
 
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
 export default function GallerySection({ images = [] }: { images?: string[] }) {
   const [headerRef, headerVisible] = useInView()
+  const [display, setDisplay] = useState<string[]>(images.slice(0, 6))
+
+  useEffect(() => {
+    if (images.length > 0) setDisplay(shuffle(images).slice(0, 6))
+  }, [images])
 
   return (
     <section id="gallery" style={{ padding: '100px 56px', background: '#1c1917' }}>
@@ -137,7 +151,7 @@ export default function GallerySection({ images = [] }: { images?: string[] }) {
           gap: 3,
         }}>
           {imageCells.map((cell, i) => (
-            <GalleryCell key={i} cols={cell.cols} rows={cell.rows} imageUrl={images[i]} index={i} />
+            <GalleryCell key={i} cols={cell.cols} rows={cell.rows} imageUrl={display[i]} index={i} />
           ))}
         </div>
       </div>

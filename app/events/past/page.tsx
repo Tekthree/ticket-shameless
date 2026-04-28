@@ -43,7 +43,7 @@ function EventRow({ event }: { event: Event }) {
 }
 
 export default async function PastEventsPage() {
-  const events = await getPastEvents(300)
+  const events = await getPastEvents(100)
 
   // Group by year
   const byYear = new Map<number, Event[]>()

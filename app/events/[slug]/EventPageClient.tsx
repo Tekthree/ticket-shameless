@@ -193,7 +193,7 @@ function LineupArtistRow({ artist }: { artist: LineupArtist }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <div style={{ width: 40, height: 40, background: hover ? C.red : C.darkCard, border: `1px solid ${hover ? C.red : C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden', position: 'relative', transition: 'all 0.2s' }}>
           {safeImageUrl(artist.image_url ?? artist.dj_profile_image_url)
-            ? <Image src={safeImageUrl(artist.image_url ?? artist.dj_profile_image_url)!} alt={artist.name} fill style={{ objectFit: 'cover', objectPosition: 'center top' }} />
+            ? <Image src={safeImageUrl(artist.image_url ?? artist.dj_profile_image_url)!} alt={artist.name} fill sizes="40px" style={{ objectFit: 'cover', objectPosition: 'center top' }} />
             : <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, color: hover ? '#fff' : C.darkMuted, textTransform: 'uppercase' }}>{artist.name[0]}</span>
           }
         </div>
@@ -627,7 +627,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
       {/* ── HERO ─────────────────────────────────────────────────────── */}
       <div className="ep-hero">
         {safeImageUrl(event.banner_url ?? event.image_url) ? (
-          <Image src={safeImageUrl(event.banner_url ?? event.image_url)!} alt={event.title} fill style={{ objectFit: 'cover', objectPosition: 'center 30%' }} priority />
+          <Image src={safeImageUrl(event.banner_url ?? event.image_url)!} alt={event.title} fill sizes="100vw" style={{ objectFit: 'cover', objectPosition: 'center 30%' }} priority />
         ) : (
           <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(45deg, #252220 0px, #252220 1px, #1c1917 1px, #1c1917 22px)' }} />
         )}

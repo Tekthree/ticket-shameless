@@ -35,8 +35,8 @@ export default function SSFooter() {
             © {new Date().getFullYear()} Simply Shameless Productions · Seattle, WA
           </div>
           <div style={{ display: 'flex', gap: 24 }}>
-            {['Privacy', 'Terms', 'Contact'].map(l => (
-              <Link key={l} href="#" style={{
+            {[{ label: 'Privacy', href: '/privacy' }, { label: 'Terms', href: '/terms' }, { label: 'Contact', href: '/contact' }].map(l => (
+              <Link key={l.label} href={l.href} style={{
                 color: 'rgba(240,236,230,0.25)', textDecoration: 'none',
                 fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700,
                 fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase',
@@ -44,7 +44,7 @@ export default function SSFooter() {
               }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#f0ece6')}
                 onMouseLeave={e => (e.currentTarget.style.color = 'rgba(240,236,230,0.25)')}
-              >{l}</Link>
+              >{l.label}</Link>
             ))}
           </div>
         </div>

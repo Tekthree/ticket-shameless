@@ -2,7 +2,9 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
+import useEmblaCarousel from 'embla-carousel-react'
+import type { Event } from '@/lib/db'
 
 const PLACEHOLDER_EVENTS = [
   { id: '1', title: 'Electric Soul', date: new Date('2025-05-09'), venue: 'Kremwerk, Seattle', tags: ['House', 'Techno'], status: 'tickets', slug: null },
@@ -26,8 +28,7 @@ function useInView() {
   return [ref, visible] as const
 }
 
-function EventCard({ event, delay }: { event: any; delay: number }) {
-  const [ref, visible] = useInView()
+function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
   const [hover, setHover] = useState(false)
   const [btnHover, setBtnHover] = useState(false)
 
@@ -41,12 +42,7 @@ function EventCard({ event, delay }: { event: any; delay: number }) {
   const isSoon = event.status === 'soon'
 
   return (
-    <div ref={ref} style={{
-      height: '100%',
-      opacity: visible ? 1 : 0,
-      transform: visible ? 'translateY(0)' : 'translateY(28px)',
-      transition: `opacity 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
-    }}>
+    <div style={{ height: '100%' }}>
       <Link href={href} style={{ display: 'flex', height: '100%', textDecoration: 'none' }}>
         <div
           onMouseEnter={() => setHover(true)}
@@ -62,9 +58,9 @@ function EventCard({ event, delay }: { event: any; delay: number }) {
           }}
         >
           {/* Image area */}
-          <div style={{ height: 190, flexShrink: 0, background: '#f2ede5', overflow: 'hidden', position: 'relative', borderBottom: '1px solid rgba(28,25,23,0.1)' }}>
+          <div style={{ aspectRatio: '16/9', flexShrink: 0, background: '#f2ede5', overflow: 'hidden', position: 'relative', borderBottom: '1px solid rgba(28,25,23,0.1)' }}>
             {imageUrl ? (
-              <Image src={imageUrl} fill style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1)', transform: hover ? 'scale(1.06)' : 'scale(1)' }} alt={event.title} />
+              <Image src={imageUrl} fill sizes="(max-width: 640px) 85vw, 420px" loading="eager" style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1)', transform: hover ? 'scale(1.06)' : 'scale(1)' }} alt={event.title} />
             ) : (
               <div style={{ width: '100%', height: '100%', background: 'repeating-linear-gradient(45deg, rgba(28,25,23,0.04) 0px, rgba(28,25,23,0.04) 1px, transparent 1px, transparent 14px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span style={{ fontFamily: 'monospace', fontSize: 10, color: '#8a8078' }}>event art</span>
@@ -106,16 +102,38 @@ function EventCard({ event, delay }: { event: any; delay: number }) {
   )
 }
 
-export default function EventsSection({ events }: { events: any[] }) {
+export default function EventsSection({ events }: { events: Event[] }) {
   const displayEvents = events.length > 0 ? events : PLACEHOLDER_EVENTS
-  const [ref, visible] = useInView()
+  const [headerRef, headerVisible] = useInView()
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: 'start',
+    loop: false,
+    dragFree: false,
+    slidesToScroll: 1,
+  })
+
+  const [selectedIndex, setSelectedIndex] = useState(0)
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return
+    setSelectedIndex(emblaApi.selectedScrollSnap())
+  }, [emblaApi])
+
+  useEffect(() => {
+    if (!emblaApi) return
+    emblaApi.on('select', onSelect)
+    emblaApi.on('reInit', onSelect)
+    onSelect()
+  }, [emblaApi, onSelect])
 
   return (
-    <section id="events" style={{ padding: '100px 56px', background: '#f2ede5' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div ref={ref} style={{
-          opacity: visible ? 1 : 0,
-          transform: visible ? 'translateY(0)' : 'translateY(28px)',
+    <section id="events" style={{ padding: '100px 0', background: '#f2ede5', overflow: 'hidden' }}>
+      {/* Header — aligned to content boundary */}
+      <div style={{ maxWidth: 1312, margin: '0 auto', padding: '0 56px' }}>
+        <div ref={headerRef} style={{
+          opacity: headerVisible ? 1 : 0,
+          transform: headerVisible ? 'translateY(0)' : 'translateY(28px)',
           transition: 'opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1)',
         }}>
           <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 14 }}>Upcoming Shows</div>
@@ -124,19 +142,53 @@ export default function EventsSection({ events }: { events: any[] }) {
             <Link href="/events" style={{ color: '#8a8078', textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase', borderBottom: '1px solid rgba(28,25,23,0.1)', paddingBottom: 2 }}>All Events →</Link>
           </div>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 2, alignItems: 'stretch' }}>
-          {displayEvents.slice(0, 4).map((e, i) => (
-            <EventCard key={e.id} event={e} delay={i * 80} />
-          ))}
+      </div>
+
+      {/* Embla — clipped at content right boundary */}
+      <div style={{ maxWidth: 1312, margin: '0 auto', clipPath: 'inset(0)' }}>
+        <div ref={emblaRef} style={{ overflow: 'hidden', cursor: 'grab' }} className="embla-events">
+          <div style={{ display: 'flex', gap: 2, alignItems: 'stretch' }}>
+            {displayEvents.map((e) => (
+              <div key={e.id} className="embla-events-slide" style={{ flexShrink: 0, minWidth: 0 }}>
+                <EventCard event={e} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
+
+      {/* Dot indicators — mobile only */}
+      <div className="embla-dots" style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 28 }}>
+        {displayEvents.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => emblaApi?.scrollTo(i)}
+            style={{
+              width: i === selectedIndex ? 20 : 6,
+              height: 6,
+              border: 'none',
+              borderRadius: 3,
+              background: i === selectedIndex ? '#c9321a' : 'rgba(28,25,23,0.2)',
+              cursor: 'pointer',
+              padding: 0,
+              transition: 'width 0.25s ease, background 0.25s ease',
+            }}
+            aria-label={`Go to event ${i + 1}`}
+          />
+        ))}
+      </div>
+
       <style dangerouslySetInnerHTML={{ __html: `
-        @media (max-width: 1024px) {
-          #events > div > div:last-child { grid-template-columns: repeat(2,1fr) !important; }
-        }
+        .embla-events { padding-left: 56px; cursor: grab; }
+        .embla-events:active { cursor: grabbing; }
+        .embla-events-slide { width: 420px; }
+        .embla-dots { display: none; }
+
         @media (max-width: 640px) {
-          #events { padding: 60px 24px !important; }
-          #events > div > div:last-child { grid-template-columns: 1fr !important; }
+          #events { padding: 60px 0 !important; }
+          .embla-events { padding-left: 24px; }
+          .embla-events-slide { width: 75vw; }
+          .embla-dots { display: flex !important; }
         }
       ` }} />
     </section>

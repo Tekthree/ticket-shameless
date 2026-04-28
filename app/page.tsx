@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import { getEvents } from '@/lib/events'
+import type { Event } from '@/lib/db'
 import { getGalleryImages } from '@/lib/r2'
 
 export const dynamic = 'force-dynamic'
@@ -31,19 +32,19 @@ import NewsletterSection from '@/components/home/NewsletterSection'
 import HomeClient from '@/components/home/HomeClient'
 
 export default async function Home() {
-  let events: any[] = []
+  let events: Event[] = []
   let galleryImages: string[] = []
   try {
     const result = await Promise.race([
-      getEvents(4),
+      getEvents(50),
       new Promise<never>((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000)),
     ])
-    events = result as any[]
+    events = result as Event[]
   } catch {
     // DB not connected or timed out — renders with placeholder events
   }
   try {
-    galleryImages = await getGalleryImages()
+    galleryImages = await getGalleryImages('', 100)
   } catch {
     // R2 not configured — renders placeholder gallery
   }

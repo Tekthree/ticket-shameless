@@ -63,7 +63,7 @@ function ProductCard({ product, onClick }: { product: Product; onClick: () => vo
         <div style={{ transition: 'transform 0.5s cubic-bezier(0.22,1,0.36,1)', transform: hover ? 'scale(1.04)' : 'scale(1)' }}>
           {product.image_url ? (
             <div style={{ height: 280, position: 'relative' }}>
-              <Image src={product.image_url} alt={product.name} fill style={{ objectFit: 'cover' }} />
+              <Image src={product.image_url} alt={product.name} fill sizes="(max-width: 640px) 50vw, 300px" style={{ objectFit: 'cover' }} />
             </div>
           ) : (
             <ProductImage product={product} />
@@ -140,7 +140,7 @@ function ProductDrawer({ product, onClose, onAddToBag }: { product: Product | nu
 
         {/* Image */}
         {product.image_url ? (
-          <div style={{ height: 300, position: 'relative' }}><Image src={product.image_url} alt={product.name} fill style={{ objectFit: 'cover' }} /></div>
+          <div style={{ height: 300, position: 'relative' }}><Image src={product.image_url} alt={product.name} fill sizes="(max-width: 640px) 100vw, 600px" style={{ objectFit: 'cover' }} /></div>
         ) : (
           <ProductImage product={product} height={300} />
         )}
