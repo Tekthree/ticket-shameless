@@ -117,7 +117,8 @@ export async function getPastEvents(limit = 50, offset = 0): Promise<Event[]> {
 }
 
 export async function getEventBySlug(slug: string): Promise<Event | null> {
-  const rows = await sql`
+  const freshSql = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
+  const rows = await freshSql`
     select * from events where slug = ${slug} and is_published = true limit 1
   `
   return (rows[0] as Event) ?? null
