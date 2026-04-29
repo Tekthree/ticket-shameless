@@ -534,7 +534,7 @@ const EVENTS: GalleryEvent[] = [
     title: 'Reverie Society',
     date: 'April 12, 2026',
     venue: 'Monkey Loft, Seattle',
-    photographer: { name: 'Collette', url: '' },
+    photographer: { name: 'Manny Dan', url: 'https://www.instagram.com/manny_dan_media/' },
     photos: REVERIE_URLS.map((src, i) => ({ id: `reverie-${i}`, src, alt: `Reverie Society — photo ${i + 1}`, aspect: ASPECTS[i % ASPECTS.length] })),
   },
   {
