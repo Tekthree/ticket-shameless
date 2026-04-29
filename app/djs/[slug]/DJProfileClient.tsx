@@ -150,13 +150,9 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
 
           {/* Role + location */}
           <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 20 }}>
-            {dj.is_resident ? (
+            {dj.is_resident && (
               <div style={{ background: C.red, color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', padding: '5px 12px' }}>
                 Shameless Resident
-              </div>
-            ) : (
-              <div style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, color: C.darkMuted, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', padding: '5px 12px' }}>
-                Guest
               </div>
             )}
             {dj.location && (

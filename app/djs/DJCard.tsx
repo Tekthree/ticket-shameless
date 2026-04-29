@@ -61,19 +61,20 @@ export function DJCard({ dj, upcomingCount = 0 }: { dj: DJ; upcomingCount?: numb
             </div>
           )}
 
-            {/* Role badge — top left */}
-          <div style={{
-            position: 'absolute', top: 12, left: 12,
-            background: dj.is_resident ? C.red : C.darkCard,
-            color: '#fff',
-            fontFamily: 'var(--font-barlow), sans-serif',
-            fontWeight: 800,
-            fontSize: 10,
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            padding: '4px 10px',
-            border: dj.is_resident ? 'none' : `1px solid ${C.darkBorder}`,
-          }}>{dj.is_resident ? 'Resident' : 'Guest'}</div>
+            {/* Role badge — residents only */}
+          {dj.is_resident && (
+            <div style={{
+              position: 'absolute', top: 12, left: 12,
+              background: C.red,
+              color: '#fff',
+              fontFamily: 'var(--font-barlow), sans-serif',
+              fontWeight: 800,
+              fontSize: 10,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              padding: '4px 10px',
+            }}>Resident</div>
+          )}
 
           {/* Upcoming indicator — top right */}
           {upcomingCount > 0 && (

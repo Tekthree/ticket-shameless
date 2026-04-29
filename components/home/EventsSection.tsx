@@ -130,7 +130,7 @@ export default function EventsSection({ events }: { events: Event[] }) {
   return (
     <section id="events" style={{ padding: '100px 0', background: '#f2ede5', overflow: 'hidden' }}>
       {/* Header — aligned to content boundary */}
-      <div style={{ maxWidth: 1312, margin: '0 auto', padding: '0 56px' }}>
+      <div className="events-header" style={{ maxWidth: 1312, margin: '0 auto', padding: '0 56px' }}>
         <div ref={headerRef} style={{
           opacity: headerVisible ? 1 : 0,
           transform: headerVisible ? 'translateY(0)' : 'translateY(28px)',
@@ -144,16 +144,14 @@ export default function EventsSection({ events }: { events: Event[] }) {
         </div>
       </div>
 
-      {/* Embla — clipped at content right boundary */}
-      <div style={{ maxWidth: 1312, margin: '0 auto', clipPath: 'inset(0)' }}>
-        <div ref={emblaRef} style={{ overflow: 'hidden', cursor: 'grab' }} className="embla-events">
-          <div style={{ display: 'flex', gap: 2, alignItems: 'stretch' }}>
-            {displayEvents.map((e) => (
-              <div key={e.id} className="embla-events-slide" style={{ flexShrink: 0, minWidth: 0 }}>
-                <EventCard event={e} />
-              </div>
-            ))}
-          </div>
+      {/* Embla — starts at content left, bleeds right to screen edge */}
+      <div ref={emblaRef} style={{ overflow: 'hidden', cursor: 'grab' }} className="embla-events">
+        <div style={{ display: 'flex', gap: 2, alignItems: 'stretch' }}>
+          {displayEvents.map((e) => (
+            <div key={e.id} className="embla-events-slide" style={{ flexShrink: 0, minWidth: 0 }}>
+              <EventCard event={e} />
+            </div>
+          ))}
         </div>
       </div>
 
@@ -179,13 +177,14 @@ export default function EventsSection({ events }: { events: Event[] }) {
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        .embla-events { padding-left: 56px; cursor: grab; }
+        .embla-events { padding-left: max(56px, calc((100vw - 1200px) / 2)); cursor: grab; }
         .embla-events:active { cursor: grabbing; }
         .embla-events-slide { width: 420px; }
         .embla-dots { display: none; }
 
         @media (max-width: 640px) {
           #events { padding: 60px 0 !important; }
+          .events-header { padding: 0 24px !important; }
           .embla-events { padding-left: 24px; }
           .embla-events-slide { width: 75vw; }
           .embla-dots { display: flex !important; }

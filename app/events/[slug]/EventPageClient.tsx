@@ -259,7 +259,7 @@ function OtherEventCard({ event }: { event: Event }) {
         onMouseLeave={() => setHover(false)}
         style={{ background: C.darkCard, border: `1px solid ${hover ? C.red : C.darkBorder}`, padding: '18px', cursor: 'pointer', transition: 'border-color 0.15s', height: '100%' }}
       >
-        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.red, marginBottom: 5 }}>{dateStr}</div>
+        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 18, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.red, marginBottom: 5 }}>{dateStr}</div>
         <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 20, color: C.darkText, textTransform: 'uppercase', lineHeight: 1, marginBottom: 4 }}>{event.title}</div>
         <div style={{ color: C.darkMuted, fontSize: 13, marginBottom: 14 }}>{event.venue} · Seattle</div>
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
