@@ -572,6 +572,8 @@ export default function HeroSection({
             justify-content: flex-end !important;
             height: auto !important;
           }
+          section[data-hero] .hero-btn-primary,
+          section[data-hero] .hero-btn-ghost { width: 100% !important; }
           /* Card flows in normal order after the buttons — no positioning tricks needed */
           section[data-hero] .hero-event-card {
             position: relative !important;
