@@ -437,7 +437,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
 
       {/* Product grid */}
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: `40px clamp(20px, 4vw, 56px) 80px` }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 4 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 'var(--ss-card-gap)' }}>
           {filtered.map(p => (
             <ProductCard key={p.id} product={p} onClick={() => setSelectedProduct(p)} />
           ))}

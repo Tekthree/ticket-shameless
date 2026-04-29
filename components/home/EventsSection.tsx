@@ -146,7 +146,7 @@ export default function EventsSection({ events }: { events: Event[] }) {
 
       {/* Embla — starts at content left, bleeds right to screen edge */}
       <div ref={emblaRef} style={{ overflow: 'hidden', cursor: 'grab' }} className="embla-events">
-        <div style={{ display: 'flex', gap: 2, alignItems: 'stretch' }}>
+        <div style={{ display: 'flex', gap: 'var(--ss-card-gap)', alignItems: 'stretch' }}>
           {displayEvents.map((e) => (
             <div key={e.id} className="embla-events-slide" style={{ flexShrink: 0, minWidth: 0 }}>
               <EventCard event={e} />

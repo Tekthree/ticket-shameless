@@ -141,7 +141,7 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
           </span>
         </div>
       ) : (
-        <div className="ss-dj-grid" style={{ display: 'grid', gap: 3 }}>
+        <div className="ss-dj-grid" style={{ display: 'grid', gap: 'var(--ss-card-gap)' }}>
           {filtered.map(dj => <DJCard key={dj.id} dj={dj} upcomingCount={upcomingCounts[dj.id] ?? 0} />)}
         </div>
       )}

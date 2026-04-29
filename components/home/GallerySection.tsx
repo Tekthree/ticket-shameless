@@ -148,7 +148,7 @@ export default function GallerySection({ images = [] }: { images?: string[] }) {
           display: 'grid',
           gridTemplateColumns: 'repeat(4, 1fr)',
           gridTemplateRows: 'repeat(2, 220px)',
-          gap: 3,
+          gap: 'var(--ss-card-gap)',
         }}>
           {imageCells.map((cell, i) => (
             <GalleryCell key={i} cols={cell.cols} rows={cell.rows} imageUrl={display[i]} index={i} />

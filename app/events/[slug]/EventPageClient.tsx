@@ -824,7 +824,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
         .ep-sidebar { display: block; }
         .ep-share-mobile { display: none; }
-        .ep-more-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+        .ep-more-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ss-card-gap); }
 
         .ep-mobile-bar { display: none; }
 

@@ -582,9 +582,9 @@ function PhotoGrid({ photos, event, onOpen }: { photos: Photo[]; event: GalleryE
   photos.forEach((photo, i) => columns[i % cols].push({ photo, index: i }))
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 3 }} className="ss-gallery-grid">
+    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 'var(--ss-card-gap)' }} className="ss-gallery-grid">
       {columns.map((col, ci) => (
-        <div key={ci} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <div key={ci} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ss-card-gap)' }}>
           {col.map(({ photo, index }) => (
             <div
               key={photo.id}

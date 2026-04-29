@@ -42,7 +42,9 @@
     --ring: 0 100% 50%; /* Red for focus rings */
 
     --radius: 0.5rem;
-    
+
+    --ss-card-gap: 3px; /* Single knob for all card grid gaps sitewide */
+
     --foreground-rgb: 20, 20, 20; /* Near black text */
     --background-rgb: 255, 255, 255; /* White background */
   }
