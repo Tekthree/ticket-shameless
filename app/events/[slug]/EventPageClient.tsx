@@ -813,9 +813,9 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
         }
 
         .ep-body {
-          max-width: 1100px;
+          max-width: 1200px;
           margin: 0 auto;
-          padding: 0 48px 60px;
+          padding: 0 clamp(20px, 4vw, 56px) 60px;
           display: grid;
           grid-template-columns: 1fr 380px;
           gap: 60px;

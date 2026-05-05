@@ -804,7 +804,7 @@ export default function GalleryClient() {
     <div style={{ minHeight: '100vh', background: C.dark }}>
       {/* Page header */}
       <div style={{ paddingTop: 64, background: C.dark }}>
-        <div style={{ padding: 'clamp(40px, 6vw, 60px) clamp(20px, 4vw, 56px) 0', maxWidth: 1280, margin: '0 auto' }}>
+        <div style={{ padding: 'clamp(40px, 6vw, 60px) clamp(20px, 4vw, 56px) 0', maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.28em', textTransform: 'uppercase', color: C.red, marginBottom: 12 }}>From the Floor</div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16, marginBottom: 0 }}>
             <h1 style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(52px, 8vw, 100px)', lineHeight: 0.86, textTransform: 'uppercase', color: C.darkText, margin: 0 }}>
@@ -818,7 +818,7 @@ export default function GalleryClient() {
 
         {/* Event tabs */}
         <div style={{ position: 'sticky', top: 64, zIndex: 100, background: 'rgba(28,25,23,0.97)', backdropFilter: 'blur(16px)', borderBottom: `1px solid ${C.darkBorder}`, marginTop: 32 }}>
-          <div style={{ maxWidth: 1280, margin: '0 auto', padding: `0 clamp(20px, 4vw, 56px)`, display: 'flex', alignItems: 'stretch' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto', padding: `0 clamp(20px, 4vw, 56px)`, display: 'flex', alignItems: 'stretch' }}>
             <div ref={tabsRef} style={{ flex: 1, display: 'flex', overflowX: 'auto', scrollbarWidth: 'none' }}>
               {EVENTS.map(e => (
                 <button
@@ -860,7 +860,7 @@ export default function GalleryClient() {
       </div>
 
       {/* Event info strip */}
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: `24px clamp(20px, 4vw, 56px)`, borderBottom: `1px solid ${C.darkBorder}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: `24px clamp(20px, 4vw, 56px)`, borderBottom: `1px solid ${C.darkBorder}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
         <div>
           <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 24, color: C.darkText, textTransform: 'uppercase', lineHeight: 1 }}>{event.title}</div>
           <div style={{ color: C.darkMuted, fontSize: 14, marginTop: 4 }}>{event.date} · {event.venue}</div>
@@ -877,7 +877,7 @@ export default function GalleryClient() {
       </div>
 
       {/* Photo grid */}
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: `20px clamp(20px, 4vw, 56px) 80px` }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: `20px clamp(20px, 4vw, 56px) 80px` }}>
         <PhotoGrid photos={event.photos} event={event} onOpen={openModal} />
 
         {/* Privacy notice */}

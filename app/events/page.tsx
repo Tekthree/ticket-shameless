@@ -71,7 +71,7 @@ export default async function EventsPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#1c1917', paddingTop: 64 }}>
-      <div className="events-container" style={{ maxWidth: 1100, margin: '0 auto', padding: '60px 48px' }}>
+      <div className="events-container" style={{ maxWidth: 1200, margin: '0 auto', padding: 'clamp(40px, 6vw, 60px) clamp(20px, 4vw, 56px)' }}>
         {/* Header */}
         <div style={{ marginBottom: 56, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
           <div>
