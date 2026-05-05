@@ -4,6 +4,7 @@ import { Barlow_Condensed, DM_Sans } from 'next/font/google'
 import { Toaster } from '@/components/ui/toaster'
 import SSNavbar from '@/components/SSNavbar'
 import SSFooter from '@/components/SSFooter'
+import PageTransition from '@/components/PageTransition'
 
 const barlowCondensed = Barlow_Condensed({
   subsets: ['latin'],
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="flex-grow">{children}</main>
         <SSFooter />
         <Toaster />
+        <PageTransition />
       </body>
     </html>
   )
