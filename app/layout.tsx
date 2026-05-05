@@ -29,10 +29,19 @@ export const metadata: Metadata = {
     siteName: 'Simply Shameless',
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: 'https://pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev/site/og-default.jpg',
+        width: 1280,
+        height: 1080,
+        alt: 'Simply Shameless — Seattle Underground House & Techno',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     site: '@simplyshameless',
+    images: ['https://pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev/site/og-default.jpg'],
   },
   robots: {
     index: true,

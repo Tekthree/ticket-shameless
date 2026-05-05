@@ -22,6 +22,26 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'simplyshameless.com', // Original site images
       },
+      {
+        protocol: 'https',
+        hostname: '*.sndcdn.com', // SoundCloud CDN avatars
+      },
+      {
+        protocol: 'https',
+        hostname: '*.cdninstagram.com', // Instagram CDN (fallbacks)
+      },
+      {
+        protocol: 'https',
+        hostname: '*.fbcdn.net', // Facebook/Instagram CDN fallbacks
+      },
+      {
+        protocol: 'https',
+        hostname: 'ra.co', // Resident Advisor
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.hammarica.com', // Legacy press images
+      },
     ],
   },
 };

@@ -53,7 +53,7 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 40, flexWrap: 'wrap' }} className="ss-filter-bar">
           {/* Tabs */}
-          <div style={{ display: 'flex', gap: 28, flexShrink: 0 }}>
+          <div className="ss-filter-tabs" style={{ display: 'flex', gap: 28, flexShrink: 0 }}>
             {tabs.map(({ key, label }) => (
               <button
                 key={key}
@@ -119,7 +119,7 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
           </div>
 
           {/* Count */}
-          <div style={{ flexShrink: 0, paddingLeft: 16, borderLeft: `1px solid ${C.darkBorder}`, paddingTop: 14, paddingBottom: 14 }}>
+          <div className="ss-filter-count" style={{ flexShrink: 0, paddingLeft: 16, borderLeft: `1px solid ${C.darkBorder}`, paddingTop: 14, paddingBottom: 14 }}>
             <span style={{
               fontFamily: 'var(--font-barlow), sans-serif',
               fontWeight: 700,
@@ -141,17 +141,28 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
           </span>
         </div>
       ) : (
-        <div className="ss-dj-grid" style={{ display: 'grid', gap: 'var(--ss-card-gap)' }}>
+        <div className="ss-dj-grid" style={{ display: 'grid' }}>
           {filtered.map(dj => <DJCard key={dj.id} dj={dj} upcomingCount={upcomingCounts[dj.id] ?? 0} />)}
         </div>
       )}
 
       <style dangerouslySetInnerHTML={{ __html: `
-        .ss-filter-bar { scrollbar-width: none; }
+        .ss-filter-bar {
+          scrollbar-width: none;
+          padding: 0 clamp(20px, 4vw, 56px);
+          gap: clamp(16px, 3vw, 40px);
+        }
         .ss-filter-bar::-webkit-scrollbar { display: none; }
-        .ss-dj-grid { grid-template-columns: repeat(4, 1fr); }
-        @media (max-width: 900px) { .ss-dj-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 600px) { .ss-dj-grid { grid-template-columns: repeat(2, 1fr); } }
+        .ss-filter-tabs { overflow-x: auto; scrollbar-width: none; }
+        .ss-filter-tabs::-webkit-scrollbar { display: none; }
+        .ss-dj-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .ss-dj-grid > * { min-width: 0; }
+        @media (max-width: 900px) { .ss-dj-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; } }
+        @media (max-width: 600px) { .ss-dj-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; } }
+        @media (max-width: 480px) {
+          .ss-filter-bar { flex-wrap: wrap; gap: 0; }
+          .ss-filter-count { display: none; }
+        }
         .ss-search-input::placeholder { color: #7a7068; }
         .ss-search-input:focus { border-color: #c9321a !important; background: rgba(255,255,255,0.06) !important; }
       ` }} />

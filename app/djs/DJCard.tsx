@@ -107,8 +107,12 @@ export function DJCard({ dj, upcomingCount = 0 }: { dj: DJ; upcomingCount?: numb
             fontSize: 22,
             color: C.darkText,
             textTransform: 'uppercase',
-            lineHeight: 1,
+            lineHeight: 1.1,
             marginBottom: 6,
+            overflow: 'hidden',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
           }}>{dj.name}</div>
           {dj.location && (
             <div style={{ color: C.darkMuted, fontSize: 13 }}>{dj.location}</div>
