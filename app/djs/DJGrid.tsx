@@ -134,17 +134,19 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
       </div>
 
       {/* Grid */}
-      {filtered.length === 0 ? (
-        <div style={{ color: C.darkMuted, fontSize: 15, padding: '48px 0', textAlign: 'center' }}>
-          <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-            No DJs found
-          </span>
-        </div>
-      ) : (
-        <div className="ss-dj-grid" style={{ display: 'grid' }}>
-          {filtered.map(dj => <DJCard key={dj.id} dj={dj} upcomingCount={upcomingCounts[dj.id] ?? 0} />)}
-        </div>
-      )}
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(20px, 4vw, 56px) 80px' }}>
+        {filtered.length === 0 ? (
+          <div style={{ color: C.darkMuted, fontSize: 15, padding: '48px 0', textAlign: 'center' }}>
+            <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              No DJs found
+            </span>
+          </div>
+        ) : (
+          <div className="ss-dj-grid" style={{ display: 'grid' }}>
+            {filtered.map(dj => <DJCard key={dj.id} dj={dj} upcomingCount={upcomingCounts[dj.id] ?? 0} />)}
+          </div>
+        )}
+      </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
         .ss-filter-bar {

@@ -67,9 +67,7 @@ export default async function DJsPage() {
         </div>
       </div>
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(20px, 4vw, 56px) 80px' }}>
-        <DJGrid djs={djs} upcomingCounts={upcomingCounts} />
-      </div>
+      <DJGrid djs={djs} upcomingCounts={upcomingCounts} />
     </div>
   )
 }
