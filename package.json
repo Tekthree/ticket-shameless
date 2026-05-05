@@ -10,7 +10,10 @@
     "lint": "next lint",
     "seed": "node scripts/seed-real-events.mjs",
     "seed:merch": "node scripts/seed-merch.mjs",
+    "seed:djs": "node scripts/seed-dj-roster.mjs",
+    "link:lineup": "node scripts/link-lineup-djs.mjs",
     "migrate": "node scripts/migrate.mjs",
+    "migrate:005": "node scripts/migrate-005.mjs",
     "test": "NODE_NO_WARNINGS=1 jest --passWithNoTests",
     "test:watch": "NODE_NO_WARNINGS=1 jest --watch",
     "test:coverage": "NODE_NO_WARNINGS=1 jest --coverage"

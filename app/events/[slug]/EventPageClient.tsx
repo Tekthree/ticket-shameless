@@ -193,12 +193,12 @@ function LineupArtistRow({ artist }: { artist: LineupArtist }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <div style={{ width: 40, height: 40, background: hover ? C.red : C.darkCard, border: `1px solid ${hover ? C.red : C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden', position: 'relative', transition: 'all 0.2s' }}>
           {safeImageUrl(artist.image_url ?? artist.dj_profile_image_url)
-            ? <Image src={safeImageUrl(artist.image_url ?? artist.dj_profile_image_url)!} alt={artist.name} fill sizes="40px" style={{ objectFit: 'cover', objectPosition: 'center top' }} />
-            : <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, color: hover ? '#fff' : C.darkMuted, textTransform: 'uppercase' }}>{artist.name[0]}</span>
+            ? <Image src={safeImageUrl(artist.image_url ?? artist.dj_profile_image_url)!} alt={artist.dj_name ?? artist.name} fill sizes="40px" style={{ objectFit: 'cover', objectPosition: 'center top' }} />
+            : <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, color: hover ? '#fff' : C.darkMuted, textTransform: 'uppercase' }}>{(artist.dj_name ?? artist.name)[0]}</span>
           }
         </div>
         <div>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 19, color: hover ? C.red : C.darkText, textTransform: 'uppercase', letterSpacing: '0.02em', transition: 'color 0.15s' }}>{artist.name}</div>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 19, color: hover ? C.red : C.darkText, textTransform: 'uppercase', letterSpacing: '0.02em', transition: 'color 0.15s' }}>{artist.dj_name ?? artist.name}</div>
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, marginLeft: 12 }}>

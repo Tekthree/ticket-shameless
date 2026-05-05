@@ -1,0 +1,4650 @@
+[
+  {
+    "alias": "Fricktion with Dark Chisme",
+    "canonical_names": [
+      "Claudia LB",
+      "Dark Chisme"
+    ],
+    "canonical_slugs": [
+      "claudia-lb",
+      "dark-chisme"
+    ],
+    "match_type": "manual-composite",
+    "confidence": "0.75",
+    "notes": "Crew/collab billing mapped to Fricktion lead Claudia LB and Dark Chisme for profile linking",
+    "is_composite": true
+  },
+  {
+    "alias": "John Tejada Live feat. March Adstrum (LA)",
+    "canonical_names": [
+      "John Tejada",
+      "March Adstrum"
+    ],
+    "canonical_slugs": [
+      "john-tejada",
+      "march-adstrum"
+    ],
+    "match_type": "manual-composite",
+    "confidence": "0.90",
+    "notes": "Live feature billing split across profiles",
+    "is_composite": true
+  },
+  {
+    "alias": "Riz & Rob",
+    "canonical_names": [
+      "Riz Rollins",
+      "Luxo"
+    ],
+    "canonical_slugs": [
+      "riz-rollins",
+      "luxo"
+    ],
+    "match_type": "manual-composite",
+    "confidence": "0.80",
+    "notes": "Likely Riz Rollins with Rob Green/Luxo billing",
+    "is_composite": true
+  },
+  {
+    "alias": "Riz B2B Rob",
+    "canonical_names": [
+      "Riz Rollins",
+      "Luxo"
+    ],
+    "canonical_slugs": [
+      "riz-rollins",
+      "luxo"
+    ],
+    "match_type": "manual-composite",
+    "confidence": "0.80",
+    "notes": "Likely Riz Rollins with Rob Green/Luxo B2B billing",
+    "is_composite": true
+  },
+  {
+    "alias": "Wax Witch B2B Repoman",
+    "canonical_names": [
+      "Wax Witch",
+      "Repoman"
+    ],
+    "canonical_slugs": [
+      "wax-witch",
+      "repoman"
+    ],
+    "match_type": "manual-composite",
+    "confidence": "0.95",
+    "notes": "Composite B2B billing, keep solo profiles",
+    "is_composite": true
+  },
+  {
+    "alias": "Anzo",
+    "canonical_names": [
+      "DJ Anzo"
+    ],
+    "canonical_slugs": [
+      "dj-anzo"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed short billing",
+    "is_composite": false
+  },
+  {
+    "alias": "Ashley Younnia (LA)",
+    "canonical_names": [
+      "Ashley Younnia (LA)"
+    ],
+    "canonical_slugs": [
+      "ashley-younnia"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Matches canonical LA billing",
+    "is_composite": false
+  },
+  {
+    "alias": "B.Lakepeterson",
+    "canonical_names": [
+      "B.LakePeterson"
+    ],
+    "canonical_slugs": [
+      "b-lake-peterson"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Case variant found in party lineups",
+    "is_composite": false
+  },
+  {
+    "alias": "Carlos R",
+    "canonical_names": [
+      "Carlos Ruiz"
+    ],
+    "canonical_slugs": [
+      "carlos-ruiz"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed short billing",
+    "is_composite": false
+  },
+  {
+    "alias": "Coflo (SF)",
+    "canonical_names": [
+      "Coflo (SF)"
+    ],
+    "canonical_slugs": [
+      "coflo"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Matches canonical SF billing",
+    "is_composite": false
+  },
+  {
+    "alias": "Curses (Berlin)",
+    "canonical_names": [
+      "Curses"
+    ],
+    "canonical_slugs": [
+      "curses"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Location parenthetical billing variant",
+    "is_composite": false
+  },
+  {
+    "alias": "Curses (Italians Do It Better, Berlin)",
+    "canonical_names": [
+      "Curses"
+    ],
+    "canonical_slugs": [
+      "curses"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Full label/location billing variant",
+    "is_composite": false
+  },
+  {
+    "alias": "Dane Garfield Wilson",
+    "canonical_names": [
+      "Dane Garfield"
+    ],
+    "canonical_slugs": [
+      "dane-garfield"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed full-name billing",
+    "is_composite": false
+  },
+  {
+    "alias": "David Dewey",
+    "canonical_names": [
+      "VonDewey"
+    ],
+    "canonical_slugs": [
+      "vondewey"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed real-name billing",
+    "is_composite": false
+  },
+  {
+    "alias": "Dewey",
+    "canonical_names": [
+      "VonDewey"
+    ],
+    "canonical_slugs": [
+      "vondewey"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed short-name billing",
+    "is_composite": false
+  },
+  {
+    "alias": "Dirty Vizualz Live VJ",
+    "canonical_names": [
+      "VJ Dirty Vizualz"
+    ],
+    "canonical_slugs": [
+      "dirty-vizualz"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed VJ billing",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Riz",
+    "canonical_names": [
+      "Riz Rollins"
+    ],
+    "canonical_slugs": [
+      "riz-rollins"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Common DJ billing for Riz Rollins",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Trinitron",
+    "canonical_names": [
+      "Trinitron"
+    ],
+    "canonical_slugs": [
+      "trinitron"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed DJ-prefix billing",
+    "is_composite": false
+  },
+  {
+    "alias": "DY3 (TN)",
+    "canonical_names": [
+      "DY3"
+    ],
+    "canonical_slugs": [
+      "dy3"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Location parenthetical billing variant",
+    "is_composite": false
+  },
+  {
+    "alias": "J-Justice",
+    "canonical_names": [
+      "JJustice"
+    ],
+    "canonical_slugs": [
+      "jjustice"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed spelling variant",
+    "is_composite": false
+  },
+  {
+    "alias": "J.Philp",
+    "canonical_names": [
+      "J.Phlip"
+    ],
+    "canonical_slugs": [
+      "j-phlip"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Likely typo variant",
+    "is_composite": false
+  },
+  {
+    "alias": "J.Phlip (Dirtybird, SF)",
+    "canonical_names": [
+      "J.Phlip"
+    ],
+    "canonical_slugs": [
+      "j-phlip"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Parenthetical billing variant",
+    "is_composite": false
+  },
+  {
+    "alias": "Jennifer Cardini (Correspondant, Dischi, Lisbon)",
+    "canonical_names": [
+      "Jennifer Cardini (Correspondant, Dischi, Lisbon)"
+    ],
+    "canonical_slugs": [
+      "jennifer-cardini"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Matches canonical full billing",
+    "is_composite": false
+  },
+  {
+    "alias": "Jesse Perez (Miami)",
+    "canonical_names": [
+      "Jesse Perez (Miami)"
+    ],
+    "canonical_slugs": [
+      "jesse-perez"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Matches canonical Miami billing",
+    "is_composite": false
+  },
+  {
+    "alias": "Joe Bellingham Live",
+    "canonical_names": [
+      "Joe Bellingham"
+    ],
+    "canonical_slugs": [
+      "joe-bellingham"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed live billing",
+    "is_composite": false
+  },
+  {
+    "alias": "JOY",
+    "canonical_names": [
+      "DJ Joy"
+    ],
+    "canonical_slugs": [
+      "dj-joy"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed short billing",
+    "is_composite": false
+  },
+  {
+    "alias": "Kid Hope",
+    "canonical_names": [
+      "Kid Hops"
+    ],
+    "canonical_slugs": [
+      "kid-hops"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Likely typo in party lineup",
+    "is_composite": false
+  },
+  {
+    "alias": "LowkeyDinTheHouse",
+    "canonical_names": [
+      "LowkeydintheHouse"
+    ],
+    "canonical_slugs": [
+      "lowkeydinthe-house"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Case/spacing variant found in party lineups",
+    "is_composite": false
+  },
+  {
+    "alias": "MattG",
+    "canonical_names": [
+      "Matt G"
+    ],
+    "canonical_slugs": [
+      "matt-g"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed spacing variant",
+    "is_composite": false
+  },
+  {
+    "alias": "MZ Artiz",
+    "canonical_names": [
+      "Mz ArTiz"
+    ],
+    "canonical_slugs": [
+      "mz-artiz"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed casing/punctuation variant",
+    "is_composite": false
+  },
+  {
+    "alias": "Nayiram & Friends (Global Bounce)",
+    "canonical_names": [
+      "Nayiram"
+    ],
+    "canonical_slugs": [
+      "nayiram"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed group billing to Nayiram",
+    "is_composite": false
+  },
+  {
+    "alias": "Optometry Live (LA)",
+    "canonical_names": [
+      "Optometry Live"
+    ],
+    "canonical_slugs": [
+      "optometry-live"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Location parenthetical billing variant",
+    "is_composite": false
+  },
+  {
+    "alias": "Riz",
+    "canonical_names": [
+      "Riz Rollins"
+    ],
+    "canonical_slugs": [
+      "riz-rollins"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Common short billing for Riz Rollins",
+    "is_composite": false
+  },
+  {
+    "alias": "roam(s)",
+    "canonical_names": [
+      "ROAM(S)"
+    ],
+    "canonical_slugs": [
+      "roams"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed casing/punctuation variant",
+    "is_composite": false
+  },
+  {
+    "alias": "Roams",
+    "canonical_names": [
+      "ROAM(S)"
+    ],
+    "canonical_slugs": [
+      "roams"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed casing/punctuation variant",
+    "is_composite": false
+  },
+  {
+    "alias": "Rob",
+    "canonical_names": [
+      "Luxo"
+    ],
+    "canonical_slugs": [
+      "luxo"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.65",
+    "notes": "Only use when context is Riz & Rob / Rob Green",
+    "is_composite": false
+  },
+  {
+    "alias": "Shaun Whitcher",
+    "canonical_names": [
+      "Whitcher"
+    ],
+    "canonical_slugs": [
+      "whitcher"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed legal/full name billing",
+    "is_composite": false
+  },
+  {
+    "alias": "Shelrawka",
+    "canonical_names": [
+      "Miss Shelrawka"
+    ],
+    "canonical_slugs": [
+      "miss-shelrawka"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed short billing",
+    "is_composite": false
+  },
+  {
+    "alias": "Wonder Twinz (Ms. Artiz & Julie Herrera)",
+    "canonical_names": [
+      "Wonder Twinz"
+    ],
+    "canonical_slugs": [
+      "wonder-twinz"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Collapsed detailed duo billing",
+    "is_composite": false
+  },
+  {
+    "alias": "WonderTwinz",
+    "canonical_names": [
+      "Wonder Twinz"
+    ],
+    "canonical_slugs": [
+      "wonder-twinz"
+    ],
+    "match_type": "manual-alias",
+    "confidence": "0.95",
+    "notes": "Spacing variant found in party lineups",
+    "is_composite": false
+  },
+  {
+    "alias": "Anzo",
+    "canonical_names": [
+      "DJ Anzo"
+    ],
+    "canonical_slugs": [
+      "dj-anzo"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: anzo",
+    "is_composite": false
+  },
+  {
+    "alias": "Carlos R",
+    "canonical_names": [
+      "Carlos Ruiz"
+    ],
+    "canonical_slugs": [
+      "carlos-ruiz"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: carlos-r",
+    "is_composite": false
+  },
+  {
+    "alias": "Carlos Ruiz",
+    "canonical_names": [
+      "Carlos Ruiz"
+    ],
+    "canonical_slugs": [
+      "carlos-ruiz"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: carlos-ruiz",
+    "is_composite": false
+  },
+  {
+    "alias": "Curses",
+    "canonical_names": [
+      "Curses"
+    ],
+    "canonical_slugs": [
+      "curses"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: curses",
+    "is_composite": false
+  },
+  {
+    "alias": "Curses (Italians Do It Better, Berlin)",
+    "canonical_names": [
+      "Curses"
+    ],
+    "canonical_slugs": [
+      "curses"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: curses",
+    "is_composite": false
+  },
+  {
+    "alias": "Dane Garfield",
+    "canonical_names": [
+      "Dane Garfield"
+    ],
+    "canonical_slugs": [
+      "dane-garfield"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: dane-garfield",
+    "is_composite": false
+  },
+  {
+    "alias": "Dane Garfield Wilson",
+    "canonical_names": [
+      "Dane Garfield"
+    ],
+    "canonical_slugs": [
+      "dane-garfield"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: dane-garfield-wilson",
+    "is_composite": false
+  },
+  {
+    "alias": "David Dewey",
+    "canonical_names": [
+      "VonDewey"
+    ],
+    "canonical_slugs": [
+      "vondewey"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: david-dewey",
+    "is_composite": false
+  },
+  {
+    "alias": "Dewey",
+    "canonical_names": [
+      "VonDewey"
+    ],
+    "canonical_slugs": [
+      "vondewey"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: dewey",
+    "is_composite": false
+  },
+  {
+    "alias": "Dirty Vizualz",
+    "canonical_names": [
+      "VJ Dirty Vizualz"
+    ],
+    "canonical_slugs": [
+      "dirty-vizualz"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: dirty-vizualz",
+    "is_composite": false
+  },
+  {
+    "alias": "Dirty Vizualz Live VJ",
+    "canonical_names": [
+      "VJ Dirty Vizualz"
+    ],
+    "canonical_slugs": [
+      "dirty-vizualz"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: dirty-vizualz-live-vj",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Anzo",
+    "canonical_names": [
+      "DJ Anzo"
+    ],
+    "canonical_slugs": [
+      "dj-anzo"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: dj-anzo",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Joy",
+    "canonical_names": [
+      "DJ Joy"
+    ],
+    "canonical_slugs": [
+      "dj-joy"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: dj-joy",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Trinitron",
+    "canonical_names": [
+      "Trinitron"
+    ],
+    "canonical_slugs": [
+      "trinitron"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: dj-trinitron",
+    "is_composite": false
+  },
+  {
+    "alias": "Fricktion with Dark Chisme",
+    "canonical_names": [
+      "Fricktion with Dark Chisme"
+    ],
+    "canonical_slugs": [],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: fricktion-with-dark-chisme",
+    "is_composite": false
+  },
+  {
+    "alias": "J-Justice",
+    "canonical_names": [
+      "JJustice"
+    ],
+    "canonical_slugs": [
+      "jjustice"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: j-justice",
+    "is_composite": false
+  },
+  {
+    "alias": "J.Phlip",
+    "canonical_names": [
+      "J.Phlip"
+    ],
+    "canonical_slugs": [
+      "j-phlip"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: j-phlip",
+    "is_composite": false
+  },
+  {
+    "alias": "J.Phlip (Dirtybird, SF)",
+    "canonical_names": [
+      "J.Phlip"
+    ],
+    "canonical_slugs": [
+      "j-phlip"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: j-philp",
+    "is_composite": false
+  },
+  {
+    "alias": "JJustice",
+    "canonical_names": [
+      "JJustice"
+    ],
+    "canonical_slugs": [
+      "jjustice"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: jjustice",
+    "is_composite": false
+  },
+  {
+    "alias": "Joe Bellingham",
+    "canonical_names": [
+      "Joe Bellingham"
+    ],
+    "canonical_slugs": [
+      "joe-bellingham"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: joe-bellingham",
+    "is_composite": false
+  },
+  {
+    "alias": "Joe Bellingham Live",
+    "canonical_names": [
+      "Joe Bellingham"
+    ],
+    "canonical_slugs": [
+      "joe-bellingham"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: joe-bellingham-live",
+    "is_composite": false
+  },
+  {
+    "alias": "JOY",
+    "canonical_names": [
+      "DJ Joy"
+    ],
+    "canonical_slugs": [
+      "dj-joy"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: joy",
+    "is_composite": false
+  },
+  {
+    "alias": "Kevin Kauer",
+    "canonical_names": [
+      "Nark"
+    ],
+    "canonical_slugs": [
+      "nark"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: kevin-kauer",
+    "is_composite": false
+  },
+  {
+    "alias": "KK/Nark",
+    "canonical_names": [
+      "Nark"
+    ],
+    "canonical_slugs": [
+      "nark"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: kk-nark",
+    "is_composite": false
+  },
+  {
+    "alias": "Matt G",
+    "canonical_names": [
+      "Matt G"
+    ],
+    "canonical_slugs": [
+      "matt-g"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: matt-g",
+    "is_composite": false
+  },
+  {
+    "alias": "MattG",
+    "canonical_names": [
+      "Matt G"
+    ],
+    "canonical_slugs": [
+      "matt-g"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: mattg",
+    "is_composite": false
+  },
+  {
+    "alias": "Miss Shelrawka",
+    "canonical_names": [
+      "Miss Shelrawka"
+    ],
+    "canonical_slugs": [
+      "miss-shelrawka"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: miss-shelrawka",
+    "is_composite": false
+  },
+  {
+    "alias": "MZ Artiz",
+    "canonical_names": [
+      "Mz ArTiz"
+    ],
+    "canonical_slugs": [
+      "mz-artiz"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: mz-artiz",
+    "is_composite": false
+  },
+  {
+    "alias": "Mz. ArTiz",
+    "canonical_names": [
+      "Mz ArTiz"
+    ],
+    "canonical_slugs": [
+      "mz-artiz"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: mz-artiz",
+    "is_composite": false
+  },
+  {
+    "alias": "Nark",
+    "canonical_names": [
+      "Nark"
+    ],
+    "canonical_slugs": [
+      "nark"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: nark",
+    "is_composite": false
+  },
+  {
+    "alias": "Nark (Top Floor)",
+    "canonical_names": [
+      "Nark"
+    ],
+    "canonical_slugs": [
+      "nark"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: nark",
+    "is_composite": false
+  },
+  {
+    "alias": "Nayiram & Friends (Global Bounce)",
+    "canonical_names": [
+      "Nayiram"
+    ],
+    "canonical_slugs": [
+      "nayiram"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: nayiram",
+    "is_composite": false
+  },
+  {
+    "alias": "roam(s)",
+    "canonical_names": [
+      "ROAM(S)"
+    ],
+    "canonical_slugs": [
+      "roams"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: roams",
+    "is_composite": false
+  },
+  {
+    "alias": "Roams",
+    "canonical_names": [
+      "ROAM(S)"
+    ],
+    "canonical_slugs": [
+      "roams"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: roams",
+    "is_composite": false
+  },
+  {
+    "alias": "Shaun Whitcher",
+    "canonical_names": [
+      "Whitcher"
+    ],
+    "canonical_slugs": [
+      "whitcher"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: shaun-whitcher",
+    "is_composite": false
+  },
+  {
+    "alias": "Shelrawka",
+    "canonical_names": [
+      "Miss Shelrawka"
+    ],
+    "canonical_slugs": [
+      "miss-shelrawka"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: shelrawka",
+    "is_composite": false
+  },
+  {
+    "alias": "Trinitron",
+    "canonical_names": [
+      "Trinitron"
+    ],
+    "canonical_slugs": [
+      "trinitron"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: trinitron",
+    "is_composite": false
+  },
+  {
+    "alias": "VonDewey",
+    "canonical_names": [
+      "VonDewey"
+    ],
+    "canonical_slugs": [
+      "vondewey"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: vondewey",
+    "is_composite": false
+  },
+  {
+    "alias": "Wax Witch B2B Repoman",
+    "canonical_names": [
+      "Wax Witch B2B Repoman"
+    ],
+    "canonical_slugs": [],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: wax-witch-b2b-repoman",
+    "is_composite": false
+  },
+  {
+    "alias": "Wonder Twinz (Ms. Artiz & Julie Herrera)",
+    "canonical_names": [
+      "Wonder Twinz"
+    ],
+    "canonical_slugs": [
+      "wonder-twinz"
+    ],
+    "match_type": "collapsed-alias",
+    "confidence": "1.00",
+    "notes": "Former slug: wonder-twinz",
+    "is_composite": false
+  },
+  {
+    "alias": "Brian Lyons B2B Wesley Holmes (Rooftop)",
+    "canonical_names": [
+      "Brian Lyons",
+      "Wesley Holmes"
+    ],
+    "canonical_slugs": [
+      "brian-lyons",
+      "wesley-holmes"
+    ],
+    "match_type": "party-composite",
+    "confidence": "0.85",
+    "notes": "Composite billing split into: Brian Lyons + Wesley Holmes",
+    "is_composite": true
+  },
+  {
+    "alias": "La Mala Noche B2B Papito Peace",
+    "canonical_names": [
+      "La Mala Noche",
+      "Papito Peace"
+    ],
+    "canonical_slugs": [
+      "la-mala-noche",
+      "papito-peace"
+    ],
+    "match_type": "party-composite",
+    "confidence": "0.85",
+    "notes": "Composite billing split into: La Mala Noche + Papito Peace",
+    "is_composite": true
+  },
+  {
+    "alias": "Onyx B2B B.LakePeterson",
+    "canonical_names": [
+      "Onyx",
+      "B.LakePeterson"
+    ],
+    "canonical_slugs": [
+      "onyx",
+      "b-lake-peterson"
+    ],
+    "match_type": "party-composite",
+    "confidence": "0.85",
+    "notes": "Composite billing split into: Onyx + B.LakePeterson",
+    "is_composite": true
+  },
+  {
+    "alias": "Parker Mills B2B Veta Vitali",
+    "canonical_names": [
+      "Parker Mills",
+      "Veta Vitali"
+    ],
+    "canonical_slugs": [
+      "parker-mills",
+      "veta-vitali"
+    ],
+    "match_type": "party-composite",
+    "confidence": "0.85",
+    "notes": "Composite billing split into: Parker Mills + Veta Vitali",
+    "is_composite": true
+  },
+  {
+    "alias": "Sazon with La Mala Noche",
+    "canonical_names": [
+      "Sazon",
+      "La Mala Noche"
+    ],
+    "canonical_slugs": [
+      "sazon",
+      "la-mala-noche"
+    ],
+    "match_type": "party-composite",
+    "confidence": "0.85",
+    "notes": "Composite billing split into: Sazon + La Mala Noche",
+    "is_composite": true
+  },
+  {
+    "alias": "Wax Witch B2B Repoman",
+    "canonical_names": [
+      "Wax Witch",
+      "Repoman"
+    ],
+    "canonical_slugs": [
+      "wax-witch",
+      "repoman"
+    ],
+    "match_type": "party-composite",
+    "confidence": "0.85",
+    "notes": "Composite billing split into: Wax Witch + Repoman",
+    "is_composite": true
+  },
+  {
+    "alias": "WD4D B2B Sho Nuph",
+    "canonical_names": [
+      "WD4D",
+      "Sho Nuph"
+    ],
+    "canonical_slugs": [
+      "wd4d",
+      "sho-nuph"
+    ],
+    "match_type": "party-composite",
+    "confidence": "0.85",
+    "notes": "Composite billing split into: WD4D + Sho Nuph",
+    "is_composite": true
+  },
+  {
+    "alias": "Aivilo (Rooftop)",
+    "canonical_names": [
+      "Aivilo"
+    ],
+    "canonical_slugs": [
+      "aivilo"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Aurora Flux (Live)",
+    "canonical_names": [
+      "Aurora Flux"
+    ],
+    "canonical_slugs": [
+      "aurora-flux"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "CancelTheCouch (Loft - Munchies After Dark)",
+    "canonical_names": [
+      "CancelTheCouch"
+    ],
+    "canonical_slugs": [
+      "cancel-the-couch"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Ctrl.MP3 (Rooftop - Global Bounce Showcase)",
+    "canonical_names": [
+      "Ctrl.MP3"
+    ],
+    "canonical_slugs": [
+      "ctrl-mp3"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Dane Garfield (Loft)",
+    "canonical_names": [
+      "Dane Garfield"
+    ],
+    "canonical_slugs": [
+      "dane-garfield"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Dab & Sherman (Free the Funk vs Selector Records Loft)",
+    "canonical_names": [
+      "DJ Dab & Sherman"
+    ],
+    "canonical_slugs": [
+      "dj-dab-and-sherman"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "DY3 (TN)",
+    "canonical_names": [
+      "DY3"
+    ],
+    "canonical_slugs": [
+      "dy3"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Frida K (Loft)",
+    "canonical_names": [
+      "Frida K"
+    ],
+    "canonical_slugs": [
+      "frida-k"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Henry Pope (L.A.)",
+    "canonical_names": [
+      "Henry Pope"
+    ],
+    "canonical_slugs": [
+      "henry-pope"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Hercules & Love Affair (DJ Set)",
+    "canonical_names": [
+      "Hercules & Love Affair"
+    ],
+    "canonical_slugs": [
+      "hercules-and-love-affair"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Isok (Loft - VIBE Showcase)",
+    "canonical_names": [
+      "Isok"
+    ],
+    "canonical_slugs": [
+      "isok"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Jason Code (Loft - Data Club)",
+    "canonical_names": [
+      "Jason Code"
+    ],
+    "canonical_slugs": [
+      "jason-code"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Jen Woolfe (Loft)",
+    "canonical_names": [
+      "Jen Woolfe"
+    ],
+    "canonical_slugs": [
+      "jen-woolfe"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Jen Woolfe (Mezzanine - Shameless 22 Year Anniversary)",
+    "canonical_names": [
+      "Jen Woolfe"
+    ],
+    "canonical_slugs": [
+      "jen-woolfe"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Jenn Green (Rooftop)",
+    "canonical_names": [
+      "Jenn Green"
+    ],
+    "canonical_slugs": [
+      "jenn-green"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Leah York (Loft)",
+    "canonical_names": [
+      "Leah York"
+    ],
+    "canonical_slugs": [
+      "leah-york"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Levi Clark (Rooftop)",
+    "canonical_names": [
+      "Levi Clark"
+    ],
+    "canonical_slugs": [
+      "levi-clark"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Mia Maya (Loft - MMBassy)",
+    "canonical_names": [
+      "Mia Maya"
+    ],
+    "canonical_slugs": [
+      "mia-maya"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Nark (Top Floor)",
+    "canonical_names": [
+      "Nark"
+    ],
+    "canonical_slugs": [
+      "nark"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "OFF99 (Rooftop)",
+    "canonical_names": [
+      "OFF99"
+    ],
+    "canonical_slugs": [
+      "off99"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Optometry Live (LA)",
+    "canonical_names": [
+      "Optometry Live"
+    ],
+    "canonical_slugs": [
+      "optometry-live"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Supreme La Rock (KEXP Rooftop)",
+    "canonical_names": [
+      "Supreme La Rock"
+    ],
+    "canonical_slugs": [
+      "supreme-la-rock"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Wonder Twinz (Ms. Artiz & Julie Herrera)",
+    "canonical_names": [
+      "Wonder Twinz"
+    ],
+    "canonical_slugs": [
+      "wonder-twinz"
+    ],
+    "match_type": "party-parenthetical-stripped",
+    "confidence": "0.90",
+    "notes": "Parenthetical/stage note stripped to match canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Anzo",
+    "canonical_names": [
+      "DJ Anzo"
+    ],
+    "canonical_slugs": [
+      "dj-anzo"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Deejay Hershe",
+    "canonical_names": [
+      "Hershe"
+    ],
+    "canonical_slugs": [
+      "hershe"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Dirty Vizualz",
+    "canonical_names": [
+      "VJ Dirty Vizualz"
+    ],
+    "canonical_slugs": [
+      "dirty-vizualz"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Nazo",
+    "canonical_names": [
+      "Nazo"
+    ],
+    "canonical_slugs": [
+      "nazo"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Raine",
+    "canonical_names": [
+      "Raine"
+    ],
+    "canonical_slugs": [
+      "raine"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ ShoNuph",
+    "canonical_names": [
+      "Sho Nuph"
+    ],
+    "canonical_slugs": [
+      "sho-nuph"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Trinitron",
+    "canonical_names": [
+      "Trinitron"
+    ],
+    "canonical_slugs": [
+      "trinitron"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Ethicaldrugs",
+    "canonical_names": [
+      "Ethical Drugs"
+    ],
+    "canonical_slugs": [
+      "ethical-drugs"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "FutureWife",
+    "canonical_names": [
+      "Future Wife"
+    ],
+    "canonical_slugs": [
+      "future-wife"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "J-Justice",
+    "canonical_names": [
+      "JJustice"
+    ],
+    "canonical_slugs": [
+      "jjustice"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Jenngreen",
+    "canonical_names": [
+      "Jenn Green"
+    ],
+    "canonical_slugs": [
+      "jenn-green"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Joy",
+    "canonical_names": [
+      "DJ Joy"
+    ],
+    "canonical_slugs": [
+      "dj-joy"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "JustBeef",
+    "canonical_names": [
+      "Just Beef"
+    ],
+    "canonical_slugs": [
+      "just-beef"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "MattG",
+    "canonical_names": [
+      "Matt G"
+    ],
+    "canonical_slugs": [
+      "matt-g"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Mz. ArTiz",
+    "canonical_names": [
+      "Mz ArTiz"
+    ],
+    "canonical_slugs": [
+      "mz-artiz"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Pappa T.",
+    "canonical_names": [
+      "Pappa T"
+    ],
+    "canonical_slugs": [
+      "pappa-t"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Roams",
+    "canonical_names": [
+      "ROAM(S)"
+    ],
+    "canonical_slugs": [
+      "roams"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "The Black Madonna",
+    "canonical_names": [
+      "The Blessed Madonna"
+    ],
+    "canonical_slugs": [
+      "the-black-madonna"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "The Love Virus",
+    "canonical_names": [
+      "The LoveVirus"
+    ],
+    "canonical_slugs": [
+      "the-lovevirus"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "WonderTwinz",
+    "canonical_names": [
+      "Wonder Twinz"
+    ],
+    "canonical_slugs": [
+      "wonder-twinz"
+    ],
+    "match_type": "party-exact-variant",
+    "confidence": "0.90",
+    "notes": "Lineup variant matched canonical roster",
+    "is_composite": false
+  },
+  {
+    "alias": "Abraham",
+    "canonical_names": [
+      "Abraham"
+    ],
+    "canonical_slugs": [
+      "abraham"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Acid Tourist",
+    "canonical_names": [
+      "Acid Tourist"
+    ],
+    "canonical_slugs": [
+      "acid-tourist"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Adlib",
+    "canonical_names": [
+      "Adlib"
+    ],
+    "canonical_slugs": [
+      "adlib"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Aivilo",
+    "canonical_names": [
+      "Aivilo"
+    ],
+    "canonical_slugs": [
+      "aivilo"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Alex Carrabba",
+    "canonical_names": [
+      "Alex Carrabba"
+    ],
+    "canonical_slugs": [
+      "alex-carrabba"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Alex Flores",
+    "canonical_names": [
+      "Alex Flores"
+    ],
+    "canonical_slugs": [
+      "alex-flores"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Alex the Cosmic Therapist",
+    "canonical_names": [
+      "Alex the Cosmic Therapist"
+    ],
+    "canonical_slugs": [
+      "alex-the-cosmic-therapist"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Alexia.F",
+    "canonical_names": [
+      "Alexia.F"
+    ],
+    "canonical_slugs": [
+      "alexia-f"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Alfonso Tan",
+    "canonical_names": [
+      "Alfonso Tan"
+    ],
+    "canonical_slugs": [
+      "alfonso-tan"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Alice Camille",
+    "canonical_names": [
+      "Alice Camille"
+    ],
+    "canonical_slugs": [
+      "alice-camille"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Alison Scott",
+    "canonical_names": [
+      "Alison Scott"
+    ],
+    "canonical_slugs": [
+      "alison-scott"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Almond Brown",
+    "canonical_names": [
+      "Almond Brown"
+    ],
+    "canonical_slugs": [
+      "almond-brown"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Ammo",
+    "canonical_names": [
+      "Ammo"
+    ],
+    "canonical_slugs": [
+      "ammo"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Ana-Lucid",
+    "canonical_names": [
+      "Ana-Lucid"
+    ],
+    "canonical_slugs": [
+      "ana-lucid"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Anabel Englund",
+    "canonical_names": [
+      "Anabel Englund"
+    ],
+    "canonical_slugs": [
+      "anabel-englund"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Anakim",
+    "canonical_names": [
+      "Anakim"
+    ],
+    "canonical_slugs": [
+      "anakim"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Andromo",
+    "canonical_names": [
+      "Andromo"
+    ],
+    "canonical_slugs": [
+      "androMo"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Andy Warren",
+    "canonical_names": [
+      "Andy Warren"
+    ],
+    "canonical_slugs": [
+      "andy-warren"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Animyx",
+    "canonical_names": [
+      "Animyx"
+    ],
+    "canonical_slugs": [
+      "animyx"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Aos",
+    "canonical_names": [
+      "Aos"
+    ],
+    "canonical_slugs": [
+      "aos"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Area 303",
+    "canonical_names": [
+      "Area 303"
+    ],
+    "canonical_slugs": [
+      "area-303"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Aria Bare",
+    "canonical_names": [
+      "Aria Bare"
+    ],
+    "canonical_slugs": [
+      "aria-bare"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Ashley Younnia (LA)",
+    "canonical_names": [
+      "Ashley Younnia (LA)"
+    ],
+    "canonical_slugs": [
+      "ashley-younnia"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "ASW",
+    "canonical_names": [
+      "ASW"
+    ],
+    "canonical_slugs": [
+      "asw"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Atlee",
+    "canonical_names": [
+      "Atlee"
+    ],
+    "canonical_slugs": [
+      "atlee"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Audie Dimitri",
+    "canonical_names": [
+      "Audie Dimitri"
+    ],
+    "canonical_slugs": [
+      "audie-dimitri"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Aundrea",
+    "canonical_names": [
+      "Aundrea"
+    ],
+    "canonical_slugs": [
+      "aundrea"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Aurora Flux",
+    "canonical_names": [
+      "Aurora Flux"
+    ],
+    "canonical_slugs": [
+      "aurora-flux"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Austin Robertson",
+    "canonical_names": [
+      "Austin Robertson"
+    ],
+    "canonical_slugs": [
+      "austin-robertson"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Avignon",
+    "canonical_names": [
+      "Avignon"
+    ],
+    "canonical_slugs": [
+      "avignon"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "B.Fly",
+    "canonical_names": [
+      "B.Fly"
+    ],
+    "canonical_slugs": [
+      "b-fly"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "B.LakePeterson",
+    "canonical_names": [
+      "B.LakePeterson"
+    ],
+    "canonical_slugs": [
+      "b-lake-peterson"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Bad Ginger",
+    "canonical_names": [
+      "Bad Ginger"
+    ],
+    "canonical_slugs": [
+      "bad-ginger"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Banyan",
+    "canonical_names": [
+      "Banyan"
+    ],
+    "canonical_slugs": [
+      "banyan"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Ben Annand",
+    "canonical_names": [
+      "Ben Annand"
+    ],
+    "canonical_slugs": [
+      "ben-annand"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Best Butt Camp",
+    "canonical_names": [
+      "Best Butt Camp"
+    ],
+    "canonical_slugs": [
+      "best-butt-camp"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Bex",
+    "canonical_names": [
+      "Bex"
+    ],
+    "canonical_slugs": [
+      "bex"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "BIG SIR",
+    "canonical_names": [
+      "BIG SIR"
+    ],
+    "canonical_slugs": [
+      "big-sir"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Biplov",
+    "canonical_names": [
+      "Biplov"
+    ],
+    "canonical_slugs": [
+      "biplov"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Bizio",
+    "canonical_names": [
+      "Bizio"
+    ],
+    "canonical_slugs": [
+      "bizio"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Black Velveteen",
+    "canonical_names": [
+      "Black Velveteen"
+    ],
+    "canonical_slugs": [
+      "black-velveteen"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Blk Lab",
+    "canonical_names": [
+      "Blk Lab"
+    ],
+    "canonical_slugs": [
+      "blk-lab"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Blueyedsoul",
+    "canonical_names": [
+      "Blueyedsoul"
+    ],
+    "canonical_slugs": [
+      "blueyedsoul"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Bobi Stevkovski",
+    "canonical_names": [
+      "Bobi Stevkovski"
+    ],
+    "canonical_slugs": [
+      "bobi-stevkovski"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Brian Lyons",
+    "canonical_names": [
+      "Brian Lyons"
+    ],
+    "canonical_slugs": [
+      "brian-lyons"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Brit",
+    "canonical_names": [
+      "Brit"
+    ],
+    "canonical_slugs": [
+      "brit"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Brit Hansen",
+    "canonical_names": [
+      "Brit Hansen"
+    ],
+    "canonical_slugs": [
+      "brit-hansen"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Brooke Would",
+    "canonical_names": [
+      "Brooke Would"
+    ],
+    "canonical_slugs": [
+      "brooke-would"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Bze",
+    "canonical_names": [
+      "Bze"
+    ],
+    "canonical_slugs": [
+      "bze"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Bzy",
+    "canonical_names": [
+      "Bzy"
+    ],
+    "canonical_slugs": [
+      "bzy"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Cafenico",
+    "canonical_names": [
+      "Cafenico"
+    ],
+    "canonical_slugs": [
+      "cafenico"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "CancelTheCouch",
+    "canonical_names": [
+      "CancelTheCouch"
+    ],
+    "canonical_slugs": [
+      "cancel-the-couch"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Canche Cachetes",
+    "canonical_names": [
+      "Canche Cachetes"
+    ],
+    "canonical_slugs": [
+      "canche-cachetes"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Carlos Ruiz",
+    "canonical_names": [
+      "Carlos Ruiz"
+    ],
+    "canonical_slugs": [
+      "carlos-ruiz"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "CaseWag",
+    "canonical_names": [
+      "CaseWag"
+    ],
+    "canonical_slugs": [
+      "casewag"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Cat Call",
+    "canonical_names": [
+      "Cat Call"
+    ],
+    "canonical_slugs": [
+      "cat-call"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Cat Claw",
+    "canonical_names": [
+      "Cat Claw"
+    ],
+    "canonical_slugs": [
+      "cat-claw"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Cee White",
+    "canonical_names": [
+      "Cee White"
+    ],
+    "canonical_slugs": [
+      "cee-white"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Chad Neiro",
+    "canonical_names": [
+      "Chad Neiro"
+    ],
+    "canonical_slugs": [
+      "chad-neiro"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Chaotic Noise Marching Corps",
+    "canonical_names": [
+      "Chaotic Noise Marching Corps"
+    ],
+    "canonical_slugs": [
+      "chaotic-noise-marching-corps"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Cherry White",
+    "canonical_names": [
+      "Cherry White"
+    ],
+    "canonical_slugs": [
+      "cherry-white"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Chris Tower",
+    "canonical_names": [
+      "Chris Tower"
+    ],
+    "canonical_slugs": [
+      "chris-tower"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Christian Martin",
+    "canonical_names": [
+      "Christian Martin"
+    ],
+    "canonical_slugs": [
+      "christian-martin"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Christine Michelle",
+    "canonical_names": [
+      "Christine Michelle"
+    ],
+    "canonical_slugs": [
+      "christine-michelle"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Christopher Ledger",
+    "canonical_names": [
+      "Christopher Ledger"
+    ],
+    "canonical_slugs": [
+      "christopher-ledger"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Citrus Age",
+    "canonical_names": [
+      "Citrus Age"
+    ],
+    "canonical_slugs": [
+      "citrus-age"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Clarian",
+    "canonical_names": [
+      "Clarian"
+    ],
+    "canonical_slugs": [
+      "clarian"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Claudia LB",
+    "canonical_names": [
+      "Claudia LB"
+    ],
+    "canonical_slugs": [
+      "claudia-lb"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Claudia Martinez",
+    "canonical_names": [
+      "Claudia Martinez"
+    ],
+    "canonical_slugs": [
+      "claudia-martinez"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Codebase",
+    "canonical_names": [
+      "Codebase"
+    ],
+    "canonical_slugs": [
+      "codebase"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Cody Hammer",
+    "canonical_names": [
+      "Cody Hammer"
+    ],
+    "canonical_slugs": [
+      "cody-hammer"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Cody Morrison",
+    "canonical_names": [
+      "Cody Morrison"
+    ],
+    "canonical_slugs": [
+      "cody-morrison"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Coflo (SF)",
+    "canonical_names": [
+      "Coflo (SF)"
+    ],
+    "canonical_slugs": [
+      "coflo"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Cole Medina",
+    "canonical_names": [
+      "Cole Medina"
+    ],
+    "canonical_slugs": [
+      "cole-medina"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Colette",
+    "canonical_names": [
+      "Colette"
+    ],
+    "canonical_slugs": [
+      "colette"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Contents",
+    "canonical_names": [
+      "Contents"
+    ],
+    "canonical_slugs": [
+      "contents"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Copeland",
+    "canonical_names": [
+      "Copeland"
+    ],
+    "canonical_slugs": [
+      "copeland"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Cosmic J0ke",
+    "canonical_names": [
+      "Cosmic J0ke"
+    ],
+    "canonical_slugs": [
+      "cosmic-joke"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Creach live (BC)",
+    "canonical_names": [
+      "Creach live (BC)"
+    ],
+    "canonical_slugs": [
+      "creach-live"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Ctrl.MP3",
+    "canonical_names": [
+      "Ctrl.MP3"
+    ],
+    "canonical_slugs": [
+      "ctrl-mp3"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Curses",
+    "canonical_names": [
+      "Curses"
+    ],
+    "canonical_slugs": [
+      "curses"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Cy Hanson",
+    "canonical_names": [
+      "Cy Hanson"
+    ],
+    "canonical_slugs": [
+      "cy-hanson"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Cylc",
+    "canonical_names": [
+      "Cylc"
+    ],
+    "canonical_slugs": [
+      "cylc"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "D.Guti",
+    "canonical_names": [
+      "D.Guti"
+    ],
+    "canonical_slugs": [
+      "d-guti"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "D'Jessique",
+    "canonical_names": [
+      "D'Jessique"
+    ],
+    "canonical_slugs": [
+      "d-jessique"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Dance Spirit",
+    "canonical_names": [
+      "Dance Spirit"
+    ],
+    "canonical_slugs": [
+      "dance-spirit"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Dane Garfield",
+    "canonical_names": [
+      "Dane Garfield"
+    ],
+    "canonical_slugs": [
+      "dane-garfield"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Danny Daze",
+    "canonical_names": [
+      "Danny Daze"
+    ],
+    "canonical_slugs": [
+      "danny-daze"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Dark Chisme",
+    "canonical_names": [
+      "Dark Chisme"
+    ],
+    "canonical_slugs": [
+      "dark-chisme"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Dark River",
+    "canonical_names": [
+      "Dark River"
+    ],
+    "canonical_slugs": [
+      "dark-river"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Dave DK",
+    "canonical_names": [
+      "Dave DK"
+    ],
+    "canonical_slugs": [
+      "dave-dk"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Dave Nada",
+    "canonical_names": [
+      "Dave Nada"
+    ],
+    "canonical_slugs": [
+      "dave-nada"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Dave Pezzner",
+    "canonical_names": [
+      "Dave Pezzner"
+    ],
+    "canonical_slugs": [
+      "dave-pezzner"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "David Scuba",
+    "canonical_names": [
+      "David Scuba"
+    ],
+    "canonical_slugs": [
+      "david-scuba"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Death on the Balcony",
+    "canonical_names": [
+      "Death on the Balcony"
+    ],
+    "canonical_slugs": [
+      "death-on-the-balcony"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Dee Diggs",
+    "canonical_names": [
+      "Dee Diggs"
+    ],
+    "canonical_slugs": [
+      "dee-diggs"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Deejay Hershe",
+    "canonical_names": [
+      "Deejay Hershe"
+    ],
+    "canonical_slugs": [
+      "deejay-hershe"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Deepchild",
+    "canonical_names": [
+      "Deepchild"
+    ],
+    "canonical_slugs": [
+      "deepchild"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Deepika",
+    "canonical_names": [
+      "Deepika"
+    ],
+    "canonical_slugs": [
+      "deepika"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Derek Pavone",
+    "canonical_names": [
+      "Derek Pavone"
+    ],
+    "canonical_slugs": [
+      "derek-pavone"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Derrick Carter",
+    "canonical_names": [
+      "Derrick Carter"
+    ],
+    "canonical_slugs": [
+      "derrick-carter"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Derrick Deep",
+    "canonical_names": [
+      "Derrick Deep"
+    ],
+    "canonical_slugs": [
+      "derrick-deep"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DeWalta",
+    "canonical_names": [
+      "DeWalta"
+    ],
+    "canonical_slugs": [
+      "dewalta"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Dirty Ice Crew",
+    "canonical_names": [
+      "Dirty Ice Crew"
+    ],
+    "canonical_slugs": [
+      "dirty-ice-crew"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Dirty J",
+    "canonical_names": [
+      "Dirty J"
+    ],
+    "canonical_slugs": [
+      "dirty-j"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Anzo",
+    "canonical_names": [
+      "DJ Anzo"
+    ],
+    "canonical_slugs": [
+      "dj-anzo"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Assault",
+    "canonical_names": [
+      "DJ Assault"
+    ],
+    "canonical_slugs": [
+      "dj-assault"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ D'Nelski",
+    "canonical_names": [
+      "DJ D'Nelski"
+    ],
+    "canonical_slugs": [
+      "dj-d-nelski"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Dab & Sherman",
+    "canonical_names": [
+      "DJ Dab & Sherman"
+    ],
+    "canonical_slugs": [
+      "dj-dab-and-sherman"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Diz",
+    "canonical_names": [
+      "DJ Diz"
+    ],
+    "canonical_slugs": [
+      "dj-diz"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Essex",
+    "canonical_names": [
+      "DJ Essex"
+    ],
+    "canonical_slugs": [
+      "dj-essex"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Heather",
+    "canonical_names": [
+      "DJ Heather"
+    ],
+    "canonical_slugs": [
+      "dj-heather"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Joy",
+    "canonical_names": [
+      "DJ Joy"
+    ],
+    "canonical_slugs": [
+      "dj-joy"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ KP",
+    "canonical_names": [
+      "DJ KP"
+    ],
+    "canonical_slugs": [
+      "dj-kp"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Libbi",
+    "canonical_names": [
+      "DJ Libbi"
+    ],
+    "canonical_slugs": [
+      "dj-libbi"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Mac Tray",
+    "canonical_names": [
+      "DJ Mac Tray"
+    ],
+    "canonical_slugs": [
+      "dj-mac-tray"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Manos",
+    "canonical_names": [
+      "DJ Manos"
+    ],
+    "canonical_slugs": [
+      "dj-manos"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Raine",
+    "canonical_names": [
+      "DJ Raine"
+    ],
+    "canonical_slugs": [
+      "dj-raine"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Sean",
+    "canonical_names": [
+      "DJ Sean"
+    ],
+    "canonical_slugs": [
+      "dj-sean"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ SH1-TR",
+    "canonical_names": [
+      "DJ SH1-TR"
+    ],
+    "canonical_slugs": [
+      "dj-sh1-tr"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Sheppard",
+    "canonical_names": [
+      "DJ Sheppard"
+    ],
+    "canonical_slugs": [
+      "dj-sheppard"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Sloth",
+    "canonical_names": [
+      "DJ Sloth"
+    ],
+    "canonical_slugs": [
+      "dj-sloth"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Three",
+    "canonical_names": [
+      "DJ Three"
+    ],
+    "canonical_slugs": [
+      "dj-three"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Weak Acid",
+    "canonical_names": [
+      "DJ Weak Acid"
+    ],
+    "canonical_slugs": [
+      "dj-weak-acid"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJ Zen",
+    "canonical_names": [
+      "DJ Zen"
+    ],
+    "canonical_slugs": [
+      "dj-zen"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJello",
+    "canonical_names": [
+      "DJello"
+    ],
+    "canonical_slugs": [
+      "djello"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DJHoodriah",
+    "canonical_names": [
+      "DJHoodriah"
+    ],
+    "canonical_slugs": [
+      "djhoodriah"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DNcrystal",
+    "canonical_names": [
+      "DNcrystal"
+    ],
+    "canonical_slugs": [
+      "dncrystal"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "dos leches",
+    "canonical_names": [
+      "dos leches"
+    ],
+    "canonical_slugs": [
+      "dos-leches"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DOT ORGY",
+    "canonical_names": [
+      "DOT ORGY"
+    ],
+    "canonical_slugs": [
+      "dot-orgy"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Doza",
+    "canonical_names": [
+      "Doza"
+    ],
+    "canonical_slugs": [
+      "doza"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Dr. Bloom",
+    "canonical_names": [
+      "Dr. Bloom"
+    ],
+    "canonical_slugs": [
+      "dr-bloom"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Dusky",
+    "canonical_names": [
+      "Dusky"
+    ],
+    "canonical_slugs": [
+      "dusky"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "DY3",
+    "canonical_names": [
+      "DY3"
+    ],
+    "canonical_slugs": [
+      "dy3"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Eagles & Butterflies",
+    "canonical_names": [
+      "Eagles & Butterflies"
+    ],
+    "canonical_slugs": [
+      "eagles-and-butterflies"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "EAN",
+    "canonical_names": [
+      "EAN"
+    ],
+    "canonical_slugs": [
+      "ean"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Edders",
+    "canonical_names": [
+      "Edders"
+    ],
+    "canonical_slugs": [
+      "edders"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Egyptian Lover",
+    "canonical_names": [
+      "Egyptian Lover"
+    ],
+    "canonical_slugs": [
+      "egyptian-lover"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Eliogold",
+    "canonical_names": [
+      "Eliogold"
+    ],
+    "canonical_slugs": [
+      "eliogold"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "ELLEM",
+    "canonical_names": [
+      "ELLEM"
+    ],
+    "canonical_slugs": [
+      "ellem"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Ellie Wild",
+    "canonical_names": [
+      "Ellie Wild"
+    ],
+    "canonical_slugs": [
+      "ellie-wild"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Emily Divine",
+    "canonical_names": [
+      "Emily Divine"
+    ],
+    "canonical_slugs": [
+      "emily-divine"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Emily Song",
+    "canonical_names": [
+      "Emily Song"
+    ],
+    "canonical_slugs": [
+      "emily-song"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Enereph",
+    "canonical_names": [
+      "Enereph"
+    ],
+    "canonical_slugs": [
+      "enereph"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "EOC",
+    "canonical_names": [
+      "EOC"
+    ],
+    "canonical_slugs": [
+      "eoc"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Erin O'Conner",
+    "canonical_names": [
+      "Erin O'Conner"
+    ],
+    "canonical_slugs": [
+      "erin-oconner"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Ethical Drugs",
+    "canonical_names": [
+      "Ethical Drugs"
+    ],
+    "canonical_slugs": [
+      "ethical-drugs"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Eugene Fauntleroy",
+    "canonical_names": [
+      "Eugene Fauntleroy"
+    ],
+    "canonical_slugs": [
+      "eugene-fauntleroy"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Eva",
+    "canonical_names": [
+      "Eva"
+    ],
+    "canonical_slugs": [
+      "eva"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Evan Casey",
+    "canonical_names": [
+      "Evan Casey"
+    ],
+    "canonical_slugs": [
+      "evan-casey"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Everett Leftside",
+    "canonical_names": [
+      "Everett Leftside"
+    ],
+    "canonical_slugs": [
+      "everett-leftside"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Experimental Housewife",
+    "canonical_names": [
+      "Experimental Housewife"
+    ],
+    "canonical_slugs": [
+      "experimental-housewife"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Expert System",
+    "canonical_names": [
+      "Expert System"
+    ],
+    "canonical_slugs": [
+      "expert-system"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "EZBOT",
+    "canonical_names": [
+      "EZBOT"
+    ],
+    "canonical_slugs": [
+      "ezbot"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Fabe Canepari",
+    "canonical_names": [
+      "Fabe Canepari"
+    ],
+    "canonical_slugs": [
+      "fabe-canepari"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Faridaguyzzz",
+    "canonical_names": [
+      "Faridaguyzzz"
+    ],
+    "canonical_slugs": [
+      "faridaguyzzz"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Fern",
+    "canonical_names": [
+      "Fern"
+    ],
+    "canonical_slugs": [
+      "fern"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Floyd Lavine (Afrikan Tales, Berlin)",
+    "canonical_names": [
+      "Floyd Lavine (Afrikan Tales, Berlin)"
+    ],
+    "canonical_slugs": [
+      "floyd-lavine"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Foofou",
+    "canonical_names": [
+      "Foofou"
+    ],
+    "canonical_slugs": [
+      "foofou"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Fouad Masoud",
+    "canonical_names": [
+      "Fouad Masoud"
+    ],
+    "canonical_slugs": [
+      "fouad-masoud"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Foxy McLeod",
+    "canonical_names": [
+      "Foxy McLeod"
+    ],
+    "canonical_slugs": [
+      "foxy-mcleod"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Franz & Shape",
+    "canonical_names": [
+      "Franz & Shape"
+    ],
+    "canonical_slugs": [
+      "franz-and-shape"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Freddy M",
+    "canonical_names": [
+      "Freddy M"
+    ],
+    "canonical_slugs": [
+      "freddy-m"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Frida K",
+    "canonical_names": [
+      "Frida K"
+    ],
+    "canonical_slugs": [
+      "frida-k"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Fungineers",
+    "canonical_names": [
+      "Fungineers"
+    ],
+    "canonical_slugs": [
+      "fungineers"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Future Wife",
+    "canonical_names": [
+      "Future Wife"
+    ],
+    "canonical_slugs": [
+      "future-wife"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Futuregrandpa",
+    "canonical_names": [
+      "Futuregrandpa"
+    ],
+    "canonical_slugs": [
+      "futuregrandpa"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Gato Negro",
+    "canonical_names": [
+      "Gato Negro"
+    ],
+    "canonical_slugs": [
+      "gato-negro"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Gene Farris",
+    "canonical_names": [
+      "Gene Farris"
+    ],
+    "canonical_slugs": [
+      "gene-farris"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Gene Lee",
+    "canonical_names": [
+      "Gene Lee"
+    ],
+    "canonical_slugs": [
+      "gene-lee"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "GeoD",
+    "canonical_names": [
+      "GeoD"
+    ],
+    "canonical_slugs": [
+      "geod"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Gina Turner",
+    "canonical_names": [
+      "Gina Turner"
+    ],
+    "canonical_slugs": [
+      "gina-turner"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Ginkgo",
+    "canonical_names": [
+      "Ginkgo"
+    ],
+    "canonical_slugs": [
+      "ginkgo"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "GriffinGrrl",
+    "canonical_names": [
+      "GriffinGrrl"
+    ],
+    "canonical_slugs": [
+      "griffin-grrl"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Hanssen",
+    "canonical_names": [
+      "Hanssen"
+    ],
+    "canonical_slugs": [
+      "hanssen"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Happy John",
+    "canonical_names": [
+      "Happy John"
+    ],
+    "canonical_slugs": [
+      "happy-john"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "HA\u00dcS\\\\GASM",
+    "canonical_names": [
+      "HA\u00dcS\\\\GASM"
+    ],
+    "canonical_slugs": [
+      "haus-gasm"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Hazel Zen",
+    "canonical_names": [
+      "Hazel Zen"
+    ],
+    "canonical_slugs": [
+      "hazel-zen"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Hazelwood",
+    "canonical_names": [
+      "Hazelwood"
+    ],
+    "canonical_slugs": [
+      "hazelwood"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Hector J Rodriguez",
+    "canonical_names": [
+      "Hector J Rodriguez"
+    ],
+    "canonical_slugs": [
+      "hector-j-rodriguez"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Henry Pope",
+    "canonical_names": [
+      "Henry Pope"
+    ],
+    "canonical_slugs": [
+      "henry-pope"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Hercules & Love Affair",
+    "canonical_names": [
+      "Hercules & Love Affair"
+    ],
+    "canonical_slugs": [
+      "hercules-and-love-affair"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Hershe",
+    "canonical_names": [
+      "Hershe"
+    ],
+    "canonical_slugs": [
+      "hershe"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "HollyLouYah",
+    "canonical_names": [
+      "HollyLouYah"
+    ],
+    "canonical_slugs": [
+      "hollylouyah"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "hOM",
+    "canonical_names": [
+      "hOM"
+    ],
+    "canonical_slugs": [
+      "hom"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Hot Pink Shade",
+    "canonical_names": [
+      "Hot Pink Shade"
+    ],
+    "canonical_slugs": [
+      "hot-pink-shade"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Hugo Hernandez",
+    "canonical_names": [
+      "Hugo Hernandez"
+    ],
+    "canonical_slugs": [
+      "hugo-hernandez"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Hyasynth",
+    "canonical_names": [
+      "Hyasynth"
+    ],
+    "canonical_slugs": [
+      "hyasynth"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Hydef",
+    "canonical_names": [
+      "Hydef"
+    ],
+    "canonical_slugs": [
+      "hydef"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Hydro Craft",
+    "canonical_names": [
+      "Hydro Craft"
+    ],
+    "canonical_slugs": [
+      "hydro-craft"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Hyeonje",
+    "canonical_names": [
+      "Hyeonje"
+    ],
+    "canonical_slugs": [
+      "hyeonje"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "I.S.H",
+    "canonical_names": [
+      "I.S.H"
+    ],
+    "canonical_slugs": [
+      "i-s-h"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Iain Howie",
+    "canonical_names": [
+      "Iain Howie"
+    ],
+    "canonical_slugs": [
+      "iain-howie"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Idle",
+    "canonical_names": [
+      "Idle"
+    ],
+    "canonical_slugs": [
+      "idle"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Interwave Surfer",
+    "canonical_names": [
+      "Interwave Surfer"
+    ],
+    "canonical_slugs": [
+      "interwave-surfer"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Isok",
+    "canonical_names": [
+      "Isok"
+    ],
+    "canonical_slugs": [
+      "isok"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "ISSA MAN",
+    "canonical_names": [
+      "ISSA MAN"
+    ],
+    "canonical_slugs": [
+      "issa-man"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "J-Sun",
+    "canonical_names": [
+      "J-Sun"
+    ],
+    "canonical_slugs": [
+      "j-sun"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "J. Ervin",
+    "canonical_names": [
+      "J. Ervin"
+    ],
+    "canonical_slugs": [
+      "j-ervin"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "J. Sleep",
+    "canonical_names": [
+      "J. Sleep"
+    ],
+    "canonical_slugs": [
+      "j-sijap"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "J.Phlip",
+    "canonical_names": [
+      "J.Phlip"
+    ],
+    "canonical_slugs": [
+      "j-phlip"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jacki Why",
+    "canonical_names": [
+      "Jacki Why"
+    ],
+    "canonical_slugs": [
+      "jacki-why"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jackson (Gallery - Between the Lines)",
+    "canonical_names": [
+      "Jackson (Gallery - Between the Lines)"
+    ],
+    "canonical_slugs": [
+      "jackson"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jacob London",
+    "canonical_names": [
+      "Jacob London"
+    ],
+    "canonical_slugs": [
+      "jacob-london"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jaderade",
+    "canonical_names": [
+      "Jaderade"
+    ],
+    "canonical_slugs": [
+      "jaderade"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jake the Rapper",
+    "canonical_names": [
+      "Jake the Rapper"
+    ],
+    "canonical_slugs": [
+      "jake-the-rapper"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "James Flavour",
+    "canonical_names": [
+      "James Flavour"
+    ],
+    "canonical_slugs": [
+      "james-flavour"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "James$Ervin",
+    "canonical_names": [
+      "James$Ervin"
+    ],
+    "canonical_slugs": [
+      "james-ervin"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jamie Schwabl",
+    "canonical_names": [
+      "Jamie Schwabl"
+    ],
+    "canonical_slugs": [
+      "jamie-schwabl"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jaogaz",
+    "canonical_names": [
+      "Jaogaz"
+    ],
+    "canonical_slugs": [
+      "jaogaz"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jared Love",
+    "canonical_names": [
+      "Jared Love"
+    ],
+    "canonical_slugs": [
+      "jared-love"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jason Code",
+    "canonical_names": [
+      "Jason Code"
+    ],
+    "canonical_slugs": [
+      "jason-code"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jason Woo",
+    "canonical_names": [
+      "Jason Woo"
+    ],
+    "canonical_slugs": [
+      "jason-woo"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jaunt",
+    "canonical_names": [
+      "Jaunt"
+    ],
+    "canonical_slugs": [
+      "jaunt"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jay Peeki",
+    "canonical_names": [
+      "Jay Peeki"
+    ],
+    "canonical_slugs": [
+      "jay-peeki"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jay Tripwire",
+    "canonical_names": [
+      "Jay Tripwire"
+    ],
+    "canonical_slugs": [
+      "jay-tripwire"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jeff Samuel",
+    "canonical_names": [
+      "Jeff Samuel"
+    ],
+    "canonical_slugs": [
+      "jeff-samuel"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jen Woolfe",
+    "canonical_names": [
+      "Jen Woolfe"
+    ],
+    "canonical_slugs": [
+      "jen-woolfe"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jenn Green",
+    "canonical_names": [
+      "Jenn Green"
+    ],
+    "canonical_slugs": [
+      "jenn-green"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jennifer Cardini (Correspondant, Dischi, Lisbon)",
+    "canonical_names": [
+      "Jennifer Cardini (Correspondant, Dischi, Lisbon)"
+    ],
+    "canonical_slugs": [
+      "jennifer-cardini"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jeremy Linden",
+    "canonical_names": [
+      "Jeremy Linden"
+    ],
+    "canonical_slugs": [
+      "jeremy-linden"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jeromy Nail",
+    "canonical_names": [
+      "Jeromy Nail"
+    ],
+    "canonical_slugs": [
+      "jeromy-nail"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jersey Girl",
+    "canonical_names": [
+      "Jersey Girl"
+    ],
+    "canonical_slugs": [
+      "jersey-girl"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jesse Leer",
+    "canonical_names": [
+      "Jesse Leer"
+    ],
+    "canonical_slugs": [
+      "jesse-leer"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "Jesse Perez (Miami)",
+    "canonical_names": [
+      "Jesse Perez (Miami)"
+    ],
+    "canonical_slugs": [
+      "jesse-perez"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  },
+  {
+    "alias": "JJustice",
+    "canonical_names": [
+      "JJustice"
+    ],
+    "canonical_slugs": [
+      "jjustice"
+    ],
+    "match_type": "canonical",
+    "confidence": "1.00",
+    "notes": "Canonical cleaned roster profile",
+    "is_composite": false
+  }
+]

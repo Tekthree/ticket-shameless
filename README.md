@@ -97,6 +97,30 @@ npm run seed:merch  # sample products
 | `products` | Merch items: name, price, sizes, stock, Stripe price ID |
 | `orders` + `order_items` | Stripe merch orders |
 | `subscribers` | Newsletter signups |
+| `djs` | DJ profiles: slug, name, bio, location, genres, social URLs, aliases, resident flag, profile image |
+
+### DJ system
+
+DJ profiles live in the `djs` table. Each profile has a `slug` (URL-safe), `aliases` (array of alternate billing names), and `is_resident` flag.
+
+`lineup.dj_id` links a lineup entry to a profile. When linked, the event page displays `djs.name` (canonical) instead of the raw billing name.
+
+**Data sources:** `scripts/data/dj-roster.json` (190 DJs from the Shameless DJ Roster Google Sheet), `scripts/data/dj-alias-map.json` (356 billing-name variants, A–J), `scripts/data/dj-merge-aliases.json` (16 aliases from the duplicate/merge log).
+
+**Seeding and linking:**
+
+```bash
+# 1. Run the schema migration (adds aliases + is_resident columns)
+npm run migrate:005
+
+# 2. Seed all 190 DJ profiles (upsert-safe, uploads images to R2)
+npm run seed:djs
+
+# 3. Link lineup entries to profiles via name/alias matching, split B2B billings
+npm run link:lineup
+```
+
+The alias map covers A–J (356 entries). K–Z billing variants will be matched by exact name only until the map is extended.
 
 ### Key fields
 

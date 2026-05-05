@@ -47,6 +47,7 @@ export type LineupArtist = {
   id: string
   event_id: string
   name: string
+  dj_name: string | null
   bio: string | null
   image_url: string | null
   mix_url: string | null
@@ -70,6 +71,7 @@ export type DJ = {
   banner_image_url: string | null
   location: string | null
   genres: string[]
+  aliases: string[]
   soundcloud_url: string | null
   instagram_url: string | null
   spotify_url: string | null
@@ -128,7 +130,7 @@ export async function getEventBySlug(slug: string): Promise<Event | null> {
 export async function getEventLineup(eventId: string): Promise<LineupArtist[]> {
   const db = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
   const rows = await db`
-    select l.*, d.slug as dj_slug, d.profile_image_url as dj_profile_image_url
+    select l.*, d.slug as dj_slug, d.name as dj_name, d.profile_image_url as dj_profile_image_url
     from lineup l
     left join djs d on d.id = l.dj_id
     where l.event_id = ${eventId}
