@@ -19,7 +19,7 @@ export function DJCard({ dj, upcomingCount = 0 }: { dj: DJ; upcomingCount?: numb
   const [hover, setHover] = useState(false)
 
   return (
-    <Link href={`/djs/${dj.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
+    <Link href={`/djs/${dj.slug}`} style={{ textDecoration: 'none', display: 'flex', height: '100%' }}>
       <div
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
@@ -29,6 +29,9 @@ export function DJCard({ dj, upcomingCount = 0 }: { dj: DJ; upcomingCount?: numb
           overflow: 'hidden',
           transition: 'border-color 0.2s, transform 0.25s cubic-bezier(0.22,1,0.36,1)',
           transform: hover ? 'translateY(-4px)' : 'translateY(0)',
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
         }}
       >
         {/* Portrait image — 3:4 aspect */}
@@ -100,7 +103,7 @@ export function DJCard({ dj, upcomingCount = 0 }: { dj: DJ; upcomingCount?: numb
         </div>
 
         {/* Info section below photo */}
-        <div style={{ padding: '16px 18px 20px', borderTop: `1px solid ${C.darkBorder}` }}>
+        <div style={{ padding: '16px 18px 20px', borderTop: `1px solid ${C.darkBorder}`, flex: 1 }}>
           <div style={{
             fontFamily: 'var(--font-barlow), sans-serif',
             fontWeight: 900,
