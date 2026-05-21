@@ -4,7 +4,17 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  compress: true,
+  poweredByHeader: false,
+  reactStrictMode: true,
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'date-fns', 'embla-carousel-react'],
+  },
   images: {
+    // WebP only — AVIF encoding is 10–20x slower on first hit and
+    // caused noticeably long image load times on cold cache.
+    formats: ['image/webp'],
+    minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days at the Image Optimization layer
     remotePatterns: [
       {
         protocol: 'https',

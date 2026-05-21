@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { getPastEvents } from '@/lib/events'
 import type { Event } from '@/lib/db'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Past Events - Simply Shameless',

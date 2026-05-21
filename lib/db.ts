@@ -1,4 +1,4 @@
-import { neon, neonConfig } from '@neondatabase/serverless'
+import { neon } from '@neondatabase/serverless'
 
 const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://placeholder:placeholder@localhost:5432/placeholder'
 
@@ -6,10 +6,8 @@ if (!process.env.DATABASE_URL) {
   console.warn('DATABASE_URL is not set, using placeholder for build')
 }
 
-// Prevent Next.js from caching Neon's internal HTTP responses
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-;(neonConfig as any).fetchOptions = { cache: 'no-store' }
-
+// Single shared client. Page-level `revalidate` controls freshness via Next.js ISR;
+// API routes / server actions that need always-fresh data should opt in explicitly.
 export const sql = neon(DATABASE_URL)
 
 // ── EVENTS ──────────────────────────────────────────────────────────────────
@@ -86,8 +84,7 @@ export type DJ = {
 
 export async function getEvents(limit = 10): Promise<Event[]> {
   try {
-    const freshSql = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
-    const rows = await freshSql`
+    const rows = await sql`
       select * from events
       where is_published = true
       and date >= now()
@@ -103,8 +100,7 @@ export async function getEvents(limit = 10): Promise<Event[]> {
 
 export async function getPastEvents(limit = 50, offset = 0): Promise<Event[]> {
   try {
-    const freshSql = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
-    const rows = await freshSql`
+    const rows = await sql`
       select * from events
       where is_published = true
       and date < now()
@@ -120,16 +116,14 @@ export async function getPastEvents(limit = 50, offset = 0): Promise<Event[]> {
 }
 
 export async function getEventBySlug(slug: string): Promise<Event | null> {
-  const freshSql = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
-  const rows = await freshSql`
+  const rows = await sql`
     select * from events where slug = ${slug} and is_published = true limit 1
   `
   return (rows[0] as Event) ?? null
 }
 
 export async function getEventLineup(eventId: string): Promise<LineupArtist[]> {
-  const db = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
-  const rows = await db`
+  const rows = await sql`
     select l.*, d.slug as dj_slug, d.name as dj_name, d.profile_image_url as dj_profile_image_url
     from lineup l
     left join djs d on d.id = l.dj_id
@@ -140,16 +134,14 @@ export async function getEventLineup(eventId: string): Promise<LineupArtist[]> {
 }
 
 export async function getDJs(): Promise<DJ[]> {
-  const db = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
-  const rows = await db`
+  const rows = await sql`
     select * from djs where is_published = true order by name asc
   `
   return rows as DJ[]
 }
 
 export async function getUpcomingCountsByDJ(): Promise<Record<string, number>> {
-  const db = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
-  const rows = await db`
+  const rows = await sql`
     select l.dj_id, count(distinct e.id)::int as upcoming_count
     from lineup l
     join events e on e.id = l.event_id
@@ -162,16 +154,14 @@ export async function getUpcomingCountsByDJ(): Promise<Record<string, number>> {
 }
 
 export async function getDJBySlug(slug: string): Promise<DJ | null> {
-  const db = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
-  const rows = await db`
+  const rows = await sql`
     select * from djs where slug = ${slug} and is_published = true limit 1
   `
   return (rows[0] as DJ) ?? null
 }
 
 export async function getDJEvents(djId: string): Promise<Event[]> {
-  const db = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
-  const rows = await db`
+  const rows = await sql`
     select distinct e.*
     from events e
     join lineup l on l.event_id = e.id
@@ -195,8 +185,7 @@ export async function getEventById(id: string): Promise<Event | null> {
 
 export async function updateEvent(id: string, data: Partial<Event>): Promise<Event | null> {
   try {
-    const db = neon(DATABASE_URL, { fetchOptions: { cache: 'no-store' } })
-    const rows = await db`
+    const rows = await sql`
       update events set
         title = coalesce(${data.title ?? null}, title),
         description = coalesce(${data.description ?? null}, description),
@@ -258,8 +247,7 @@ export async function createRsvp(data: {
 }
 
 export async function getRsvpCounts(eventId: string): Promise<{ going: number; maybe: number; not_going: number }> {
-  const db = neon(process.env.DATABASE_URL!, { fetchOptions: { cache: 'no-store' } })
-  const rows = await db`
+  const rows = await sql`
     select status, count(*)::int as count from rsvps where event_id = ${eventId} group by status
   `
   const result = { going: 0, maybe: 0, not_going: 0 }
@@ -276,16 +264,14 @@ export type Comment = {
 }
 
 export async function createComment(data: { event_id: string; name: string; message: string }): Promise<Comment> {
-  const db = neon(process.env.DATABASE_URL!, { fetchOptions: { cache: 'no-store' } })
-  const rows = await db`
+  const rows = await sql`
     insert into comments (event_id, name, message) values (${data.event_id}, ${data.name}, ${data.message}) returning *
   `
   return rows[0] as Comment
 }
 
 export async function getComments(eventId: string): Promise<Comment[]> {
-  const db = neon(process.env.DATABASE_URL!, { fetchOptions: { cache: 'no-store' } })
-  const rows = await db`
+  const rows = await sql`
     select * from comments where event_id = ${eventId} order by created_at asc
   `
   return rows as Comment[]

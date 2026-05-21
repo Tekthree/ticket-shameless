@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { getEventBySlug, getEventLineup, getEvents } from '@/lib/events'
 import EventPageClient from './EventPageClient'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 const SITE_URL = 'https://simplyshameless.com'
 

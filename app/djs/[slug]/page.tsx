@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import DJProfileClient from './DJProfileClient'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 type Props = { params: Promise<{ slug: string }> }
 

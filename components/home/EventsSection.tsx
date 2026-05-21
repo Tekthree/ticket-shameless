@@ -62,7 +62,7 @@ function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
           {/* Image area */}
           <div style={{ aspectRatio: '16/9', flexShrink: 0, background: '#1a1715', overflow: 'hidden', position: 'relative', borderBottom: '1px solid rgba(245,240,235,0.08)', borderRadius: 'var(--ss-radius) var(--ss-radius) 0 0' }}>
             {imageUrl ? (
-              <Image src={imageUrl} fill sizes="(max-width: 640px) 85vw, 420px" loading="eager" style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1)', transform: hover ? 'scale(1.06)' : 'scale(1)' }} alt={event.title} />
+              <Image src={imageUrl} fill sizes="(max-width: 640px) 85vw, 420px" loading="lazy" style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1)', transform: hover ? 'scale(1.06)' : 'scale(1)' }} alt={event.title} />
             ) : (
               <div style={{ width: '100%', height: '100%', background: 'repeating-linear-gradient(45deg, rgba(28,25,23,0.04) 0px, rgba(28,25,23,0.04) 1px, transparent 1px, transparent 14px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span style={{ fontFamily: 'monospace', fontSize: 10, color: 'rgba(245,240,235,0.3)' }}>event art</span>

@@ -2,7 +2,7 @@ import { getDJs, getUpcomingCountsByDJ, type DJ } from '@/lib/db'
 import type { Metadata } from 'next'
 import { DJGrid } from './DJGrid'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'DJs | Simply Shameless',

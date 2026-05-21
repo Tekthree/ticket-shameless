@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { getEvents } from '@/lib/events'
 import type { Event } from '@/lib/db'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Events - Simply Shameless',
