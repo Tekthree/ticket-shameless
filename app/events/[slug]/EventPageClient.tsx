@@ -1189,7 +1189,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
           100% { transform: scale(1); }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1100px) {
           .ep-hero { height: 260px; margin-top: 64px; }
           .ep-hero-tags-wrap { bottom: 20px; }
 
