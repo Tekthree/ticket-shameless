@@ -871,7 +871,7 @@ function ShareButton({ event }: { event: Event }) {
   }, [open])
 
   return (
-    <div ref={ref} style={{ position: 'relative', flex: 1 }}>
+    <div ref={ref} style={{ position: 'relative', flex: 1, display: 'flex' }}>
       <OutlineBtn onClick={() => setOpen(o => !o)}>
         <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
           <circle cx="11" cy="2.5" r="1.5" stroke="currentColor" strokeWidth="1.3"/>
