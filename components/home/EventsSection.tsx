@@ -49,21 +49,21 @@ function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
           onMouseLeave={() => setHover(false)}
           style={{
             display: 'flex', flexDirection: 'column', width: '100%',
-            background: hover ? '#fff' : '#faf7f2',
-            border: '1px solid rgba(28,25,23,0.1)',
+            background: hover ? '#2e2a27' : '#242220',
+            border: '1px solid rgba(245,240,235,0.08)',
             transform: hover ? 'translateY(-6px)' : 'translateY(0)',
-            boxShadow: hover ? '0 16px 40px rgba(28,25,23,0.12)' : 'none',
+            boxShadow: hover ? '0 16px 40px rgba(0,0,0,0.4)' : 'none',
             transition: 'transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease, background 0.15s',
             cursor: 'pointer',
           }}
         >
           {/* Image area */}
-          <div style={{ aspectRatio: '16/9', flexShrink: 0, background: '#f2ede5', overflow: 'hidden', position: 'relative', borderBottom: '1px solid rgba(28,25,23,0.1)' }}>
+          <div style={{ aspectRatio: '16/9', flexShrink: 0, background: '#1a1715', overflow: 'hidden', position: 'relative', borderBottom: '1px solid rgba(245,240,235,0.08)' }}>
             {imageUrl ? (
               <Image src={imageUrl} fill sizes="(max-width: 640px) 85vw, 420px" loading="eager" style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1)', transform: hover ? 'scale(1.06)' : 'scale(1)' }} alt={event.title} />
             ) : (
               <div style={{ width: '100%', height: '100%', background: 'repeating-linear-gradient(45deg, rgba(28,25,23,0.04) 0px, rgba(28,25,23,0.04) 1px, transparent 1px, transparent 14px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ fontFamily: 'monospace', fontSize: 10, color: '#8a8078' }}>event art</span>
+                <span style={{ fontFamily: 'monospace', fontSize: 10, color: 'rgba(245,240,235,0.3)' }}>event art</span>
               </div>
             )}
             {isSoon && (
@@ -74,11 +74,11 @@ function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
           {/* Content */}
           <div style={{ padding: '22px 24px 24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
             <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.2em', color: '#c9321a', textTransform: 'uppercase', marginBottom: 7 }}>{dateStr}</div>
-            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 24, color: '#1c1917', textTransform: 'uppercase', lineHeight: 1, marginBottom: 6 }}>{event.title}</div>
-            <div style={{ color: '#8a8078', fontSize: 14, marginBottom: 14 }}>{event.venue || event.location}</div>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 24, color: '#f5f0eb', textTransform: 'uppercase', lineHeight: 1, marginBottom: 6 }}>{event.title}</div>
+            <div style={{ color: 'rgba(245,240,235,0.45)', fontSize: 14, marginBottom: 14 }}>{event.venue || event.location}</div>
             <div style={{ display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap' }}>
               {tags.map((tag: string) => (
-                <span key={tag} style={{ background: 'rgba(28,25,23,0.06)', color: '#7a7068', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', alignSelf: 'flex-start' }}>{tag}</span>
+                <span key={tag} style={{ background: 'rgba(245,240,235,0.08)', color: 'rgba(245,240,235,0.55)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', alignSelf: 'flex-start' }}>{tag}</span>
               ))}
             </div>
             <button
@@ -128,7 +128,7 @@ export default function EventsSection({ events }: { events: Event[] }) {
   }, [emblaApi, onSelect])
 
   return (
-    <section id="events" style={{ padding: '100px 0', background: '#f2ede5', overflow: 'hidden' }}>
+    <section id="events" style={{ padding: '100px 0', background: '#1c1917', overflow: 'hidden' }}>
       {/* Header — aligned to content boundary */}
       <div className="events-header" style={{ maxWidth: 1312, margin: '0 auto', padding: '0 clamp(20px, 4vw, 56px)' }}>
         <div ref={headerRef} style={{
@@ -138,8 +138,8 @@ export default function EventsSection({ events }: { events: Event[] }) {
         }}>
           <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 14 }}>Upcoming Shows</div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 48 }}>
-            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(52px,6vw,88px)', lineHeight: 0.88, color: '#1c1917', textTransform: 'uppercase' }}>Events</div>
-            <Link href="/events" style={{ color: '#8a8078', textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase', borderBottom: '1px solid rgba(28,25,23,0.1)', paddingBottom: 2 }}>All Events →</Link>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(52px,6vw,88px)', lineHeight: 0.88, color: '#f5f0eb', textTransform: 'uppercase' }}>Events</div>
+            <Link href="/events" style={{ color: 'rgba(245,240,235,0.5)', textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase', borderBottom: '1px solid rgba(245,240,235,0.15)', paddingBottom: 2 }}>All Events →</Link>
           </div>
         </div>
       </div>
@@ -166,7 +166,7 @@ export default function EventsSection({ events }: { events: Event[] }) {
               height: 6,
               border: 'none',
               borderRadius: 3,
-              background: i === selectedIndex ? '#c9321a' : 'rgba(28,25,23,0.2)',
+              background: i === selectedIndex ? '#c9321a' : 'rgba(245,240,235,0.2)',
               cursor: 'pointer',
               padding: 0,
               transform: `scaleX(${i === selectedIndex ? 1 : 0.3})`,
