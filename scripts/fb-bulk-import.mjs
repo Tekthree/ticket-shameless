@@ -1,12 +1,12 @@
 /**
  * fb-bulk-import.mjs
  *
- * Scrapes ALL upcoming events from the Shameless Facebook page,
- * skips ones already in the DB, and inserts new ones including
- * description, lineup, and stage (rooftop / loft / main).
+ * Scrapes ALL upcoming events from the Shameless Eventbrite organizer page,
+ * skips ones already in the DB, and inserts new ones including full artist
+ * lineup with stage assignments, bios, and social links (RA, SC, IG, YT).
  *
  * Prerequisites:
- *   1. Min Browser running and logged into Facebook:
+ *   1. Min Browser running:
  *      /opt/Min/min --remote-debugging-port=9222
  *   2. Prod env pulled:
  *      cd /home/tekthree/ticket-shameless && npx vercel env pull /tmp/vercel-prod-env --environment=production
@@ -21,7 +21,7 @@ import { readFileSync, existsSync, readdirSync } from 'fs'
 import path from 'path'
 
 const CDP_URL        = 'http://localhost:9222'
-const FB_EVENTS_URL  = 'https://www.facebook.com/shamelessinseattle/events'
+const EB_ORG_URL     = 'https://www.eventbrite.com/o/12623653314'
 const UPLOAD_URL     = 'https://ticket-shameless.vercel.app/api/upload'
 const SHAMELESS_ROOT = '/mnt/e/WORK/SHAMELESS'
 const DRY_RUN        = process.argv.includes('--dry-run')
@@ -41,8 +41,15 @@ const sql = neon(getProd('DATABASE_URL'), { fetchOptions: { cache: 'no-store' } 
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function makeSlug(title) {
+function cleanTitle(title) {
   return (title ?? '')
+    .replace(/^\(\d+\+\)\s*/i, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function makeSlug(title) {
+  return cleanTitle(title)
     .toLowerCase()
     .replace(/['']/g, '')
     .replace(/[^a-z0-9\s-]/g, '')
@@ -51,38 +58,17 @@ function makeSlug(title) {
     .slice(0, 80)
 }
 
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December']
 const pad = n => String(n).padStart(2, '0')
 
-function parseDateLine(dateLine) {
-  const dm = dateLine?.match(/(\w+day),\s+(\w+)\s+(\d+),\s+(\d{4})\s+at\s+(\d+)(?::(\d+))?\s*([AP]M)/i)
-  if (!dm) return null
-  const [,, month, day, year, hrStr, minStr, ampm] = dm
-  const monthIdx = MONTHS.findIndex(m => m.toLowerCase() === month.toLowerCase())
-  let hr = parseInt(hrStr)
-  const mn = parseInt(minStr ?? '0')
-  if (ampm.toUpperCase() === 'PM' && hr !== 12) hr += 12
-  if (ampm.toUpperCase() === 'AM' && hr === 12) hr = 0
-  const isDST = monthIdx >= 2 && monthIdx <= 10
-  const tzOffset = isDST ? '-07:00' : '-08:00'
-  const iso = `${year}-${pad(monthIdx + 1)}-${pad(parseInt(day))}T${pad(hr)}:${pad(mn)}:00${tzOffset}`
-  return new Date(iso)
-}
-
-function parseEndTime(dateLine, endTimeStr) {
-  if (!endTimeStr || !dateLine) return null
-  const dm = dateLine?.match(/(\w+day),\s+(\w+)\s+(\d+),\s+(\d{4})\s+at\s+(\d+)(?::(\d+))?\s*([AP]M)/i)
-  if (!dm) return null
-  const [,, month, day, year, hrStr] = dm
-  const monthIdx = MONTHS.findIndex(m => m.toLowerCase() === month.toLowerCase())
-  const startHr = parseInt(hrStr)
-  const [endH, endM] = endTimeStr.split(':').map(Number)
-  let endDay = parseInt(day)
-  if (endH < startHr) endDay += 1
-  const isDST = monthIdx >= 2 && monthIdx <= 10
-  const tzOffset = isDST ? '-07:00' : '-08:00'
-  const iso = `${year}-${pad(monthIdx + 1)}-${pad(endDay)}T${pad(endH)}:${pad(endM ?? 0)}:00${tzOffset}`
-  return new Date(iso)
+/** Parse a JSON-LD ISO date string (with or without TZ offset) to a UTC Date. */
+function parseISODate(isoStr) {
+  if (!isoStr) return null
+  // Has explicit timezone — let Date() handle it
+  if (/[Z]$/.test(isoStr) || /[+\-]\d{2}:\d{2}$/.test(isoStr)) return new Date(isoStr)
+  // No TZ — assume Pacific: PDT (UTC-7) Mar–Nov, PST (UTC-8) otherwise
+  const month = parseInt(isoStr.slice(5, 7))
+  const isDST = month >= 3 && month <= 11
+  return new Date(isoStr + (isDST ? '-07:00' : '-08:00'))
 }
 
 function detectStage(text) {
@@ -93,65 +79,143 @@ function detectStage(text) {
   return null
 }
 
-/**
- * Parse artist lineup from a description string.
- * Looks for lines after "Lineup", "Artists", "DJs", or bullet-separated names.
- * Returns array of { name, stage }.
- */
-function parseLineup(description, eventTitle) {
-  if (!description) return []
+function parseArtistsFromTitle(title) {
+  if (!title) return []
+  let segment = title
+    .replace(/^deck['']d out\s+#?\d+\s*/i, '')
+    .replace(/^[\w\s&']+(?:season opener|season finale|pride edition|[\w]+ edition)\s*/i, '')
+
+  const presM = segment.match(/(?:presents?|pres\.?|feat\.?|featuring|w\/|with)\s+(.+)$/i)
+  if (presM) segment = presM[1]
+  else {
+    const dashM = segment.match(/\s[-]\s+(.+)$/)
+    if (dashM) segment = dashM[1]
+    else return []
+  }
+
+  const parts = segment.split(/\s+b2b\s+|\s+\+\s+(?!more)|,\s+/i)
+  const artists = []
+  for (const part of parts) {
+    const name = part
+      .replace(/\s*\([^)]+\)/g, ' ')
+      .replace(/\s+all\s+vinyl$/i, '')
+      .replace(/\s*open\s+to\s+close\s*/i, '')
+      .replace(/\s*\+?\s*more!?$/i, '')
+      .replace(/\s+showcases?$/i, '')
+      .replace(/\s+\d+\s+year\s+anniv.*$/i, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+    if (!name || name.length < 2 || name.length >= 60) continue
+    if (/\btba\b|\btbd\b/i.test(name)) continue
+    if (/^\d+$/.test(name)) continue
+    if (/\b(january|february|march|april|may|june|july|august|september|october|november|december)\b/i.test(name)) continue
+    if (/\d+\s*(th|rd|st|nd),?\s*\d{4}/i.test(name)) continue
+    if (/\d+\s+year\s+anniv/i.test(name)) continue
+    if (/^[-–]\s*/.test(name)) continue
+    if (/^(more|and|feat|vs|showcase)$/i.test(name)) continue
+    artists.push({ name, stage: null, bio: null, ra: null, soundcloud: null, instagram: null, youtube: null })
+  }
+  return artists
+}
+
+const SOCIAL_NOISE = /^(resident advisor|soundcloud|instagram|youtube|you\s*tube|spotify|mixcloud|facebook|twitter|bandcamp|beatport|website|link in bio|ra\.co|tickets?|eventbrite|tixr|buy tickets|get tickets)$/i
+
+function parseDescriptionData(description) {
+  if (!description) return { artists: [], bios: {}, presentedBy: null }
 
   const lines = description.split('\n').map(l => l.trim()).filter(Boolean)
   const artists = []
-  let inLineup = false
-  const lineupTrigger = /^(lineup|dj\s*lineup|artists?|djs?|performing|featuring)[:\s]*$/i
-  const stopWords = /^(tickets?|location|venue|address|about|info|more info|presented by|doors|date|time|age)/i
-  const noiseWords = /^(and|featuring|feat\.|ft\.|vs\.?|b2b|back\s*to\s*back|\+)$/i
+  const bios = {}
+  let presentedBy = null
+  let currentStage = null
+  let inBioSection = false
+  let currentBioName = null
+  let currentBioLines = []
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
+  const ARTIST_TAG  = /^\+\+(.+)\+\+$/
+  const STAGE_HDR   = /^(rooftop|loft|main|back\s*room)\s+stage[:\s]*/i
+  const BIO_START   = /^about\s+(.+?):\s*(.*)/i
+  const PRESENTER   = /^(.{2,60}?)\s+presents?\s*$/i
+  const SECTION_SEP = /^[-=─═·•]{4,}$/
 
-    if (lineupTrigger.test(line)) {
-      inLineup = true
+  function saveBio() {
+    if (currentBioName && currentBioLines.length) {
+      bios[currentBioName.toLowerCase()] = currentBioLines.join(' ').replace(/\s+/g, ' ').trim()
+    }
+    currentBioName = null
+    currentBioLines = []
+  }
+
+  for (const line of lines) {
+    if (SECTION_SEP.test(line)) { saveBio(); inBioSection = false; continue }
+
+    const bioM = BIO_START.exec(line)
+    if (bioM) {
+      saveBio()
+      currentBioName = bioM[1].trim()
+      inBioSection = true
+      if (bioM[2]) currentBioLines.push(bioM[2])
+      continue
+    }
+    if (inBioSection) { currentBioLines.push(line); continue }
+
+    if (SOCIAL_NOISE.test(line)) continue
+
+    const stageM = STAGE_HDR.exec(line)
+    if (stageM) {
+      const s = stageM[1].toLowerCase()
+      currentStage = s === 'rooftop' ? 'rooftop' : s === 'loft' ? 'loft' : /back/.test(s) ? 'back' : null
       continue
     }
 
-    // Stop collecting at section breaks
-    if (inLineup && stopWords.test(line)) break
+    const presM = PRESENTER.exec(line)
+    if (presM && !presentedBy) { presentedBy = presM[1].trim(); continue }
 
-    if (inLineup || line.startsWith('•') || line.startsWith('·') || line.startsWith('-')) {
-      // Clean the artist name
-      let name = line.replace(/^[•·\-\*]\s*/, '').trim()
-
-      // Handle "Artist1 b2b Artist2" — split into two
-      if (/\bb2b\b/i.test(name)) {
-        const parts = name.split(/\s+b2b\s+/i)
-        for (const part of parts) {
-          const cleaned = part.trim()
-          if (cleaned && !noiseWords.test(cleaned) && cleaned.length > 1 && cleaned.length < 50) {
-            const stage = detectStage(cleaned) ?? detectStage(eventTitle)
-            artists.push({ name: cleaned, stage })
-          }
-        }
-        continue
+    const artM = ARTIST_TAG.exec(line)
+    if (artM) {
+      const rawName = artM[1]
+        .replace(/\s*\([^)]+\)/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+      if (!rawName || rawName.length < 2) continue
+      if (/\btba\b|\btbd\b/i.test(rawName)) continue
+      if (/deck['']d out\s+\d{4}/i.test(rawName)) continue
+      if (/summer series|season pass|season opener|season finale/i.test(rawName)) continue
+      const b2bParts = rawName.split(/\s+b2b\s+/i).map(p => p.trim()).filter(p => p.length >= 2 && p.length <= 60)
+      for (const name of b2bParts) {
+        artists.push({ name, stage: currentStage, bio: null, ra: null, soundcloud: null, instagram: null, youtube: null })
       }
-
-      if (name && !noiseWords.test(name) && !lineupTrigger.test(name) && !stopWords.test(name) && name.length > 1 && name.length < 60) {
-        // Skip lines that look like full sentences (likely description prose)
-        if (name.split(' ').length > 6 && !line.startsWith('•')) continue
-        const stage = detectStage(name) ?? null
-        artists.push({ name, stage })
-      }
+      continue
     }
   }
+  saveBio()
 
-  // Deduplicate by name
   const seen = new Set()
-  return artists.filter(a => {
+  const uniqueArtists = artists.filter(a => {
     if (seen.has(a.name.toLowerCase())) return false
     seen.add(a.name.toLowerCase())
     return true
   })
+
+  return { artists: uniqueArtists, bios, presentedBy }
+}
+
+function extractPresentedBy(title) {
+  const stripped = title.replace(/^deck['']d out\s+#?\d+\s*/i, '')
+  const m = stripped.match(/^(.+?)\s+(?:presents?|pres\.?|feat\.?|featuring)\s+/i)
+  if (m) {
+    const p = m[1].trim()
+    if (p && p.length < 60) return p
+  }
+  return 'Shameless'
+}
+
+function buildTags(title, description) {
+  const tags = ['house', 'deep house', 'techno']
+  if (/deck['']d out/i.test(title) || /rooftop/i.test(title + ' ' + (description ?? ''))) {
+    tags.push('rooftop party')
+  }
+  return tags
 }
 
 function autoFindBanner(title) {
@@ -174,41 +238,135 @@ function autoFindBanner(title) {
   return null
 }
 
-// ── Step 1: Collect event URLs from the listing page ─────────────────────────
+/**
+ * Fetch an artist profile image by scraping og:image from RA, Soundcloud, or YouTube.
+ * Returns the raw source image URL, or null if nothing usable found.
+ */
+async function fetchArtistImage(artist) {
+  const sources = [artist.ra, artist.soundcloud, artist.youtube].filter(Boolean)
+  for (const url of sources) {
+    try {
+      const res = await fetch(url, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36' },
+        signal: AbortSignal.timeout(8000),
+      })
+      if (!res.ok) continue
+      const html = await res.text()
+      const m = html.match(/<meta[^>]+property="og:image"[^>]+content="([^"]+)"/i)
+             ?? html.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:image"/i)
+      const imgUrl = m?.[1]
+      // Skip defaults, placeholders, and Eventbrite generic images
+      if (imgUrl && !/default|placeholder|fallback|static\.eventbrite|img\.evbuc/i.test(imgUrl)) {
+        return imgUrl
+      }
+    } catch {}
+  }
+  return null
+}
+
+/** Download an image from sourceUrl and re-upload it to R2 via the upload endpoint. */
+async function uploadImageFromUrl(sourceUrl, name) {
+  try {
+    const imgRes = await fetch(sourceUrl, { signal: AbortSignal.timeout(10000) })
+    if (!imgRes.ok) return null
+    const buffer = await imgRes.arrayBuffer()
+    const contentType = imgRes.headers.get('content-type') ?? 'image/jpeg'
+    const ext = contentType.includes('png') ? 'png' : contentType.includes('webp') ? 'webp' : 'jpg'
+    const filename = `${makeSlug(name)}.${ext}`
+    const blob = new Blob([buffer], { type: contentType })
+    const form = new FormData()
+    form.append('file', blob, filename)
+    form.append('folder', 'djs')
+    const uploadRes = await fetch(UPLOAD_URL, { method: 'POST', body: form })
+    const json = await uploadRes.json()
+    return json.url ?? null
+  } catch {
+    return null
+  }
+}
+
+/** Match social link URLs to artists by name slug. */
+function assignSocialLinks(artists, socialAnchors) {
+  for (const artist of artists) {
+    const nameSlug = artist.name.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 8)
+    if (nameSlug.length < 3) continue
+    const prefix = nameSlug.slice(0, Math.min(5, nameSlug.length))
+    for (const href of socialAnchors) {
+      const h = href.toLowerCase()
+      const urlPath = h.replace(/^https?:\/\/[^/]+\//, '').replace(/[^a-z0-9]/g, '').slice(0, 15)
+      if (!urlPath.includes(prefix)) continue
+      if (!artist.ra       && h.includes('ra.co/dj'))                                         artist.ra        = href
+      if (!artist.soundcloud && h.includes('soundcloud.com'))                                  artist.soundcloud = href
+      if (!artist.instagram  && h.includes('instagram.com') && !/\/p\/|\/reel\//.test(h))     artist.instagram  = href
+      if (!artist.youtube    && (h.includes('youtube.com') || h.includes('youtu.be')))        artist.youtube    = href
+    }
+  }
+}
+
+// ── Step 1: Collect event URLs from Eventbrite organizer page ─────────────────
 
 console.log('\n[1/3] Connecting to Min Browser...')
 const browser = await chromium.connectOverCDP(CDP_URL)
 const context = browser.contexts()[0]
-const pages = context.pages()
-const page = pages.find(p => p.url().includes('facebook.com')) ?? pages[0]
+const page = context.pages()[0]
 
-console.log(`[1/3] Navigating to ${FB_EVENTS_URL}`)
-await page.goto(FB_EVENTS_URL, { waitUntil: 'domcontentloaded' })
+console.log(`[1/3] Navigating to Eventbrite organizer page...`)
+await page.goto(EB_ORG_URL, { waitUntil: 'domcontentloaded', timeout: 20000 })
 await page.waitForTimeout(3000)
 
-// Scroll to load all events
+// Dismiss cookie/GDPR consent banner if present
+try {
+  const acceptBtn = page.locator('button:has-text("Accept"), button:has-text("Accept All"), button:has-text("I Accept")').first()
+  if (await acceptBtn.isVisible({ timeout: 3000 })) {
+    await acceptBtn.click()
+    await page.waitForTimeout(800)
+  }
+} catch {}
+
+// Scroll and click "Show more" until all events are loaded
 console.log('[1/3] Scrolling to load all upcoming events...')
 let prevCount = 0
-for (let i = 0; i < 30; i++) {
+let stableRuns = 0
+for (let i = 0; i < 40; i++) {
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
   await page.waitForTimeout(1500)
+
+  // Click "Show more" if present
+  try {
+    const showMore = page.locator('button:has-text("Show more")').first()
+    if (await showMore.isVisible({ timeout: 1000 })) {
+      await showMore.click()
+      await page.waitForTimeout(2000)
+    }
+  } catch {}
+
   const count = await page.evaluate(() =>
-    new Set([...document.querySelectorAll('a[href*="/events/"]')]
-      .map(a => a.href.match(/\/events\/(\d+)/)?.[1])
-      .filter(Boolean)
+    new Set(
+      [...document.querySelectorAll('a[href*="/e/"]')]
+        .map(a => a.href.split('?')[0])
+        .filter(u => /eventbrite\.com\/e\/[a-z0-9-]+-\d{8,}/.test(u))
     ).size
   )
-  if (count === prevCount) break
-  prevCount = count
+  if (count === prevCount) {
+    stableRuns++
+    if (stableRuns >= 3) break
+  } else {
+    stableRuns = 0
+    prevCount = count
+  }
 }
 
 const eventUrls = await page.evaluate(() => {
-  const ids = new Set()
-  for (const a of document.querySelectorAll('a[href*="/events/"]')) {
-    const m = a.href.match(/\/events\/(\d+)/)
-    if (m) ids.add(m[1])
+  const seen = new Set()
+  const result = []
+  for (const a of document.querySelectorAll('a[href*="/e/"]')) {
+    const url = a.href.split('?')[0]
+    if (/eventbrite\.com\/e\/[a-z0-9-]+-\d{8,}/.test(url) && !seen.has(url)) {
+      seen.add(url)
+      result.push(url)
+    }
   }
-  return [...ids].map(id => `https://www.facebook.com/events/${id}/`)
+  return result
 })
 
 console.log(`[1/3] Found ${eventUrls.length} upcoming event(s)`)
@@ -216,24 +374,24 @@ console.log(`[1/3] Found ${eventUrls.length} upcoming event(s)`)
 // ── Step 2: Check which already exist in DB ───────────────────────────────────
 
 console.log('\n[2/3] Checking existing events in DB...')
-const existingEvents = await sql`SELECT slug, title FROM events`
+const existingEvents = await sql`SELECT slug, title, date FROM events`
 const existingSlugs = new Set(existingEvents.map(e => e.slug))
 console.log(`      ${existingSlugs.size} events already in DB`)
 
-// ── Step 3: Scrape and import each new event ─────────────────────────────────
+// ── Step 3: Scrape and import each event ─────────────────────────────────────
 
 const results = { inserted: [], skipped: [], failed: [] }
 
-for (const fbUrl of eventUrls) {
-  console.log(`\n[3/3] → ${fbUrl}`)
+for (const ebUrl of eventUrls) {
+  console.log(`\n[3/3] → ${ebUrl}`)
 
   try {
-    await page.goto(fbUrl, { waitUntil: 'domcontentloaded' })
-    await page.waitForTimeout(2500)
+    await page.goto(ebUrl, { waitUntil: 'domcontentloaded', timeout: 15000 })
+    await page.waitForTimeout(3000)
 
-    // Expand description
+    // Expand description if truncated
     try {
-      const btn = page.locator('div[role="button"]:has-text("See more")').first()
+      const btn = page.locator('button:has-text("Show more"), button:has-text("Read more")').first()
       if (await btn.isVisible({ timeout: 2000 })) {
         await btn.click()
         await page.waitForTimeout(800)
@@ -241,71 +399,87 @@ for (const fbUrl of eventUrls) {
     } catch {}
 
     const scraped = await page.evaluate(() => {
-      const mainEl   = document.querySelector('[role="main"]')
-      const mainText = mainEl?.innerText ?? ''
-      const lines    = mainText.split('\n').map(l => l.trim()).filter(Boolean)
-
-      // Date line
-      const dateMatch = mainText.match(/\w+day,\s+\w+\s+\d+,\s+\d{4}\s+at\s+\d+(?::\d+)?\s*[AP]M/i)
-      const dateLine  = dateMatch?.[0] ?? null
-
-      // End time from event: "7 PM – 11 PM" style
-      const timeRangeMatch = mainText.match(/\d+(?::\d+)?\s*(?:AM|PM)\s*[–\-]\s*(\d+(?::\d+)?\s*(?:AM|PM))/i)
-      const endTimeRaw = timeRangeMatch?.[1] ?? null
-
-      // Title
-      let title = null
-      if (dateLine) {
-        const dateIdx = lines.findIndex(l => l === dateLine)
-        if (dateIdx !== -1 && lines[dateIdx + 1]) title = lines[dateIdx + 1]
-      }
-      if (!title) {
-        title = document.querySelector('meta[property="og:title"]')?.content?.replace(/\s*\|.*$/, '').trim()
-          ?? document.title?.replace(/\s*\|.*$/, '').trim()
-      }
-
-      // Venue
-      let venue = null
-      if (dateLine) {
-        const dateIdx = lines.findIndex(l => l === dateLine)
-        if (dateIdx !== -1 && lines[dateIdx + 2]) venue = lines[dateIdx + 2]
-      }
-
-      // Address
-      const addrMatch = mainText.match(/\d+\s+\w[^,\n]+,\s*Seattle,\s*WA\s*\d{5}/)
-      const address = addrMatch?.[0]?.replace(/-\d+,.*$/, '').trim() ?? null
-
-      // Ticket link
-      let ticketLink = null
-      for (const a of document.querySelectorAll('a[href]')) {
-        if (/eventbrite|tixr|dice\.fm|ra\.co|axs|ticketweb/i.test(a.href)) {
-          const m = a.href.match(/[?&]u=([^&]+)/)
-          ticketLink = m ? decodeURIComponent(m[1]).split('?')[0] : a.href.split('?')[0]
+      // JSON-LD structured data — Eventbrite uses @type: SocialEvent
+      let jsonTitle = null, jsonStart = null, jsonEnd = null
+      let jsonVenue = null, jsonAddress = null, jsonImage = null
+      for (const s of document.querySelectorAll('script[type="application/ld+json"]')) {
+        try {
+          const raw = JSON.parse(s.textContent)
+          const evArr = Array.isArray(raw) ? raw : [raw]
+          const ev = evArr.find(x => x['@type'] === 'Event' || x['@type'] === 'SocialEvent')
+          if (!ev) continue
+          jsonTitle = ev.name ?? null
+          jsonStart = ev.startDate ?? null
+          jsonEnd   = ev.endDate ?? null
+          // ev.image is the event banner — can be a string or array
+          jsonImage = Array.isArray(ev.image) ? ev.image[0] : (ev.image ?? null)
+          if (ev.location?.name) jsonVenue = ev.location.name
+          if (ev.location?.address) {
+            const a = ev.location.address
+            // streetAddress often already includes city/state/zip — use as-is if it has a comma
+            jsonAddress = typeof a === 'string'
+              ? a
+              : (a.streetAddress?.includes(',') ? a.streetAddress
+                : [a.streetAddress, a.addressLocality, a.addressRegion, a.postalCode].filter(Boolean).join(', '))
+          }
           break
+        } catch {}
+      }
+
+      const title = jsonTitle ?? document.querySelector('h1')?.textContent?.trim() ?? null
+
+      // Description — try structured selectors first, fall back to main body
+      const descSelectors = [
+        '[data-testid="structured-content-parent"]',
+        '[data-testid="description-container"]',
+        '.structured-content',
+        '.eds-text--left',
+        '.event-description',
+      ]
+      let description = null
+      for (const sel of descSelectors) {
+        const el = document.querySelector(sel)
+        if (el?.innerText?.trim().length > 50) { description = el.innerText.trim(); break }
+      }
+      if (!description) {
+        const main = document.querySelector('main')
+        if (main) description = main.innerText.trim()
+      }
+
+      // Social anchors — actual clickable links (EB renders real <a href> for socials)
+      const socialAnchors = []
+      const seen = new Set()
+      for (const a of document.querySelectorAll('a[href]')) {
+        const h = a.href.split('?')[0]
+        if (seen.has(h)) continue
+        if (/(ra\.co\/dj|soundcloud\.com|instagram\.com|youtube\.com|youtu\.be)/i.test(h)) {
+          socialAnchors.push(h)
+          seen.add(h)
         }
       }
 
-      // Description
-      const pubIdx = mainText.indexOf('Anyone on or off Facebook')
-      const addrIdx = address ? mainText.indexOf(address) : -1
-      let description = null
-      if (pubIdx !== -1) {
-        const raw = addrIdx > pubIdx
-          ? mainText.slice(pubIdx + 'Anyone on or off Facebook'.length, addrIdx)
-          : mainText.slice(pubIdx + 'Anyone on or off Facebook'.length, pubIdx + 4000)
-        description = raw
-          .replace(/\n+/g, '\n').trim()
-          .replace(/\s*See less[\s\S]*$/, '')
-          .replace(/\s*\*\*By entering a Shameless event[\s\S]*$/, '')
-          .trim()
+      // FB URL if EB page links to the FB event
+      let fbUrl = null
+      for (const a of document.querySelectorAll('a[href*="facebook.com/events/"]')) {
+        fbUrl = a.href.split('?')[0]
+        break
       }
 
-      return { title, dateLine, endTimeRaw, venue, address, ticketLink, description }
+      return { title, jsonStart, jsonEnd, venue: jsonVenue, address: jsonAddress, jsonImage, description, socialAnchors, fbUrl }
     })
 
-    if (!scraped.title || !scraped.dateLine) {
+    if (!scraped.title || !scraped.jsonStart) {
       console.log('  Skipping — could not parse title or date')
-      results.failed.push({ url: fbUrl, reason: 'parse failure' })
+      results.failed.push({ url: ebUrl, reason: 'parse failure' })
+      continue
+    }
+
+    scraped.title = cleanTitle(scraped.title)
+
+    // Skip season passes — they're not individual shows
+    if (/season pass/i.test(scraped.title)) {
+      console.log('  Skipping — season pass, not an individual show')
+      results.skipped.push(scraped.title + ' (season pass)')
       continue
     }
 
@@ -317,42 +491,67 @@ for (const fbUrl of eventUrls) {
       continue
     }
 
-    const utcStart = parseDateLine(scraped.dateLine)
-    if (!utcStart) {
-      console.log('  Could not parse date:', scraped.dateLine)
-      results.failed.push({ url: fbUrl, reason: 'date parse failure' })
+    const utcStart = parseISODate(scraped.jsonStart)
+    const utcEnd   = scraped.jsonEnd ? parseISODate(scraped.jsonEnd) : null
+
+    if (!utcStart || isNaN(utcStart.getTime())) {
+      console.log('  Could not parse date:', scraped.jsonStart)
+      results.failed.push({ url: ebUrl, reason: 'date parse failure' })
       continue
     }
 
-    // Parse end time from the event page's time range (e.g. "7 PM – 11 PM")
-    let utcEnd = null
-    if (scraped.endTimeRaw) {
-      const endMatch = scraped.endTimeRaw.match(/(\d+)(?::(\d+))?\s*(AM|PM)/i)
-      if (endMatch) {
-        let endH = parseInt(endMatch[1])
-        const endM = parseInt(endMatch[2] ?? '0')
-        if (endMatch[3].toUpperCase() === 'PM' && endH !== 12) endH += 12
-        if (endMatch[3].toUpperCase() === 'AM' && endH === 12) endH = 0
-        const startHr = utcStart.getUTCHours() + (utcStart.getTimezoneOffset() / -60)
-        const dayStr = scraped.dateLine.match(/(\w+)\s+(\d+),\s+(\d{4})/)?.[0]
-        utcEnd = parseEndTime(scraped.dateLine, `${pad(endH)}:${pad(endM)}`)
-      }
+    // Skip past events (EB organizer page loads past events when scrolled far enough)
+    if (utcStart < new Date()) {
+      console.log(`  Skipping — past event (${utcStart.toISOString().slice(0, 10)})`)
+      results.skipped.push(scraped.title + ' (past)')
+      continue
     }
 
-    // Detect stage from title and description
+    // Date + title-similarity duplicate check (catches slug-variant dups)
+    const isoDay = utcStart.toISOString().slice(0, 10)
+    const newTitlePrefix = scraped.title.toLowerCase().slice(0, 15)
+    const sameDayEvent = existingEvents.find(e => {
+      if (!e.date) return false
+      if (new Date(e.date).toISOString().slice(0, 10) !== isoDay) return false
+      return (e.title ?? '').toLowerCase().slice(0, 15) === newTitlePrefix
+    })
+    if (sameDayEvent) {
+      console.log(`  Date+title duplicate: "${scraped.title}" matches existing "${sameDayEvent.title}" — skipping`)
+      results.skipped.push(scraped.title + ' (date+title dup)')
+      continue
+    }
+
+    // Parse description for artists, bios, presentedBy
+    const { artists: descArtists, bios, presentedBy: descPresentedBy } = parseDescriptionData(scraped.description)
+    const artists = descArtists.length > 0 ? descArtists : parseArtistsFromTitle(scraped.title)
+
+    // Attach bios
+    for (const a of artists) {
+      if (!a.bio) a.bio = bios[a.name.toLowerCase()] ?? null
+    }
+
+    // Assign social links from EB page
+    assignSocialLinks(artists, scraped.socialAnchors)
+
+    const presentedBy = descPresentedBy ?? extractPresentedBy(scraped.title)
+    const tags = buildTags(scraped.title, scraped.description)
     const titleStage = detectStage(scraped.title)
 
-    // Parse lineup from description
-    const artists = parseLineup(scraped.description, scraped.title)
-
-    // If multiple stages detected in lineup, assign them
-    const hasMultipleStages = artists.length > 0 && new Set(artists.map(a => a.stage).filter(Boolean)).size > 1
-
     console.log(`  Title:   ${scraped.title}`)
-    console.log(`  Date:    ${utcStart.toISOString()}`)
+    console.log(`  Date:    ${utcStart.toISOString()}${utcEnd ? ` → ${utcEnd.toISOString()}` : ''}`)
     console.log(`  Venue:   ${scraped.venue ?? '—'}`)
-    console.log(`  Stage:   ${titleStage ?? 'none detected'}`)
-    console.log(`  Artists: ${artists.length > 0 ? artists.map(a => a.name).join(', ') : 'none parsed'}`)
+    console.log(`  By:      ${presentedBy}`)
+    console.log(`  Tags:    ${tags.join(', ')}`)
+    if (artists.length > 0) {
+      const lines = artists.map(a => {
+        const socials = [a.ra && 'RA', a.soundcloud && 'SC', a.instagram && 'IG', a.youtube && 'YT'].filter(Boolean)
+        const hasImg = a.ra || a.soundcloud || a.youtube
+        return `${a.name}${a.stage ? ` [${a.stage}]` : ''}${socials.length ? ` (${socials.join('/')}${hasImg ? '/img' : ''})` : ''}`
+      })
+      console.log(`  Artists: ${lines.join(', ')}`)
+    } else {
+      console.log('  Artists: none parsed')
+    }
 
     if (DRY_RUN) {
       console.log('  [DRY RUN — not inserting]')
@@ -360,7 +559,7 @@ for (const fbUrl of eventUrls) {
       continue
     }
 
-    // Upload banner if found on E: drive
+    // Upload banner: prefer E: drive file, fall back to Eventbrite image
     let imageUrl = null
     const bannerPath = autoFindBanner(scraped.title)
     if (bannerPath) {
@@ -373,12 +572,16 @@ for (const fbUrl of eventUrls) {
         const res = await fetch(UPLOAD_URL, { method: 'POST', body: form })
         const json = await res.json()
         imageUrl = json.url ?? null
-        console.log(`  Banner:  uploaded from ${bannerPath}`)
+        console.log(`  Banner:  uploaded from E: drive`)
       } catch (e) {
-        console.log(`  Banner:  upload failed — ${e.message}`)
+        console.log(`  Banner:  E: drive upload failed — ${e.message}`)
       }
+    } else if (scraped.jsonImage) {
+      // Use the Eventbrite event image directly (already a public CDN URL)
+      imageUrl = scraped.jsonImage
+      console.log(`  Banner:  using Eventbrite image`)
     } else {
-      console.log('  Banner:  not found on E: drive — set manually later')
+      console.log('  Banner:  not found — set manually later')
     }
 
     // Insert event
@@ -387,6 +590,7 @@ for (const fbUrl of eventUrls) {
         slug, title, description, date, end_date,
         venue, address, tags, payment_link,
         image_url, banner_url,
+        presented_by, facebook_url,
         is_published, is_public
       ) VALUES (
         ${slug},
@@ -396,10 +600,12 @@ for (const fbUrl of eventUrls) {
         ${utcEnd?.toISOString() ?? null},
         ${scraped.venue},
         ${scraped.address},
-        ${[]},
-        ${scraped.ticketLink},
+        ${tags},
+        ${ebUrl},
         ${imageUrl},
         ${imageUrl},
+        ${presentedBy},
+        ${scraped.fbUrl ?? null},
         true, true
       )
       ON CONFLICT (slug) DO NOTHING
@@ -415,24 +621,67 @@ for (const fbUrl of eventUrls) {
     const eventId = inserted[0].id
     existingSlugs.add(slug)
 
-    // Insert lineup
+    // Insert lineup — upsert DJ profiles with bio + social links
     if (artists.length > 0) {
+      let newDjCount = 0
       for (let i = 0; i < artists.length; i++) {
         const a = artists[i]
-        // Try to find matching DJ profile by name
-        const djRows = await sql`
-          SELECT id, slug FROM djs
+
+        // Look up existing DJ by name or alias
+        let djRows = await sql`
+          SELECT id FROM djs
           WHERE lower(name) = lower(${a.name})
           OR lower(${a.name}) = any(select lower(x) from unnest(aliases) as x)
           LIMIT 1
         `
-        const djId = djRows[0]?.id ?? null
+        let djId = djRows[0]?.id ?? null
+
+        const hasSocials = a.ra || a.soundcloud || a.instagram || a.youtube
+        const hasBio = !!a.bio
+
+        // Fetch profile image from RA / Soundcloud / YouTube og:image
+        let profileImageUrl = null
+        if (hasSocials) {
+          const sourceUrl = await fetchArtistImage(a)
+          if (sourceUrl) profileImageUrl = await uploadImageFromUrl(sourceUrl, a.name)
+        }
+
+        if (!djId && (hasBio || hasSocials)) {
+          // Create new DJ profile
+          const djSlug = makeSlug(a.name)
+          const newDj = await sql`
+            INSERT INTO djs (slug, name, bio, soundcloud_url, instagram_url, youtube_url, website_url, profile_image_url, is_published)
+            VALUES (
+              ${djSlug}, ${a.name}, ${a.bio ?? null},
+              ${a.soundcloud ?? null}, ${a.instagram ?? null}, ${a.youtube ?? null}, ${a.ra ?? null},
+              ${profileImageUrl},
+              false
+            )
+            ON CONFLICT (slug) DO NOTHING
+            RETURNING id
+          `
+          djId = newDj[0]?.id ?? null
+          if (djId) newDjCount++
+        } else if (djId && (hasBio || hasSocials)) {
+          // Enrich existing profile without overwriting already-set fields
+          await sql`
+            UPDATE djs SET
+              soundcloud_url    = COALESCE(soundcloud_url,    ${a.soundcloud ?? null}),
+              instagram_url     = COALESCE(instagram_url,     ${a.instagram ?? null}),
+              youtube_url       = COALESCE(youtube_url,       ${a.youtube ?? null}),
+              website_url       = COALESCE(website_url,       ${a.ra ?? null}),
+              bio               = COALESCE(bio,               ${a.bio ?? null}),
+              profile_image_url = COALESCE(profile_image_url, ${profileImageUrl})
+            WHERE id = ${djId}
+          `
+        }
+
         await sql`
           INSERT INTO lineup (event_id, name, dj_id, sort_order, stage)
           VALUES (${eventId}, ${a.name}, ${djId}, ${i}, ${a.stage ?? titleStage})
         `
       }
-      console.log(`  Lineup:  inserted ${artists.length} artist(s)`)
+      console.log(`  Lineup:  ${artists.length} artist(s)${newDjCount > 0 ? `, ${newDjCount} new DJ profile(s) created` : ''}`)
     }
 
     console.log(`  Inserted: https://ticket-shameless.vercel.app/events/${slug}`)
@@ -440,10 +689,9 @@ for (const fbUrl of eventUrls) {
 
   } catch (e) {
     console.log(`  Error: ${e.message}`)
-    results.failed.push({ url: fbUrl, reason: e.message })
+    results.failed.push({ url: ebUrl, reason: e.message })
   }
 
-  // Small pause between events to avoid FB rate limiting
   await page.waitForTimeout(1500)
 }
 

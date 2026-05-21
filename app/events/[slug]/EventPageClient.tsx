@@ -77,6 +77,49 @@ function MetaRow({ icon, children }: { icon: React.ReactNode; children: React.Re
   )
 }
 
+function DescriptionText({ text }: { text: string }) {
+  const [expanded, setExpanded] = useState(false)
+  const LINE_HEIGHT_PX = 15 * 1.75
+  const MAX_LINES = 7
+  const isLong = text.split('\n').filter(Boolean).length > MAX_LINES || text.length > 600
+  return (
+    <div style={{ marginTop: 8 }}>
+      <div style={{
+        color: C.darkMuted,
+        fontSize: 15,
+        lineHeight: 1.75,
+        whiteSpace: 'pre-line',
+        ...(isLong && !expanded ? {
+          display: '-webkit-box',
+          WebkitBoxOrient: 'vertical' as const,
+          WebkitLineClamp: MAX_LINES,
+          overflow: 'hidden',
+          maxHeight: `${LINE_HEIGHT_PX * MAX_LINES}px`,
+        } : {}),
+      }}>{text}</div>
+      {isLong && (
+        <button
+          onClick={() => setExpanded(e => !e)}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: C.red,
+            cursor: 'pointer',
+            fontFamily: 'var(--font-barlow), sans-serif',
+            fontWeight: 700,
+            fontSize: 12,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            padding: '10px 0 0',
+          }}
+        >
+          {expanded ? 'Read less' : 'Read more'}
+        </button>
+      )}
+    </div>
+  )
+}
+
 function OutlineBtn({ children, onClick, style }: { children: React.ReactNode; onClick?: () => void; style?: React.CSSProperties }) {
   const [hover, setHover] = useState(false)
   return (
@@ -996,7 +1039,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
               </MetaRow>
             )}
             {event.description && (
-              <div style={{ color: C.darkMuted, fontSize: 15, lineHeight: 1.75, marginTop: 8 }}>{event.description}</div>
+              <DescriptionText text={event.description} />
             )}
           </div>
 
