@@ -351,63 +351,101 @@ function RSVPModal({ event, onClose, onSuccess }: {
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 400, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
-      <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)' }} />
-      <div style={{ position: 'relative', background: C.dark, borderTop: `1px solid ${C.darkBorder}`, padding: '0 24px 48px', maxHeight: '92vh', overflowY: 'auto', animation: 'slideUp 0.35s cubic-bezier(0.22,1,0.36,1)' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '14px 0 24px' }}>
-          <div style={{ width: 36, height: 4, background: C.darkBorder, borderRadius: 2 }} />
+      <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)' }} />
+      <div style={{
+        position: 'relative',
+        background: C.darkCard,
+        borderTop: `1px solid ${C.darkBorder}`,
+        borderRadius: 'var(--ss-radius) var(--ss-radius) 0 0',
+        maxHeight: '92vh',
+        overflowY: 'auto',
+        animation: 'slideUp 0.35s cubic-bezier(0.22,1,0.36,1)',
+      }}>
+        {/* Drag handle */}
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '16px 0 0' }}>
+          <div style={{ width: 40, height: 3, background: C.darkMuted, borderRadius: 999, opacity: 0.4 }} />
         </div>
 
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 32 }}>
-          {RSVP_STATUSES.map(s => (
+        <div style={{ maxWidth: 560, margin: '0 auto', padding: '20px 28px 40px' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
+            <div>
+              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: C.red, marginBottom: 4 }}>RSVP</div>
+              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 22, color: C.darkText, textTransform: 'uppercase', lineHeight: 1.1 }}>{event.title}</div>
+            </div>
             <button
-              key={s.key}
-              onClick={() => setStatus(s.key)}
-              style={{ background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: 0 }}
+              onClick={onClose}
+              style={{ background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', width: 36, height: 36, borderRadius: 'var(--ss-radius-btn)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 6, transition: 'border-color 0.15s, color 0.15s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = C.red; e.currentTarget.style.color = C.red }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = C.darkBorder; e.currentTarget.style.color = C.darkMuted }}
             >
-              <div style={{
-                width: 72, height: 72, borderRadius: '50%',
-                background: status === s.key ? C.red : C.darkCard,
-                border: `2px solid ${status === s.key ? C.red : C.darkBorder}`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 28, transition: 'all 0.2s',
-                boxShadow: status === s.key ? `0 0 0 4px ${C.redMuted}` : 'none',
-              }}>{s.emoji}</div>
-              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: status === s.key ? C.darkText : C.darkMuted, transition: 'color 0.2s' }}>{s.label}</div>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
             </button>
-          ))}
+          </div>
+
+          {/* Status picker */}
+          <div style={{ marginBottom: 28 }}>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: C.darkMuted, marginBottom: 10 }}>Are you going?</div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {RSVP_STATUSES.map(s => (
+                <button
+                  key={s.key}
+                  onClick={() => setStatus(s.key)}
+                  style={{
+                    flex: 1,
+                    background: status === s.key ? C.red : C.dark,
+                    border: `1px solid ${status === s.key ? C.red : C.darkBorder}`,
+                    color: status === s.key ? '#fff' : C.darkMuted,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: 6,
+                    padding: '14px 8px',
+                    borderRadius: 'var(--ss-radius)',
+                    transition: 'all 0.18s',
+                    fontFamily: 'var(--font-barlow), sans-serif',
+                  }}
+                >
+                  <span style={{ fontSize: 22, lineHeight: 1 }}>{s.emoji}</span>
+                  <span style={{ fontWeight: 800, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{s.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <FormField label="Your Name" value={name} onChange={setName} placeholder="First and last" required />
+          <FormField label="Phone Number" value={phone} onChange={setPhone} placeholder="For event updates. No spam." type="tel" />
+
+          <div style={{ marginBottom: 22 }}>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: C.darkMuted, marginBottom: 8 }}>Attendees</div>
+            <select
+              value={attendeeCount}
+              onChange={e => setAttendeeCount(Number(e.target.value))}
+              style={{ background: C.dark, border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius-btn)', color: C.darkText, fontSize: 15, padding: '10px 14px', outline: 'none', width: '100%', fontFamily: 'inherit' }}
+            >
+              {[1,2,3,4,5,6,7,8,9,10].map(n => (
+                <option key={n} value={n}>{n} {n === 1 ? 'attendee' : 'attendees'}</option>
+              ))}
+            </select>
+          </div>
+
+          <FormField label="Your Message" value={message} onChange={setMessage} placeholder="Can't wait!" multiline />
+          <div style={{ color: C.darkMuted, fontSize: 12, marginBottom: 28 }}>Your comment will show up on this event page.</div>
+
+          {error && <div style={{ color: C.red, fontSize: 13, marginBottom: 14 }}>{error}</div>}
+
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            style={{ width: '100%', background: loading ? C.dark : C.red, color: '#fff', border: 'none', cursor: loading ? 'default' : 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '17px', marginBottom: 10, borderRadius: 'var(--ss-radius-btn)', transition: 'background 0.2s' }}
+          >{loading ? 'Sending...' : "I'm in"}</button>
+
+          <button
+            onClick={onClose}
+            style={{ width: '100%', background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '13px', borderRadius: 'var(--ss-radius-btn)' }}
+          >Cancel</button>
         </div>
-
-        <FormField label="Your Name" value={name} onChange={setName} placeholder="First and last" required />
-        <FormField label="Phone Number" value={phone} onChange={setPhone} placeholder="For event updates. No spam." type="tel" />
-
-        <div style={{ marginBottom: 22 }}>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: C.darkMuted, marginBottom: 8 }}>Attendees</div>
-          <select
-            value={attendeeCount}
-            onChange={e => setAttendeeCount(Number(e.target.value))}
-            style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius)', color: C.darkText, fontSize: 15, padding: '10px 14px', outline: 'none', width: '100%', fontFamily: 'inherit' }}
-          >
-            {[1,2,3,4,5,6,7,8,9,10].map(n => (
-              <option key={n} value={n}>{n} {n === 1 ? 'attendee' : 'attendees'}</option>
-            ))}
-          </select>
-        </div>
-
-        <FormField label="Your Message" value={message} onChange={setMessage} placeholder="Can't wait!" multiline />
-        <div style={{ color: C.darkMuted, fontSize: 12, marginBottom: 24 }}>Your comment will be posted on this page</div>
-
-        {error && <div style={{ color: C.red, fontSize: 13, marginBottom: 14 }}>{error}</div>}
-
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          style={{ width: '100%', background: loading ? C.darkCard : C.red, color: '#fff', border: 'none', cursor: loading ? 'default' : 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 17, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '17px', marginBottom: 12, borderRadius: 'var(--ss-radius-btn)', transition: 'background 0.2s' }}
-        >{loading ? 'Sending...' : 'Continue'}</button>
-
-        <button
-          onClick={onClose}
-          style={{ width: '100%', background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '13px', borderRadius: 'var(--ss-radius-btn)' }}
-        >Cancel</button>
       </div>
     </div>
   )
