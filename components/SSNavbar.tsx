@@ -158,6 +158,7 @@ export default function SSNavbar() {
               fontWeight: 900, fontSize: 14,
               letterSpacing: '0.15em', textTransform: 'uppercase',
               padding: '11px 28px',
+              borderRadius: 'var(--ss-radius-btn)',
               transition: 'background 0.2s, transform 0.12s',
             }}
               onMouseEnter={e => { e.currentTarget.style.background = C.redDeep; e.currentTarget.style.transform = 'translateY(-1px)' }}

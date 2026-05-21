@@ -217,6 +217,47 @@ scripts/
 
 ---
 
+## Design system
+
+### CSS custom properties (globals.css)
+
+| Token | Value | Use |
+|---|---|---|
+| `--ss-radius` | `8px` | Cards, gallery cells, tag pills, image areas |
+| `--ss-radius-btn` | `3px` | All buttons (barely-there, per brand feel) |
+| `--ss-card-gap` | `0.5rem` | Gap between all card grids sitewide |
+
+### Radius rules
+
+- **Cards** (`EventsSection`, `DJCard`, `OtherEventCard`): `var(--ss-radius)` on the card container with `overflow: hidden` to clip children
+- **Event card images**: top corners only via `borderRadius: 'var(--ss-radius) var(--ss-radius) 0 0'` on the image wrapper (card overflow handles the clip)
+- **Gallery cells** (`GallerySection`, `GalleryClient`): `var(--ss-radius)` on each photo cell
+- **Tag pills**: `var(--ss-radius)` everywhere tags appear
+- **Buttons**: `var(--ss-radius-btn)` (3px) — "Get Tickets" in navbar, "View Event", "Coming Soon", "Tickets" in event cards
+- **Avatar/circle elements**: `50%` (not a token — always full circle)
+
+### Color palette
+
+| Name | Hex | Use |
+|---|---|---|
+| Dark deep | `#1c1917` | Events section bg, gallery section bg |
+| Dark card | `#242220` / `#252220` | Card backgrounds |
+| Dark hover | `#2e2a27` | Card hover state |
+| Off-white | `#f5f0eb` / `#f0ece6` | Primary text on dark |
+| Muted text | `#7a7068` | Secondary text, venue, timestamps |
+| Red | `#c9321a` | Brand color, dates, CTAs |
+| Red hover | `#a82614` | Button hover |
+
+### Section themes
+
+- **Events section** (home): dark — `#1c1917` bg, light text
+- **Gallery section** (home): dark — `#1c1917` bg, light text
+- **Hero**: dark with video overlay
+- **About, DJs preview**: light cream `#faf7f2`
+- **Newsletter/footer CTA**: red `#c9321a`
+
+---
+
 ## Design reference
 
 Two designs were merged to build the current app.

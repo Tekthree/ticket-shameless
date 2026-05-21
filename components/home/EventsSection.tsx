@@ -51,6 +51,8 @@ function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
             display: 'flex', flexDirection: 'column', width: '100%',
             background: hover ? '#2e2a27' : '#242220',
             border: '1px solid rgba(245,240,235,0.08)',
+            borderRadius: 'var(--ss-radius)',
+            overflow: 'hidden',
             transform: hover ? 'translateY(-6px)' : 'translateY(0)',
             boxShadow: hover ? '0 16px 40px rgba(0,0,0,0.4)' : 'none',
             transition: 'transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease, background 0.15s',
@@ -58,7 +60,7 @@ function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
           }}
         >
           {/* Image area */}
-          <div style={{ aspectRatio: '16/9', flexShrink: 0, background: '#1a1715', overflow: 'hidden', position: 'relative', borderBottom: '1px solid rgba(245,240,235,0.08)' }}>
+          <div style={{ aspectRatio: '16/9', flexShrink: 0, background: '#1a1715', overflow: 'hidden', position: 'relative', borderBottom: '1px solid rgba(245,240,235,0.08)', borderRadius: 'var(--ss-radius) var(--ss-radius) 0 0' }}>
             {imageUrl ? (
               <Image src={imageUrl} fill sizes="(max-width: 640px) 85vw, 420px" loading="eager" style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1)', transform: hover ? 'scale(1.06)' : 'scale(1)' }} alt={event.title} />
             ) : (
@@ -78,7 +80,7 @@ function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
             <div style={{ color: 'rgba(245,240,235,0.45)', fontSize: 14, marginBottom: 14 }}>{event.venue || event.location}</div>
             <div style={{ display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap' }}>
               {tags.map((tag: string) => (
-                <span key={tag} style={{ background: 'rgba(245,240,235,0.08)', color: 'rgba(245,240,235,0.55)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', alignSelf: 'flex-start' }}>{tag}</span>
+                <span key={tag} style={{ background: 'rgba(245,240,235,0.08)', color: 'rgba(245,240,235,0.55)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', alignSelf: 'flex-start', borderRadius: 'var(--ss-radius)' }}>{tag}</span>
               ))}
             </div>
             <button
@@ -91,6 +93,7 @@ function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
                 color: isSoon ? '#8a8078' : '#fff',
                 fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 14,
                 letterSpacing: '0.15em', textTransform: 'uppercase', padding: '13px',
+                borderRadius: 'var(--ss-radius-btn)',
                 transition: 'background 0.15s, transform 0.1s',
                 transform: !isSoon && btnHover ? 'scale(0.98)' : 'scale(1)',
               }}

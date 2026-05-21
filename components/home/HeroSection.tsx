@@ -321,6 +321,7 @@ export default function HeroSection({
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
                 padding: '17px 44px',
+                borderRadius: 'var(--ss-radius-btn)',
                 transition: 'background 0.2s, transform 0.12s, box-shadow 0.2s',
               }}
               onMouseEnter={(e) => {
@@ -354,6 +355,7 @@ export default function HeroSection({
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
                 padding: '17px 36px',
+                borderRadius: 'var(--ss-radius-btn)',
                 transition: 'border-color 0.2s, transform 0.12s',
               }}
               onMouseEnter={(e) => {
@@ -398,6 +400,7 @@ export default function HeroSection({
                 gap: 18,
                 background: C.darkCard,
                 border: `1px solid rgba(255,255,255,0.07)`,
+                borderRadius: 'var(--ss-radius)',
                 color: C.darkText,
                 padding: '18px 22px',
                 maxWidth: 380,

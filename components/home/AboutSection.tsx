@@ -103,7 +103,7 @@ export default function AboutSection() {
 
           {/* Image 1 */}
           <div ref={r2} style={{ ...revealStyle(v2, 80), marginBottom: 40 }}>
-            <div style={{ position: 'relative', width: '100%', aspectRatio: '1080/1528', overflow: 'hidden' }}>
+            <div style={{ position: 'relative', width: '100%', aspectRatio: '1080/1528', overflow: 'hidden', borderRadius: 'var(--ss-radius)' }}>
               <Image
                 src="https://simplyshameless.com/wp-content/uploads/2020/11/MAIN600.jpg"
                 alt="Shameless Productions party crowd shots"
@@ -129,7 +129,7 @@ export default function AboutSection() {
 
           {/* Image 2 */}
           <div ref={r5} style={{ ...revealStyle(v5, 200), marginBottom: 40 }}>
-            <div style={{ position: 'relative', width: '100%', aspectRatio: '1080/1528', overflow: 'hidden' }}>
+            <div style={{ position: 'relative', width: '100%', aspectRatio: '1080/1528', overflow: 'hidden', borderRadius: 'var(--ss-radius)' }}>
               <Image
                 src="https://simplyshameless.com/wp-content/uploads/2023/03/greatjob.jpg"
                 alt="Shameless Productions Deck'd Out party"
@@ -152,6 +152,7 @@ export default function AboutSection() {
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
               padding: '16px 40px',
+              borderRadius: 'var(--ss-radius-btn)',
               transition: 'background 0.2s',
             }}
               onMouseEnter={e => (e.currentTarget.style.background = '#2e2a27')}

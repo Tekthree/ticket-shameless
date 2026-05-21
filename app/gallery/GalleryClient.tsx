@@ -589,7 +589,7 @@ function PhotoGrid({ photos, event, onOpen }: { photos: Photo[]; event: GalleryE
             <div
               key={photo.id}
               onClick={() => onOpen(index)}
-              style={{ position: 'relative', overflow: 'hidden', cursor: 'pointer', background: C.darkCard, aspectRatio: photo.aspect || 1 }}
+              style={{ position: 'relative', overflow: 'hidden', borderRadius: 'var(--ss-radius)', cursor: 'pointer', background: C.darkCard, aspectRatio: photo.aspect || 1 }}
               className="ss-photo-cell"
             >
               {photo.src ? (
@@ -881,7 +881,7 @@ export default function GalleryClient() {
         <PhotoGrid photos={event.photos} event={event} onOpen={openModal} />
 
         {/* Privacy notice */}
-        <div style={{ marginTop: 48, padding: '20px 24px', background: C.darkCard, border: `1px solid ${C.darkBorder}`, display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+        <div style={{ marginTop: 48, padding: '20px 24px', background: C.darkCard, border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius)', display: 'flex', gap: 16, alignItems: 'flex-start' }}>
           <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0, marginTop: 2 }}><circle cx="10" cy="10" r="8.5" stroke={C.red} strokeWidth="1.4"/><path d="M10 7v4M10 13v.5" stroke={C.red} strokeWidth="1.8" strokeLinecap="round"/></svg>
           <div style={{ flex: 1 }}>
             <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 15, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.darkText, marginBottom: 6 }}>Privacy & Image Removal</div>

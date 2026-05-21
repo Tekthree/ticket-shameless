@@ -12,6 +12,9 @@
 
 @layer base {
   :root {
+    --ss-radius: 8px;
+    --ss-radius-btn: 3px;
+
     /* Light mode with red brand color */
     --background: 0 0% 100%; /* White background */
     --foreground: 0 0% 10%; /* Near black text */

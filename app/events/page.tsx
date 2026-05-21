@@ -50,14 +50,14 @@ function EventRow({ event }: { event: Event }) {
           <div style={{ color: '#7a7068', fontSize: 14, marginBottom: 10 }}>{event.venue}{event.address ? ` · ${event.address}` : ''}</div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {tags.map(tag => (
-              <span key={tag} style={{ background: 'rgba(255,255,255,0.06)', color: '#7a7068', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '3px 8px' }}>{tag}</span>
+              <span key={tag} style={{ background: 'rgba(255,255,255,0.06)', color: '#7a7068', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '3px 8px', borderRadius: 'var(--ss-radius)' }}>{tag}</span>
             ))}
           </div>
         </div>
 
         {/* CTA */}
         <div style={{ textAlign: 'right', flexShrink: 0 }}>
-          <span className="event-row-btn" style={{ display: 'inline-block', background: '#c9321a', color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '10px 20px', transition: 'background 0.15s' }}>
+          <span className="event-row-btn" style={{ display: 'inline-block', background: '#c9321a', color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '10px 20px', borderRadius: 'var(--ss-radius-btn)', transition: 'background 0.15s' }}>
             View Event →
           </span>
         </div>
@@ -90,6 +90,7 @@ export default async function EventsPage() {
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
             padding: '12px 20px',
+            borderRadius: 'var(--ss-radius-btn)',
             textDecoration: 'none',
           }} className="past-link">
             Past Events →

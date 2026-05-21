@@ -53,6 +53,7 @@ function GalleryCell({ cols, rows, imageUrl, index }: { cols: number; rows: numb
         gridRow: `span ${rows}`,
         background: '#252220',
         overflow: 'hidden',
+        borderRadius: 'var(--ss-radius)',
         position: 'relative',
         cursor: 'pointer',
         display: 'block',

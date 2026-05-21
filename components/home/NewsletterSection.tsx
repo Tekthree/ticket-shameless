@@ -97,7 +97,7 @@ export default function NewsletterSection() {
                   background: '#fff', color: '#c9321a', border: 'none', cursor: loading ? 'default' : 'pointer',
                   fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16,
                   letterSpacing: '0.15em', textTransform: 'uppercase', padding: '14px 40px',
-                  marginLeft: 16, flexShrink: 0, transition: 'transform 0.12s, opacity 0.2s',
+                  marginLeft: 16, flexShrink: 0, borderRadius: 'var(--ss-radius-btn)', transition: 'transform 0.12s, opacity 0.2s',
                   opacity: loading ? 0.7 : 1,
                 }}
                   onMouseEnter={e => { if (!loading) { e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(-1px)' } }}

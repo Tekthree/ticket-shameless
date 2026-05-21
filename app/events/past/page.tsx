@@ -77,6 +77,7 @@ export default async function PastEventsPage() {
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
             padding: '12px 20px',
+            borderRadius: 'var(--ss-radius-btn)',
             textDecoration: 'none',
             transition: 'border-color 0.2s, color 0.2s',
           }} className="back-link">

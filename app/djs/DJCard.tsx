@@ -26,6 +26,7 @@ export function DJCard({ dj, upcomingCount = 0 }: { dj: DJ; upcomingCount?: numb
         style={{
           background: C.darkCard,
           border: `1px solid ${hover ? C.red : C.darkBorder}`,
+          borderRadius: 'var(--ss-radius)',
           overflow: 'hidden',
           transition: 'border-color 0.2s, transform 0.25s cubic-bezier(0.22,1,0.36,1)',
           transform: hover ? 'translateY(-4px)' : 'translateY(0)',
