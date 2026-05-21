@@ -138,7 +138,8 @@ export default async function EventsPage() {
           .event-row-img { display: block !important; grid-column: 1; grid-row: 2; }
           .event-row > div:nth-child(3) { grid-column: 1; grid-row: 3; }
           .event-row > div:nth-child(4) { grid-column: 1; grid-row: 4; text-align: left !important; margin-top: 4px; }
-          .event-row > div:nth-child(4) .event-row-btn { display: block !important; text-align: center !important; }
+          .event-row > div:nth-child(4) .event-row-btn { display: block !important; text-align: center !important; background: transparent !important; color: rgba(240,236,230,0.45) !important; border: 1px solid rgba(255,255,255,0.12) !important; }
+          .event-row:hover > div:nth-child(4) .event-row-btn { background: transparent !important; border-color: rgba(201,50,26,0.5) !important; color: #c9321a !important; }
         }
 
         @media (max-width: 640px) {
