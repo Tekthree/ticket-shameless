@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { getEvents } from '@/lib/events'
 import type { Event } from '@/lib/db'
 
@@ -22,6 +23,7 @@ function EventRow({ event }: { event: Event }) {
   const timeStr = fmtTime(event.date)
   const endTimeStr = event.end_date ? fmtTime(event.end_date) : null
   const tags = event.tags ?? []
+  const imageUrl = event.banner_url || event.image_url || null
 
   return (
     <Link href={`/events/${event.slug}`} style={{ display: 'block', textDecoration: 'none' }}>
@@ -29,7 +31,7 @@ function EventRow({ event }: { event: Event }) {
         className="event-row"
         style={{
           display: 'grid',
-          gridTemplateColumns: '160px 1fr auto',
+          gridTemplateColumns: '160px 80px 1fr auto',
           alignItems: 'center',
           gap: 32,
           padding: '28px 0',
@@ -42,6 +44,15 @@ function EventRow({ event }: { event: Event }) {
         <div>
           <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 18, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 4 }}>{dateStr}</div>
           <div style={{ color: '#7a7068', fontSize: 13 }}>{timeStr}{endTimeStr ? ` – ${endTimeStr}` : ''}</div>
+        </div>
+
+        {/* Square image */}
+        <div className="event-row-img" style={{ width: 80, height: 80, borderRadius: 6, overflow: 'hidden', background: '#111', position: 'relative', flexShrink: 0 }}>
+          {imageUrl ? (
+            <Image src={imageUrl} fill sizes="80px" style={{ objectFit: 'cover' }} alt={event.title} />
+          ) : (
+            <div style={{ width: '100%', height: '100%', background: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 10px)' }} />
+          )}
         </div>
 
         {/* Title + meta */}
@@ -119,11 +130,15 @@ export default async function EventsPage() {
         @media (max-width: 768px) {
           .events-container { padding: 40px 24px !important; }
           .event-row {
-            grid-template-columns: 1fr !important;
-            gap: 12px !important;
+            grid-template-columns: 1fr auto !important;
+            grid-template-rows: auto auto !important;
+            gap: 12px 16px !important;
             padding: 24px 0 !important;
           }
-          .event-row > div:last-child { text-align: left !important; }
+          .event-row-img { display: none !important; }
+          .event-row > div:nth-child(1) { grid-column: 1; grid-row: 1; }
+          .event-row > div:nth-child(3) { grid-column: 1; grid-row: 2; }
+          .event-row > div:nth-child(4) { grid-column: 2; grid-row: 1 / 3; align-self: center; text-align: right; }
         }
 
         @media (max-width: 640px) {
