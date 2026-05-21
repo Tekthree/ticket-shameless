@@ -212,18 +212,31 @@ function MobileTicketBar({ event }: { event: Event }) {
 
   return (
     <div className="ep-mobile-bar">
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, color: C.darkText, textTransform: 'uppercase', lineHeight: 1.2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{event.title}</div>
+      <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+        <div className="ep-bar-marquee-wrap">
+          <div className="ep-bar-marquee">
+            <span>{event.title}</span>
+            <span aria-hidden>{event.title}</span>
+          </div>
+        </div>
         <div style={{ color: C.darkMuted, fontSize: 12, marginTop: 3 }}>{dateStr}</div>
       </div>
-      <a
-        href={event.payment_link}
-        target="_blank"
-        rel="noopener noreferrer"
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        style={{ background: hover ? C.redDeep : C.red, color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '14px 28px', flexShrink: 0, textDecoration: 'none', borderRadius: 'var(--ss-radius-btn)', transition: 'background 0.2s' }}
-      >Get Tickets</a>
+      <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+        <a
+          href={event.payment_link}
+          target="_blank"
+          rel="noopener noreferrer"
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+          style={{ background: hover ? C.redDeep : C.red, color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '14px 28px', textDecoration: 'none', borderRadius: 'var(--ss-radius-btn)', transition: 'background 0.2s', whiteSpace: 'nowrap' }}
+        >Get Tickets</a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: C.darkMuted, fontSize: 11 }}>
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+            <path d="M10 2L2 10M6 2h4v4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          Forwarded to Eventbrite
+        </div>
+      </div>
     </div>
   )
 }
@@ -1217,6 +1230,30 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
             align-items: center;
             gap: 16px;
             animation: slideUp 0.35s cubic-bezier(0.22,1,0.36,1);
+          }
+
+          .ep-bar-marquee-wrap {
+            overflow: hidden;
+            width: 100%;
+          }
+
+          .ep-bar-marquee {
+            display: flex;
+            gap: 48px;
+            width: max-content;
+            animation: barScroll 14s linear infinite;
+            font-family: var(--font-barlow), sans-serif;
+            font-weight: 900;
+            font-size: 18px;
+            color: #f0ece6;
+            text-transform: uppercase;
+            line-height: 1.2;
+            white-space: nowrap;
+          }
+
+          @keyframes barScroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(calc(-50% - 24px)); }
           }
         }
       ` }} />
