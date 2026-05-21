@@ -31,7 +31,7 @@ function EventRow({ event }: { event: Event }) {
         className="event-row"
         style={{
           display: 'grid',
-          gridTemplateColumns: '160px 80px 1fr auto',
+          gridTemplateColumns: '80px 160px 1fr auto',
           alignItems: 'center',
           gap: 32,
           padding: '28px 0',
@@ -40,12 +40,6 @@ function EventRow({ event }: { event: Event }) {
           cursor: 'pointer',
         }}
       >
-        {/* Date */}
-        <div>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 18, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 4 }}>{dateStr}</div>
-          <div style={{ color: '#7a7068', fontSize: 13 }}>{timeStr}{endTimeStr ? ` – ${endTimeStr}` : ''}</div>
-        </div>
-
         {/* Square image */}
         <div className="event-row-img" style={{ width: 80, height: 80, borderRadius: 6, overflow: 'hidden', background: '#111', position: 'relative', flexShrink: 0 }}>
           {imageUrl ? (
@@ -53,6 +47,12 @@ function EventRow({ event }: { event: Event }) {
           ) : (
             <div style={{ width: '100%', height: '100%', background: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 10px)' }} />
           )}
+        </div>
+
+        {/* Date */}
+        <div>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 18, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 4 }}>{dateStr}</div>
+          <div style={{ color: '#7a7068', fontSize: 13 }}>{timeStr}{endTimeStr ? ` – ${endTimeStr}` : ''}</div>
         </div>
 
         {/* Title + meta */}
@@ -134,8 +134,8 @@ export default async function EventsPage() {
             gap: 10px 16px !important;
             padding: 24px 0 !important;
           }
-          .event-row > div:nth-child(1) { grid-column: 1; grid-row: 1; }
-          .event-row-img { display: block !important; grid-column: 1; grid-row: 2; }
+          .event-row-img { grid-column: 1; grid-row: 1; }
+          .event-row > div:nth-child(2) { grid-column: 1; grid-row: 2; }
           .event-row > div:nth-child(3) { grid-column: 1; grid-row: 3; }
           .event-row > div:nth-child(4) { grid-column: 2; grid-row: 1 / 4; align-self: center; text-align: right; }
         }
