@@ -215,8 +215,8 @@ function MobileTicketBar({ event }: { event: Event }) {
       <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
         <div className="ep-bar-marquee-wrap">
           <div className="ep-bar-marquee">
-            <span>{event.title}</span>
-            <span aria-hidden>{event.title}</span>
+            <span>{event.title}&nbsp;&nbsp;·&nbsp;&nbsp;</span>
+            <span aria-hidden>{event.title}&nbsp;&nbsp;·&nbsp;&nbsp;</span>
           </div>
         </div>
         <div style={{ color: C.darkMuted, fontSize: 12, marginTop: 3 }}>{dateStr}</div>
@@ -1239,12 +1239,12 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
           .ep-bar-marquee {
             display: flex;
-            gap: 48px;
+            gap: 0;
             width: max-content;
             animation: barScroll 14s linear infinite;
             font-family: var(--font-barlow), sans-serif;
             font-weight: 900;
-            font-size: 18px;
+            font-size: 20px;
             color: #f0ece6;
             text-transform: uppercase;
             line-height: 1.2;
@@ -1253,7 +1253,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
           @keyframes barScroll {
             0%   { transform: translateX(0); }
-            100% { transform: translateX(calc(-50% - 24px)); }
+            100% { transform: translateX(-50%); }
           }
         }
       ` }} />
