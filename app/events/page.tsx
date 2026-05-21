@@ -130,14 +130,15 @@ export default async function EventsPage() {
         @media (max-width: 768px) {
           .events-container { padding: 40px 24px !important; }
           .event-row {
-            grid-template-columns: 1fr auto !important;
-            gap: 10px 16px !important;
+            grid-template-columns: 1fr !important;
+            gap: 10px !important;
             padding: 24px 0 !important;
           }
           .event-row > div:nth-child(1) { grid-column: 1; grid-row: 1; }
           .event-row-img { display: block !important; grid-column: 1; grid-row: 2; }
           .event-row > div:nth-child(3) { grid-column: 1; grid-row: 3; }
-          .event-row > div:nth-child(4) { grid-column: 2; grid-row: 1 / 4; align-self: center; text-align: right; }
+          .event-row > div:nth-child(4) { grid-column: 1; grid-row: 4; text-align: left !important; margin-top: 4px; }
+          .event-row > div:nth-child(4) .event-row-btn { display: block !important; text-align: center !important; }
         }
 
         @media (max-width: 640px) {
