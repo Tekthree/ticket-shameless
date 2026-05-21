@@ -31,9 +31,9 @@ function EventRow({ event }: { event: Event }) {
         className="event-row"
         style={{
           display: 'grid',
-          gridTemplateColumns: '80px 160px 1fr auto',
+          gridTemplateColumns: '80px 1fr',
           alignItems: 'center',
-          gap: 32,
+          gap: 24,
           padding: '28px 0',
           borderBottom: '1px solid rgba(255,255,255,0.07)',
           transition: 'background 0.15s',
@@ -41,7 +41,7 @@ function EventRow({ event }: { event: Event }) {
         }}
       >
         {/* Square image */}
-        <div className="event-row-img" style={{ width: 80, height: 80, borderRadius: 6, overflow: 'hidden', background: '#111', position: 'relative', flexShrink: 0 }}>
+        <div style={{ width: 80, height: 80, borderRadius: 6, overflow: 'hidden', background: '#111', position: 'relative', flexShrink: 0 }}>
           {imageUrl ? (
             <Image src={imageUrl} fill sizes="80px" style={{ objectFit: 'cover' }} alt={event.title} />
           ) : (
@@ -49,26 +49,19 @@ function EventRow({ event }: { event: Event }) {
           )}
         </div>
 
-        {/* Date */}
+        {/* All content + button */}
         <div>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 18, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 4 }}>{dateStr}</div>
-          <div style={{ color: '#7a7068', fontSize: 13 }}>{timeStr}{endTimeStr ? ` – ${endTimeStr}` : ''}</div>
-        </div>
-
-        {/* Title + meta */}
-        <div>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(20px, 2.5vw, 28px)', color: '#f0ece6', textTransform: 'uppercase', lineHeight: 1, marginBottom: 6 }}>{event.title}</div>
-          <div style={{ color: '#7a7068', fontSize: 14, marginBottom: 10 }}>{event.venue}{event.address ? ` · ${event.address}` : ''}</div>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 13, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 5 }}>
+            {dateStr} <span style={{ color: '#7a7068', fontWeight: 700, fontSize: 12 }}>{timeStr}{endTimeStr ? ` – ${endTimeStr}` : ''}</span>
+          </div>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(18px, 2vw, 26px)', color: '#f0ece6', textTransform: 'uppercase', lineHeight: 1.05, marginBottom: 6 }}>{event.title}</div>
+          <div style={{ color: '#7a7068', fontSize: 13, marginBottom: 10 }}>{event.venue}{event.address ? ` · ${event.address}` : ''}</div>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 14 }}>
             {tags.map(tag => (
               <span key={tag} style={{ background: 'rgba(255,255,255,0.06)', color: '#7a7068', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '3px 8px', borderRadius: 999 }}>{tag}</span>
             ))}
           </div>
-        </div>
-
-        {/* CTA */}
-        <div style={{ textAlign: 'right', flexShrink: 0 }}>
-          <span className="event-row-btn" style={{ display: 'inline-block', background: '#c9321a', color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '10px 20px', borderRadius: 'var(--ss-radius-btn)', transition: 'background 0.15s' }}>
+          <span className="event-row-btn" style={{ display: 'inline-block', background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(240,236,230,0.5)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', padding: '8px 18px', borderRadius: 'var(--ss-radius-btn)', transition: 'border-color 0.15s, color 0.15s' }}>
             View Event →
           </span>
         </div>
@@ -124,24 +117,17 @@ export default async function EventsPage() {
 
       <style dangerouslySetInnerHTML={{ __html: `
         .event-row:hover { background: rgba(255,255,255,0.02); }
-        .event-row:hover .event-row-btn { background: #a82614; }
+        .event-row:hover .event-row-btn { border-color: #c9321a !important; color: #c9321a !important; }
         .past-link:hover { border-color: #c9321a !important; color: #c9321a !important; }
 
         @media (max-width: 768px) {
           .events-container { padding: 40px 24px !important; }
-          .event-row {
-            grid-template-columns: 1fr auto !important;
-            gap: 10px 16px !important;
-            padding: 24px 0 !important;
-          }
-          .event-row-img { grid-column: 1; grid-row: 1; }
-          .event-row > div:nth-child(2) { grid-column: 1; grid-row: 2; }
-          .event-row > div:nth-child(3) { grid-column: 1; grid-row: 3; }
-          .event-row > div:nth-child(4) { grid-column: 2; grid-row: 1 / 4; align-self: center; text-align: right; }
+          .event-row { gap: 16px !important; padding: 22px 0 !important; }
         }
 
         @media (max-width: 640px) {
           .events-container { padding: 32px 20px !important; }
+          .event-row { gap: 14px !important; }
         }
       ` }} />
     </div>
