@@ -30,7 +30,7 @@ export default async function DJsPage() {
     <div style={{ minHeight: '100vh', background: C.dark, paddingTop: 64 }}>
 
       {/* Page header */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: 'clamp(40px, 6vw, 72px) clamp(20px, 4vw, 56px) 0' }}>
+      <div style={{ maxWidth: 1312, margin: '0 auto', padding: 'clamp(40px, 6vw, 72px) clamp(20px, 4vw, 56px) 0' }}>
         <div style={{
           fontFamily: 'var(--font-barlow), sans-serif',
           fontWeight: 900,

@@ -71,117 +71,126 @@ export default function SSNavbar() {
       <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 300,
         height: 64,
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0 clamp(20px, 4vw, 56px)',
         background: navBg,
         backdropFilter: navBlur,
         borderBottom: navBorder,
         transition: 'background 0.35s, backdrop-filter 0.35s, border-color 0.35s',
       }}>
-
-        {/* ── LEFT: logo + back-breadcrumb on detail pages ── */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
-          <Link href="/" style={{ flexShrink: 0 }}>
-            <Image src="/shameless-logo.png" alt="Simply Shameless" width={160} height={52}
-              style={{ height: 44, width: 'auto' }} priority />
-          </Link>
-          {(isEventPage || isDJPage) && (
-            <>
-              <span style={{ color: 'rgba(255,255,255,0.15)', fontSize: 16 }}>|</span>
-              <Link
-                href={isEventPage ? '/events' : '/djs'}
-                style={{
-                  color: C.darkText, textDecoration: 'none',
-                  fontFamily: 'var(--font-barlow), sans-serif',
-                  fontWeight: 700, fontSize: 13,
-                  letterSpacing: '0.14em', textTransform: 'uppercase',
-                  opacity: 0.7,
-                  display: 'flex', alignItems: 'center', gap: 5,
-                  transition: 'opacity 0.2s',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
-                onMouseLeave={e => (e.currentTarget.style.opacity = '0.7')}
-              >
-                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-                  <path d="M9 2L4 7L9 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                {isEventPage ? 'All Events' : 'All DJs'}
-              </Link>
-            </>
-          )}
-        </div>
-
-        {/* ── CENTER: desktop nav links ── */}
-        <div className="ss-desktop-links" style={{
-          position: 'absolute', left: '50%', transform: 'translateX(-50%)',
-          gap: 36, alignItems: 'center',
+        <div style={{
+          maxWidth: 1312,
+          margin: '0 auto',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 clamp(20px, 4vw, 56px)',
+          position: 'relative',
         }}>
-          {NAV_LINKS.map(([label, href]) => (
-            <Link key={label} href={href} style={{
-              color: isActive(href) ? C.darkText : 'rgba(240,236,230,0.5)',
-              textDecoration: 'none',
-              fontFamily: 'var(--font-barlow), sans-serif',
-              fontWeight: 700, fontSize: 15,
-              letterSpacing: '0.14em', textTransform: 'uppercase',
-              position: 'relative', paddingBottom: 2,
-              transition: 'color 0.2s',
-            }}
-              onMouseEnter={e => (e.currentTarget.style.color = C.darkText)}
-              onMouseLeave={e => (e.currentTarget.style.color = isActive(href) ? C.darkText : 'rgba(240,236,230,0.5)')}
-            >
-              {label}
-              {isActive(href) && (
-                <span style={{
-                  position: 'absolute', bottom: 0, left: 0, right: 0,
-                  height: 2, background: C.red,
-                }} />
-              )}
+          {/* ── LEFT: logo + back-breadcrumb on detail pages ── */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
+            <Link href="/" style={{ flexShrink: 0 }}>
+              <Image src="/shameless-logo.png" alt="Simply Shameless" width={160} height={52}
+                style={{ height: 44, width: 'auto' }} priority />
             </Link>
-          ))}
-        </div>
+            {(isEventPage || isDJPage) && (
+              <>
+                <span style={{ color: 'rgba(255,255,255,0.15)', fontSize: 16 }}>|</span>
+                <Link
+                  href={isEventPage ? '/events' : '/djs'}
+                  style={{
+                    color: C.darkText, textDecoration: 'none',
+                    fontFamily: 'var(--font-barlow), sans-serif',
+                    fontWeight: 700, fontSize: 13,
+                    letterSpacing: '0.14em', textTransform: 'uppercase',
+                    opacity: 0.7,
+                    display: 'flex', alignItems: 'center', gap: 5,
+                    transition: 'opacity 0.2s',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
+                  onMouseLeave={e => (e.currentTarget.style.opacity = '0.7')}
+                >
+                  <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                    <path d="M9 2L4 7L9 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  {isEventPage ? 'All Events' : 'All DJs'}
+                </Link>
+              </>
+            )}
+          </div>
 
-        {/* ── RIGHT: Get Tickets (desktop) + hamburger (mobile) ── */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+          {/* ── CENTER: desktop nav links ── */}
+          <div className="ss-desktop-links" style={{
+            position: 'absolute', left: '50%', transform: 'translateX(-50%)',
+            gap: 36, alignItems: 'center',
+          }}>
+            {NAV_LINKS.map(([label, href]) => (
+              <Link key={label} href={href} style={{
+                color: isActive(href) ? C.darkText : 'rgba(240,236,230,0.5)',
+                textDecoration: 'none',
+                fontFamily: 'var(--font-barlow), sans-serif',
+                fontWeight: 700, fontSize: 15,
+                letterSpacing: '0.14em', textTransform: 'uppercase',
+                position: 'relative', paddingBottom: 2,
+                transition: 'color 0.2s',
+              }}
+                onMouseEnter={e => (e.currentTarget.style.color = C.darkText)}
+                onMouseLeave={e => (e.currentTarget.style.color = isActive(href) ? C.darkText : 'rgba(240,236,230,0.5)')}
+              >
+                {label}
+                {isActive(href) && (
+                  <span style={{
+                    position: 'absolute', bottom: 0, left: 0, right: 0,
+                    height: 2, background: C.red,
+                  }} />
+                )}
+              </Link>
+            ))}
+          </div>
 
-          {/* Get Tickets — shown only on desktop via CSS */}
-          <Link href="/events" className="ss-get-tickets" style={{
-            background: C.red, color: '#fff', textDecoration: 'none',
-            fontFamily: 'var(--font-barlow), sans-serif',
-            fontWeight: 900, fontSize: 14,
-            letterSpacing: '0.15em', textTransform: 'uppercase',
-            padding: '11px 28px',
-            transition: 'background 0.2s, transform 0.12s',
-          }}
-            onMouseEnter={e => { e.currentTarget.style.background = C.redDeep; e.currentTarget.style.transform = 'translateY(-1px)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = C.red; e.currentTarget.style.transform = 'translateY(0)' }}
-          >Get Tickets</Link>
+          {/* ── RIGHT: Get Tickets (desktop) + hamburger (mobile) ── */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
 
-          {/* Hamburger — shown only on mobile via CSS (no inline display so CSS wins) */}
-          <button
-            className="ss-hamburger"
-            onClick={() => setMenuOpen(o => !o)}
-            style={{
-              background: 'transparent', border: 'none', cursor: 'pointer',
-              padding: 8, flexDirection: 'column', gap: 5, alignItems: 'flex-end',
+            {/* Get Tickets — shown only on desktop via CSS */}
+            <Link href="/events" className="ss-get-tickets" style={{
+              background: C.red, color: '#fff', textDecoration: 'none',
+              fontFamily: 'var(--font-barlow), sans-serif',
+              fontWeight: 900, fontSize: 14,
+              letterSpacing: '0.15em', textTransform: 'uppercase',
+              padding: '11px 28px',
+              transition: 'background 0.2s, transform 0.12s',
             }}
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          >
-            <span style={{
-              display: 'block', width: 24, height: 2, background: C.darkText,
-              transition: 'transform 0.25s cubic-bezier(0.22,1,0.36,1)',
-              transform: menuOpen ? 'translateY(7px) rotate(45deg)' : 'none',
-            }} />
-            <span style={{
-              display: 'block', width: 16, height: 2, background: C.darkText,
-              transition: 'opacity 0.2s',
-              opacity: menuOpen ? 0 : 1,
-            }} />
-            <span style={{
-              display: 'block', width: 24, height: 2, background: C.darkText,
-              transition: 'transform 0.25s cubic-bezier(0.22,1,0.36,1)',
-              transform: menuOpen ? 'translateY(-7px) rotate(-45deg)' : 'none',
-            }} />
-          </button>
+              onMouseEnter={e => { e.currentTarget.style.background = C.redDeep; e.currentTarget.style.transform = 'translateY(-1px)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = C.red; e.currentTarget.style.transform = 'translateY(0)' }}
+            >Get Tickets</Link>
+
+            {/* Hamburger — shown only on mobile via CSS (no inline display so CSS wins) */}
+            <button
+              className="ss-hamburger"
+              onClick={() => setMenuOpen(o => !o)}
+              style={{
+                background: 'transparent', border: 'none', cursor: 'pointer',
+                padding: 8, flexDirection: 'column', gap: 5, alignItems: 'flex-end',
+              }}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            >
+              <span style={{
+                display: 'block', width: 24, height: 2, background: C.darkText,
+                transition: 'transform 0.25s cubic-bezier(0.22,1,0.36,1)',
+                transform: menuOpen ? 'translateY(7px) rotate(45deg)' : 'none',
+              }} />
+              <span style={{
+                display: 'block', width: 16, height: 2, background: C.darkText,
+                transition: 'opacity 0.2s',
+                opacity: menuOpen ? 0 : 1,
+              }} />
+              <span style={{
+                display: 'block', width: 24, height: 2, background: C.darkText,
+                transition: 'transform 0.25s cubic-bezier(0.22,1,0.36,1)',
+                transform: menuOpen ? 'translateY(-7px) rotate(-45deg)' : 'none',
+              }} />
+            </button>
+          </div>
         </div>
       </nav>
 

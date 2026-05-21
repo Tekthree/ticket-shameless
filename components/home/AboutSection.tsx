@@ -62,7 +62,7 @@ export default function AboutSection() {
   })
 
   return (
-    <section id="about" style={{ padding: '120px 56px', background: '#faf7f2' }}>
+    <section id="about" style={{ padding: '120px clamp(20px, 4vw, 56px)', background: '#faf7f2' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '5fr 7fr', gap: 100, alignItems: 'start' }}>
 
         {/* LEFT sticky */}
@@ -116,7 +116,7 @@ export default function AboutSection() {
 
           {/* Pull quote */}
           <div ref={r3} style={{ ...revealStyle(v3, 120), marginBottom: 32 }}>
-            <blockquote style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(24px, 3vw, 36px)', textTransform: 'uppercase', lineHeight: 1.1, color: '#1c1917', margin: 0, borderLeft: '4px solid #c9321a', paddingLeft: 24 }}>
+            <blockquote style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(24px, 3vw, 36px)', textTransform: 'uppercase', lineHeight: 1.1, color: '#1c1917', margin: 0, paddingLeft: 0 }}>
               Shake your shame off and get your game on.
             </blockquote>
           </div>
@@ -165,9 +165,6 @@ export default function AboutSection() {
         @media (max-width: 900px) {
           #about > div { grid-template-columns: 1fr !important; gap: 48px !important; }
           #about > div > div:first-child { position: static !important; }
-        }
-        @media (max-width: 640px) {
-          #about { padding: 60px 24px !important; }
         }
       ` }} />
     </section>

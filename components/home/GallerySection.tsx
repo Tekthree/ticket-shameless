@@ -110,7 +110,7 @@ export default function GallerySection({ images = [] }: { images?: string[] }) {
   }, [images])
 
   return (
-    <section id="gallery" style={{ padding: '100px 56px', background: '#1c1917' }}>
+    <section id="gallery" style={{ padding: '100px clamp(20px, 4vw, 56px)', background: '#1c1917' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div ref={headerRef} style={{
           opacity: headerVisible ? 1 : 0,
@@ -158,7 +158,6 @@ export default function GallerySection({ images = [] }: { images?: string[] }) {
 
       <style dangerouslySetInnerHTML={{ __html: `
         @media (max-width: 900px) {
-          #gallery { padding: 60px 24px !important; }
           #gallery .gallery-header { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
           #gallery > div > div:last-child {
             grid-template-columns: repeat(2, 1fr) !important;

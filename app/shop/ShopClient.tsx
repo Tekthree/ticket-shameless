@@ -364,7 +364,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
 
       {/* Hero */}
       <div style={{ paddingTop: 64, background: C.dark }}>
-        <div style={{ padding: 'clamp(40px, 6vw, 60px) clamp(20px, 4vw, 56px) 0', maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}>
+        <div style={{ padding: 'clamp(40px, 6vw, 60px) clamp(20px, 4vw, 56px) 0', maxWidth: 1312, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}>
           <div>
             <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.28em', textTransform: 'uppercase', color: C.red, marginBottom: 12 }}>Official Store</div>
             <h1 style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(52px, 8vw, 100px)', lineHeight: 0.86, textTransform: 'uppercase', color: C.darkText, margin: 0 }}>
@@ -399,14 +399,14 @@ export default function ShopClient({ products }: { products: Product[] }) {
           </div>
         </div>
 
-        <div style={{ margin: '32px clamp(20px,4vw,56px) 0', maxWidth: 1200, marginLeft: 'auto', marginRight: 'auto' }}>
+        <div style={{ margin: '32px clamp(20px,4vw,56px) 0', maxWidth: 1312, marginLeft: 'auto', marginRight: 'auto' }}>
           <div style={{ height: 1, background: C.darkBorder }} />
         </div>
       </div>
 
       {/* Sticky filter bar */}
       <div style={{ position: 'sticky', top: 64, zIndex: 100, background: 'rgba(28,25,23,0.97)', backdropFilter: 'blur(16px)', borderBottom: `1px solid ${C.darkBorder}` }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: `0 clamp(20px, 4vw, 56px)`, display: 'flex', overflowX: 'auto', scrollbarWidth: 'none' }}>
+        <div style={{ maxWidth: 1312, margin: '0 auto', padding: `0 clamp(20px, 4vw, 56px)`, display: 'flex', overflowX: 'auto', scrollbarWidth: 'none' }}>
           {cats.map(cat => (
             <button key={cat} onClick={() => setFilter(cat)} style={{
               background: 'transparent',
@@ -426,7 +426,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
               flexShrink: 0,
             }}>
               {cat}
-              <span style={{ position: 'absolute', bottom: -1, left: 0, width: filter === cat ? '100%' : '0%', height: 2, background: C.red, transition: 'width 0.25s cubic-bezier(0.22,1,0.36,1)' }} />
+              <span style={{ position: 'absolute', bottom: -1, left: 0, width: '100%', height: 2, background: C.red, transform: `scaleX(${filter === cat ? 1 : 0})`, transformOrigin: 'left', transition: 'transform 0.25s cubic-bezier(0.22,1,0.36,1)' }} />
             </button>
           ))}
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', flexShrink: 0, paddingLeft: 20, borderLeft: `1px solid ${C.darkBorder}` }}>
@@ -436,7 +436,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
       </div>
 
       {/* Product grid */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: `40px clamp(20px, 4vw, 56px) 80px` }}>
+      <div style={{ maxWidth: 1312, margin: '0 auto', padding: `40px clamp(20px, 4vw, 56px) 80px` }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 'var(--ss-card-gap)' }}>
           {filtered.map(p => (
             <ProductCard key={p.id} product={p} onClick={() => setSelectedProduct(p)} />

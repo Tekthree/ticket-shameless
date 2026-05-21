@@ -632,10 +632,14 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
           <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(45deg, #252220 0px, #252220 1px, #1c1917 1px, #1c1917 22px)' }} />
         )}
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(28,25,23,0.1) 0%, rgba(28,25,23,0.65) 60%, #1c1917 100%)' }} />
-        <div ref={heroRef} className="ep-hero-tags" style={{ position: 'absolute', bottom: 28, display: 'flex', gap: 6, flexWrap: 'wrap', opacity: heroVisible ? 1 : 0, transition: 'opacity 0.6s ease' }}>
-          {event.tags?.map(tag => (
-            <span key={tag} style={{ background: 'rgba(17,17,16,0.75)', backdropFilter: 'blur(8px)', border: `1px solid ${C.darkBorder}`, color: 'rgba(240,236,230,0.6)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px' }}>{tag}</span>
-          ))}
+        <div className="ep-hero-tags-wrap">
+          <div style={{ width: '100%', maxWidth: 1312, padding: '0 clamp(20px, 4vw, 56px)' }}>
+            <div ref={heroRef} style={{ display: 'flex', gap: 6, flexWrap: 'wrap', opacity: heroVisible ? 1 : 0, transition: 'opacity 0.6s ease', pointerEvents: 'auto' }}>
+              {event.tags?.map(tag => (
+                <span key={tag} style={{ background: 'rgba(17,17,16,0.75)', backdropFilter: 'blur(8px)', border: `1px solid ${C.darkBorder}`, color: 'rgba(240,236,230,0.6)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px' }}>{tag}</span>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -807,13 +811,18 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
           overflow: hidden;
           margin-top: 64px;
         }
-        .ep-hero-tags {
-          left: 48px;
+        .ep-hero-tags-wrap {
+          position: absolute;
+          left: 0;
+          right: 0;
           bottom: 28px;
+          display: flex;
+          justify-content: center;
+          pointer-events: none;
         }
 
         .ep-body {
-          max-width: 1200px;
+          max-width: 1312px;
           margin: 0 auto;
           padding: 0 clamp(20px, 4vw, 56px) 60px;
           display: grid;
@@ -832,7 +841,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
         @media (max-width: 768px) {
           .ep-hero { height: 260px; margin-top: 64px; }
-          .ep-hero-tags { left: 20px; bottom: 20px; }
+          .ep-hero-tags-wrap { bottom: 20px; }
 
           .ep-body {
             grid-template-columns: 1fr;

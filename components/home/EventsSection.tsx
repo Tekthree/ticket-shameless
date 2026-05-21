@@ -78,7 +78,7 @@ function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
             <div style={{ color: '#8a8078', fontSize: 14, marginBottom: 14 }}>{event.venue || event.location}</div>
             <div style={{ display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap' }}>
               {tags.map((tag: string) => (
-                <span key={tag} style={{ background: 'rgba(201,50,26,0.12)', color: '#c9321a', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', alignSelf: 'flex-start' }}>{tag}</span>
+                <span key={tag} style={{ background: 'rgba(28,25,23,0.06)', color: '#7a7068', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', alignSelf: 'flex-start' }}>{tag}</span>
               ))}
             </div>
             <button
@@ -130,7 +130,7 @@ export default function EventsSection({ events }: { events: Event[] }) {
   return (
     <section id="events" style={{ padding: '100px 0', background: '#f2ede5', overflow: 'hidden' }}>
       {/* Header — aligned to content boundary */}
-      <div className="events-header" style={{ maxWidth: 1312, margin: '0 auto', padding: '0 56px' }}>
+      <div className="events-header" style={{ maxWidth: 1312, margin: '0 auto', padding: '0 clamp(20px, 4vw, 56px)' }}>
         <div ref={headerRef} style={{
           opacity: headerVisible ? 1 : 0,
           transform: headerVisible ? 'translateY(0)' : 'translateY(28px)',
@@ -162,14 +162,16 @@ export default function EventsSection({ events }: { events: Event[] }) {
             key={i}
             onClick={() => emblaApi?.scrollTo(i)}
             style={{
-              width: i === selectedIndex ? 20 : 6,
+              width: 20,
               height: 6,
               border: 'none',
               borderRadius: 3,
               background: i === selectedIndex ? '#c9321a' : 'rgba(28,25,23,0.2)',
               cursor: 'pointer',
               padding: 0,
-              transition: 'width 0.25s ease, background 0.25s ease',
+              transform: `scaleX(${i === selectedIndex ? 1 : 0.3})`,
+              transformOrigin: 'center',
+              transition: 'transform 0.25s ease, background 0.25s ease',
             }}
             aria-label={`Go to event ${i + 1}`}
           />
@@ -177,15 +179,13 @@ export default function EventsSection({ events }: { events: Event[] }) {
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        .embla-events { padding-left: max(56px, calc((100vw - 1200px) / 2)); cursor: grab; }
+        .embla-events { padding-left: max(clamp(20px, 4vw, 56px), calc((100vw - 1200px) / 2)); cursor: grab; }
         .embla-events:active { cursor: grabbing; }
         .embla-events-slide { width: 420px; }
         .embla-dots { display: none; }
 
         @media (max-width: 640px) {
           #events { padding: 60px 0 !important; }
-          .events-header { padding: 0 24px !important; }
-          .embla-events { padding-left: 24px; }
           .embla-events-slide { width: 75vw; }
           .embla-dots { display: flex !important; }
         }

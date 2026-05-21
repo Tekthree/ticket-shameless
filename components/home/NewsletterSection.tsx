@@ -54,7 +54,7 @@ export default function NewsletterSection() {
   }
 
   return (
-    <section id="signup" style={{ padding: '120px 56px', background: '#c9321a', position: 'relative', overflow: 'hidden' }}>
+    <section id="signup" style={{ padding: '120px clamp(20px, 4vw, 56px)', background: '#c9321a', position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 18px)' }} />
       <div ref={ref} style={{ maxWidth: 780, margin: '0 auto', textAlign: 'center', position: 'relative' }}>
         <div style={revealStyle()}>
@@ -117,7 +117,7 @@ export default function NewsletterSection() {
       </div>
       <style dangerouslySetInnerHTML={{ __html: `
         @media (max-width: 640px) {
-          #signup { padding: 80px 24px !important; }
+          #signup { padding-top: 80px !important; padding-bottom: 80px !important; }
           #signup form { flex-direction: column !important; gap: 16px; }
           #signup form button { margin-left: 0 !important; }
         }

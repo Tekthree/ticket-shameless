@@ -50,7 +50,7 @@ function EventRow({ event }: { event: Event }) {
           <div style={{ color: '#7a7068', fontSize: 14, marginBottom: 10 }}>{event.venue}{event.address ? ` · ${event.address}` : ''}</div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {tags.map(tag => (
-              <span key={tag} style={{ background: 'rgba(201,50,26,0.12)', color: '#c9321a', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '3px 8px' }}>{tag}</span>
+              <span key={tag} style={{ background: 'rgba(255,255,255,0.06)', color: '#7a7068', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '3px 8px' }}>{tag}</span>
             ))}
           </div>
         </div>
@@ -71,7 +71,7 @@ export default async function EventsPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#1c1917', paddingTop: 64 }}>
-      <div className="events-container" style={{ maxWidth: 1200, margin: '0 auto', padding: 'clamp(40px, 6vw, 60px) clamp(20px, 4vw, 56px)' }}>
+      <div className="events-container" style={{ maxWidth: 1312, margin: '0 auto', padding: 'clamp(40px, 6vw, 60px) clamp(20px, 4vw, 56px)' }}>
         {/* Header */}
         <div style={{ marginBottom: 56, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
           <div>

@@ -190,16 +190,17 @@ export default function HeroSection({
           position: 'relative',
           zIndex: 4,
           width: '100%',
-          maxWidth: 1600,
+          maxWidth: 1312,
           margin: '0 auto',
           display: 'flex',
           alignItems: 'center',
+          minHeight: 'inherit',
         }}>
         <div
           className='hero-content'
           style={{
             width: '52%',
-            padding: '100px 64px 100px 72px',
+            padding: '100px clamp(20px, 4vw, 56px)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -261,11 +262,13 @@ export default function HeroSection({
           {/* Red rule (design system motif) */}
           <div
             style={{
-              width: loaded ? 56 : 0,
+              width: 56,
               height: 3,
               background: C.red,
               margin: '32px 0 28px',
-              transition: 'width 0.7s cubic-bezier(0.22,1,0.36,1) 0.55s',
+              transform: `scaleX(${loaded ? 1 : 0})`,
+              transformOrigin: 'left',
+              transition: 'transform 0.7s cubic-bezier(0.22,1,0.36,1) 0.55s',
             }}
           />
 
@@ -378,103 +381,103 @@ export default function HeroSection({
             }}>
             EST · 2003 &nbsp;·&nbsp; SEATTLE WA
           </div>
+
+          {/* ── NEXT EVENT CARD (bottom-right, design-system .merch-card style) ── */}
+          {nextEvent && (
+            <Link
+              href={`/events/${nextEvent.slug}`}
+              className='hero-event-card'
+              style={{
+                position: 'absolute',
+                right: 56,
+                bottom: 80,
+                zIndex: 5,
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 18,
+                background: C.darkCard,
+                border: `1px solid rgba(255,255,255,0.07)`,
+                color: C.darkText,
+                padding: '18px 22px',
+                maxWidth: 380,
+                opacity: loaded ? 1 : 0,
+                transform: loaded ? 'translateY(0)' : 'translateY(32px)',
+                transition:
+                  'opacity 0.9s cubic-bezier(0.22,1,0.36,1) 0.75s, transform 0.9s cubic-bezier(0.22,1,0.36,1) 0.75s, border-color 0.2s, box-shadow 0.2s',
+                boxShadow: '0 16px 50px rgba(0,0,0,0.45)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = C.red;
+                e.currentTarget.style.boxShadow =
+                  '0 18px 56px rgba(0,0,0,0.55), 0 4px 16px rgba(201,50,26,0.25)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)';
+                e.currentTarget.style.boxShadow = '0 16px 50px rgba(0,0,0,0.45)';
+              }}>
+              <div
+                style={{
+                  width: 4,
+                  alignSelf: 'stretch',
+                  background: C.red,
+                  flexShrink: 0,
+                }}
+              />
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-barlow), sans-serif',
+                    fontWeight: 900,
+                    fontSize: 11,
+                    letterSpacing: '0.22em',
+                    textTransform: 'uppercase',
+                    color: C.red,
+                    marginBottom: 4,
+                  }}>
+                  Next Event
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-barlow), sans-serif',
+                    fontWeight: 800,
+                    fontSize: 22,
+                    lineHeight: 1.05,
+                    textTransform: 'uppercase',
+                    color: C.darkText,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    marginBottom: 4,
+                  }}>
+                  {nextEvent.title}
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-dm), sans-serif',
+                    fontSize: 12,
+                    color: C.darkMuted,
+                  }}>
+                  {eventDate}
+                  {nextEvent.venue ? ` · ${nextEvent.venue}` : ''}
+                </div>
+              </div>
+              <span
+                style={{
+                  fontFamily: 'var(--font-barlow), sans-serif',
+                  fontWeight: 800,
+                  fontSize: 12,
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  color: C.darkText,
+                  flexShrink: 0,
+                }}>
+                Open →
+              </span>
+            </Link>
+          )}
         </div>
       </div>
-
-      {/* ── NEXT EVENT CARD (bottom-right, design-system .merch-card style) ── */}
-      {nextEvent && (
-        <Link
-          href={`/events/${nextEvent.slug}`}
-          className='hero-event-card'
-          style={{
-            position: 'absolute',
-            right: 56,
-            bottom: 80,
-            zIndex: 5,
-            textDecoration: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 18,
-            background: C.darkCard,
-            border: `1px solid rgba(255,255,255,0.07)`,
-            color: C.darkText,
-            padding: '18px 22px',
-            maxWidth: 380,
-            opacity: loaded ? 1 : 0,
-            transform: loaded ? 'translateY(0)' : 'translateY(32px)',
-            transition:
-              'opacity 0.9s cubic-bezier(0.22,1,0.36,1) 0.75s, transform 0.9s cubic-bezier(0.22,1,0.36,1) 0.75s, border-color 0.2s, box-shadow 0.2s',
-            boxShadow: '0 16px 50px rgba(0,0,0,0.45)',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = C.red;
-            e.currentTarget.style.boxShadow =
-              '0 18px 56px rgba(0,0,0,0.55), 0 4px 16px rgba(201,50,26,0.25)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)';
-            e.currentTarget.style.boxShadow = '0 16px 50px rgba(0,0,0,0.45)';
-          }}>
-          <div
-            style={{
-              width: 4,
-              alignSelf: 'stretch',
-              background: C.red,
-              flexShrink: 0,
-            }}
-          />
-          <div style={{ minWidth: 0, flex: 1 }}>
-            <div
-              style={{
-                fontFamily: 'var(--font-barlow), sans-serif',
-                fontWeight: 900,
-                fontSize: 11,
-                letterSpacing: '0.22em',
-                textTransform: 'uppercase',
-                color: C.red,
-                marginBottom: 4,
-              }}>
-              Next Event
-            </div>
-            <div
-              style={{
-                fontFamily: 'var(--font-barlow), sans-serif',
-                fontWeight: 800,
-                fontSize: 22,
-                lineHeight: 1.05,
-                textTransform: 'uppercase',
-                color: C.darkText,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                marginBottom: 4,
-              }}>
-              {nextEvent.title}
-            </div>
-            <div
-              style={{
-                fontFamily: 'var(--font-dm), sans-serif',
-                fontSize: 12,
-                color: C.darkMuted,
-              }}>
-              {eventDate}
-              {nextEvent.venue ? ` · ${nextEvent.venue}` : ''}
-            </div>
-          </div>
-          <span
-            style={{
-              fontFamily: 'var(--font-barlow), sans-serif',
-              fontWeight: 800,
-              fontSize: 12,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              color: C.darkText,
-              flexShrink: 0,
-            }}>
-            Open →
-          </span>
-        </Link>
-      )}
 
       {/* Responsive overrides: large = side-by-side; mobile = video top + gradient/header bottom */}
       <style
@@ -489,19 +492,20 @@ export default function HeroSection({
         @media (max-width: 768px) {
           /* Full-overlay layout — video is absolute background, spacer pushes content down */
           section[data-hero] {
-            min-height: 100svh !important;
+            min-height: auto !important;
+            padding-bottom: 48px !important;
             display: flex !important;
             flex-direction: column !important;
             justify-content: flex-start !important;
             position: relative !important;
             overflow: hidden !important;
           }
-          /* Transparent spacer — guarantees at least 48vh of video above content */
+          /* Transparent spacer — strict vh height so gap doesn't expand on tall screens */
           section[data-hero]::before {
             content: '';
             display: block;
-            flex: 1;
-            min-height: 48vh;
+            flex: none;
+            height: 46vh;
           }
           /* Fixed height so cover crops less aggressively (58vh ≈ 490px = less portrait extreme) */
           section[data-hero] .hero-video-wrap {
@@ -555,6 +559,13 @@ export default function HeroSection({
           section[data-hero] .hero-bottom-fade {
             display: none !important;
           }
+          /* Scale heading font size and stroke weight responsibly for all mobile and narrow viewports */
+          section[data-hero] h1 {
+            font-size: clamp(44px, 14vw, 82px) !important;
+          }
+          section[data-hero] h1 span:last-child {
+            -webkit-text-stroke: 1.5px ${C.darkText} !important;
+          }
           /* Content in normal flow at bottom (section is flex-col justify-end) */
           section[data-hero] .hero-content-wrap {
             position: relative !important;
@@ -579,8 +590,8 @@ export default function HeroSection({
             position: relative !important;
             right: auto !important;
             bottom: auto !important;
-            margin: 0 24px 28px !important;
-            width: calc(100% - 48px) !important;
+            margin: 32px 0 0 !important;
+            width: 100% !important;
             max-width: none !important;
             transform: none !important;
             opacity: 1 !important;
@@ -589,7 +600,7 @@ export default function HeroSection({
         }
         @media (max-width: 480px) {
           section[data-hero] .hero-content { padding: 24px 20px 20px !important; }
-          section[data-hero] h1 { font-size: clamp(52px, 15vw, 80px) !important; }
+          section[data-hero] h1 { font-size: clamp(42px, 15vw, 76px) !important; }
         }
       `,
         }}

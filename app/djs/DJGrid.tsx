@@ -16,7 +16,7 @@ const C = {
 type Filter = 'all' | 'residents' | 'guests'
 
 export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts?: Record<string, number> }) {
-  const [filter, setFilter] = useState<Filter>('all')
+  const [filter, setFilter] = useState<Filter>('residents')
   const [search, setSearch] = useState('')
 
   const filtered = useMemo(() => {
@@ -51,7 +51,7 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
         borderBottom: `1px solid ${C.darkBorder}`,
         marginBottom: 40,
       }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 40, flexWrap: 'wrap' }} className="ss-filter-bar">
+        <div style={{ maxWidth: 1312, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 40, flexWrap: 'wrap' }} className="ss-filter-bar">
           {/* Tabs */}
           <div className="ss-filter-tabs" style={{ display: 'flex', gap: 28, flexShrink: 0 }}>
             {tabs.map(({ key, label }) => (
@@ -78,10 +78,12 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
                 <span style={{
                   position: 'absolute',
                   bottom: 0, left: 0,
-                  width: filter === key ? '100%' : '0%',
+                  width: '100%',
                   height: 2,
                   background: C.red,
-                  transition: 'width 0.28s cubic-bezier(0.22,1,0.36,1)',
+                  transform: `scaleX(${filter === key ? 1 : 0})`,
+                  transformOrigin: 'left',
+                  transition: 'transform 0.28s cubic-bezier(0.22,1,0.36,1)',
                 }} />
               </button>
             ))}
@@ -134,7 +136,7 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
       </div>
 
       {/* Grid */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(20px, 4vw, 56px) 80px' }}>
+      <div style={{ maxWidth: 1312, margin: '0 auto', padding: '0 clamp(20px, 4vw, 56px) 80px' }}>
         {filtered.length === 0 ? (
           <div style={{ color: C.darkMuted, fontSize: 15, padding: '48px 0', textAlign: 'center' }}>
             <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>

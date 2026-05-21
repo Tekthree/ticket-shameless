@@ -12,8 +12,8 @@ export default function SSFooter() {
   ]
 
   return (
-    <footer style={{ background: '#111110', padding: '52px 56px', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+    <footer style={{ background: '#111110', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+      <div style={{ maxWidth: 1312, margin: '0 auto', padding: '52px clamp(20px, 4vw, 56px)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 40, flexWrap: 'wrap', gap: 24 }}>
           <Image src="/shameless-logo.png" alt="Simply Shameless" width={120} height={34} style={{ height: 34, width: 'auto' }} />
           <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>

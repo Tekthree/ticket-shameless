@@ -146,7 +146,8 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
       <div style={{ paddingTop: 64, minHeight: 'min(70vh, 600px)', display: 'grid' }} className="djp-hero-grid">
 
         {/* Left: info */}
-        <div style={{ padding: 'clamp(40px, 6vw, 80px) clamp(20px, 4vw, 56px) clamp(36px, 5vw, 60px)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', position: 'relative', zIndex: 1 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', position: 'relative', zIndex: 1 }}>
+          <div className="djp-hero-text-wrap" style={{ width: '100%', padding: 'clamp(40px, 6vw, 80px) clamp(20px, 4vw, 56px) clamp(36px, 5vw, 60px)' }}>
 
           {/* Role + location */}
           <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 20 }}>
@@ -180,6 +181,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
               {socials.map(s => <SocialBtn key={s.label} {...s} />)}
             </div>
           )}
+          </div>
         </div>
 
         {/* Right: photo */}
@@ -210,7 +212,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
 
       {/* ── EVENTS count bar ─────────────────────────────────────────── */}
       <div style={{ background: C.darkCard, borderTop: `1px solid ${C.darkBorder}`, borderBottom: `1px solid ${C.darkBorder}` }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(20px, 4vw, 56px)', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
+        <div style={{ maxWidth: 1312, margin: '0 auto', padding: '0 clamp(20px, 4vw, 56px)', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
           {[
             ['Shameless Events', events.length],
             ['Upcoming', upcoming.length],
@@ -224,7 +226,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
       </div>
 
       {/* ── MAIN CONTENT ─────────────────────────────────────────────── */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: 'clamp(40px, 5vw, 60px) clamp(20px, 4vw, 56px) 80px' }} className="djp-body-grid">
+      <div style={{ maxWidth: 1312, margin: '0 auto', padding: 'clamp(40px, 5vw, 60px) clamp(20px, 4vw, 56px) 80px' }} className="djp-body-grid">
 
         {/* Left: bio + tabs */}
         <div>
@@ -257,7 +259,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
                 whiteSpace: 'nowrap',
               }}>
                 {label} <span style={{ opacity: 0.5, fontSize: 12 }}>({count})</span>
-                <span style={{ position: 'absolute', bottom: 0, left: 0, width: activeTab === key ? '100%' : '0%', height: 2, background: C.red, transition: 'width 0.28s cubic-bezier(0.22,1,0.36,1)' }} />
+                <span style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: 2, background: C.red, transform: `scaleX(${activeTab === key ? 1 : 0})`, transformOrigin: 'left', transition: 'transform 0.28s cubic-bezier(0.22,1,0.36,1)' }} />
               </button>
             ))}
           </div>
@@ -367,9 +369,20 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
         </div>
       </div>
 
+      {/* ── DJ REQUEST NOTE ────────────────────────────────────────────── */}
+      <div className="djp-request-note">
+        If you would like your profile removed or updated, please <a href="mailto:info@simplyshameless.com" style={{ color: '#7a7068', textDecoration: 'underline' }}>contact us</a>.
+      </div>
+
       <style dangerouslySetInnerHTML={{ __html: `
         .djp-hero-grid {
           grid-template-columns: 1fr 1fr;
+        }
+        @media (min-width: 769px) {
+          .djp-hero-text-wrap {
+            max-width: 656px;
+            margin-left: auto;
+          }
         }
         .djp-photo-col {
           position: relative;
@@ -382,6 +395,15 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
           grid-template-columns: 1fr 360px;
           gap: 64px;
           align-items: start;
+        }
+        .djp-request-note {
+          max-width: 1312px;
+          margin: 0 auto;
+          padding: 0 clamp(20px, 4vw, 56px) 60px;
+          color: #554f4b;
+          font-size: 12px;
+          font-family: var(--font-barlow), sans-serif;
+          text-align: left;
         }
         @media (max-width: 768px) {
           .djp-hero-grid {
@@ -400,6 +422,9 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
           }
           .djp-body-grid > div:last-child {
             order: -1;
+          }
+          .djp-request-note {
+            text-align: center;
           }
         }
       ` }} />
