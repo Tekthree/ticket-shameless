@@ -42,6 +42,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'www.hammarica.com', // Legacy press images
       },
+      {
+        protocol: 'https',
+        hostname: '*.evbuc.com', // Eventbrite event images
+      },
     ],
   },
 };

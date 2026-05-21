@@ -54,7 +54,7 @@ export default async function Home() {
       <HomeClient />
       <HeroSection nextEvent={events[0] ?? null} />
       <Ticker />
-      <EventsSection events={events} />
+      <EventsSection events={events.slice(0, 6)} />
       <AboutSection />
       <GallerySection images={galleryImages} />
       <NewsletterSection />

@@ -11,6 +11,8 @@ const ALLOWED_IMAGE_HOSTS = [
   'pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev',
   'images.unsplash.com',
   'simplyshameless.com',
+  'img.evbuc.com',
+  'cdn.evbuc.com',
 ]
 
 function safeImageUrl(url: string | null | undefined): string | null {
