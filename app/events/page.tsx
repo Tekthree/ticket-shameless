@@ -131,14 +131,13 @@ export default async function EventsPage() {
           .events-container { padding: 40px 24px !important; }
           .event-row {
             grid-template-columns: 1fr auto !important;
-            grid-template-rows: auto auto !important;
-            gap: 12px 16px !important;
+            gap: 10px 16px !important;
             padding: 24px 0 !important;
           }
-          .event-row-img { display: none !important; }
           .event-row > div:nth-child(1) { grid-column: 1; grid-row: 1; }
-          .event-row > div:nth-child(3) { grid-column: 1; grid-row: 2; }
-          .event-row > div:nth-child(4) { grid-column: 2; grid-row: 1 / 3; align-self: center; text-align: right; }
+          .event-row-img { display: block !important; grid-column: 1; grid-row: 2; }
+          .event-row > div:nth-child(3) { grid-column: 1; grid-row: 3; }
+          .event-row > div:nth-child(4) { grid-column: 2; grid-row: 1 / 4; align-self: center; text-align: right; }
         }
 
         @media (max-width: 640px) {
