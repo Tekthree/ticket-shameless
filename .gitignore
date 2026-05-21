@@ -52,6 +52,7 @@ next-env.d.ts
 # OS specific
 Thumbs.db
 desktop.ini
+*:Zone.Identifier
 
 # Temp files
 *.log
