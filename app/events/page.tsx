@@ -31,7 +31,7 @@ function EventRow({ event }: { event: Event }) {
         className="event-row"
         style={{
           display: 'grid',
-          gridTemplateColumns: '160px 80px 1fr auto',
+          gridTemplateColumns: 'auto 80px 1fr auto',
           alignItems: 'center',
           gap: 32,
           padding: '28px 0',
