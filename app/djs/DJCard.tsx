@@ -77,6 +77,7 @@ export function DJCard({ dj, upcomingCount = 0 }: { dj: DJ; upcomingCount?: numb
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
               padding: '4px 10px',
+              borderRadius: 'var(--ss-radius-btn)',
             }}>Resident</div>
           )}
 
@@ -93,6 +94,7 @@ export function DJCard({ dj, upcomingCount = 0 }: { dj: DJ; upcomingCount?: numb
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
               padding: '4px 10px',
+              borderRadius: 'var(--ss-radius-btn)',
               display: 'flex',
               alignItems: 'center',
               gap: 5,

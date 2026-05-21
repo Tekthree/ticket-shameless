@@ -96,7 +96,7 @@ export default function AboutSection() {
         {/* RIGHT */}
         <div>
           <div ref={r1} style={revealStyle(v1)}>
-            <p style={{ color: '#1c1917', fontSize: 20, lineHeight: 1.75, fontWeight: 300, marginBottom: 32 }}>
+            <p style={{ color: '#8a8078', fontSize: 18, lineHeight: 1.8, fontWeight: 300, marginBottom: 32 }}>
               In 2003, Shameless first took shape as a weekly indie dance night in the basement of the Alibi Room located in Seattle&apos;s historic Pike Place Market. The ensemble quickly became one of the city&apos;s most respected underground dance music collectives by throwing numerous legendary club nights, open air and after parties.
             </p>
           </div>
