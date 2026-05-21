@@ -93,6 +93,7 @@ function OutlineBtn({ children, onClick, style }: { children: React.ReactNode; o
         letterSpacing: '0.1em',
         textTransform: 'uppercase',
         padding: '10px 0',
+        borderRadius: 'var(--ss-radius-btn)',
         transition: 'border-color 0.2s, color 0.2s',
         display: 'flex',
         alignItems: 'center',
@@ -112,7 +113,7 @@ function TicketBox({ event, sticky = false }: { event: Event; sticky?: boolean }
   if (!event.payment_link) return null
 
   return (
-    <div style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, padding: '24px', ...(sticky ? { position: 'sticky', top: 84 } : {}) }}>
+    <div style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius)', padding: '24px', ...(sticky ? { position: 'sticky', top: 84 } : {}) }}>
       <SecLabel>Tickets</SecLabel>
       <a
         href={event.payment_link}
@@ -136,6 +137,7 @@ function TicketBox({ event, sticky = false }: { event: Event; sticky?: boolean }
           padding: '18px',
           textDecoration: 'none',
           marginBottom: 12,
+          borderRadius: 'var(--ss-radius-btn)',
           transition: 'background 0.2s',
         }}
       >
@@ -174,7 +176,7 @@ function MobileTicketBar({ event }: { event: Event }) {
         rel="noopener noreferrer"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
-        style={{ background: hover ? C.redDeep : C.red, color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '14px 28px', flexShrink: 0, textDecoration: 'none', transition: 'background 0.2s' }}
+        style={{ background: hover ? C.redDeep : C.red, color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '14px 28px', flexShrink: 0, textDecoration: 'none', borderRadius: 'var(--ss-radius-btn)', transition: 'background 0.2s' }}
       >Get Tickets</a>
     </div>
   )
@@ -191,7 +193,7 @@ function LineupArtistRow({ artist }: { artist: LineupArtist }) {
       style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: `1px solid ${C.darkBorder}`, cursor: artist.dj_slug ? 'pointer' : 'default' }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-        <div style={{ width: 40, height: 40, background: hover ? C.red : C.darkCard, border: `1px solid ${hover ? C.red : C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden', position: 'relative', transition: 'all 0.2s' }}>
+        <div style={{ width: 40, height: 40, background: hover ? C.red : C.darkCard, border: `1px solid ${hover ? C.red : C.darkBorder}`, borderRadius: 'var(--ss-radius-btn)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden', position: 'relative', transition: 'all 0.2s' }}>
           {safeImageUrl(artist.image_url ?? artist.dj_profile_image_url)
             ? <Image src={safeImageUrl(artist.image_url ?? artist.dj_profile_image_url)!} alt={artist.dj_name ?? artist.name} fill sizes="40px" style={{ objectFit: 'cover', objectPosition: 'center top' }} />
             : <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 15, color: hover ? '#fff' : C.darkMuted, textTransform: 'uppercase' }}>{(artist.dj_name ?? artist.name)[0]}</span>
@@ -383,7 +385,7 @@ function RSVPModal({ event, onClose, onSuccess }: {
           <select
             value={attendeeCount}
             onChange={e => setAttendeeCount(Number(e.target.value))}
-            style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, color: C.darkText, fontSize: 15, padding: '10px 14px', outline: 'none', width: '100%', fontFamily: 'inherit' }}
+            style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius)', color: C.darkText, fontSize: 15, padding: '10px 14px', outline: 'none', width: '100%', fontFamily: 'inherit' }}
           >
             {[1,2,3,4,5,6,7,8,9,10].map(n => (
               <option key={n} value={n}>{n} {n === 1 ? 'attendee' : 'attendees'}</option>
@@ -399,12 +401,12 @@ function RSVPModal({ event, onClose, onSuccess }: {
         <button
           onClick={handleSubmit}
           disabled={loading}
-          style={{ width: '100%', background: loading ? C.darkCard : C.red, color: '#fff', border: 'none', cursor: loading ? 'default' : 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 17, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '17px', marginBottom: 12, transition: 'background 0.2s' }}
+          style={{ width: '100%', background: loading ? C.darkCard : C.red, color: '#fff', border: 'none', cursor: loading ? 'default' : 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 17, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '17px', marginBottom: 12, borderRadius: 'var(--ss-radius-btn)', transition: 'background 0.2s' }}
         >{loading ? 'Sending...' : 'Continue'}</button>
 
         <button
           onClick={onClose}
-          style={{ width: '100%', background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '13px' }}
+          style={{ width: '100%', background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '13px', borderRadius: 'var(--ss-radius-btn)' }}
         >Cancel</button>
       </div>
     </div>
@@ -461,7 +463,7 @@ function RSVPSection({ event, onOpenModal, myRsvp }: {
       </div>
 
       {myRsvp ? (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: C.darkCard, border: `1px solid ${C.darkBorder}`, padding: '14px 18px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: C.darkCard, border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius)', padding: '14px 18px' }}>
           <div style={{ color: C.darkText, fontSize: 14 }}>{statusLabel[myRsvp.status] ?? "You RSVPd"}</div>
           <button onClick={onOpenModal} style={{ background: 'transparent', border: 'none', color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Change</button>
         </div>
@@ -469,7 +471,7 @@ function RSVPSection({ event, onOpenModal, myRsvp }: {
         <>
           <button
             onClick={onOpenModal}
-            style={{ width: '100%', background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkText, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 15, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '14px', transition: 'border-color 0.2s' }}
+            style={{ width: '100%', background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkText, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 15, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '14px', borderRadius: 'var(--ss-radius-btn)', transition: 'border-color 0.2s' }}
           >RSVP</button>
           <div style={{ marginTop: 10, color: C.darkMuted, fontSize: 13 }}>RSVP to see who else is going.</div>
         </>
@@ -541,7 +543,7 @@ function CommentsSection({ event, myRsvp, onOpenModal }: {
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 0%, rgba(28,25,23,0.85) 40%, #1c1917 100%)', display: 'flex', alignItems: 'flex-end', paddingBottom: 8 }}>
             <div style={{ width: '100%', textAlign: 'center' }}>
               <div style={{ color: C.darkMuted, fontSize: 13, marginBottom: 12 }}>RSVP to see the conversation</div>
-              <button onClick={onOpenModal} style={{ background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkText, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '10px 24px' }}>RSVP to unlock</button>
+              <button onClick={onOpenModal} style={{ background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkText, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '10px 24px', borderRadius: 'var(--ss-radius-btn)' }}>RSVP to unlock</button>
             </div>
           </div>
         </div>
@@ -636,7 +638,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
           <div style={{ width: '100%', maxWidth: 1312, padding: '0 clamp(20px, 4vw, 56px)' }}>
             <div ref={heroRef} style={{ display: 'flex', gap: 6, flexWrap: 'wrap', opacity: heroVisible ? 1 : 0, transition: 'opacity 0.6s ease', pointerEvents: 'auto' }}>
               {event.tags?.map(tag => (
-                <span key={tag} style={{ background: 'rgba(17,17,16,0.75)', backdropFilter: 'blur(8px)', border: `1px solid ${C.darkBorder}`, color: 'rgba(240,236,230,0.6)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px' }}>{tag}</span>
+                <span key={tag} style={{ background: 'rgba(17,17,16,0.75)', backdropFilter: 'blur(8px)', border: `1px solid ${C.darkBorder}`, color: 'rgba(240,236,230,0.6)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', borderRadius: 999 }}>{tag}</span>
               ))}
             </div>
           </div>
@@ -734,7 +736,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn-outline-link"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkText, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '10px 18px', textDecoration: 'none', transition: 'border-color 0.2s, color 0.2s' }}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkText, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '10px 18px', textDecoration: 'none', borderRadius: 'var(--ss-radius-btn)', transition: 'border-color 0.2s, color 0.2s' }}
                     >
                       <svg width="12" height="12" viewBox="0 0 13 13" fill="none"><path d="M6.5 12S1 7.686 1 4.5a5.5 5.5 0 1 1 11 0C12 7.686 6.5 12 6.5 12Z" stroke="currentColor" strokeWidth="1.4" /><circle cx="6.5" cy="4.5" r="1.75" stroke="currentColor" strokeWidth="1.4" /></svg>
                       Open in Maps
@@ -745,7 +747,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
                     Doors open {timeStr}
                   </div>
                 </div>
-                <div style={{ width: '100%', height: 200, background: C.darkCard, border: `1px solid ${C.darkBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ width: '100%', height: 200, background: C.darkCard, border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                   <div style={{ position: 'absolute', inset: 0, background: `repeating-linear-gradient(0deg, ${C.darkBorder} 0, ${C.darkBorder} 1px, transparent 1px, transparent 32px), repeating-linear-gradient(90deg, ${C.darkBorder} 0, ${C.darkBorder} 1px, transparent 1px, transparent 32px)` }} />
                   <div style={{ position: 'relative', textAlign: 'center' }}>
                     <svg width="26" height="26" viewBox="0 0 28 28" fill="none" style={{ display: 'block', margin: '0 auto 8px' }}>

@@ -50,7 +50,7 @@ function EventRow({ event }: { event: Event }) {
           <div style={{ color: '#7a7068', fontSize: 14, marginBottom: 10 }}>{event.venue}{event.address ? ` · ${event.address}` : ''}</div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {tags.map(tag => (
-              <span key={tag} style={{ background: 'rgba(255,255,255,0.06)', color: '#7a7068', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '3px 8px', borderRadius: 'var(--ss-radius)' }}>{tag}</span>
+              <span key={tag} style={{ background: 'rgba(255,255,255,0.06)', color: '#7a7068', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '3px 8px', borderRadius: 999 }}>{tag}</span>
             ))}
           </div>
         </div>

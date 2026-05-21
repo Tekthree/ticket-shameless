@@ -80,7 +80,7 @@ function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
             <div style={{ color: 'rgba(245,240,235,0.45)', fontSize: 14, marginBottom: 14 }}>{event.venue || event.location}</div>
             <div style={{ display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap' }}>
               {tags.map((tag: string) => (
-                <span key={tag} style={{ background: 'rgba(245,240,235,0.08)', color: 'rgba(245,240,235,0.55)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', alignSelf: 'flex-start', borderRadius: 'var(--ss-radius)' }}>{tag}</span>
+                <span key={tag} style={{ background: 'rgba(245,240,235,0.08)', color: 'rgba(245,240,235,0.55)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', alignSelf: 'flex-start', borderRadius: 999 }}>{tag}</span>
               ))}
             </div>
             <button
