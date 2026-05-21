@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import type { Event, LineupArtist } from '@/lib/db'
+import { useAuth, storeSession, type AuthUser } from '@/lib/auth'
 
 const ALLOWED_IMAGE_HOSTS = [
   'd85f1bb68ad7da530dccaef0eccc5e0b.r2.cloudflarestorage.com',
@@ -636,12 +637,263 @@ function CommentsSection({ event, myRsvp, onOpenModal }: {
   )
 }
 
+// ── PHONE AUTH MODAL ─────────────────────────────────────────────────────────
+
+function PhoneAuthModal({ onClose, onSuccess }: {
+  onClose: () => void
+  onSuccess: (token: string, user: AuthUser) => void
+}) {
+  const [step, setStep] = useState<'phone' | 'code'>('phone')
+  const [phone, setPhone] = useState('')
+  const [code, setCode] = useState('')
+  const [name, setName] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [devCode, setDevCode] = useState<string | null>(null)
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
+  }, [])
+
+  async function sendCode() {
+    if (!phone.trim()) { setError('Phone number required'); return }
+    setLoading(true); setError('')
+    try {
+      const res = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to send code')
+      if (data.devCode) setDevCode(data.devCode)
+      setStep('code')
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Something went wrong')
+    } finally { setLoading(false) }
+  }
+
+  async function verify() {
+    if (!code.trim()) { setError('Enter the code'); return }
+    setLoading(true); setError('')
+    try {
+      const res = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, code, name: name.trim() || undefined }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Invalid code')
+      onSuccess(data.token, data.user)
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Something went wrong')
+    } finally { setLoading(false) }
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 500, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+      <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)' }} />
+      <div style={{ position: 'relative', background: C.darkCard, borderTop: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius) var(--ss-radius) 0 0', maxHeight: '92vh', overflowY: 'auto', animation: 'slideUp 0.35s cubic-bezier(0.22,1,0.36,1)' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '16px 0 0' }}>
+          <div style={{ width: 40, height: 3, background: C.darkMuted, borderRadius: 999, opacity: 0.4 }} />
+        </div>
+        <div style={{ maxWidth: 560, margin: '0 auto', padding: '20px 28px 40px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
+            <div>
+              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: C.red, marginBottom: 4 }}>Sign In</div>
+              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 22, color: C.darkText, textTransform: 'uppercase', lineHeight: 1.1 }}>
+                {step === 'phone' ? 'Enter your phone' : 'Check your texts'}
+              </div>
+            </div>
+            <button onClick={onClose}
+              style={{ background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', width: 36, height: 36, borderRadius: 'var(--ss-radius-btn)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 6, transition: 'border-color 0.15s, color 0.15s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = C.red; e.currentTarget.style.color = C.red }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = C.darkBorder; e.currentTarget.style.color = C.darkMuted }}
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
+            </button>
+          </div>
+
+          {step === 'phone' ? (
+            <>
+              <p style={{ color: C.darkMuted, fontSize: 14, lineHeight: 1.6, marginBottom: 28 }}>We'll text you a code to verify. No password needed.</p>
+              <FormField label="Phone Number" value={phone} onChange={setPhone} placeholder="(206) 555-0100" type="tel" />
+              <FormField label="Your Name (optional)" value={name} onChange={setName} placeholder="First name is fine" />
+              {error && <div style={{ color: C.red, fontSize: 13, marginBottom: 14 }}>{error}</div>}
+              <button onClick={sendCode} disabled={loading}
+                style={{ width: '100%', background: loading ? C.dark : C.red, color: '#fff', border: 'none', cursor: loading ? 'default' : 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '17px', borderRadius: 'var(--ss-radius-btn)', transition: 'background 0.2s' }}
+              >{loading ? 'Sending...' : 'Send Code'}</button>
+            </>
+          ) : (
+            <>
+              <p style={{ color: C.darkMuted, fontSize: 14, lineHeight: 1.6, marginBottom: 28 }}>
+                Sent to {phone}.{' '}
+                <button onClick={() => { setStep('phone'); setError('') }} style={{ background: 'none', border: 'none', color: C.red, cursor: 'pointer', padding: 0, fontSize: 14, fontFamily: 'inherit' }}>Change</button>
+              </p>
+              {devCode && (
+                <div style={{ background: C.dark, border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius-btn)', padding: '10px 14px', marginBottom: 20, fontFamily: 'monospace', fontSize: 14, color: C.red }}>
+                  Dev — code: <strong>{devCode}</strong>
+                </div>
+              )}
+              <FormField label="6-Digit Code" value={code} onChange={setCode} placeholder="123456" type="tel" />
+              {error && <div style={{ color: C.red, fontSize: 13, marginBottom: 14 }}>{error}</div>}
+              <button onClick={verify} disabled={loading}
+                style={{ width: '100%', background: loading ? C.dark : C.red, color: '#fff', border: 'none', cursor: loading ? 'default' : 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '17px', marginBottom: 10, borderRadius: 'var(--ss-radius-btn)', transition: 'background 0.2s' }}
+              >{loading ? 'Verifying...' : 'Verify'}</button>
+              <button onClick={() => { setStep('phone'); setCode(''); setError('') }}
+                style={{ width: '100%', background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '13px', borderRadius: 'var(--ss-radius-btn)' }}
+              >Back</button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── LIKE BUTTON ───────────────────────────────────────────────────────────────
+
+function LikeButton({ event, token, onNeedAuth }: {
+  event: Event
+  token: string | null
+  onNeedAuth: () => void
+}) {
+  const [count, setCount] = useState(0)
+  const [liked, setLiked] = useState(false)
+  const [animating, setAnimating] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const headers: HeadersInit = token ? { 'x-session-token': token } : {}
+    fetch(`/api/likes?event_id=${event.id}`, { headers })
+      .then(r => r.json())
+      .then(d => { setCount(d.count ?? 0); setLiked(d.liked ?? false) })
+      .catch(() => {})
+  }, [event.id, token])
+
+  async function handleLike() {
+    if (!token) { onNeedAuth(); return }
+    if (loading) return
+    setLoading(true)
+    try {
+      const res = await fetch('/api/likes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-session-token': token },
+        body: JSON.stringify({ event_id: event.id }),
+      })
+      const data = await res.json()
+      setLiked(data.liked)
+      setCount(data.count)
+      if (data.liked) { setAnimating(true); setTimeout(() => setAnimating(false), 600) }
+    } catch { /* ignore */ } finally { setLoading(false) }
+  }
+
+  return (
+    <OutlineBtn onClick={handleLike} style={liked ? { borderColor: C.red, color: C.red } : {}}>
+      <span style={{ display: 'inline-block', animation: animating ? 'heartPop 0.5s cubic-bezier(0.36,0.07,0.19,0.97) both' : 'none', transformOrigin: 'center' }}>
+        {liked
+          ? <svg width="13" height="13" viewBox="0 0 16 16" fill={C.red}><path d="M8 14S2 9.8 2 6a4 4 0 0 1 6-3.46A4 4 0 0 1 14 6c0 3.8-6 8-6 8Z"/></svg>
+          : <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 14S2 9.8 2 6a4 4 0 0 1 6-3.46A4 4 0 0 1 14 6c0 3.8-6 8-6 8Z" stroke="currentColor" strokeWidth="1.4"/></svg>
+        }
+      </span>
+      {count > 0 ? count : null}
+    </OutlineBtn>
+  )
+}
+
+// ── SHARE BUTTON ──────────────────────────────────────────────────────────────
+
+function SharePanel({ event, onClose }: { event: Event; onClose: () => void }) {
+  const [copied, setCopied] = useState(false)
+  const url = typeof window !== 'undefined' ? window.location.href : `https://simplyshameless.com/events/${event.slug}`
+  const shareText = `${event.title} — ${new Date(event.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}${event.venue ? ` at ${event.venue}` : ''}`
+
+  function copyLink() {
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true)
+      setTimeout(() => { setCopied(false); onClose() }, 1400)
+    })
+  }
+
+  const items = [
+    {
+      label: copied ? 'Copied!' : 'Copy Link',
+      icon: <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.3"/><path d="M11 5V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h1" stroke="currentColor" strokeWidth="1.3"/></svg>,
+      action: copyLink,
+    },
+    {
+      label: 'Facebook',
+      icon: <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 2H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h5.5V9.5H7V8h1.5V6.5A2 2 0 0 1 10.5 4.5H12V6h-1.5a.5.5 0 0 0-.5.5V8H12l-.5 1.5H10V14H13a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z" stroke="currentColor" strokeWidth="1.3"/></svg>,
+      action: () => { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank'); onClose() },
+    },
+    {
+      label: 'Text',
+      icon: <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M14 10a2 2 0 0 1-2 2H5l-3 2V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v6Z" stroke="currentColor" strokeWidth="1.3"/></svg>,
+      action: () => { window.open(`sms:?body=${encodeURIComponent(`${shareText} ${url}`)}`); onClose() },
+    },
+    {
+      label: 'More',
+      icon: <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3h3v3M13 3l-5 5M7 4H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V9" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>,
+      action: () => {
+        if (typeof navigator !== 'undefined' && navigator.share) {
+          navigator.share({ title: event.title, text: shareText, url }).catch(() => {})
+        } else { copyLink() }
+        onClose()
+      },
+    },
+  ]
+
+  return (
+    <div style={{ position: 'absolute', right: 0, bottom: 'calc(100% + 8px)', background: C.darkCard, border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius)', padding: 6, minWidth: 180, zIndex: 300, boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
+      {items.map(item => (
+        <button key={item.label} onClick={item.action}
+          style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, background: 'transparent', border: 'none', color: C.darkText, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '9px 12px', borderRadius: 'var(--ss-radius-btn)', transition: 'background 0.12s' }}
+          onMouseEnter={e => { e.currentTarget.style.background = C.dark }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+        >{item.icon}{item.label}</button>
+      ))}
+    </div>
+  )
+}
+
+function ShareButton({ event }: { event: Event }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [open])
+
+  return (
+    <div ref={ref} style={{ position: 'relative', flex: 1 }}>
+      <OutlineBtn onClick={() => setOpen(o => !o)}>
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+          <circle cx="11" cy="2.5" r="1.5" stroke="currentColor" strokeWidth="1.3"/>
+          <circle cx="11" cy="11.5" r="1.5" stroke="currentColor" strokeWidth="1.3"/>
+          <circle cx="3" cy="7" r="1.5" stroke="currentColor" strokeWidth="1.3"/>
+          <path d="M9.5 3.3L4.5 6.1M9.5 10.7L4.5 7.9" stroke="currentColor" strokeWidth="1.3"/>
+        </svg>
+        Share
+      </OutlineBtn>
+      {open && <SharePanel event={event} onClose={() => setOpen(false)} />}
+    </div>
+  )
+}
+
 // ── PAGE ─────────────────────────────────────────────────────────────────
 
 export default function EventPageClient({ event, lineup, otherEvents }: { event: Event; lineup: LineupArtist[]; otherEvents: Event[] }) {
   const [heroRef, heroVisible] = useInView()
   const [bodyRef, bodyVisible] = useInView(0.02)
   const [rsvpModalOpen, setRsvpModalOpen] = useState(false)
+  const [authModalOpen, setAuthModalOpen] = useState(false)
+  const { token, signIn } = useAuth()
   const [myRsvp, setMyRsvp] = useState<{ name: string; status: string } | null>(() => {
     if (typeof window === 'undefined') return null
     try {
@@ -717,9 +969,8 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
           {/* Mobile share row */}
           <div className="ep-share-mobile">
             <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-              <OutlineBtn>Share</OutlineBtn>
-              <OutlineBtn>Save</OutlineBtn>
-              <OutlineBtn>♡ 142</OutlineBtn>
+              <ShareButton event={event} />
+              <LikeButton event={event} token={token} onNeedAuth={() => setAuthModalOpen(true)} />
             </div>
           </div>
 
@@ -821,15 +1072,21 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
         <div className="ep-sidebar" style={{ paddingTop: 40 }}>
           <TicketBox event={event} sticky />
           <div style={{ marginTop: 14, display: 'flex', gap: 8 }}>
-            <OutlineBtn>Share</OutlineBtn>
-            <OutlineBtn>Save</OutlineBtn>
-            <OutlineBtn>♡ 142</OutlineBtn>
+            <ShareButton event={event} />
+            <LikeButton event={event} token={token} onNeedAuth={() => setAuthModalOpen(true)} />
           </div>
         </div>
       </div>
 
       {/* Mobile sticky bar */}
       <MobileTicketBar event={event} />
+
+      {authModalOpen && (
+        <PhoneAuthModal
+          onClose={() => setAuthModalOpen(false)}
+          onSuccess={(tok, user) => { signIn(tok, user); setAuthModalOpen(false) }}
+        />
+      )}
 
       {rsvpModalOpen && (
         <RSVPModal
@@ -878,6 +1135,14 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
         .ep-mobile-bar { display: none; }
 
         .btn-outline-link:hover { border-color: #c9321a !important; color: #c9321a !important; }
+
+        @keyframes heartPop {
+          0%   { transform: scale(1); }
+          30%  { transform: scale(1.5); }
+          60%  { transform: scale(0.88); }
+          80%  { transform: scale(1.15); }
+          100% { transform: scale(1); }
+        }
 
         @media (max-width: 768px) {
           .ep-hero { height: 260px; margin-top: 64px; }
