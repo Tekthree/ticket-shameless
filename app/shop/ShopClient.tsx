@@ -53,6 +53,8 @@ function ProductCard({ product, onClick }: { product: Product; onClick: () => vo
       style={{
         background: C.darkCard,
         border: `1px solid ${hover ? C.red : C.darkBorder}`,
+        borderRadius: 'var(--ss-radius)',
+        overflow: 'hidden',
         cursor: 'pointer',
         transition: 'transform 0.25s cubic-bezier(0.22,1,0.36,1), border-color 0.2s, box-shadow 0.25s',
         transform: hover ? 'translateY(-5px)' : 'translateY(0)',
@@ -173,6 +175,7 @@ function ProductDrawer({ product, onClose, onAddToBag }: { product: Product | nu
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
                     padding: '10px 0',
+                    borderRadius: 'var(--ss-radius-btn)',
                     textAlign: 'center',
                     transition: 'all 0.15s',
                   }}
@@ -187,7 +190,7 @@ function ProductDrawer({ product, onClose, onAddToBag }: { product: Product | nu
           {/* Qty */}
           <div style={{ marginBottom: 24 }}>
             <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.darkMuted, marginBottom: 10 }}>Quantity</div>
-            <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${C.darkBorder}`, width: 'fit-content' }}>
+            <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius)', overflow: 'hidden', width: 'fit-content' }}>
               <button onClick={() => setQty(q => Math.max(1, q - 1))} style={{ background: 'transparent', border: 'none', color: C.darkText, cursor: 'pointer', width: 44, height: 44, fontSize: 22, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
               <div style={{ width: 52, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 20, color: C.darkText, borderLeft: `1px solid ${C.darkBorder}`, borderRight: `1px solid ${C.darkBorder}` }}>{qty}</div>
               <button onClick={() => setQty(q => Math.min(10, q + 1))} style={{ background: 'transparent', border: 'none', color: C.darkText, cursor: 'pointer', width: 44, height: 44, fontSize: 22, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
@@ -207,6 +210,7 @@ function ProductDrawer({ product, onClose, onAddToBag }: { product: Product | nu
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
               padding: '18px',
+              borderRadius: 'var(--ss-radius-btn)',
               opacity: canAdd && !outOfStock ? 1 : 0.4,
               transition: 'background 0.3s, opacity 0.2s',
             }}>
@@ -223,6 +227,7 @@ function ProductDrawer({ product, onClose, onAddToBag }: { product: Product | nu
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
               padding: '16px',
+              borderRadius: 'var(--ss-radius-btn)',
               opacity: canAdd && !outOfStock ? 1 : 0.4,
               transition: 'border-color 0.15s, color 0.15s',
             }}
@@ -270,12 +275,12 @@ function CartDrawer({ cart, onClose, onRemove, onQtyChange }: {
           ) : (
             cart.map(item => (
               <div key={item.id + item.selectedSize} style={{ display: 'flex', gap: 16, padding: '20px 0', borderBottom: `1px solid ${C.darkBorder}` }}>
-                <div style={{ width: 72, height: 72, background: C.darkCard, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: C.darkMuted, fontFamily: 'monospace' }}>img</div>
+                <div style={{ width: 72, height: 72, background: C.darkCard, borderRadius: 'var(--ss-radius-btn)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: C.darkMuted, fontFamily: 'monospace' }}>img</div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 17, color: C.darkText, textTransform: 'uppercase', lineHeight: 1, marginBottom: 4 }}>{item.name}</div>
                   {item.selectedSize !== 'One Size' && <div style={{ color: C.darkMuted, fontSize: 13, marginBottom: 8 }}>Size: {item.selectedSize}</div>}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${C.darkBorder}` }}>
+                    <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius-btn)', overflow: 'hidden' }}>
                       <button onClick={() => onQtyChange(item, item.qty - 1)} style={{ background: 'transparent', border: 'none', color: C.darkText, cursor: 'pointer', width: 32, height: 32, fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
                       <div style={{ width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 15, color: C.darkText, borderLeft: `1px solid ${C.darkBorder}`, borderRight: `1px solid ${C.darkBorder}` }}>{item.qty}</div>
                       <button onClick={() => onQtyChange(item, item.qty + 1)} style={{ background: 'transparent', border: 'none', color: C.darkText, cursor: 'pointer', width: 32, height: 32, fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
@@ -310,6 +315,7 @@ function CartDrawer({ cart, onClose, onRemove, onQtyChange }: {
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
               padding: '18px',
+              borderRadius: 'var(--ss-radius-btn)',
               textAlign: 'center',
               marginBottom: 8,
               transition: 'background 0.2s',
@@ -317,7 +323,7 @@ function CartDrawer({ cart, onClose, onRemove, onQtyChange }: {
               onMouseEnter={e => (e.currentTarget.style.background = C.redDeep)}
               onMouseLeave={e => (e.currentTarget.style.background = C.red)}
             >Checkout — ${total.toFixed(2)}</a>
-            <button onClick={onClose} style={{ width: '100%', background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkText, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '14px', transition: 'border-color 0.15s' }}
+            <button onClick={onClose} style={{ width: '100%', background: 'transparent', border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius-btn)', color: C.darkText, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '14px', transition: 'border-color 0.15s' }}
               onMouseEnter={e => (e.currentTarget.style.borderColor = C.red)}
               onMouseLeave={e => (e.currentTarget.style.borderColor = C.darkBorder)}
             >Continue Shopping</button>
@@ -385,6 +391,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
               alignItems: 'center',
               gap: 8,
               padding: '10px 20px',
+              borderRadius: 'var(--ss-radius-btn)',
               transition: 'border-color 0.2s',
               color: C.darkText,
             }}
@@ -444,7 +451,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
         </div>
 
         {/* Coming soon */}
-        <div style={{ marginTop: 48, padding: 'clamp(28px, 4vw, 48px)', border: '1px dashed rgba(201,50,26,0.25)', textAlign: 'center' }}>
+        <div style={{ marginTop: 48, padding: 'clamp(28px, 4vw, 48px)', border: '1px dashed rgba(201,50,26,0.25)', borderRadius: 'var(--ss-radius)', textAlign: 'center' }}>
           <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(22px, 4vw, 32px)', color: C.darkText, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 10 }}>New Drop Coming Soon</div>
           <div style={{ color: C.darkMuted, fontSize: 15, marginBottom: 20 }}>Sign up to get first access — usually sells out in hours.</div>
           <a href="/#signup" style={{
@@ -458,6 +465,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
             padding: '14px 36px',
+            borderRadius: 'var(--ss-radius-btn)',
             transition: 'background 0.2s',
           }}
             onMouseEnter={e => (e.currentTarget.style.background = C.redDeep)}

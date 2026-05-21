@@ -108,6 +108,7 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
                 fontFamily: 'var(--font-dm), sans-serif',
                 fontSize: 15,
                 padding: '10px 36px 10px 40px',
+                borderRadius: 'var(--ss-radius)',
                 outline: 'none',
                 width: '100%',
               }}

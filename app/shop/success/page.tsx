@@ -41,6 +41,7 @@ export default function ShopSuccessPage() {
           letter-spacing: 0.12em;
           text-transform: uppercase;
           padding: 14px 32px;
+          border-radius: var(--ss-radius-btn);
           transition: background 0.2s;
         }
         .btn-primary:hover { background: #a82614; }
@@ -56,6 +57,7 @@ export default function ShopSuccessPage() {
           letter-spacing: 0.12em;
           text-transform: uppercase;
           padding: 14px 28px;
+          border-radius: var(--ss-radius-btn);
           transition: border-color 0.2s;
         }
         .btn-outline:hover { border-color: rgba(255,255,255,0.3); }

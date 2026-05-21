@@ -44,6 +44,7 @@ function SocialBtn({ label, url, icon }: { label: string; url: string; icon: Rea
         letterSpacing: '0.1em',
         textTransform: 'uppercase',
         padding: '10px 18px',
+        borderRadius: 'var(--ss-radius-btn)',
         textDecoration: 'none',
         transition: 'border-color 0.2s, color 0.2s, transform 0.2s',
         transform: hover ? 'translateY(-1px)' : 'translateY(0)',
@@ -152,7 +153,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
           {/* Role + location */}
           <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 20 }}>
             {dj.is_resident && (
-              <div style={{ background: C.red, color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', padding: '5px 12px' }}>
+              <div style={{ background: C.red, color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', padding: '5px 12px', borderRadius: 'var(--ss-radius-btn)' }}>
                 Shameless Resident
               </div>
             )}
@@ -291,6 +292,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
                         letterSpacing: '0.12em',
                         textTransform: 'uppercase',
                         padding: '16px',
+                        borderRadius: 'var(--ss-radius-btn)',
                         cursor: 'pointer',
                         transition: 'border-color 0.2s, color 0.2s',
                       }}
@@ -305,7 +307,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
 
           {/* SoundCloud link */}
           {dj.soundcloud_url && (
-            <div style={{ marginTop: 32, padding: '20px', border: `1px dashed rgba(201,50,26,0.2)`, textAlign: 'center' }}>
+            <div style={{ marginTop: 32, padding: '20px', border: `1px dashed rgba(201,50,26,0.2)`, borderRadius: 'var(--ss-radius)', textAlign: 'center' }}>
               <a href={dj.soundcloud_url} target="_blank" rel="noopener noreferrer" style={{ color: C.red, textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                 Listen on SoundCloud ↗
               </a>
@@ -317,7 +319,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
         <div>
           {/* Next show CTA */}
           {nextShow && (
-            <div style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, padding: '24px', marginBottom: 16 }}>
+            <div style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius)', padding: '24px', marginBottom: 16 }}>
               <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: C.red, marginBottom: 14 }}>Next Show</div>
               <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.red, marginBottom: 6 }}>
                 {fmt(nextShow.date)}
@@ -337,6 +339,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
                 letterSpacing: '0.15em',
                 textTransform: 'uppercase',
                 padding: '15px',
+                borderRadius: 'var(--ss-radius-btn)',
                 textAlign: 'center',
                 transition: 'background 0.2s',
               }}

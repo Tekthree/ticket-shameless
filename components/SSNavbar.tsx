@@ -239,6 +239,7 @@ export default function SSNavbar() {
             fontWeight: 900, fontSize: 18,
             letterSpacing: '0.15em', textTransform: 'uppercase',
             padding: '18px 52px',
+            borderRadius: 'var(--ss-radius-btn)',
             animation: `ssNavFadeIn 0.35s ease ${NAV_LINKS.length * 0.06 + 0.04}s both`,
           }}>Get Tickets</Link>
         </div>
