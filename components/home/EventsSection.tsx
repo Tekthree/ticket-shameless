@@ -59,24 +59,26 @@ function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
             cursor: 'pointer',
           }}
         >
-          {/* Image area */}
-          <div style={{ aspectRatio: '16/9', flexShrink: 0, background: '#1a1715', overflow: 'hidden', position: 'relative', borderBottom: '1px solid rgba(245,240,235,0.08)', borderRadius: 'var(--ss-radius) var(--ss-radius) 0 0' }}>
-            {imageUrl ? (
-              <Image src={imageUrl} fill sizes="(max-width: 640px) 85vw, 420px" loading="lazy" style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1)', transform: hover ? 'scale(1.06)' : 'scale(1)' }} alt={event.title} />
-            ) : (
-              <div style={{ width: '100%', height: '100%', background: 'repeating-linear-gradient(45deg, rgba(28,25,23,0.04) 0px, rgba(28,25,23,0.04) 1px, transparent 1px, transparent 14px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ fontFamily: 'monospace', fontSize: 10, color: 'rgba(245,240,235,0.3)' }}>event art</span>
-              </div>
-            )}
-            {isSoon && (
-              <div style={{ position: 'absolute', top: 14, right: 14, background: '#1c1917', color: '#7a7068', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', padding: '5px 12px' }}>Coming Soon</div>
-            )}
+          {/* Image area — inset from card edges */}
+          <div style={{ padding: '12px 12px 0', flexShrink: 0 }}>
+            <div style={{ aspectRatio: '16/9', background: '#1a1715', overflow: 'hidden', position: 'relative', borderRadius: 'calc(var(--ss-radius) - 4px)' }}>
+              {imageUrl ? (
+                <Image src={imageUrl} fill sizes="(max-width: 640px) 85vw, 420px" loading="lazy" style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1)', transform: hover ? 'scale(1.06)' : 'scale(1)' }} alt={event.title} />
+              ) : (
+                <div style={{ width: '100%', height: '100%', background: 'repeating-linear-gradient(45deg, rgba(28,25,23,0.04) 0px, rgba(28,25,23,0.04) 1px, transparent 1px, transparent 14px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontFamily: 'monospace', fontSize: 10, color: 'rgba(245,240,235,0.3)' }}>event art</span>
+                </div>
+              )}
+              {isSoon && (
+                <div style={{ position: 'absolute', top: 10, right: 10, background: '#1c1917', color: '#7a7068', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', padding: '5px 12px' }}>Coming Soon</div>
+              )}
+            </div>
           </div>
 
           {/* Content */}
-          <div style={{ padding: '22px 24px 24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ padding: '18px 20px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
             <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.2em', color: '#c9321a', textTransform: 'uppercase', marginBottom: 7 }}>{dateStr}</div>
-            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 24, color: '#f5f0eb', textTransform: 'uppercase', lineHeight: 1, marginBottom: 6 }}>{event.title}</div>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 22, color: '#f5f0eb', textTransform: 'uppercase', lineHeight: 1.05, marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{event.title}</div>
             <div style={{ color: 'rgba(245,240,235,0.45)', fontSize: 14, marginBottom: 14 }}>{event.venue || event.location}</div>
             <div style={{ display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap' }}>
               {tags.map((tag: string) => (
@@ -88,13 +90,15 @@ function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
               onMouseLeave={() => setBtnHover(false)}
               style={{
                 marginTop: 'auto',
-                width: '100%', border: 'none', cursor: isSoon ? 'default' : 'pointer',
-                background: isSoon ? 'rgba(28,25,23,0.06)' : (btnHover ? '#a82614' : '#c9321a'),
-                color: isSoon ? '#8a8078' : '#fff',
+                width: '100%',
+                cursor: isSoon ? 'default' : 'pointer',
+                background: 'transparent',
+                border: isSoon ? '1px solid rgba(245,240,235,0.15)' : '1px solid #c9321a',
+                color: isSoon ? '#8a8078' : (btnHover ? '#ff4d30' : '#c9321a'),
                 fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 14,
-                letterSpacing: '0.15em', textTransform: 'uppercase', padding: '13px',
+                letterSpacing: '0.15em', textTransform: 'uppercase', padding: '12px',
                 borderRadius: 'var(--ss-radius-btn)',
-                transition: 'background 0.15s, transform 0.1s',
+                transition: 'color 0.15s, border-color 0.15s, transform 0.1s',
                 transform: !isSoon && btnHover ? 'scale(0.98)' : 'scale(1)',
               }}
             >{isSoon ? 'Coming Soon' : 'View Event →'}</button>
@@ -112,8 +116,8 @@ export default function EventsSection({ events }: { events: Event[] }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
     loop: false,
-    dragFree: false,
-    slidesToScroll: 1,
+    dragFree: true,
+    containScroll: 'trimSnaps',
   })
 
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -147,18 +151,24 @@ export default function EventsSection({ events }: { events: Event[] }) {
         </div>
       </div>
 
-      {/* Embla — starts at content left, bleeds right to screen edge */}
-      <div ref={emblaRef} style={{ overflow: 'hidden', cursor: 'grab' }} className="embla-events">
-        <div style={{ display: 'flex', gap: 'var(--ss-card-gap)', alignItems: 'stretch' }}>
-          {displayEvents.map((e) => (
-            <div key={e.id} className="embla-events-slide" style={{ flexShrink: 0, minWidth: 0 }}>
-              <EventCard event={e} />
+      {/* Embla — clipped at content left boundary, bleeds right to viewport */}
+      <div className="embla-events-outer">
+        <div style={{ position: 'relative' }}>
+          <div ref={emblaRef} style={{ overflow: 'hidden', cursor: 'grab' }} className="embla-events">
+            <div style={{ display: 'flex', gap: 'var(--ss-card-gap)', alignItems: 'stretch' }}>
+              {displayEvents.map((e) => (
+                <div key={e.id} className="embla-events-slide" style={{ flexShrink: 0, minWidth: 0 }}>
+                  <EventCard event={e} />
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+          {/* Right fade */}
+          <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: 140, background: 'linear-gradient(to right, transparent, #1c1917)', pointerEvents: 'none', zIndex: 2 }} />
         </div>
       </div>
 
-      {/* Dot indicators — mobile only */}
+      {/* Dot indicators — mobile only, centered within content area */}
       <div className="embla-dots" style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 28 }}>
         {displayEvents.map((_, i) => (
           <button
@@ -182,14 +192,25 @@ export default function EventsSection({ events }: { events: Event[] }) {
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        .embla-events { padding-left: max(clamp(20px, 4vw, 56px), calc((100vw - 1200px) / 2)); cursor: grab; }
+        /*
+          Content boundary = same as navbar: maxWidth 1312px centered + clamp(20px,4vw,56px) padding.
+          Left/right margins resolve to exactly that boundary at every viewport width.
+          max() handles the transition: when viewport < 1312px the centering term goes negative,
+          so max() falls back to just the padding value.
+        */
+        .embla-events-outer {
+          overflow: hidden;
+          margin-left: max(clamp(20px, 4vw, 56px), calc((100vw - 1312px) / 2 + clamp(20px, 4vw, 56px)));
+          margin-right: max(clamp(20px, 4vw, 56px), calc((100vw - 1312px) / 2 + clamp(20px, 4vw, 56px)));
+        }
+        .embla-events { cursor: grab; }
         .embla-events:active { cursor: grabbing; }
-        .embla-events-slide { width: 420px; }
+        .embla-events-slide { width: 380px; }
         .embla-dots { display: none; }
 
         @media (max-width: 640px) {
           #events { padding: 60px 0 !important; }
-          .embla-events-slide { width: 75vw; }
+          .embla-events-slide { width: 78vw; }
           .embla-dots { display: flex !important; }
         }
       ` }} />

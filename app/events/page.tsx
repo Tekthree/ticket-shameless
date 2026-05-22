@@ -68,7 +68,7 @@ function EventRow({ event }: { event: Event }) {
 
         {/* CTA */}
         <div style={{ textAlign: 'right', flexShrink: 0 }}>
-          <span className="event-row-btn" style={{ display: 'inline-block', background: '#c9321a', color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '10px 20px', borderRadius: 'var(--ss-radius-btn)', transition: 'background 0.15s' }}>
+          <span className="event-row-btn" style={{ display: 'inline-block', background: 'transparent', border: '1px solid #c9321a', color: '#c9321a', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '10px 20px', borderRadius: 'var(--ss-radius-btn)', transition: 'color 0.15s, border-color 0.15s' }}>
             View Event →
           </span>
         </div>
@@ -124,22 +124,22 @@ export default async function EventsPage() {
 
       <style dangerouslySetInnerHTML={{ __html: `
         .event-row:hover { background: rgba(255,255,255,0.02); }
-        .event-row:hover .event-row-btn { background: #a82614; }
+        .event-row:hover .event-row-btn { color: #ff4d30 !important; border-color: #ff4d30 !important; }
         .past-link:hover { border-color: #c9321a !important; color: #c9321a !important; }
 
         @media (max-width: 768px) {
           .events-container { padding: 40px 24px !important; }
           .event-row {
-            grid-template-columns: 80px 1fr !important;
+            grid-template-columns: 130px 1fr !important;
             gap: 10px 16px !important;
             padding: 24px 0 !important;
           }
           .event-row > div:nth-child(1) { grid-column: 2; grid-row: 1; align-self: start; }
-          .event-row-img { display: block !important; grid-column: 1; grid-row: 1 / 3; align-self: start; }
+          .event-row-img { display: block !important; grid-column: 1; grid-row: 1 / 3; align-self: start; width: 130px !important; height: 130px !important; }
           .event-row > div:nth-child(3) { grid-column: 2; grid-row: 2; }
           .event-row > div:nth-child(4) { grid-column: 1 / 3; grid-row: 3; text-align: left !important; margin-top: 4px; }
-          .event-row > div:nth-child(4) .event-row-btn { display: block !important; text-align: center !important; background: transparent !important; color: rgba(240,236,230,0.45) !important; border: 1px solid rgba(255,255,255,0.12) !important; }
-          .event-row:hover > div:nth-child(4) .event-row-btn { background: transparent !important; border-color: rgba(201,50,26,0.5) !important; color: #c9321a !important; }
+          .event-row > div:nth-child(4) .event-row-btn { display: block !important; text-align: center !important; }
+          .event-row:hover > div:nth-child(4) .event-row-btn { color: #ff4d30 !important; border-color: #ff4d30 !important; }
         }
 
         @media (max-width: 640px) {
