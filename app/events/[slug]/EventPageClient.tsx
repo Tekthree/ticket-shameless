@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import type { Event, LineupArtist } from '@/lib/db'
 import { useAuth, storeSession, type AuthUser } from '@/lib/auth'
+import EventPhotoStrip from './EventPhotoStrip'
 
 const ALLOWED_IMAGE_HOSTS = [
   'd85f1bb68ad7da530dccaef0eccc5e0b.r2.cloudflarestorage.com',
@@ -1079,6 +1080,9 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
             )}
             {event.description && (
               <DescriptionText text={event.description} />
+            )}
+            {event.gallery_images && event.gallery_images.length > 0 && (
+              <EventPhotoStrip images={event.gallery_images} />
             )}
           </div>
 

@@ -39,6 +39,7 @@ export type Event = {
   created_at: string
   ticket_tiers: TicketTier[] | null
   presented_by: string | null
+  gallery_images: string[] | null
 }
 
 export type LineupArtist = {

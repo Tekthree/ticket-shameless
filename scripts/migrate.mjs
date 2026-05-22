@@ -117,4 +117,11 @@ await sql`
 `
 console.log('✓ comments')
 
+// gallery_images: per-event photo strip URLs
+await sql`
+  ALTER TABLE events
+  ADD COLUMN IF NOT EXISTS gallery_images text[] DEFAULT '{}'
+`
+console.log('✓ gallery_images column')
+
 console.log('\nAll migrations complete.')
