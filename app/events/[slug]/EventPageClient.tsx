@@ -513,19 +513,20 @@ function RSVPModal({ event, onClose, onSuccess }: {
 type RsvpCounts = { going: number; maybe: number; not_going: number }
 type CommentRow = { id: string; name: string; message: string; created_at: string }
 
-function RSVPSection({ event, onOpenModal, myRsvp }: {
+function RSVPSection({ event, onOpenModal, myRsvp, counts, onCountsChange }: {
   event: Event;
   onOpenModal: () => void;
   myRsvp: { name: string; status: string } | null;
+  counts: RsvpCounts;
+  onCountsChange: (counts: RsvpCounts) => void;
 }) {
-  const [counts, setCounts] = useState<RsvpCounts>({ going: 0, maybe: 0, not_going: 0 })
-
   useEffect(() => {
+    if (!myRsvp?.status) return
     fetch(`/api/rsvp?event_id=${event.id}`)
       .then(r => r.json())
-      .then(d => setCounts(d.counts ?? { going: 0, maybe: 0, not_going: 0 }))
+      .then(d => onCountsChange(d.counts ?? { going: 0, maybe: 0, not_going: 0 }))
       .catch(() => {})
-  }, [event.id, myRsvp?.status])
+  }, [myRsvp?.status])
 
   const statusLabel: Record<string, string> = {
     going: "You're going",
@@ -577,14 +578,19 @@ function RSVPSection({ event, onOpenModal, myRsvp }: {
   )
 }
 
-function CommentsSection({ event, myRsvp, onOpenModal }: {
+function CommentsSection({ event, myRsvp, onOpenModal, initialComments }: {
   event: Event;
   myRsvp: { name: string; status: string } | null;
   onOpenModal: () => void;
+  initialComments: CommentRow[];
 }) {
-  const [comments, setComments] = useState<CommentRow[]>([])
+  const [comments, setComments] = useState<CommentRow[]>(initialComments)
   const [newMsg, setNewMsg] = useState('')
   const [posting, setPosting] = useState(false)
+
+  useEffect(() => {
+    setComments(initialComments)
+  }, [initialComments])
 
   function loadComments() {
     fetch(`/api/comment?event_id=${event.id}`)
@@ -593,7 +599,10 @@ function CommentsSection({ event, myRsvp, onOpenModal }: {
       .catch(() => {})
   }
 
-  useEffect(() => { loadComments() }, [event.id, myRsvp?.status])
+  useEffect(() => {
+    if (!myRsvp?.status) return
+    loadComments()
+  }, [myRsvp?.status])
 
   async function handlePost() {
     if (!newMsg.trim() || !myRsvp) return
@@ -812,23 +821,22 @@ function PhoneAuthModal({ onClose, onSuccess }: {
 
 // ── LIKE BUTTON ───────────────────────────────────────────────────────────────
 
-function LikeButton({ event, token, onNeedAuth }: {
+function LikeButton({ event, token, onNeedAuth, initialCount, initialLiked }: {
   event: Event
   token: string | null
   onNeedAuth: () => void
+  initialCount: number
+  initialLiked: boolean
 }) {
-  const [count, setCount] = useState(0)
-  const [liked, setLiked] = useState(false)
+  const [count, setCount] = useState(initialCount)
+  const [liked, setLiked] = useState(initialLiked)
   const [animating, setAnimating] = useState(false)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const headers: HeadersInit = token ? { 'x-session-token': token } : {}
-    fetch(`/api/likes?event_id=${event.id}`, { headers })
-      .then(r => r.json())
-      .then(d => { setCount(d.count ?? 0); setLiked(d.liked ?? false) })
-      .catch(() => {})
-  }, [event.id, token])
+    setCount(initialCount)
+    setLiked(initialLiked)
+  }, [initialCount, initialLiked])
 
   async function handleLike() {
     if (!token) { onNeedAuth(); return }
@@ -952,6 +960,24 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
   const [rsvpModalOpen, setRsvpModalOpen] = useState(false)
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const { token, signIn } = useAuth()
+  const [socialData, setSocialData] = useState<{
+    likes: { count: number; liked: boolean };
+    rsvpCounts: RsvpCounts;
+    comments: CommentRow[];
+  }>({
+    likes: { count: 0, liked: false },
+    rsvpCounts: { going: 0, maybe: 0, not_going: 0 },
+    comments: [],
+  })
+
+  useEffect(() => {
+    const headers: HeadersInit = token ? { 'x-session-token': token } : {}
+    fetch(`/api/event-social?event_id=${event.id}`, { headers })
+      .then(r => r.json())
+      .then(d => setSocialData(d))
+      .catch(() => {})
+  }, [event.id, token])
+
   const [myRsvp, setMyRsvp] = useState<{ name: string; status: string } | null>(() => {
     if (typeof window === 'undefined') return null
     try {
@@ -1028,7 +1054,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
           <div className="ep-share-mobile">
             <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
               <ShareButton event={event} />
-              <LikeButton event={event} token={token} onNeedAuth={() => setAuthModalOpen(true)} />
+              <LikeButton event={event} token={token} onNeedAuth={() => setAuthModalOpen(true)} initialCount={socialData.likes.count} initialLiked={socialData.likes.liked} />
             </div>
           </div>
 
@@ -1058,7 +1084,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
           {/* RSVP */}
           <Divider />
-          <RSVPSection event={event} onOpenModal={() => setRsvpModalOpen(true)} myRsvp={myRsvp} />
+          <RSVPSection event={event} onOpenModal={() => setRsvpModalOpen(true)} myRsvp={myRsvp} counts={socialData.rsvpCounts} onCountsChange={counts => setSocialData(d => ({ ...d, rsvpCounts: counts }))} />
 
           {/* Lineup */}
           {lineup.length > 0 && (
@@ -1110,7 +1136,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
           {/* Message Board */}
           <Divider />
-          <CommentsSection event={event} myRsvp={myRsvp} onOpenModal={() => setRsvpModalOpen(true)} />
+          <CommentsSection event={event} myRsvp={myRsvp} onOpenModal={() => setRsvpModalOpen(true)} initialComments={socialData.comments} />
 
           {/* More from Simply Shameless */}
           {otherEvents.length > 0 && (
@@ -1131,7 +1157,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
           <TicketBox event={event} sticky />
           <div style={{ marginTop: 14, display: 'flex', gap: 8 }}>
             <ShareButton event={event} />
-            <LikeButton event={event} token={token} onNeedAuth={() => setAuthModalOpen(true)} />
+            <LikeButton event={event} token={token} onNeedAuth={() => setAuthModalOpen(true)} initialCount={socialData.likes.count} initialLiked={socialData.likes.liked} />
           </div>
         </div>
       </div>
