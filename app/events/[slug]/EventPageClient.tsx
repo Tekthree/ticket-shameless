@@ -1024,7 +1024,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
       <div ref={bodyRef} className="ep-body" style={{ opacity: bodyVisible ? 1 : 0, transform: bodyVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'opacity 0.7s ease, transform 0.7s ease' }}>
 
         {/* ── LEFT COLUMN ────────────────────────────────────────────── */}
-        <div style={{ paddingTop: 40 }}>
+        <div style={{ paddingTop: 40, minWidth: 0 }}>
 
           {/* Title block */}
           <div style={{ marginBottom: 24 }}>
