@@ -155,7 +155,7 @@ export async function getUpcomingCountsByDJ(): Promise<Record<string, number>> {
 
 export async function getDJBySlug(slug: string): Promise<DJ | null> {
   const rows = await sql`
-    select * from djs where slug = ${slug} and is_published = true limit 1
+    select * from djs where slug = ${slug} limit 1
   `
   return (rows[0] as DJ) ?? null
 }

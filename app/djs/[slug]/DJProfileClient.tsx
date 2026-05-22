@@ -236,7 +236,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
             <div style={{ marginBottom: 48 }}>
               <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: C.red, marginBottom: 16 }}>About</div>
               {dj.bio.split('\n\n').map((p, i) => (
-                <p key={i} style={{ color: i === 0 ? C.darkText : C.darkMuted, fontSize: 17, lineHeight: 1.8, fontWeight: 300, marginBottom: 16, margin: '0 0 16px' }}>{p}</p>
+                <p key={i} style={{ color: 'rgba(240,236,230,0.55)', fontSize: 17, lineHeight: 1.8, fontWeight: 300, marginBottom: 16, margin: '0 0 16px' }}>{p}</p>
               ))}
             </div>
           )}
@@ -320,7 +320,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
           {/* Next show CTA */}
           {nextShow && (
             <div style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius)', padding: '24px', marginBottom: 16 }}>
-              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: C.red, marginBottom: 14 }}>Next Show</div>
+              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: C.darkMuted, marginBottom: 14 }}>Next Show</div>
               <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.red, marginBottom: 6 }}>
                 {fmt(nextShow.date)}
               </div>
