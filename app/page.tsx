@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     description: "Seattle's underground house and techno collective since 2003. Upcoming events at Monkey Loft and beyond.",
     url: 'https://simplyshameless.com',
     type: 'website',
+    images: [{ url: 'https://pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev/site/og-default.jpg', width: 1280, height: 1080, alt: 'Simply Shameless — Seattle Underground House & Techno' }],
   },
   twitter: {
     card: 'summary_large_image',

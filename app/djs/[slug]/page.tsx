@@ -15,13 +15,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const description = dj.seo_description ?? dj.bio?.slice(0, 155) ?? `${dj.name} plays Simply Shameless events in Seattle.`
 
+  const url = `https://simplyshameless.com/djs/${slug}`
+
   return {
     title: `${dj.name} | Simply Shameless`,
     description,
+    alternates: { canonical: url },
     openGraph: {
       title: `${dj.name} | Simply Shameless`,
       description,
-      images: dj.profile_image_url ? [{ url: dj.profile_image_url }] : [],
+      url,
+      images: dj.profile_image_url ? [{ url: dj.profile_image_url, width: 800, height: 800, alt: dj.name }] : [],
     },
     twitter: {
       card: 'summary_large_image',
