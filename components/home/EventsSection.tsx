@@ -212,7 +212,7 @@ export default function EventsSection({ events }: { events: Event[] }) {
           #events { padding: 60px 0 !important; }
           .embla-events-slide { width: 78vw; }
           .embla-dots { display: flex !important; }
-          .embla-events-fade { right: -30px !important; width: 80px !important; }
+          .embla-events-fade { right: -20px !important; width: 80px !important; }
         }
       ` }} />
     </section>
