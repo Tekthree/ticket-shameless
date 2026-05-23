@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Order Confirmed — Simply Shameless',
+  robots: { index: false, follow: false },
 }
 
 export default function ShopSuccessPage() {

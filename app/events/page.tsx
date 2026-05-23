@@ -9,6 +9,7 @@ export const revalidate = 60
 export const metadata: Metadata = {
   title: 'Events - Simply Shameless',
   description: "Upcoming Shameless Productions events in Seattle — underground house and techno.",
+  alternates: { canonical: 'https://simplyshameless.com/events' },
 }
 
 function fmt(dateStr: string) {

@@ -8,6 +8,7 @@ export const revalidate = 300
 export const metadata: Metadata = {
   title: 'Merch — Simply Shameless',
   description: 'Official Simply Shameless merch. Tees, hoodies, hats and more.',
+  alternates: { canonical: 'https://simplyshameless.com/shop' },
 }
 
 export default async function ShopPage() {

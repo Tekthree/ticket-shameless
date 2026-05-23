@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Terms & Conditions — Simply Shameless',
   description: 'Terms for attending Simply Shameless events, purchasing tickets, and using this website.',
+  alternates: { canonical: 'https://simplyshameless.com/terms' },
 }
 
 const C = {

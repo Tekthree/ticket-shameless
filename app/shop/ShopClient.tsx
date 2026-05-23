@@ -16,19 +16,61 @@ const C = {
   redMuted: 'rgba(201,50,26,0.12)',
 }
 
+function getProductImageUrl(product: Product): string {
+  if (product.image_url) return product.image_url
+  const name = product.name.toLowerCase()
+  if (name.includes('20 year') || name.includes('20y') || name.includes('anniversary')) {
+    if (name.includes('tee') || name.includes('t-shirt')) return '/images/merch/shameless_20y_tee.png'
+    if (name.includes('crewneck') || name.includes('sweatshirt')) return '/images/merch/shameless_20y_crewneck.png'
+    if (name.includes('jacket') || name.includes('coach')) return '/images/merch/shameless_20y_jacket.png'
+  }
+  if (name.includes('deck') && name.includes('tee')) return '/images/merch/deckd_out_summer_tee.png'
+  if (name.includes('deck') && name.includes('hoodie')) return '/images/merch/deckd_out_sunset_hoodie.png'
+  if (name.includes('deck') && (name.includes('cap') || name.includes('hat') || name.includes('snapback'))) return '/images/merch/deckd_out_snapback.png'
+  if (name.includes('breakfast') || name.includes('tbc')) return '/images/merch/tbc_retro_tee.png'
+  if (name.includes('white tee') || name.includes('tee — white')) return '/images/merch/shameless_white_tee.png'
+  if (name.includes('red tee') || name.includes('tee — red')) return '/images/merch/shameless_red_tee.png'
+  if (name.includes('black tee') || name.includes('tee — black') || name.includes('classic logo tee')) return '/images/merch/classic_logo_tee.png'
+  if (name.includes('minimalist') && name.includes('hoodie')) return '/images/merch/shameless_min_hoodie.png'
+  if (name.includes('crop') || name.includes('cropped')) return '/images/merch/shameless_crop_hoodie.png'
+  if (name.includes('hoodie')) return '/images/merch/shameless_hoodie.png'
+  if (name.includes('coach') || name.includes('jacket')) return '/images/merch/shameless_coach_jacket.png'
+  if (name.includes('cap') || name.includes('hat')) return '/images/merch/shameless_cap.png'
+  if (name.includes('slipmat')) return '/images/merch/shameless_slipmats.png'
+  if (name.includes('sticker')) return '/images/merch/sticker_sheet.png'
+  return ''
+}
+
 const PLACEHOLDER_PRODUCTS: Product[] = [
-  { id: '1', name: 'Classic Logo Tee', description: '100% heavyweight cotton. Screen printed logo. Unisex fit.', price: 35, image_url: null, category: 'Tops', sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], stock: 50, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '2', name: 'Shameless Hoodie', description: 'Pullover hoodie, 80% cotton 20% poly. Embroidered.', price: 75, image_url: null, category: 'Tops', sizes: ['S', 'M', 'L', 'XL', '2XL'], stock: 30, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '3', name: 'Smiley Crewneck', description: 'Medium-weight fleece crewneck. Oversized fit.', price: 65, image_url: null, category: 'Tops', sizes: ['S', 'M', 'L', 'XL'], stock: 25, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '4', name: 'Logo Cap', description: 'Unstructured 6-panel, adjustable strap. One size.', price: 28, image_url: null, category: 'Accessories', sizes: ['One Size'], stock: 40, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '5', name: 'Tote Bag', description: 'Heavy canvas tote. Screen printed logo.', price: 22, image_url: null, category: 'Accessories', sizes: ['One Size'], stock: 60, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '6', name: 'Sticker Sheet', description: 'Five die-cut vinyl stickers. Weatherproof.', price: 10, image_url: null, category: 'Art', sizes: ['One Size'], stock: 200, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '1', name: 'Classic Logo Tee — Black', description: '100% heavyweight cotton streetwear tee. Screen printed white cutout logo.', price: 35, image_url: '/images/merch/classic_logo_tee.png', category: 'Tops', sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], stock: 50, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '2', name: 'Classic Logo Tee — White', description: '100% heavyweight cotton streetwear tee. Screen printed matte black cutout logo.', price: 35, image_url: '/images/merch/shameless_white_tee.png', category: 'Tops', sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], stock: 50, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '3', name: 'Shameless Hoodie — Embroidered', description: 'Premium heavyweight charcoal pullover hoodie with scratched red and white embroidered logo.', price: 75, image_url: '/images/merch/shameless_hoodie.png', category: 'Tops', sizes: ['S', 'M', 'L', 'XL', '2XL'], stock: 30, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '4', name: 'Minimalist Logo Hoodie — Black', description: 'Matte black premium pullover hoodie with a clean white circle logo embroidered on the left chest.', price: 75, image_url: '/images/merch/shameless_min_hoodie.png', category: 'Tops', sizes: ['S', 'M', 'L', 'XL', '2XL'], stock: 40, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '5', name: 'Coach Jacket — Black', description: 'Matte black nylon coach jacket with clean bold white cutout logo screen-printed across the back.', price: 85, image_url: '/images/merch/shameless_coach_jacket.png', category: 'Tops', sizes: ['S', 'M', 'L', 'XL', '2XL'], stock: 25, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '6', name: 'Raw Hem Crop Hoodie', description: 'Vintage-washed charcoal grey cropped women\'s hoodie with raw hem. Features scratched red and white Shameless logo.', price: 65, image_url: '/images/merch/shameless_crop_hoodie.png', category: 'Tops', sizes: ['S', 'M', 'L', 'XL'], stock: 30, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '7', name: 'Distressed Logo Cap', description: 'Washed black unstructured 6-panel cap with adjustable metal clasp. Features embroidered off-white circular logo.', price: 28, image_url: '/images/merch/shameless_cap.png', category: 'Accessories', sizes: ['One Size'], stock: 45, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '8', name: 'DJ Turntable Slipmats (Pair)', description: 'Pair of premium 12-inch black felt slipmats with large off-white circular logo print.', price: 25, image_url: '/images/merch/shameless_slipmats.png', category: 'Accessories', sizes: ['One Size'], stock: 50, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '9', name: 'Deck\'d Out Summer Tee', description: 'Premium heavyweight off-white cotton tee with the official sunset gradient Deck\'d Out rooftop party logo.', price: 38, image_url: '/images/merch/deckd_out_summer_tee.png', category: 'Tops', sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], stock: 50, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '10', name: 'Deck\'d Out Sunset Hoodie', description: 'Premium sand-colored heavyweight pullover hoodie featuring high-fidelity Deck\'d Out circular sunset logo embroidery.', price: 78, image_url: '/images/merch/deckd_out_sunset_hoodie.png', category: 'Tops', sizes: ['S', 'M', 'L', 'XL', '2XL'], stock: 35, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '11', name: 'Deck\'d Out Snapback Hat', description: 'Structured forest green snapback cap featuring sharp, high-res Deck\'d Out sunset logo front embroidery.', price: 32, image_url: '/images/merch/deckd_out_snapback.png', category: 'Accessories', sizes: ['One Size'], stock: 40, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '12', name: 'The Breakfast Club Retro Tee', description: 'Heavyweight vintage washed black cotton tee with high-contrast Sunrise series Breakfast Club screen-print.', price: 38, image_url: '/images/merch/tbc_retro_tee.png', category: 'Tops', sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], stock: 45, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '13', name: '20 Year Anniversary Vintage Tee', description: 'Premium washed charcoal cotton tee featuring the official Shameless 20 Year Anniversary gold and white crest.', price: 40, image_url: '/images/merch/shameless_20y_tee.png', category: 'Tops', sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], stock: 40, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '14', name: '20 Year Anniversary Crewneck', description: 'Premium heavyweight black fleece crewneck with detailed gold and white 20 Year Anniversary chest embroidery.', price: 80, image_url: '/images/merch/shameless_20y_crewneck.png', category: 'Tops', sizes: ['S', 'M', 'L', 'XL', '2XL'], stock: 30, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '15', name: '20 Year Anniversary Coach Jacket', description: 'Limited-edition matte black nylon coach jacket with the official 20 Year Anniversary gold crest back print.', price: 95, image_url: '/images/merch/shameless_20y_jacket.png', category: 'Tops', sizes: ['S', 'M', 'L', 'XL', '2XL'], stock: 20, is_published: true, stripe_price_id: null, created_at: '' },
 ]
 
 type CartItem = Product & { selectedSize: string; qty: number }
 
 // ── PRODUCT IMAGE PLACEHOLDER ─────────────────────────────────────────────────
 function ProductImage({ product, height = 280 }: { product: Product; height?: number }) {
+  const localImage = getProductImageUrl(product)
+  if (localImage) {
+    return (
+      <div style={{ height, position: 'relative', width: '100%' }}>
+        <Image src={localImage} alt={product.name} fill sizes="(max-width: 640px) 50vw, 300px" style={{ objectFit: 'cover' }} />
+      </div>
+    )
+  }
   const angles = [30, 45, 15, 60, 20, 35]
   const angle = angles[parseInt(product.id) % angles.length]
   return (
@@ -275,7 +317,13 @@ function CartDrawer({ cart, onClose, onRemove, onQtyChange }: {
           ) : (
             cart.map(item => (
               <div key={item.id + item.selectedSize} style={{ display: 'flex', gap: 16, padding: '20px 0', borderBottom: `1px solid ${C.darkBorder}` }}>
-                <div style={{ width: 72, height: 72, background: C.darkCard, borderRadius: 'var(--ss-radius-btn)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: C.darkMuted, fontFamily: 'monospace' }}>img</div>
+                {getProductImageUrl(item) ? (
+                  <div style={{ width: 72, height: 72, borderRadius: 'var(--ss-radius-btn)', flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
+                    <Image src={getProductImageUrl(item)} alt={item.name} fill sizes="72px" style={{ objectFit: 'cover' }} />
+                  </div>
+                ) : (
+                  <div style={{ width: 72, height: 72, background: C.darkCard, borderRadius: 'var(--ss-radius-btn)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: C.darkMuted, fontFamily: 'monospace' }}>img</div>
+                )}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 17, color: C.darkText, textTransform: 'uppercase', lineHeight: 1, marginBottom: 4 }}>{item.name}</div>
                   {item.selectedSize !== 'One Size' && <div style={{ color: C.darkMuted, fontSize: 13, marginBottom: 8 }}>Size: {item.selectedSize}</div>}

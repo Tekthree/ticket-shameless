@@ -289,8 +289,11 @@ function LineupArtistRow({ artist }: { artist: LineupArtist }) {
   return inner
 }
 
+const STAGE_ORDER: Record<string, number> = { rooftop: 0, main: 1, back: 2, loft: 3 }
+
 function LineupSection({ lineup }: { lineup: LineupArtist[] }) {
-  const stages = Array.from(new Set(lineup.map(a => a.stage).filter(Boolean))) as string[]
+  const stages = Array.from(new Set(lineup.map(a => a.stage).filter(Boolean)))
+    .sort((a, b) => (STAGE_ORDER[a!] ?? 99) - (STAGE_ORDER[b!] ?? 99)) as string[]
   const stageLabels: Record<string, string> = { main: 'Main Room', back: 'Back Room', rooftop: 'Rooftop Stage', loft: 'Loft Stage' }
   const hasStages = stages.length > 1
 
@@ -981,7 +984,8 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
   const titleParts = event.title.includes(' × ') ? event.title.split(' × ') : null
 
   // Figure out stages for the "Two stages" meta row
-  const stages = Array.from(new Set(lineup.map(a => a.stage).filter(Boolean))) as string[]
+  const stages = Array.from(new Set(lineup.map(a => a.stage).filter(Boolean)))
+    .sort((a, b) => (STAGE_ORDER[a!] ?? 99) - (STAGE_ORDER[b!] ?? 99)) as string[]
   const stageLabels: Record<string, string> = { main: 'Main Room', back: 'Back Room', rooftop: 'Rooftop', loft: 'Loft' }
   const stagesLabel = stages.length > 1 ? stages.map(s => stageLabels[s] ?? s).join(' + ') : null
 
