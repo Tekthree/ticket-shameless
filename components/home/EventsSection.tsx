@@ -164,7 +164,7 @@ export default function EventsSection({ events }: { events: Event[] }) {
             </div>
           </div>
           {/* Right fade */}
-          <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: 140, background: 'linear-gradient(to right, transparent, #1c1917)', pointerEvents: 'none', zIndex: 2 }} />
+          <div className="embla-events-fade" style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: 140, background: 'linear-gradient(to right, transparent, #1c1917)', pointerEvents: 'none', zIndex: 2 }} />
         </div>
       </div>
 
@@ -212,6 +212,7 @@ export default function EventsSection({ events }: { events: Event[] }) {
           #events { padding: 60px 0 !important; }
           .embla-events-slide { width: 78vw; }
           .embla-dots { display: flex !important; }
+          .embla-events-fade { right: -30px !important; width: 80px !important; }
         }
       ` }} />
     </section>
