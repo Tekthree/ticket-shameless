@@ -163,6 +163,18 @@ function OutlineBtn({ children, onClick, style }: { children: React.ReactNode; o
 
 function TicketBox({ event, sticky = false }: { event: Event; sticky?: boolean }) {
   const [hover, setHover] = useState(false)
+  const isPast = new Date(event.date) < new Date()
+
+  if (isPast) {
+    return (
+      <div style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius)', padding: '24px', ...(sticky ? { position: 'sticky', top: 84 } : {}) }}>
+        <SecLabel>Tickets</SecLabel>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%', background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '18px', borderRadius: 'var(--ss-radius-btn)' }}>
+          This Event Has Passed
+        </div>
+      </div>
+    )
+  }
 
   if (!event.payment_link) return null
 
@@ -216,7 +228,7 @@ function MobileTicketBar({ event }: { event: Event }) {
   const [hover, setHover] = useState(false)
   const dateStr = fmt(event.date, { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase()
 
-  if (!event.payment_link) return null
+  if (!event.payment_link || new Date(event.date) < new Date()) return null
 
   return (
     <div className="ep-mobile-bar">
