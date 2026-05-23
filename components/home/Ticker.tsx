@@ -16,7 +16,7 @@ export default function Ticker() {
             fontFamily: 'var(--font-barlow), sans-serif',
             fontWeight: 900,
             fontSize: 15,
-            letterSpacing: '0.22em',
+            letterSpacing: '0.10em',
             textTransform: 'uppercase',
             color: 'rgba(255,255,255,0.9)',
             padding: '0 40px',

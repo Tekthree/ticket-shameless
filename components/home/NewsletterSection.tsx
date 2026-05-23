@@ -58,7 +58,7 @@ export default function NewsletterSection() {
       <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 18px)' }} />
       <div ref={ref} style={{ maxWidth: 780, margin: '0 auto', textAlign: 'center', position: 'relative' }}>
         <div style={revealStyle()}>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 13, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)', marginBottom: 16 }}>Stay in the Loop</div>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)', marginBottom: 16 }}>Stay in the Loop</div>
           <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(56px,8vw,100px)', lineHeight: 0.86, color: '#fff', textTransform: 'uppercase', marginBottom: 28 }}>
             Never Miss<br />a Party.
           </div>
@@ -96,7 +96,7 @@ export default function NewsletterSection() {
                 <button type="submit" disabled={loading} style={{
                   background: '#fff', color: '#c9321a', border: 'none', cursor: loading ? 'default' : 'pointer',
                   fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16,
-                  letterSpacing: '0.15em', textTransform: 'uppercase', padding: '14px 40px',
+                  letterSpacing: '0.08em', textTransform: 'uppercase', padding: '14px 40px',
                   marginLeft: 16, flexShrink: 0, borderRadius: 'var(--ss-radius-btn)', transition: 'transform 0.12s, opacity 0.2s',
                   opacity: loading ? 0.7 : 1,
                 }}

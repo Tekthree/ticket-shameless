@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { useState, useEffect } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 
 const ALLOWED_HOST = 'pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev'
@@ -12,8 +13,16 @@ function safeUrl(url: string): string | null {
   } catch { return null }
 }
 
+function pickRandom(arr: string[], n: number): string[] {
+  const shuffled = [...arr].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, n)
+}
+
 export default function EventPhotoStrip({ images }: { images: string[] }) {
   if (!images || images.length === 0) return null
+
+  const [display, setDisplay] = useState(images.slice(0, 10))
+  useEffect(() => { setDisplay(pickRandom(images, Math.min(10, images.length))) }, [])
 
   const [emblaRef] = useEmblaCarousel({
     align: 'start',
@@ -27,7 +36,7 @@ export default function EventPhotoStrip({ images }: { images: string[] }) {
       <div style={{ position: 'relative', overflow: 'hidden' }}>
         <div ref={emblaRef} style={{ overflow: 'hidden', cursor: 'grab' }}>
           <div style={{ display: 'flex', gap: 8 }}>
-            {images.map((url, i) => {
+            {display.map((url, i) => {
               const safe = safeUrl(url) ?? url
               return (
                 <div

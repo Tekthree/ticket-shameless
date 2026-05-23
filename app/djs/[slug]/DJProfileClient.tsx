@@ -41,7 +41,7 @@ function SocialBtn({ label, url, icon }: { label: string; url: string; icon: Rea
         fontFamily: 'var(--font-barlow), sans-serif',
         fontWeight: 700,
         fontSize: 13,
-        letterSpacing: '0.1em',
+        letterSpacing: '0.06em',
         textTransform: 'uppercase',
         padding: '10px 18px',
         borderRadius: 'var(--ss-radius-btn)',
@@ -78,7 +78,7 @@ function EventRow({ event }: { event: Event }) {
       >
         <div style={{ width: 4, alignSelf: 'stretch', background: isPast ? C.darkBorder : C.red, flexShrink: 0 }} />
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.2em', color: isPast ? C.darkMuted : C.red, textTransform: 'uppercase', marginBottom: 5 }}>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.10em', color: isPast ? C.darkMuted : C.red, textTransform: 'uppercase', marginBottom: 5 }}>
             {fmt(event.date)}
           </div>
           <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 22, color: hover ? C.red : C.darkText, textTransform: 'uppercase', lineHeight: 1, marginBottom: 4, transition: 'color 0.15s' }}>
@@ -153,12 +153,12 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
           {/* Role + location */}
           <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 20 }}>
             {dj.is_resident && (
-              <div style={{ background: C.red, color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', padding: '5px 12px', borderRadius: 'var(--ss-radius-btn)' }}>
+              <div style={{ background: C.red, color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '5px 12px', borderRadius: 'var(--ss-radius-btn)' }}>
                 Shameless Resident
               </div>
             )}
             {dj.location && (
-              <div style={{ color: C.darkMuted, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+              <div style={{ color: C.darkMuted, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                 {dj.location}
               </div>
             )}
@@ -220,7 +220,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
           ].map(([label, val], i) => (
             <div key={i} style={{ padding: '24px 0', textAlign: 'center', borderRight: i === 0 ? `1px solid ${C.darkBorder}` : 'none' }}>
               <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 36, color: C.red, lineHeight: 1, marginBottom: 4 }}>{val}</div>
-              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: C.darkMuted }}>{label}</div>
+              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: C.darkMuted }}>{label}</div>
             </div>
           ))}
         </div>
@@ -234,7 +234,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
           {/* Bio */}
           {dj.bio && (
             <div style={{ marginBottom: 48 }}>
-              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: C.red, marginBottom: 16 }}>About</div>
+              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: C.red, marginBottom: 16 }}>About</div>
               {dj.bio.split('\n\n').map((p, i) => (
                 <p key={i} style={{ color: 'rgba(240,236,230,0.55)', fontSize: 17, lineHeight: 1.8, fontWeight: 300, marginBottom: 16, margin: '0 0 16px' }}>{p}</p>
               ))}
@@ -251,7 +251,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
                 fontFamily: 'var(--font-barlow), sans-serif',
                 fontWeight: 800,
                 fontSize: 15,
-                letterSpacing: '0.12em',
+                letterSpacing: '0.06em',
                 textTransform: 'uppercase',
                 color: activeTab === key ? C.darkText : 'rgba(240,236,230,0.4)',
                 padding: '16px 0',
@@ -289,7 +289,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
                         fontFamily: 'var(--font-barlow), sans-serif',
                         fontWeight: 700,
                         fontSize: 13,
-                        letterSpacing: '0.12em',
+                        letterSpacing: '0.06em',
                         textTransform: 'uppercase',
                         padding: '16px',
                         borderRadius: 'var(--ss-radius-btn)',
@@ -308,7 +308,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
           {/* SoundCloud link */}
           {dj.soundcloud_url && (
             <div style={{ marginTop: 32, padding: '20px', border: `1px dashed rgba(201,50,26,0.2)`, borderRadius: 'var(--ss-radius)', textAlign: 'center' }}>
-              <a href={dj.soundcloud_url} target="_blank" rel="noopener noreferrer" style={{ color: C.red, textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+              <a href={dj.soundcloud_url} target="_blank" rel="noopener noreferrer" style={{ color: C.red, textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                 Listen on SoundCloud ↗
               </a>
             </div>
@@ -320,8 +320,8 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
           {/* Next show CTA */}
           {nextShow && (
             <div style={{ background: C.darkCard, border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius)', padding: '24px', marginBottom: 16 }}>
-              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: C.darkMuted, marginBottom: 14 }}>Next Show</div>
-              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.red, marginBottom: 6 }}>
+              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.darkMuted, marginBottom: 14 }}>Next Show</div>
+              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.10em', textTransform: 'uppercase', color: C.red, marginBottom: 6 }}>
                 {fmt(nextShow.date)}
               </div>
               <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 22, color: C.darkText, textTransform: 'uppercase', lineHeight: 1, marginBottom: 6 }}>
@@ -336,7 +336,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
                 fontFamily: 'var(--font-barlow), sans-serif',
                 fontWeight: 900,
                 fontSize: 15,
-                letterSpacing: '0.15em',
+                letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 padding: '15px',
                 borderRadius: 'var(--ss-radius-btn)',
@@ -358,7 +358,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
             fontFamily: 'var(--font-barlow), sans-serif',
             fontWeight: 700,
             fontSize: 13,
-            letterSpacing: '0.12em',
+            letterSpacing: '0.06em',
             textTransform: 'uppercase',
             textDecoration: 'none',
             transition: 'color 0.15s',

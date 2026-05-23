@@ -6,34 +6,39 @@ const sql = neon(process.env.DATABASE_URL)
 
 const R2 = 'https://pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev'
 
-// Shared gallery — same 10 photos used across all Deck'd Out events
-// Upload photos to R2 at events/gallery/01.jpg through 10.jpg
-const SHARED_PHOTOS = Array.from({ length: 10 }, (_, i) =>
-  `${R2}/events/gallery/${String(i + 1).padStart(2, '0')}.jpg`
-)
-
-const SLUGS = [
-  'deckd-out-1-season-opener-shvili-nyc-sky-rivers-la-all-vinyl',
-  'deckd-out-2-pride-edition-w-open-house-collective-idle',
-  'deckd-out-3-off99-shameless-present-dj-said-sf-costa-showcase',
-  'deckd-out-4-give-n-groove-shameless-present-headliner-tba-france',
-  'deckd-out-5-shameless-presents-jason-peters-sf-best-butt-camp',
-  'deckd-out-6-sassmouth-chi-nark-bottom-forty-has-catz',
-  'deckd-out-7-sazn-shameless-present-mango-ginger-la-more',
-  'deckd-out-8-innerflight-shameless-feat-garth-wicked-nightmoves',
-  'deckd-out-9-flammable-shameless-pres-gene-hunt-traxchi-flamm-djs',
-  'deckd-out-10-lnm-shameless-pres-cami-jones-ibiza-11-year-anniv',
+// Full pool — all images in events/gallery/. Component picks 10 randomly per render.
+const GALLERY_POOL = [
+  `${R2}/events/gallery/01.jpg`,
+  `${R2}/events/gallery/02.jpg`,
+  `${R2}/events/gallery/03.jpg`,
+  `${R2}/events/gallery/04.jpg`,
+  `${R2}/events/gallery/05.jpg`,
+  `${R2}/events/gallery/06.jpg`,
+  `${R2}/events/gallery/07.jpg`,
+  `${R2}/events/gallery/08.jpg`,
+  `${R2}/events/gallery/09.jpg`,
+  `${R2}/events/gallery/10.jpg`,
+  `${R2}/events/gallery/1423126115878452.jpg`,
+  `${R2}/events/gallery/1423126785878385.jpg`,
+  `${R2}/events/gallery/1423127415878322.jpg`,
+  `${R2}/events/gallery/1423130402544690.jpg`,
+  `${R2}/events/gallery/1423130752544655.jpg`,
+  `${R2}/events/gallery/1423131385877925.jpg`,
+  `${R2}/events/gallery/1423131455877918.jpg`,
+  `${R2}/events/gallery/1423131799211217.jpg`,
+  `${R2}/events/gallery/1423131922544538.jpg`,
+  `${R2}/events/gallery/1423132532544477.jpg`,
+  `${R2}/events/gallery/1423132662544464.jpg`,
 ]
 
 async function run() {
-  for (const slug of SLUGS) {
-    const result = await sql`
-      UPDATE events SET gallery_images = ${SHARED_PHOTOS} WHERE slug = ${slug} RETURNING slug
-    `
-    if (result.length) console.log('  set', SHARED_PHOTOS.length, 'photos for', slug)
-    else console.log('  NOT FOUND:', slug)
-  }
-  console.log('Done!')
+  const result = await sql`
+    UPDATE events SET gallery_images = ${GALLERY_POOL}
+    WHERE date > now() AND is_published = true
+    RETURNING slug
+  `
+  result.forEach(r => console.log('  set', GALLERY_POOL.length, 'photos for', r.slug))
+  console.log(`\nUpdated ${result.length} events. Done!`)
 }
 
 run().catch(e => { console.error(e); process.exit(1) })

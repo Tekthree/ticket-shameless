@@ -65,7 +65,7 @@ function fmtTime(dateStr: string) {
 const Divider = () => <div style={{ height: 1, background: C.darkBorder, margin: '32px 0' }} />
 
 const SecLabel = ({ children }: { children: React.ReactNode }) => (
-  <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: C.red, marginBottom: 14 }}>
+  <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: C.red, marginBottom: 14 }}>
     {children}
   </div>
 )
@@ -105,17 +105,23 @@ function DescriptionText({ text }: { text: string }) {
           style={{
             background: 'transparent',
             border: 'none',
-            color: C.red,
+            color: C.darkMuted,
             cursor: 'pointer',
             fontFamily: 'var(--font-barlow), sans-serif',
             fontWeight: 700,
             fontSize: 12,
-            letterSpacing: '0.1em',
+            letterSpacing: '0.08em',
             textTransform: 'uppercase',
-            padding: '10px 0 0',
+            padding: '10px 0 16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 5,
           }}
         >
           {expanded ? 'Read less' : 'Read more'}
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ transform: expanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+            <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </button>
       )}
     </div>
@@ -411,7 +417,7 @@ function RSVPModal({ event, onClose, onSuccess }: {
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
             <div>
-              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: C.red, marginBottom: 4 }}>RSVP</div>
+              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: C.red, marginBottom: 4 }}>RSVP</div>
               <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 22, color: C.darkText, textTransform: 'uppercase', lineHeight: 1.1 }}>{event.title}</div>
             </div>
             <button
@@ -750,7 +756,7 @@ function PhoneAuthModal({ onClose, onSuccess }: {
         <div style={{ maxWidth: 560, margin: '0 auto', padding: '20px 28px 40px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
             <div>
-              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: C.red, marginBottom: 4 }}>Sign In</div>
+              <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: C.red, marginBottom: 4 }}>Sign In</div>
               <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 22, color: C.darkText, textTransform: 'uppercase', lineHeight: 1.1 }}>
                 {step === 'phone' ? 'Enter your phone' : 'Check your texts'}
               </div>
@@ -994,7 +1000,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
           <div style={{ width: '100%', maxWidth: 1312, padding: '0 clamp(20px, 4vw, 56px)' }}>
             <div ref={heroRef} style={{ display: 'flex', gap: 6, flexWrap: 'wrap', opacity: heroVisible ? 1 : 0, transition: 'opacity 0.6s ease', pointerEvents: 'auto' }}>
               {event.tags?.map(tag => (
-                <span key={tag} style={{ background: 'rgba(17,17,16,0.75)', backdropFilter: 'blur(8px)', border: `1px solid ${C.darkBorder}`, color: 'rgba(240,236,230,0.6)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', borderRadius: 999 }}>{tag}</span>
+                <span key={tag} style={{ background: 'rgba(17,17,16,0.75)', backdropFilter: 'blur(8px)', border: `1px solid ${C.darkBorder}`, color: 'rgba(240,236,230,0.6)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '4px 10px', borderRadius: 999 }}>{tag}</span>
               ))}
             </div>
           </div>
@@ -1009,7 +1015,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
           {/* Title block */}
           <div style={{ marginBottom: 24 }}>
-            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: C.red, marginBottom: 10 }}>Shameless Presents</div>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.red, marginBottom: 10 }}>Shameless Presents</div>
             <h1 style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(44px, 7vw, 80px)', lineHeight: 0.88, color: C.darkText, textTransform: 'uppercase', marginBottom: 16 }}>
               {titleParts ? (
                 <>

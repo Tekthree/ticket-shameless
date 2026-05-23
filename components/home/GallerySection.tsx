@@ -120,7 +120,7 @@ export default function GallerySection({ images = [] }: { images?: string[] }) {
         }}>
           <div style={{
             fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900,
-            fontSize: 12, letterSpacing: '0.28em', textTransform: 'uppercase',
+            fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase',
             color: '#c9321a', marginBottom: 14,
           }}>From the Floor</div>
           <div className="gallery-header" style={{
@@ -135,7 +135,7 @@ export default function GallerySection({ images = [] }: { images?: string[] }) {
             <a href="/gallery" style={{
               color: '#7a7068', textDecoration: 'none',
               fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700,
-              fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase',
+              fontSize: 14, letterSpacing: '0.06em', textTransform: 'uppercase',
               borderBottom: '1px solid rgba(255,255,255,0.07)', paddingBottom: 2,
               transition: 'color 0.2s',
             }}

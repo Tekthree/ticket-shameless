@@ -42,7 +42,7 @@ function StatCounter({ value, label }: { value: string; label: string }) {
   return (
     <div ref={ref}>
       <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(36px, 10vw, 56px)', color: '#c9321a', lineHeight: 1 }}>{count}{suffix}</div>
-      <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#8a8078', marginTop: 4 }}>{label}</div>
+      <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#8a8078', marginTop: 4 }}>{label}</div>
     </div>
   )
 }
@@ -68,7 +68,7 @@ export default function AboutSection() {
         {/* LEFT sticky */}
         <div ref={leftRef} style={{ position: 'sticky', top: 100 }}>
           <div style={revealStyle(leftVisible)}>
-            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 18 }}>Shameless Productions</div>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 18 }}>Shameless Productions</div>
           </div>
           <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(64px,8vw,112px)', lineHeight: 0.9, textTransform: 'uppercase' }}>
             {[
@@ -79,7 +79,7 @@ export default function AboutSection() {
             ].map((line, i) => (
               <div key={i} style={{
                 color: line.color,
-                WebkitTextStroke: line.stroke ? '4px #1c1917' : undefined,
+                WebkitTextStroke: line.stroke ? '2px #1c1917' : undefined,
                 opacity: leftVisible ? 1 : 0,
                 transform: leftVisible ? 'translateY(0)' : 'translateY(28px)',
                 transition: `opacity 0.7s cubic-bezier(0.22,1,0.36,1) ${line.delay}ms, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${line.delay}ms`,
@@ -149,7 +149,7 @@ export default function AboutSection() {
               fontFamily: 'var(--font-barlow), sans-serif',
               fontWeight: 800,
               fontSize: 16,
-              letterSpacing: '0.12em',
+              letterSpacing: '0.06em',
               textTransform: 'uppercase',
               padding: '16px 40px',
               borderRadius: 'var(--ss-radius-btn)',

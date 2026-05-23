@@ -70,19 +70,19 @@ function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
                 </div>
               )}
               {isSoon && (
-                <div style={{ position: 'absolute', top: 10, right: 10, background: '#1c1917', color: '#7a7068', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', padding: '5px 12px' }}>Coming Soon</div>
+                <div style={{ position: 'absolute', top: 10, right: 10, background: '#1c1917', color: '#7a7068', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '5px 12px' }}>Coming Soon</div>
               )}
             </div>
           </div>
 
           {/* Content */}
           <div style={{ padding: '18px 20px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.2em', color: '#c9321a', textTransform: 'uppercase', marginBottom: 7 }}>{dateStr}</div>
+            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.10em', color: '#c9321a', textTransform: 'uppercase', marginBottom: 7 }}>{dateStr}</div>
             <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 22, color: '#f5f0eb', textTransform: 'uppercase', lineHeight: 1.05, marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{event.title}</div>
             <div style={{ color: 'rgba(245,240,235,0.45)', fontSize: 14, marginBottom: 14 }}>{event.venue || event.location}</div>
             <div style={{ display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap' }}>
               {tags.map((tag: string) => (
-                <span key={tag} style={{ background: 'rgba(245,240,235,0.08)', color: 'rgba(245,240,235,0.55)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', alignSelf: 'flex-start', borderRadius: 999 }}>{tag}</span>
+                <span key={tag} style={{ background: 'rgba(245,240,235,0.08)', color: 'rgba(245,240,235,0.55)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '4px 10px', alignSelf: 'flex-start', borderRadius: 999 }}>{tag}</span>
               ))}
             </div>
             <button
@@ -96,7 +96,7 @@ function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
                 border: isSoon ? '1px solid rgba(245,240,235,0.15)' : '1px solid #c9321a',
                 color: isSoon ? '#8a8078' : (btnHover ? '#ff4d30' : '#c9321a'),
                 fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 14,
-                letterSpacing: '0.15em', textTransform: 'uppercase', padding: '12px',
+                letterSpacing: '0.08em', textTransform: 'uppercase', padding: '12px',
                 borderRadius: 'var(--ss-radius-btn)',
                 transition: 'color 0.15s, border-color 0.15s, transform 0.1s',
                 transform: !isSoon && btnHover ? 'scale(0.98)' : 'scale(1)',
@@ -143,10 +143,10 @@ export default function EventsSection({ events }: { events: Event[] }) {
           transform: headerVisible ? 'translateY(0)' : 'translateY(28px)',
           transition: 'opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1)',
         }}>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 14 }}>Upcoming Shows</div>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 14 }}>Upcoming Shows</div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 48 }}>
             <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(52px,6vw,88px)', lineHeight: 0.88, color: '#f5f0eb', textTransform: 'uppercase' }}>Events</div>
-            <Link href="/events" style={{ color: 'rgba(245,240,235,0.5)', textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase', borderBottom: '1px solid rgba(245,240,235,0.15)', paddingBottom: 2 }}>All Events →</Link>
+            <Link href="/events" style={{ color: 'rgba(245,240,235,0.5)', textDecoration: 'none', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.06em', textTransform: 'uppercase', borderBottom: '1px solid rgba(245,240,235,0.15)', paddingBottom: 2 }}>All Events →</Link>
           </div>
         </div>
       </div>
