@@ -75,7 +75,7 @@ function EventRow({ event }: { event: Event }) {
 
         {/* Title + meta */}
         <div>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(17px, 1.6vw, 21px)', color: 'rgba(240,236,230,0.82)', textTransform: 'uppercase', lineHeight: 1, marginBottom: 6 }}>{event.title}</div>
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(18px, 1.9vw, 24px)', color: 'rgba(240,236,230,0.82)', textTransform: 'uppercase', lineHeight: 1, marginBottom: 6 }}>{event.title}</div>
           <div style={{ color: '#7a7068', fontSize: 14, marginBottom: 10 }}>{event.venue}{event.address ? ` · ${event.address}` : ''}</div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {tags.map(tag => (
