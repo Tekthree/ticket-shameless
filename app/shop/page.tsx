@@ -9,6 +9,18 @@ export const metadata: Metadata = {
   title: 'Merch — Simply Shameless',
   description: 'Official Simply Shameless merch. Tees, hoodies, hats and more.',
   alternates: { canonical: 'https://simplyshameless.com/shop' },
+  openGraph: {
+    title: 'Merch — Simply Shameless',
+    description: 'Official Simply Shameless merch. Tees, hoodies, hats and more.',
+    url: 'https://simplyshameless.com/shop',
+    images: [{ url: '/images/merch/shameless_hoodie.png', alt: 'Simply Shameless merch — embroidered hoodie' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Merch — Simply Shameless',
+    description: 'Official Simply Shameless merch. Tees, hoodies, hats and more.',
+    images: ['/images/merch/shameless_hoodie.png'],
+  },
 }
 
 export default async function ShopPage() {
