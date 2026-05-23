@@ -12,6 +12,23 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://simplyshameless.com/events' },
 }
 
+function toSeattleISO(dateStr: string): string {
+  const date = new Date(dateStr)
+  const local = new Intl.DateTimeFormat('sv-SE', {
+    timeZone: 'America/Los_Angeles',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+  }).format(date).replace(' ', 'T')
+  const utcMs = date.getTime()
+  const laMs = new Date(date.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })).getTime()
+  const offsetMin = Math.round((laMs - utcMs) / 60000)
+  const sign = offsetMin >= 0 ? '+' : '-'
+  const absMin = Math.abs(offsetMin)
+  const hh = String(Math.floor(absMin / 60)).padStart(2, '0')
+  const mm = String(absMin % 60).padStart(2, '0')
+  return `${local}${sign}${hh}:${mm}`
+}
+
 function fmt(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase()
 }
@@ -92,7 +109,9 @@ export default async function EventsPage() {
       item: {
         '@type': 'MusicEvent',
         name: event.title,
-        startDate: event.date,
+        startDate: toSeattleISO(event.date),
+        eventStatus: 'https://schema.org/EventScheduled',
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
         url: `https://simplyshameless.com/events/${event.slug}`,
         location: {
           '@type': 'MusicVenue',

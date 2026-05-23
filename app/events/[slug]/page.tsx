@@ -11,6 +11,24 @@ function fmtDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 }
 
+// Convert a UTC date string to a Seattle-local ISO 8601 string with offset (e.g. 2025-06-14T21:00:00-07:00)
+function toSeattleISO(dateStr: string): string {
+  const date = new Date(dateStr)
+  const local = new Intl.DateTimeFormat('sv-SE', {
+    timeZone: 'America/Los_Angeles',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+  }).format(date).replace(' ', 'T')
+  const utcMs = date.getTime()
+  const laMs = new Date(date.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })).getTime()
+  const offsetMin = Math.round((laMs - utcMs) / 60000)
+  const sign = offsetMin >= 0 ? '+' : '-'
+  const absMin = Math.abs(offsetMin)
+  const hh = String(Math.floor(absMin / 60)).padStart(2, '0')
+  const mm = String(absMin % 60).padStart(2, '0')
+  return `${local}${sign}${hh}:${mm}`
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -62,12 +80,16 @@ export default async function EventPage({
 
   const otherEvents = allEvents.filter(e => e.id !== event.id).slice(0, 4)
 
+  const isPast = new Date(event.date) < new Date()
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'MusicEvent',
     name: event.title,
-    startDate: event.date,
-    ...(event.end_date ? { endDate: event.end_date } : {}),
+    startDate: toSeattleISO(event.date),
+    ...(event.end_date ? { endDate: toSeattleISO(event.end_date) } : {}),
+    eventStatus: isPast ? 'https://schema.org/EventScheduled' : 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     location: {
       '@type': 'MusicVenue',
       name: event.venue,
@@ -85,11 +107,14 @@ export default async function EventPage({
       url: SITE_URL,
     },
     ...(lineup.length > 0 ? {
-      performer: lineup.map(a => ({
-        '@type': 'MusicGroup',
-        name: a.name,
-        ...(a.dj_slug ? { url: `${SITE_URL}/djs/${a.dj_slug}` } : {}),
-      })),
+      performer: lineup.map(a => {
+        const profileUrl = a.dj_slug ? `${SITE_URL}/djs/${a.dj_slug}` : null
+        return {
+          '@type': 'MusicGroup',
+          name: a.name,
+          ...(profileUrl ? { url: profileUrl, sameAs: [profileUrl] } : {}),
+        }
+      }),
     } : {}),
     ...(event.banner_url ?? event.image_url ? { image: event.banner_url ?? event.image_url } : {}),
     url: `${SITE_URL}/events/${event.slug}`,
@@ -99,7 +124,7 @@ export default async function EventPage({
         url: event.payment_link,
         priceCurrency: 'USD',
         ...(event.suggested_price != null ? { price: event.suggested_price } : {}),
-        availability: 'https://schema.org/InStock',
+        availability: isPast ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
       },
     } : {}),
     description: event.description ?? '',
