@@ -81,7 +81,33 @@ function EventRow({ event }: { event: Event }) {
 export default async function EventsPage() {
   const events = await getEvents(20)
 
+  const jsonLd = events.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Upcoming Simply Shameless Events',
+    url: 'https://simplyshameless.com/events',
+    itemListElement: events.map((event, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'MusicEvent',
+        name: event.title,
+        startDate: event.date,
+        url: `https://simplyshameless.com/events/${event.slug}`,
+        location: {
+          '@type': 'MusicVenue',
+          name: event.venue,
+          address: { '@type': 'PostalAddress', addressLocality: 'Seattle', addressRegion: 'WA', addressCountry: 'US' },
+        },
+        organizer: { '@type': 'Organization', name: 'Simply Shameless', url: 'https://simplyshameless.com' },
+        ...(event.banner_url ?? event.image_url ? { image: event.banner_url ?? event.image_url } : {}),
+      },
+    })),
+  } : null
+
   return (
+    <>
+    {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />}
     <div style={{ minHeight: '100vh', background: '#1c1917', paddingTop: 64 }}>
       <div className="events-container" style={{ maxWidth: 1312, margin: '0 auto', padding: 'clamp(40px, 6vw, 60px) clamp(20px, 4vw, 56px)' }}>
         {/* Header */}
@@ -148,5 +174,6 @@ export default async function EventsPage() {
         }
       ` }} />
     </div>
+    </>
   )
 }

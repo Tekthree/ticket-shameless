@@ -50,15 +50,47 @@ export default async function Home() {
     // R2 not configured — renders placeholder gallery
   }
 
+  const orgJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Simply Shameless',
+    url: 'https://simplyshameless.com',
+    logo: 'https://simplyshameless.com/shameless-logo.png',
+    description: "Seattle's underground house and techno collective since 2003.",
+    foundingDate: '2003',
+    location: { '@type': 'Place', address: { '@type': 'PostalAddress', addressLocality: 'Seattle', addressRegion: 'WA', addressCountry: 'US' } },
+    sameAs: [
+      'https://www.instagram.com/simplyshameless',
+      'https://www.facebook.com/simplyshameless',
+      'https://soundcloud.com/simplyshameless',
+    ],
+  }
+
+  const siteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Simply Shameless',
+    url: 'https://simplyshameless.com',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: { '@type': 'EntryPoint', urlTemplate: 'https://simplyshameless.com/events?q={search_term_string}' },
+      'query-input': 'required name=search_term_string',
+    },
+  }
+
   return (
-    <div style={{ background: '#1c1917' }}>
-      <HomeClient />
-      <HeroSection nextEvent={events[0] ?? null} />
-      <Ticker />
-      <EventsSection events={events.slice(0, 6)} />
-      <AboutSection />
-      <GallerySection images={galleryImages} />
-      <NewsletterSection />
-    </div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }} />
+      <div style={{ background: '#1c1917' }}>
+        <HomeClient />
+        <HeroSection nextEvent={events[0] ?? null} />
+        <Ticker />
+        <EventsSection events={events.slice(0, 6)} />
+        <AboutSection />
+        <GallerySection images={galleryImages} />
+        <NewsletterSection />
+      </div>
+    </>
   )
 }

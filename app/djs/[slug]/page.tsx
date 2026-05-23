@@ -48,5 +48,32 @@ export default async function DJProfilePage({ params }: Props) {
     // no events or DB issue
   }
 
-  return <DJProfileClient dj={dj} events={events} />
+  const sameAs = [
+    dj.instagram_url,
+    dj.soundcloud_url,
+    dj.spotify_url,
+    dj.youtube_url,
+    dj.mixcloud_url,
+    dj.website_url,
+  ].filter(Boolean) as string[]
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'MusicGroup',
+    name: dj.name,
+    url: `https://simplyshameless.com/djs/${slug}`,
+    description: dj.bio ?? undefined,
+    ...(dj.profile_image_url ? { image: dj.profile_image_url } : {}),
+    ...(dj.location ? { location: { '@type': 'Place', name: dj.location } } : {}),
+    ...(dj.genres.length > 0 ? { genre: dj.genres } : {}),
+    ...(sameAs.length > 0 ? { sameAs } : {}),
+    member: { '@type': 'Organization', name: 'Simply Shameless', url: 'https://simplyshameless.com' },
+  }
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <DJProfileClient dj={dj} events={events} />
+    </>
+  )
 }
