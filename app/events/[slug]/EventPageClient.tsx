@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from 'react'
 import type { Event, LineupArtist } from '@/lib/db'
 import { useAuth, storeSession, type AuthUser } from '@/lib/auth'
 import EventPhotoStrip from './EventPhotoStrip'
+import EventCardStrip from './EventCardStrip'
 
 const ALLOWED_IMAGE_HOSTS = [
   'd85f1bb68ad7da530dccaef0eccc5e0b.r2.cloudflarestorage.com',
@@ -311,26 +312,6 @@ function LineupSection({ lineup }: { lineup: LineupArtist[] }) {
 
 // ── OTHER EVENT CARD ─────────────────────────────────────────────────────
 
-function OtherEventCard({ event }: { event: Event }) {
-  const [hover, setHover] = useState(false)
-  const dateStr = fmt(event.date, { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase()
-  return (
-    <Link href={`/events/${event.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
-      <div
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        style={{ background: C.darkCard, border: `1px solid ${hover ? C.red : C.darkBorder}`, borderRadius: 'var(--ss-radius)', padding: '18px', cursor: 'pointer', transition: 'border-color 0.15s', height: '100%', overflow: 'hidden' }}
-      >
-        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 18, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.red, marginBottom: 5 }}>{dateStr}</div>
-        <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 20, color: C.darkText, textTransform: 'uppercase', lineHeight: 1, marginBottom: 4 }}>{event.title}</div>
-        <div style={{ color: C.darkMuted, fontSize: 13, marginBottom: 14 }}>{event.venue} · Seattle</div>
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <span style={{ background: C.red, color: '#fff', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '8px 16px', borderRadius: 'var(--ss-radius-btn)' }}>Tickets</span>
-        </div>
-      </div>
-    </Link>
-  )
-}
 
 // ── RSVP ─────────────────────────────────────────────────────────────────────
 
@@ -1148,9 +1129,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
               <Divider />
               <div>
                 <SecLabel>More from Simply Shameless</SecLabel>
-                <div className="ep-more-grid">
-                  {otherEvents.map(e => <OtherEventCard key={e.id} event={e} />)}
-                </div>
+                <EventCardStrip events={otherEvents} />
               </div>
             </>
           )}
@@ -1218,7 +1197,6 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
         .ep-sidebar { display: block; }
         .ep-share-mobile { display: none; }
-        .ep-more-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ss-card-gap); }
 
         .ep-mobile-bar { display: none; }
 
@@ -1246,7 +1224,6 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
           .ep-sidebar { display: none; }
           .ep-share-mobile { display: block; margin-bottom: 8px; }
-          .ep-more-grid { grid-template-columns: 1fr; }
 
           .ep-mobile-bar {
             display: flex;
