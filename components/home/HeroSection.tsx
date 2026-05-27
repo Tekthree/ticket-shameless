@@ -40,6 +40,7 @@ export default function HeroSection({
         weekday: 'short',
         month: 'short',
         day: 'numeric',
+        timeZone: 'America/Los_Angeles',
       })
     : '';
 

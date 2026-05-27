@@ -30,7 +30,7 @@ function toSeattleISO(dateStr: string): string {
 }
 
 function fmt(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase()
+  return new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'America/Los_Angeles' }).toUpperCase()
 }
 function fmtTime(dateStr: string) {
   return new Date(dateStr).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/Los_Angeles' })

@@ -8,7 +8,7 @@ export const revalidate = 60
 const SITE_URL = 'https://simplyshameless.com'
 
 function fmtDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+  return new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Los_Angeles' })
 }
 
 // Convert a UTC date string to a Seattle-local ISO 8601 string with offset (e.g. 2025-06-14T21:00:00-07:00)

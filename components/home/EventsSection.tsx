@@ -6,12 +6,6 @@ import { useRef, useState, useEffect, useCallback } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import type { Event } from '@/lib/db'
 
-const PLACEHOLDER_EVENTS = [
-  { id: '1', title: 'Electric Soul', date: new Date('2025-05-09'), venue: 'Kremwerk, Seattle', tags: ['House', 'Techno'], status: 'tickets', slug: null },
-  { id: '2', title: 'Auden × Miky Montenegro', date: new Date('2025-05-17'), venue: 'Monkey Loft, Seattle', tags: ['House'], status: 'tickets', slug: null },
-  { id: '3', title: 'Desert Hearts × Shameless', date: new Date('2025-05-25'), venue: 'Monkey Loft, Seattle', tags: ['House', 'Techno', 'Deep'], status: 'soon', slug: null, hasImg: true },
-  { id: '4', title: 'Nonstop', date: new Date('2025-06-14'), venue: 'TBA, Seattle', tags: ['Techno'], status: 'soon', slug: null },
-]
 
 function useInView() {
   const ref = useRef<HTMLDivElement>(null)
@@ -28,18 +22,16 @@ function useInView() {
   return [ref, visible] as const
 }
 
-function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
+function EventCard({ event }: { event: Event }) {
   const [hover, setHover] = useState(false)
   const [btnHover, setBtnHover] = useState(false)
 
-  const dateStr = event.date instanceof Date
-    ? event.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase()
-    : String(event.date || '').toUpperCase()
+  const dateStr = new Date(event.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'America/Los_Angeles' }).toUpperCase()
 
   const tags = Array.isArray(event.tags) ? event.tags : []
   const imageUrl = event.banner_url || event.image_url || null
   const href = event.slug ? `/events/${event.slug}` : '/events'
-  const isSoon = event.status === 'soon'
+  const isSoon = false
 
   return (
     <div style={{ height: '100%' }}>
@@ -79,7 +71,7 @@ function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
           <div style={{ padding: '18px 20px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
             <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.10em', color: '#c9321a', textTransform: 'uppercase', marginBottom: 7 }}>{dateStr}</div>
             <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 22, color: '#f5f0eb', textTransform: 'uppercase', lineHeight: 1.05, marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{event.title}</div>
-            <div style={{ color: 'rgba(245,240,235,0.45)', fontSize: 14, marginBottom: 14 }}>{event.venue || event.location}</div>
+            <div style={{ color: 'rgba(245,240,235,0.45)', fontSize: 14, marginBottom: 14 }}>{event.venue}</div>
             <div style={{ display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap' }}>
               {tags.map((tag: string) => (
                 <span key={tag} style={{ background: 'rgba(245,240,235,0.08)', color: 'rgba(245,240,235,0.55)', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '4px 10px', alignSelf: 'flex-start', borderRadius: 999 }}>{tag}</span>
@@ -110,7 +102,8 @@ function EventCard({ event }: { event: Event | typeof PLACEHOLDER_EVENTS[0] }) {
 }
 
 export default function EventsSection({ events }: { events: Event[] }) {
-  const displayEvents = events.length > 0 ? events : PLACEHOLDER_EVENTS
+  if (events.length === 0) return null
+  const displayEvents = events
   const [headerRef, headerVisible] = useInView()
 
   const [emblaRef, emblaApi] = useEmblaCarousel({

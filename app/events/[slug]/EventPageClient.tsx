@@ -56,7 +56,7 @@ function useInView(threshold = 0.08) {
 }
 
 function fmt(dateStr: string, opts: Intl.DateTimeFormatOptions) {
-  return new Date(dateStr).toLocaleDateString('en-US', opts)
+  return new Date(dateStr).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', ...opts })
 }
 function fmtTime(dateStr: string) {
   return new Date(dateStr).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/Los_Angeles' })
@@ -876,7 +876,7 @@ function LikeButton({ event, token, onNeedAuth, initialCount, initialLiked }: {
 function SharePanel({ event, onClose }: { event: Event; onClose: () => void }) {
   const [copied, setCopied] = useState(false)
   const url = typeof window !== 'undefined' ? window.location.href : `https://simplyshameless.com/events/${event.slug}`
-  const shareText = `${event.title} — ${new Date(event.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}${event.venue ? ` at ${event.venue}` : ''}`
+  const shareText = `${event.title} — ${new Date(event.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'America/Los_Angeles' })}${event.venue ? ` at ${event.venue}` : ''}`
 
   function copyLink() {
     navigator.clipboard.writeText(url).then(() => {
