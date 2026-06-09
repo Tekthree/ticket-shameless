@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { neon } from '@neondatabase/serverless'
 
 const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://placeholder:placeholder@localhost:5432/placeholder'
@@ -116,12 +117,12 @@ export async function getPastEvents(limit = 50, offset = 0): Promise<Event[]> {
   }
 }
 
-export async function getEventBySlug(slug: string): Promise<Event | null> {
+export const getEventBySlug = cache(async (slug: string): Promise<Event | null> => {
   const rows = await sql`
     select * from events where slug = ${slug} and is_published = true limit 1
   `
   return (rows[0] as Event) ?? null
-}
+})
 
 export async function getEventLineup(eventId: string): Promise<LineupArtist[]> {
   const rows = await sql`
@@ -154,12 +155,12 @@ export async function getUpcomingCountsByDJ(): Promise<Record<string, number>> {
   return result
 }
 
-export async function getDJBySlug(slug: string): Promise<DJ | null> {
+export const getDJBySlug = cache(async (slug: string): Promise<DJ | null> => {
   const rows = await sql`
     select * from djs where slug = ${slug} limit 1
   `
   return (rows[0] as DJ) ?? null
-}
+})
 
 export async function getDJEvents(djId: string): Promise<Event[]> {
   const rows = await sql`

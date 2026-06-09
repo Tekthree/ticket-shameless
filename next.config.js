@@ -5,10 +5,29 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   compress: true,
+  swcMinify: true,
   poweredByHeader: false,
   reactStrictMode: true,
   experimental: {
     optimizePackageImports: ['lucide-react', 'date-fns', 'embla-carousel-react'],
+  },
+  async headers() {
+    return [
+      {
+        // Fonts, images, and video in /public never change without a rename —
+        // cache immutably for a year so repeat visits skip the network entirely.
+        source: '/:prefix(fonts|images|video)/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/:file(shameless-logo.png|brand-hero.jpg)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+    ]
   },
   images: {
     // WebP only — AVIF encoding is 10–20x slower on first hit and

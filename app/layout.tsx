@@ -11,12 +11,14 @@ const barlowCondensed = Barlow_Condensed({
   weight: ['400', '600', '700', '800', '900'],
   style: ['normal', 'italic'],
   variable: '--font-barlow',
+  display: 'swap',
 })
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
   weight: ['300', '400', '500'],
   variable: '--font-dm',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {

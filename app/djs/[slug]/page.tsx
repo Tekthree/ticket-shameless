@@ -1,10 +1,19 @@
-import { getDJBySlug, getDJEvents } from '@/lib/db'
+import { getDJBySlug, getDJEvents, getDJs } from '@/lib/db'
 import type { DJ, Event } from '@/lib/db'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import DJProfileClient from './DJProfileClient'
 
 export const revalidate = 300
+
+export async function generateStaticParams() {
+  try {
+    const djs = await getDJs()
+    return djs.map(dj => ({ slug: dj.slug }))
+  } catch {
+    return []
+  }
+}
 
 type Props = { params: Promise<{ slug: string }> }
 

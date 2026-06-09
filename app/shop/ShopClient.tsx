@@ -20,41 +20,41 @@ function getProductImageUrl(product: Product): string {
   if (product.image_url) return product.image_url
   const name = product.name.toLowerCase()
   if (name.includes('23 year') || name.includes('23y') || name.includes('23-year')) {
-    if (name.includes('tee') || name.includes('t-shirt')) return '/images/merch/shameless_23y_tee.png'
-    if (name.includes('jacket') || name.includes('coach')) return '/images/merch/shameless_23y_jacket.png'
-    if (name.includes('cap') || name.includes('hat')) return '/images/merch/shameless_23y_cap.png'
-    if (name.includes('tote') || name.includes('bag')) return '/images/merch/shameless_23y_tote.png'
+    if (name.includes('tee') || name.includes('t-shirt')) return '/images/merch/shameless_23y_tee.jpg'
+    if (name.includes('jacket') || name.includes('coach')) return '/images/merch/shameless_23y_jacket.jpg'
+    if (name.includes('cap') || name.includes('hat')) return '/images/merch/shameless_23y_cap.jpg'
+    if (name.includes('tote') || name.includes('bag')) return '/images/merch/shameless_23y_tote.jpg'
   }
   if (name.includes('20 year') || name.includes('20y') || name.includes('anniversary')) {
-    if (name.includes('tee') || name.includes('t-shirt')) return '/images/merch/shameless_20y_tee.png'
-    if (name.includes('jacket') || name.includes('coach')) return '/images/merch/shameless_20y_jacket.png'
+    if (name.includes('tee') || name.includes('t-shirt')) return '/images/merch/shameless_20y_tee.jpg'
+    if (name.includes('jacket') || name.includes('coach')) return '/images/merch/shameless_20y_jacket.jpg'
   }
-  if (name.includes('deck') && (name.includes('cap') || name.includes('hat') || name.includes('snapback'))) return '/images/merch/deckd_out_snapback.png'
-  if (name.includes('breakfast') || name.includes('tbc')) return '/images/merch/tbc_retro_tee.png'
-  if (name.includes('white tee') || name.includes('tee — white')) return '/images/merch/shameless_white_tee.png'
-  if (name.includes('minimalist') && name.includes('hoodie')) return '/images/merch/shameless_min_hoodie.png'
-  if (name.includes('crop') || name.includes('cropped')) return '/images/merch/shameless_crop_hoodie.png'
-  if (name.includes('hoodie')) return '/images/merch/shameless_hoodie.png'
-  if (name.includes('cap') || name.includes('hat')) return '/images/merch/shameless_cap.png'
-  if (name.includes('slipmat')) return '/images/merch/shameless_slipmats.png'
+  if (name.includes('deck') && (name.includes('cap') || name.includes('hat') || name.includes('snapback'))) return '/images/merch/deckd_out_snapback.jpg'
+  if (name.includes('breakfast') || name.includes('tbc')) return '/images/merch/tbc_retro_tee.jpg'
+  if (name.includes('white tee') || name.includes('tee — white')) return '/images/merch/shameless_white_tee.jpg'
+  if (name.includes('minimalist') && name.includes('hoodie')) return '/images/merch/shameless_min_hoodie.jpg'
+  if (name.includes('crop') || name.includes('cropped')) return '/images/merch/shameless_crop_hoodie.jpg'
+  if (name.includes('hoodie')) return '/images/merch/shameless_hoodie.jpg'
+  if (name.includes('cap') || name.includes('hat')) return '/images/merch/shameless_cap.jpg'
+  if (name.includes('slipmat')) return '/images/merch/shameless_slipmats.jpg'
   return ''
 }
 
 const PLACEHOLDER_PRODUCTS: Product[] = [
-  { id: '1', name: 'Classic Logo Tee — White', description: '100% heavyweight cotton streetwear tee. Screen printed matte black cutout logo.', price: 35, image_url: '/images/merch/shameless_white_tee.png', category: 'Tops', sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], stock: 50, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '2', name: 'Shameless Hoodie — Charcoal', description: 'Premium heavyweight charcoal pullover hoodie featuring red and white scratched logo embroidery.', price: 75, image_url: '/images/merch/shameless_hoodie.png', category: 'Tops', sizes: ['S', 'M', 'L', 'XL', '2XL'], stock: 30, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '3', name: 'Minimalist Logo Hoodie — Black', description: 'Matte black premium pullover hoodie with a clean white circle logo embroidered on the left chest.', price: 75, image_url: '/images/merch/shameless_min_hoodie.png', category: 'Tops', sizes: ['S', 'M', 'L', 'XL', '2XL'], stock: 40, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '4', name: 'Raw Hem Crop Hoodie', description: 'Vintage-washed charcoal grey cropped women\'s hoodie with raw hem. Features scratched red and white Shameless logo.', price: 65, image_url: '/images/merch/shameless_crop_hoodie.png', category: 'Tops', sizes: ['S', 'M', 'L', 'XL'], stock: 30, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '5', name: 'Distressed Logo Cap', description: 'Washed black unstructured 6-panel cap with adjustable metal clasp. Features embroidered off-white circular logo.', price: 28, image_url: '/images/merch/shameless_cap.png', category: 'Accessories', sizes: ['One Size'], stock: 45, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '6', name: 'DJ Turntable Slipmats (Pair)', description: 'Pair of premium 12-inch black felt slipmats with large off-white circular logo print.', price: 25, image_url: '/images/merch/shameless_slipmats.png', category: 'Accessories', sizes: ['One Size'], stock: 50, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '7', name: 'Deck\'d Out Snapback Hat', description: 'Structured forest green snapback cap featuring sharp, high-res Deck\'d Out sunset logo front embroidery.', price: 32, image_url: '/images/merch/deckd_out_snapback.png', category: 'Accessories', sizes: ['One Size'], stock: 40, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '8', name: 'The Breakfast Club Retro Tee', description: 'Heavyweight vintage washed black cotton tee with high-contrast Sunrise series Breakfast Club screen-print.', price: 38, image_url: '/images/merch/tbc_retro_tee.png', category: 'Tops', sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], stock: 45, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '9', name: '20 Year Anniversary Vintage Tee', description: 'Premium washed charcoal cotton tee featuring the official Shameless 20 Year Anniversary gold and white crest.', price: 40, image_url: '/images/merch/shameless_20y_tee.png', category: 'Tops', sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], stock: 40, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '10', name: '20 Year Anniversary Coach Jacket', description: 'Limited-edition matte black nylon coach jacket with the official 20 Year Anniversary gold crest back print.', price: 95, image_url: '/images/merch/shameless_20y_jacket.png', category: 'Tops', sizes: ['S', 'M', 'L', 'XL', '2XL'], stock: 20, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '11', name: '23 Year Anniversary Vintage Tee', description: 'Premium washed charcoal cotton tee featuring the official Shameless 23 Year Anniversary white logo.', price: 40, image_url: '/images/merch/shameless_23y_tee.png', category: 'Tops', sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], stock: 40, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '12', name: '23 Year Anniversary Coach Jacket', description: 'Limited-edition matte black nylon coach jacket with the official 23 Year Anniversary bold white crest back print.', price: 95, image_url: '/images/merch/shameless_23y_jacket.png', category: 'Tops', sizes: ['S', 'M', 'L', 'XL', '2XL'], stock: 20, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '13', name: '23 Year Anniversary Dad Cap', description: 'Washed black unstructured 6-panel dad cap featuring sharp, high-res 23 Year Anniversary logo front embroidery.', price: 30, image_url: '/images/merch/shameless_23y_cap.png', category: 'Accessories', sizes: ['One Size'], stock: 35, is_published: true, stripe_price_id: null, created_at: '' },
-  { id: '14', name: '23 Year Anniversary Tote Bag', description: 'Heavy natural cotton canvas tote bag featuring the official 23 Year Anniversary logo print.', price: 25, image_url: '/images/merch/shameless_23y_tote.png', category: 'Accessories', sizes: ['One Size'], stock: 45, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '1', name: 'Classic Logo Tee — White', description: '100% heavyweight cotton streetwear tee. Screen printed matte black cutout logo.', price: 35, image_url: '/images/merch/shameless_white_tee.jpg', category: 'Tops', sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], stock: 50, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '2', name: 'Shameless Hoodie — Charcoal', description: 'Premium heavyweight charcoal pullover hoodie featuring red and white scratched logo embroidery.', price: 75, image_url: '/images/merch/shameless_hoodie.jpg', category: 'Tops', sizes: ['S', 'M', 'L', 'XL', '2XL'], stock: 30, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '3', name: 'Minimalist Logo Hoodie — Black', description: 'Matte black premium pullover hoodie with a clean white circle logo embroidered on the left chest.', price: 75, image_url: '/images/merch/shameless_min_hoodie.jpg', category: 'Tops', sizes: ['S', 'M', 'L', 'XL', '2XL'], stock: 40, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '4', name: 'Raw Hem Crop Hoodie', description: 'Vintage-washed charcoal grey cropped women\'s hoodie with raw hem. Features scratched red and white Shameless logo.', price: 65, image_url: '/images/merch/shameless_crop_hoodie.jpg', category: 'Tops', sizes: ['S', 'M', 'L', 'XL'], stock: 30, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '5', name: 'Distressed Logo Cap', description: 'Washed black unstructured 6-panel cap with adjustable metal clasp. Features embroidered off-white circular logo.', price: 28, image_url: '/images/merch/shameless_cap.jpg', category: 'Accessories', sizes: ['One Size'], stock: 45, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '6', name: 'DJ Turntable Slipmats (Pair)', description: 'Pair of premium 12-inch black felt slipmats with large off-white circular logo print.', price: 25, image_url: '/images/merch/shameless_slipmats.jpg', category: 'Accessories', sizes: ['One Size'], stock: 50, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '7', name: 'Deck\'d Out Snapback Hat', description: 'Structured forest green snapback cap featuring sharp, high-res Deck\'d Out sunset logo front embroidery.', price: 32, image_url: '/images/merch/deckd_out_snapback.jpg', category: 'Accessories', sizes: ['One Size'], stock: 40, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '8', name: 'The Breakfast Club Retro Tee', description: 'Heavyweight vintage washed black cotton tee with high-contrast Sunrise series Breakfast Club screen-print.', price: 38, image_url: '/images/merch/tbc_retro_tee.jpg', category: 'Tops', sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], stock: 45, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '9', name: '20 Year Anniversary Vintage Tee', description: 'Premium washed charcoal cotton tee featuring the official Shameless 20 Year Anniversary gold and white crest.', price: 40, image_url: '/images/merch/shameless_20y_tee.jpg', category: 'Tops', sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], stock: 40, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '10', name: '20 Year Anniversary Coach Jacket', description: 'Limited-edition matte black nylon coach jacket with the official 20 Year Anniversary gold crest back print.', price: 95, image_url: '/images/merch/shameless_20y_jacket.jpg', category: 'Tops', sizes: ['S', 'M', 'L', 'XL', '2XL'], stock: 20, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '11', name: '23 Year Anniversary Vintage Tee', description: 'Premium washed charcoal cotton tee featuring the official Shameless 23 Year Anniversary white logo.', price: 40, image_url: '/images/merch/shameless_23y_tee.jpg', category: 'Tops', sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], stock: 40, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '12', name: '23 Year Anniversary Coach Jacket', description: 'Limited-edition matte black nylon coach jacket with the official 23 Year Anniversary bold white crest back print.', price: 95, image_url: '/images/merch/shameless_23y_jacket.jpg', category: 'Tops', sizes: ['S', 'M', 'L', 'XL', '2XL'], stock: 20, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '13', name: '23 Year Anniversary Dad Cap', description: 'Washed black unstructured 6-panel dad cap featuring sharp, high-res 23 Year Anniversary logo front embroidery.', price: 30, image_url: '/images/merch/shameless_23y_cap.jpg', category: 'Accessories', sizes: ['One Size'], stock: 35, is_published: true, stripe_price_id: null, created_at: '' },
+  { id: '14', name: '23 Year Anniversary Tote Bag', description: 'Heavy natural cotton canvas tote bag featuring the official 23 Year Anniversary logo print.', price: 25, image_url: '/images/merch/shameless_23y_tote.jpg', category: 'Accessories', sizes: ['One Size'], stock: 45, is_published: true, stripe_price_id: null, created_at: '' },
 ]
 
 type CartItem = Product & { selectedSize: string; qty: number }

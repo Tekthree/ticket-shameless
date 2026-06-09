@@ -5,6 +5,15 @@ import EventPageClient from './EventPageClient'
 
 export const revalidate = 60
 
+export async function generateStaticParams() {
+  try {
+    const events = await getEvents(50)
+    return events.map(e => ({ slug: e.slug }))
+  } catch {
+    return []
+  }
+}
+
 const SITE_URL = 'https://simplyshameless.com'
 
 function fmtDate(dateStr: string) {

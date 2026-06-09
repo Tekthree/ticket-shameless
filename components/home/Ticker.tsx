@@ -1,5 +1,3 @@
-'use client'
-
 const items = ['Simply Shameless', 'Seattle', 'House Music', 'Techno', 'Community', 'Est. 2003', 'No Regrets']
 
 export default function Ticker() {

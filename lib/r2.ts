@@ -46,7 +46,7 @@ export function keyFromUrl(url: string): string {
   return url.startsWith(base) ? url.slice(base.length) : url
 }
 
-export async function getGalleryImages(prefix = '', limit = 20): Promise<string[]> {
+export async function getGalleryImages(prefix = '', limit = 1000): Promise<string[]> {
   try {
     const res = await r2.send(new ListObjectsV2Command({
       Bucket: R2_BUCKET,

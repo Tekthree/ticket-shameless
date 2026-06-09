@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import GalleryClient from './GalleryClient'
+import { ANNIV_URLS, PICFLOW_URLS, TBC2024_URLS, REVERIE_URLS } from './gallery-data'
 
 export const metadata: Metadata = {
   title: 'Gallery | Simply Shameless',
@@ -22,6 +23,53 @@ export const metadata: Metadata = {
   },
 }
 
+const ASPECTS = [1, 1.25, 0.8, 1.1, 0.9, 1.2, 1, 0.85, 1.15, 1, 1.3, 0.8, 1, 1.1, 0.9, 1, 1.2, 0.85, 1.1, 1]
+const MANNY = { name: 'Manny Dan', url: 'https://www.instagram.com/manny_dan_media/' }
+
+function makePhotos(urls: string[], prefix: string, label: string) {
+  return urls.map((src, i) => ({
+    id: `${prefix}-${i}`,
+    src,
+    alt: `${label} — photo ${i + 1}`,
+    aspect: ASPECTS[i % ASPECTS.length],
+  }))
+}
+
 export default function GalleryPage() {
-  return <GalleryClient />
+  const events = [
+    {
+      id: 'reverie-society-apr-26',
+      title: 'Reverie Society',
+      date: 'April 12, 2026',
+      venue: 'Monkey Loft, Seattle',
+      photographer: MANNY,
+      photos: makePhotos(REVERIE_URLS, 'reverie', 'Reverie Society'),
+    },
+    {
+      id: 'club-yes-anniversary',
+      title: 'Club Yes x Shameless',
+      date: '23rd Anniversary',
+      venue: 'Monkey Loft, Seattle',
+      photographer: MANNY,
+      photos: makePhotos(ANNIV_URLS, 'anniv', 'Club Yes & Shameless 23rd Anniversary'),
+    },
+    {
+      id: 'breakfast-club-dec',
+      title: 'The Breakfast Club',
+      date: '2025',
+      venue: 'Monkey Loft, Seattle',
+      photographer: MANNY,
+      photos: makePhotos(PICFLOW_URLS, 'picflow', 'The Breakfast Club'),
+    },
+    {
+      id: 'breakfast-club-2024',
+      title: 'The Breakfast Club',
+      date: '2024',
+      venue: 'Monkey Loft, Seattle',
+      photographer: MANNY,
+      photos: makePhotos(TBC2024_URLS, 'tbc24', 'The Breakfast Club 2024'),
+    },
+  ]
+
+  return <GalleryClient events={events} />
 }

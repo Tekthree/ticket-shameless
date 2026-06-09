@@ -24,7 +24,6 @@ function useInView() {
 
 function EventCard({ event }: { event: Event }) {
   const [hover, setHover] = useState(false)
-  const [btnHover, setBtnHover] = useState(false)
 
   const dateStr = new Date(event.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'America/Los_Angeles' }).toUpperCase()
 
@@ -76,8 +75,6 @@ function EventCard({ event }: { event: Event }) {
               ))}
             </div>
             <button
-              onMouseEnter={() => setBtnHover(true)}
-              onMouseLeave={() => setBtnHover(false)}
               style={{
                 marginTop: 'auto',
                 width: '100%',
