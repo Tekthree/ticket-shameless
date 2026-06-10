@@ -58,6 +58,7 @@ export type LineupArtist = {
   dj_slug: string | null
   dj_profile_image_url: string | null
   is_headliner: boolean
+  is_resident: boolean
 }
 
 // ── DJS ──────────────────────────────────────────────────────────────────────
@@ -126,7 +127,7 @@ export const getEventBySlug = cache(async (slug: string): Promise<Event | null> 
 
 export async function getEventLineup(eventId: string): Promise<LineupArtist[]> {
   const rows = await sql`
-    select l.*, d.slug as dj_slug, d.name as dj_name, d.profile_image_url as dj_profile_image_url
+    select l.*, d.slug as dj_slug, d.name as dj_name, d.profile_image_url as dj_profile_image_url, coalesce(d.is_resident, false) as is_resident
     from lineup l
     left join djs d on d.id = l.dj_id
     where l.event_id = ${eventId}

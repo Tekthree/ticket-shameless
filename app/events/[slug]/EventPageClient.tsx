@@ -295,6 +295,10 @@ function LineupArtistRow({ artist }: { artist: LineupArtist }) {
     </div>
   )
 
+  const isGenericResident = /shameless resident/i.test(artist.dj_name ?? artist.name)
+  if (isGenericResident) {
+    return <Link href="/djs" style={{ textDecoration: 'none', display: 'block' }}>{inner}</Link>
+  }
   if (artist.dj_slug) {
     return <Link href={`/djs/${artist.dj_slug}`} style={{ textDecoration: 'none', display: 'block' }}>{inner}</Link>
   }
