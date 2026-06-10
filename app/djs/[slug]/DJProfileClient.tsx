@@ -129,6 +129,10 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
       label: 'Mixcloud', url: dj.mixcloud_url,
       icon: <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 11C2 9.34 3.34 8 5 8C5 5.79 6.79 4 9 4C11.21 4 13 5.79 13 8H13.5C14.33 8 15 8.67 15 9.5S14.33 11 13.5 11H5C3.34 11 2 11 2 11Z" stroke="currentColor" strokeWidth="1.3"/></svg>,
     },
+    dj.ra_url && {
+      label: 'RA', url: dj.ra_url,
+      icon: <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 13V3h5.5c2 0 3.5 1.5 3.5 3s-1.5 3-3.5 3H2M9 9l3 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+    },
     dj.website_url && {
       label: 'Website', url: dj.website_url,
       icon: <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.3"/><path d="M8 1.5C8 1.5 6 4 6 8C6 12 8 14.5 8 14.5M8 1.5C8 1.5 10 4 10 8C10 12 8 14.5 8 14.5M1.5 8H14.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>,

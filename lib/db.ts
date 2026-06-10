@@ -79,6 +79,7 @@ export type DJ = {
   youtube_url: string | null
   mixcloud_url: string | null
   website_url: string | null
+  ra_url: string | null
   seo_description: string | null
   is_published: boolean
   is_resident: boolean
