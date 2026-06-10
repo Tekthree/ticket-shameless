@@ -33,56 +33,37 @@ await sql`
 `
 console.log('✓ products table ready')
 
+// Clear old products to avoid duplicates and show only the new merch line
+await sql`delete from products`
+console.log('✓ products table cleared')
+
 const items = [
   {
-    name: 'Shameless Tee — Black',
-    description: 'Classic fit, heavyweight cotton. Screen printed logo on chest.',
-    price: 35,
-    category: 'apparel',
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    stock: 50,
-  },
-  {
-    name: 'Shameless Tee — White',
-    description: 'Classic fit, heavyweight cotton. Screen printed logo on chest.',
-    price: 35,
-    category: 'apparel',
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    stock: 50,
-  },
-  {
-    name: 'Shameless Hoodie',
-    description: 'Pullover hoodie, 80% cotton 20% poly. Embroidered logo on chest.',
-    price: 75,
-    category: 'apparel',
-    sizes: ['S', 'M', 'L', 'XL'],
-    stock: 30,
-  },
-  {
-    name: 'Dad Hat — Washed Black',
-    description: 'Unstructured 6-panel cap with adjustable strap. Embroidered logo.',
-    price: 32,
-    category: 'accessories',
+    name: 'Shameless Visor Pendant Chain',
+    description: 'Custom brushed steel circular pendant engraved with the official Shameless DJ visor design. Attached to a premium silver barrel ball chain. Limited run.',
+    price: 45.00,
+    image_url: '/images/merch/shameless_chain.png',
+    category: 'Accessories',
     sizes: ['One Size'],
-    stock: 40,
+    stock: 100,
   },
   {
-    name: 'Sticker Pack (5)',
-    description: 'Five die-cut vinyl stickers. UV-resistant, waterproof.',
-    price: 10,
-    category: 'accessories',
-    sizes: null,
-    stock: 200,
+    name: 'Shameless Visor Tee - Black',
+    description: 'Heavyweight 100% cotton streetwear t-shirt in washed black. Features a screen-printed circular DJ visor graphic on the chest. Classic boxy fit.',
+    price: 35.00,
+    image_url: '/images/merch/shameless_black_tee.png',
+    category: 'Tops',
+    sizes: ['S', 'M', 'L', 'XL', '2XL'],
+    stock: 75,
   },
 ]
 
 for (const item of items) {
   await sql`
-    insert into products (name, description, price, category, sizes, stock)
-    values (${item.name}, ${item.description}, ${item.price}, ${item.category}, ${item.sizes}, ${item.stock})
-    on conflict do nothing
+    insert into products (name, description, price, image_url, category, sizes, stock)
+    values (${item.name}, ${item.description}, ${item.price}, ${item.image_url}, ${item.category}, ${item.sizes}, ${item.stock})
   `
-  console.log(`✓ ${item.name}`)
+  console.log(`✓ Seeded product: ${item.name}`)
 }
 
 console.log('\nDone. Products seeded.')
