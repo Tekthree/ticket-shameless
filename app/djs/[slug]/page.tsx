@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import DJProfileClient from './DJProfileClient'
 
-export const revalidate = 300
+export const revalidate = 60
 
 export async function generateStaticParams() {
   try {
