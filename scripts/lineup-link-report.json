@@ -1,0 +1,809 @@
+{
+  "high": [
+    {
+      "lineup_id": "626f3c5f-c411-476c-bc39-03f2f38cbd5e",
+      "lineup_name": "ALFONSO TAN",
+      "event": "Deck'd Out #2 Pride Edition w/ Open House Collective & IDLE",
+      "matched_name": "Alfonso Tan",
+      "matched_id": "59d56a8e-9607-4966-bd78-216c6ee8f723",
+      "matched_slug": "alfonso-tan",
+      "score": 1
+    },
+    {
+      "lineup_id": "1a981cc0-1ce4-4c32-8649-48ba1c71e83c",
+      "lineup_name": "B.LakePeterson",
+      "event": "The Breakfast Club 2026",
+      "matched_name": "B.LakePeterson",
+      "matched_id": "310476cb-6f33-4790-b08c-8e84f808cd1f",
+      "matched_slug": "b-lake-peterson",
+      "score": 1
+    },
+    {
+      "lineup_id": "042126ee-dc93-4c96-8fb5-4aab5b0bd5ff",
+      "lineup_name": "Flammable Records crew",
+      "event": "Deck'd Out #8 - Flammable Showcase",
+      "matched_name": "Flamm",
+      "matched_id": "3cceeb33-c9cc-445d-a527-548dc0589271",
+      "matched_slug": "flamm",
+      "score": 0.85
+    },
+    {
+      "lineup_id": "56527f59-75bc-4d40-accb-a68059f3fc6c",
+      "lineup_name": "HAUS|GASM",
+      "event": "Deck'd Out #2 Pride Edition w/ Open House Collective & IDLE",
+      "matched_name": "HAÜS/GASM",
+      "matched_id": "1a07748d-7d71-4266-a788-d349da93b8b2",
+      "matched_slug": "haus-gasm",
+      "score": 1
+    },
+    {
+      "lineup_id": "6b33aa62-1777-4f15-85c2-ce2d63f3cc61",
+      "lineup_name": "JAOGAZ",
+      "event": "Deck'd Out #3 OFF99 & Shameless Present DJ Said (SF) & Costa Showcase",
+      "matched_name": "Jaogaz",
+      "matched_id": "ea6f5bee-4b9a-4a05-88a7-961cf5e40007",
+      "matched_slug": "jaogaz",
+      "score": 1
+    },
+    {
+      "lineup_id": "dbdd3520-b682-4c2e-99e3-1187f19f3b45",
+      "lineup_name": "Jaogaz",
+      "event": "Deck'd Out #10 LNM & Shameless Pres. Cami Jones (Ibiza) + 11 Year Anniv!",
+      "matched_name": "Jaogaz",
+      "matched_id": "ea6f5bee-4b9a-4a05-88a7-961cf5e40007",
+      "matched_slug": "jaogaz",
+      "score": 1
+    },
+    {
+      "lineup_id": "7bd4f5ce-46ae-4f2b-975c-e4a3bb4ca8f5",
+      "lineup_name": "Kadeejah Streets",
+      "event": "Deck'd Out #8",
+      "matched_name": "Kadeejah Streets",
+      "matched_id": "a6c14b98-53df-4d4a-a443-b23d29fcd2f0",
+      "matched_slug": "kadeejah-streets",
+      "score": 1
+    },
+    {
+      "lineup_id": "21191f08-8ab7-4833-8110-45258d43e540",
+      "lineup_name": "Kadeejah Streets",
+      "event": "The Breakfast Club - New Years DAY 2025",
+      "matched_name": "Kadeejah Streets",
+      "matched_id": "a6c14b98-53df-4d4a-a443-b23d29fcd2f0",
+      "matched_slug": "kadeejah-streets",
+      "score": 1
+    },
+    {
+      "lineup_id": "27f10997-976f-4e05-bef8-76d23ed7d2cd",
+      "lineup_name": "Leah York",
+      "event": "Deck'd Out #10 LNM & Shameless Pres. Cami Jones (Ibiza) + 11 Year Anniv!",
+      "matched_name": "Leah York",
+      "matched_id": "c50b9d04-cf0c-43df-87e1-59f1f88ffd8c",
+      "matched_slug": "leah-york",
+      "score": 1
+    },
+    {
+      "lineup_id": "045b8249-f46a-479e-b759-d37339ffb582",
+      "lineup_name": "Papito Peace",
+      "event": "The Breakfast Club 2026",
+      "matched_name": "Papito Peace",
+      "matched_id": "0787c28d-bc45-4c44-8697-3de99421bb66",
+      "matched_slug": "papito-peace",
+      "score": 1
+    },
+    {
+      "lineup_id": "7d324eb6-effc-4cca-8a6a-1ae131a1fc7a",
+      "lineup_name": "Pezzner",
+      "event": "Deck'd Out #13 Season Finale with Saqib (NYC) & Pezzner b2b Open to Close",
+      "matched_name": "Dave Pezzner",
+      "matched_id": "66a160e2-6725-4846-9c01-89bb4261a36a",
+      "matched_slug": "dave-pezzner",
+      "score": 1
+    },
+    {
+      "lineup_id": "3cc1e0e1-9644-4883-90c5-2a5465694a45",
+      "lineup_name": "Pezzner",
+      "event": "Deck'd Out #12 - Season Closing Party",
+      "matched_name": "Dave Pezzner",
+      "matched_id": "66a160e2-6725-4846-9c01-89bb4261a36a",
+      "matched_slug": "dave-pezzner",
+      "score": 1
+    },
+    {
+      "lineup_id": "cfbd3ea6-bf0d-4d6e-bedf-d76685719ca3",
+      "lineup_name": "Recess",
+      "event": "Deck'd Out #5 Shameless Presents Jason Peters (SF) & Best Butt Camp",
+      "matched_name": "DJ Recess",
+      "matched_id": "dcf608e6-c1e6-4764-8624-7767aba6e9cf",
+      "matched_slug": "dj-recess",
+      "score": 1
+    },
+    {
+      "lineup_id": "39c24902-633b-42a7-9c00-0e191f0ccb53",
+      "lineup_name": "Repoman",
+      "event": "The Breakfast Club - New Years DAY 2025",
+      "matched_name": "Repoman",
+      "matched_id": "32b46d9d-414a-4ff1-9c58-5ec4062258af",
+      "matched_slug": "repoman",
+      "score": 1
+    },
+    {
+      "lineup_id": "b13e8439-75c2-4c24-b6d6-788ed7b7d742",
+      "lineup_name": "Rob",
+      "event": "The Breakfast Club 2026",
+      "matched_name": "Rob Noble",
+      "matched_id": "af013714-da27-454b-b0a5-fad43577bc9a",
+      "matched_slug": "rob-noble",
+      "score": 1
+    },
+    {
+      "lineup_id": "08f7535e-e77e-4ef0-954d-0fd691ebe2e5",
+      "lineup_name": "Rob Green",
+      "event": "The Breakfast Club - New Years DAY 2025",
+      "matched_name": "Rob Noble",
+      "matched_id": "af013714-da27-454b-b0a5-fad43577bc9a",
+      "matched_slug": "rob-noble",
+      "score": 0.85
+    },
+    {
+      "lineup_id": "986bc690-ca5b-4657-a5cf-b244a02a02c4",
+      "lineup_name": "SUPREMEN LA ROCK",
+      "event": "Deck'd Out #12 Shameless Presents KEXP Showcase + more",
+      "matched_name": "Supreme La Rock",
+      "matched_id": "8c60ed55-ed34-47f6-99a9-d7a219366898",
+      "matched_slug": "supreme-la-rock",
+      "score": 0.93
+    },
+    {
+      "lineup_id": "a280808b-fa69-42c4-a9b2-8770b270a5ce",
+      "lineup_name": "Saqib",
+      "event": "Deck'd Out #13 Season Finale with Saqib (NYC) & Pezzner b2b Open to Close",
+      "matched_name": "Saqib",
+      "matched_id": "7b24abf0-70b5-4b87-a128-d89df79d1179",
+      "matched_slug": "saqib",
+      "score": 1
+    },
+    {
+      "lineup_id": "1c5a8a41-f9fa-4b31-835b-5f5b242ccb7c",
+      "lineup_name": "Sho Nuph",
+      "event": "The Breakfast Club 2026",
+      "matched_name": "Sho Nuph",
+      "matched_id": "c8b2c9ac-8fe0-4a38-a7bc-6e3c962ec9e9",
+      "matched_slug": "sho-nuph",
+      "score": 1
+    },
+    {
+      "lineup_id": "2736ce0e-c9f2-4c1d-8b35-cc37b87f8f74",
+      "lineup_name": "Short Stack",
+      "event": "Riz Rollins' 70 ish Birthday Bash",
+      "matched_name": "Shortstack",
+      "matched_id": "d474572a-87a4-437e-8090-b7365286be6e",
+      "matched_slug": "shortstack",
+      "score": 1
+    },
+    {
+      "lineup_id": "22da1a09-ba76-4f8f-9d2e-6996f7fb765f",
+      "lineup_name": "Short Stack",
+      "event": "The Breakfast Club - New Years DAY 2025",
+      "matched_name": "Shortstack",
+      "matched_id": "d474572a-87a4-437e-8090-b7365286be6e",
+      "matched_slug": "shortstack",
+      "score": 1
+    },
+    {
+      "lineup_id": "e7b2d6e9-3d39-487d-924c-ccec09db6c88",
+      "lineup_name": "VETA VITALI",
+      "event": "Deck'd Out #3 OFF99 & Shameless Present DJ Said (SF) & Costa Showcase",
+      "matched_name": "Veta Vitali",
+      "matched_id": "fd4e5657-7131-48b3-a169-54ad337f2bc7",
+      "matched_slug": "veta-vitali",
+      "score": 1
+    },
+    {
+      "lineup_id": "926e2c9f-5919-495c-b5ea-0e4e8c0d8b66",
+      "lineup_name": "Veta Vitali",
+      "event": "The Breakfast Club 2026",
+      "matched_name": "Veta Vitali",
+      "matched_id": "fd4e5657-7131-48b3-a169-54ad337f2bc7",
+      "matched_slug": "veta-vitali",
+      "score": 1
+    },
+    {
+      "lineup_id": "a5f36060-3194-4353-a8dd-6f5483537c52",
+      "lineup_name": "Waxwitch",
+      "event": "Deck'd Out #8 Innerflight & Shameless Feat. Garth (Wicked) + Nightmoves",
+      "matched_name": "Wax Witch",
+      "matched_id": "fc591945-1dc1-44d6-a92a-b0b6e3f165ea",
+      "matched_slug": "wax-witch",
+      "score": 1
+    },
+    {
+      "lineup_id": "ee05313d-80a2-4c2a-8eb7-a22c4820253b",
+      "lineup_name": "Wesley Holmes",
+      "event": "Deck'd Out #9",
+      "matched_name": "Wesley Holmes",
+      "matched_id": "6ca2e776-9483-46c4-aeb6-446052c173ae",
+      "matched_slug": "wesley-holmes",
+      "score": 1
+    }
+  ],
+  "review": [
+    {
+      "lineup_id": "4773c5fd-28e5-4825-941d-5792123b3b50",
+      "lineup_name": "ALESSANDRO CARRABBA",
+      "event": "Deck'd Out #3 OFF99 & Shameless Present DJ Said (SF) & Costa Showcase",
+      "matched_name": "Alex Carrabba",
+      "matched_id": "0e19ccba-279d-4abb-a6c1-568c626844e7",
+      "matched_slug": "alex-carrabba",
+      "score": 0.61
+    },
+    {
+      "lineup_id": "e7f12d3e-87b8-47e1-943e-e7924c568a6c",
+      "lineup_name": "Farin",
+      "event": "Deck'd Out #5 Shameless Presents Jason Peters (SF) & Best Butt Camp",
+      "matched_name": "Marino",
+      "matched_id": "85447fc0-f3a0-4a26-8e20-104bf6b14d91",
+      "matched_slug": "marino",
+      "score": 0.67
+    },
+    {
+      "lineup_id": "98c04b08-fc4d-4989-afc4-fca65aa47061",
+      "lineup_name": "ILLSON",
+      "event": "Deck'd Out #12 Shameless Presents KEXP Showcase + more",
+      "matched_name": "Emily Song",
+      "matched_id": "9a9639f2-7c5d-4454-82c8-9c48ad925df4",
+      "matched_slug": "emily-song",
+      "score": 0.56
+    },
+    {
+      "lineup_id": "b63adeb1-57ab-40e1-a01c-54e7c96836b4",
+      "lineup_name": "Koister",
+      "event": "Deck'd Out #10 LNM & Shameless Pres. Cami Jones (Ibiza) + 11 Year Anniv!",
+      "matched_name": "Konifer",
+      "matched_id": "e7d2cb60-ca9e-4661-9a6d-54a3143a9b17",
+      "matched_slug": "konifer",
+      "score": 0.57
+    },
+    {
+      "lineup_id": "0ee7e813-7db5-49c6-a0cf-6bdde3a93ecd",
+      "lineup_name": "Koister",
+      "event": "Deck'd Out #10 LNM 10 Year Anniv w/ Jesse Perez (Miami)",
+      "matched_name": "Konifer",
+      "matched_id": "e7d2cb60-ca9e-4661-9a6d-54a3143a9b17",
+      "matched_slug": "konifer",
+      "score": 0.57
+    },
+    {
+      "lineup_id": "896ece1c-7126-4665-aaf7-a25c6c50f55d",
+      "lineup_name": "Left Cheek",
+      "event": "Deck'd Out #5 Shameless Presents Jason Peters (SF) & Best Butt Camp",
+      "matched_name": "Right Cheek",
+      "matched_id": "f35320dc-31d0-430f-8d63-c1fe2ba58e34",
+      "matched_slug": "right-cheek",
+      "score": 0.6
+    },
+    {
+      "lineup_id": "0ac9ebb6-f08d-4e60-8ed9-4418e0443b20",
+      "lineup_name": "Shameless DJs",
+      "event": "Deck'd Out #12 - Season Closing Party",
+      "matched_name": "Sharlese",
+      "matched_id": "1d8a4c21-0cc6-448d-967f-1657ee5a9072",
+      "matched_slug": "sharlese",
+      "score": 0.5
+    },
+    {
+      "lineup_id": "58dd0dfe-687c-4866-80c0-125938ddb251",
+      "lineup_name": "Sugar Pea",
+      "event": "Deck'd Out #11 with Global Bounce & Selector Records Showcases",
+      "matched_name": "Aundrea",
+      "matched_id": "697a55bd-1b56-40a9-a8e0-fff8bdb0c9a5",
+      "matched_slug": "aundrea",
+      "score": 0.5
+    },
+    {
+      "lineup_id": "911ab5d4-518f-45d9-a1e3-b4b825cd7678",
+      "lineup_name": "Tichi",
+      "event": "Deck'd Out #11 with Global Bounce & Selector Records Showcases",
+      "matched_name": "Tactic",
+      "matched_id": "9617c44f-954c-49a3-8abc-7f91d7b1b247",
+      "matched_slug": "tactic",
+      "score": 0.5
+    },
+    {
+      "lineup_id": "4796c79f-b0c6-4c5e-ada5-071011633d18",
+      "lineup_name": "kuzCO",
+      "event": "Deck'd Out #7 Sazón & Shameless Present Mango & Ginger (LA) + more!",
+      "matched_name": "Surco",
+      "matched_id": "9c9227a9-70c5-4dc0-a241-cfa05030316f",
+      "matched_slug": "surco",
+      "score": 0.6
+    }
+  ],
+  "no_match": [
+    {
+      "lineup_id": "efd30a45-7e42-4abc-9565-8468f0c8d1a9",
+      "lineup_name": "16bit Villain",
+      "event": "Deck'd Out #6 Sassmouth (CHI), Nark (Bottom Forty) & Haüs Catz",
+      "matched_name": "VJ Dirty Vizualz",
+      "matched_id": "6befd13d-efdc-4ee1-b2c3-d8d4ca348339",
+      "matched_slug": "dirty-vizualz",
+      "score": 0.36
+    },
+    {
+      "lineup_id": "c04ab0e7-0054-434b-9277-a10715e351c8",
+      "lineup_name": "Beer Goblin",
+      "event": "Deck'd Out #7 Sazón & Shameless Present Mango & Ginger (LA) + more!",
+      "matched_name": "J. Ervin",
+      "matched_id": "0cba1267-461d-407b-ba94-89bc9c6c98bc",
+      "matched_slug": "j-ervin",
+      "score": 0.4
+    },
+    {
+      "lineup_id": "45eca9c7-9bf8-43e4-8088-d47baa47934e",
+      "lineup_name": "Bottom Forty",
+      "event": "Deck'd Out w/ The Black Madonna & Bottom Forty!",
+      "matched_name": "DOT ORGY",
+      "matched_id": "a0c8ae01-0845-49fd-a3cd-6b5f14f82d03",
+      "matched_slug": "dot-orgy",
+      "score": 0.45
+    },
+    {
+      "lineup_id": "5fb63aaf-6d2e-4868-9861-d9a8a3a3992a",
+      "lineup_name": "Breakbeat Brigadier",
+      "event": "Deck'd Out #11 with Global Bounce & Selector Records Showcases",
+      "matched_name": "Jake the Rapper",
+      "matched_id": "74d08c9c-6ac3-4508-bbd6-eff8b83dc3f4",
+      "matched_slug": "jake-the-rapper",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "b6c4bf48-3391-4b05-9ad9-071cf75c1f8d",
+      "lineup_name": "Exis",
+      "event": "Deck'd Out #11 with Global Bounce & Selector Records Showcases",
+      "matched_name": "Alexia.F",
+      "matched_id": "4ca79fa2-81d4-4ab0-bff2-ed81745e1368",
+      "matched_slug": "alexia-f",
+      "score": 0.43
+    },
+    {
+      "lineup_id": "430d9348-ee14-49de-b472-886380fd0ada",
+      "lineup_name": "Grounded Records crew",
+      "event": "Deck'd Out #5 w/ Residents",
+      "matched_name": "Derrick Deep",
+      "matched_id": "8cc7ab3c-52fa-46c1-a19f-e077bb859064",
+      "matched_slug": "derrick-deep",
+      "score": 0.32
+    },
+    {
+      "lineup_id": "c5d50ab8-749f-432a-ac2b-611eb92af663",
+      "lineup_name": "Headliner TBA (France)",
+      "event": "Deck'd Out #4 Give N Groove & Shameless Present - Headliner TBA (France)",
+      "matched_name": "Alex Carrabba",
+      "matched_id": "0e19ccba-279d-4abb-a6c1-568c626844e7",
+      "matched_slug": "alex-carrabba",
+      "score": 0.33
+    },
+    {
+      "lineup_id": "53dbaba8-2754-4443-a2c2-c21ff120ee6f",
+      "lineup_name": "I Will Control",
+      "event": "Deck'd Out #2 Pride Edition w/ Open House Collective & IDLE",
+      "matched_name": "Erin O'Connor",
+      "matched_id": "5dbd2a43-b2f4-4abd-9ffa-17e3b2dfcf60",
+      "matched_slug": "erin-o-connor",
+      "score": 0.42
+    },
+    {
+      "lineup_id": "f54b0322-c7a4-4e7a-aa9b-e4b92e7a9549",
+      "lineup_name": "Innerflight",
+      "event": "Innerflight & Shameless present Never Enough Decibel Afterhours!",
+      "matched_name": "Dane Garfield",
+      "matched_id": "1efb59f0-130b-4ff8-a16c-251912590edd",
+      "matched_slug": "dane-garfield",
+      "score": 0.38
+    },
+    {
+      "lineup_id": "47403bff-725e-4272-b278-81daf21b5fb4",
+      "lineup_name": "Innerflight",
+      "event": "Deck'd Out 2022 Season Opener",
+      "matched_name": "Dane Garfield",
+      "matched_id": "1efb59f0-130b-4ff8-a16c-251912590edd",
+      "matched_slug": "dane-garfield",
+      "score": 0.38
+    },
+    {
+      "lineup_id": "59a8cc78-9d46-4ba2-93ec-353678123c76",
+      "lineup_name": "Innerflight Residents",
+      "event": "Deck'd Out #6",
+      "matched_name": "Kadeejah Streets",
+      "matched_id": "a6c14b98-53df-4d4a-a443-b23d29fcd2f0",
+      "matched_slug": "kadeejah-streets",
+      "score": 0.35
+    },
+    {
+      "lineup_id": "eacf8f43-6006-4984-89de-529f3c7a9378",
+      "lineup_name": "KHOLO",
+      "event": "Deck'd Out #3 OFF99 & Shameless Present DJ Said (SF) & Costa Showcase",
+      "matched_name": "Kid Hops",
+      "matched_id": "1fc97fa1-005d-4e3b-a6af-212fccc9ff22",
+      "matched_slug": "kid-hops",
+      "score": 0.43
+    },
+    {
+      "lineup_id": "9e867f72-e9f2-4c47-b1d4-3366af9f616f",
+      "lineup_name": "KWEEN KAYSH",
+      "event": "Deck'd Out #2 Pride Edition w/ Open House Collective & IDLE",
+      "matched_name": "Cheeks",
+      "matched_id": "c175da8b-4305-4acf-9a0c-1a3ecdd9f60c",
+      "matched_slug": "cheeks",
+      "score": 0.4
+    },
+    {
+      "lineup_id": "15fe2720-b4c9-48a3-b829-f8934b2e6df3",
+      "lineup_name": "Kendoll",
+      "event": "Deck'd Out #10 LNM & Shameless Pres. Cami Jones (Ibiza) + 11 Year Anniv!",
+      "matched_name": "Luke Mandala",
+      "matched_id": "4130563b-2edd-4245-8ada-72d0c382b181",
+      "matched_slug": "luke-mandala",
+      "score": 0.45
+    },
+    {
+      "lineup_id": "92c6cf1f-5649-433d-8e2a-6beaa7ffec9a",
+      "lineup_name": "Late Night Munchies crew",
+      "event": "Deck'd Out #9 Late Night Munchies Anniversary",
+      "matched_name": "Dirty Ice Crew",
+      "matched_id": "bd5ce6cb-297e-42a2-948a-32d31fde36c5",
+      "matched_slug": "dirty-ice-crew",
+      "score": 0.38
+    },
+    {
+      "lineup_id": "489128b0-026e-427d-ae68-4d83a0a8c1f3",
+      "lineup_name": "No DJs listed",
+      "event": "Future Funktion: A DJ Donation Drive For Fair Fight",
+      "matched_name": "Codebase",
+      "matched_id": "ee4e7582-4c4b-4996-8da5-4b94de332d30",
+      "matched_slug": "codebase",
+      "score": 0.36
+    },
+    {
+      "lineup_id": "13b8cef9-fa6e-4d35-9a1f-a6f2f1691a2e",
+      "lineup_name": "Open House Collective",
+      "event": "Deck'd Out #2 Pride Edition w/ OHC & Idle",
+      "matched_name": "Optometry Live",
+      "matched_id": "16bba9d2-8f7c-44e9-8d24-6188f7ea4542",
+      "matched_slug": "optometry-live",
+      "score": 0.42
+    },
+    {
+      "lineup_id": "6a87812b-700f-4c7d-a94e-ab126d56df11",
+      "lineup_name": "Perdi La Luz",
+      "event": "Deck'd Out #8 Innerflight & Shameless Feat. Garth (Wicked) + Nightmoves",
+      "matched_name": "Kerala Dust",
+      "matched_id": "27dbbc0a-9b71-403a-bfad-1e2ab9f9f9e0",
+      "matched_slug": "kerala-dust",
+      "score": 0.4
+    },
+    {
+      "lineup_id": "c39a16cb-107b-480f-ab33-b4ae73942427",
+      "lineup_name": "Residents",
+      "event": "\\[Shameless Presents\\] The Social",
+      "matched_name": "Contents",
+      "matched_id": "57896235-f346-4ca4-bae0-7624f2acaa4b",
+      "matched_slug": "contents",
+      "score": 0.44
+    },
+    {
+      "lineup_id": "e755c574-da6d-402d-9fd7-98c4e133402e",
+      "lineup_name": "Residents",
+      "event": "The Breakfast Club - 2012 New Years DAY Party (6a-4p)",
+      "matched_name": "Contents",
+      "matched_id": "57896235-f346-4ca4-bae0-7624f2acaa4b",
+      "matched_slug": "contents",
+      "score": 0.44
+    },
+    {
+      "lineup_id": "9024ab20-caa1-4be8-9ee6-8390611ac946",
+      "lineup_name": "Residents",
+      "event": "Shameless Presents AFTERGLOW a Decibel Festival After Party",
+      "matched_name": "Contents",
+      "matched_id": "57896235-f346-4ca4-bae0-7624f2acaa4b",
+      "matched_slug": "contents",
+      "score": 0.44
+    },
+    {
+      "lineup_id": "76f490c6-8df3-4b99-8ece-0304e1c48b69",
+      "lineup_name": "Residents",
+      "event": "\\[SHAMELESS PRESENTS\\] The Social",
+      "matched_name": "Contents",
+      "matched_id": "57896235-f346-4ca4-bae0-7624f2acaa4b",
+      "matched_slug": "contents",
+      "score": 0.44
+    },
+    {
+      "lineup_id": "2cf60807-d973-420e-a5c9-8b36c10fbfd5",
+      "lineup_name": "Shameless Residents",
+      "event": "Deck'd Out 2015 Season Opening Party",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "7b2f6f36-927f-47d4-ac3d-c797ad1c055b",
+      "lineup_name": "Shameless Residents",
+      "event": "Deck'd Out #2 w/ Residents",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "646cee95-9994-4e2f-992e-aca06ef9d749",
+      "lineup_name": "Shameless Residents",
+      "event": "Deck'd Out #3 w/ Residents",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "8c52c5cb-bfbc-4edb-9a33-99c9695d4eda",
+      "lineup_name": "Shameless Residents",
+      "event": "Deck'd Out #4 w/ Residents",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "0f163adb-e92e-4027-9291-1902756c7061",
+      "lineup_name": "Shameless Residents",
+      "event": "Deck'd Out #5 w/ Residents",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "e2e069ab-5da6-463f-9261-a3a43926d81f",
+      "lineup_name": "Shameless Residents",
+      "event": "Deck'd Out #9 w/ Residents",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "659e1a3c-a5bf-4824-b087-5898b6a46810",
+      "lineup_name": "Shameless Residents",
+      "event": "The Last Party ever at ETG: The Shameless Social",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "3672305b-7af3-4a00-9b9f-947ee68cf492",
+      "lineup_name": "Shameless Residents",
+      "event": "The Shameless Social - ETG Love!",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "4f9b2aee-8630-46c4-9f4f-d6629e36cbd0",
+      "lineup_name": "Shameless Residents",
+      "event": "2nd Annual Breakfast Club NEW YEARS DAY 2013",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "79a93d0a-3afd-431f-9b08-571f5a7f9ba8",
+      "lineup_name": "Shameless Residents",
+      "event": "Shameless Social - Decibel New Years Bash",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "80e7387a-1afc-4f8e-880d-9830bfe1a05d",
+      "lineup_name": "Shameless Residents",
+      "event": "The Shameless Social",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "a7ec2c83-036a-4b4c-b83a-3f77aeab4934",
+      "lineup_name": "Shameless Residents",
+      "event": "The Shameless Social",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "a336357b-da33-46f0-aa8a-19528af30466",
+      "lineup_name": "Shameless Residents",
+      "event": "The Shameless Social",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "7435ffe4-390a-4d2d-a600-1f6f3d95bfea",
+      "lineup_name": "Shameless Residents",
+      "event": "The Shameless Social at ReBar: Disco Holidazed party",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "702fab50-fd80-46ab-bbbe-049b9a70e8b8",
+      "lineup_name": "Shameless Residents",
+      "event": "11th Annual My Bloody Valentine is Shameless",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "5a351ad6-b0ef-4ba5-9b29-eca1bf1c9067",
+      "lineup_name": "Shameless Residents",
+      "event": "The Breakfast Club - New Years Day 2015",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "9aa70ac9-65cc-479a-867b-46dfa1ebe49f",
+      "lineup_name": "Shameless Residents",
+      "event": "12th Annual My Bloody Valentine is Shameless",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "d7133616-8ee1-4fa2-b38b-a1db64b5bff8",
+      "lineup_name": "Shameless Residents",
+      "event": "New Year's Eve 2016 - 2017",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "43459e62-8029-49f0-a83b-0d425faa56f0",
+      "lineup_name": "Shameless Residents",
+      "event": "Deck'd Out 2017 Season Opening Party",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "1711f5db-3863-44ac-89b8-79e7aac4ee8b",
+      "lineup_name": "Shameless Residents",
+      "event": "Deck'd Out #2 w/ Residents",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "3803fc1f-1640-4822-bf1d-9a054d075fec",
+      "lineup_name": "Shameless Residents",
+      "event": "Deck'd Out #6 w/ Residents",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "f94cf6f7-a61b-4fba-9d25-9c9b1d784f27",
+      "lineup_name": "Shameless Residents",
+      "event": "Deck'd Out #10 KEXP Showcase",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "adeb04ec-df1d-4da4-887c-ec58b8183898",
+      "lineup_name": "Shameless Residents",
+      "event": "Deck'd Out Opening Party w/ Dee Diggs (NYC)",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "13263b6d-012e-48cd-a5ad-67547b4d303d",
+      "lineup_name": "Shameless Residents",
+      "event": "Shameless' 19 Year Anniversary",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "6694e53d-e88e-4b2f-b9b4-3021b9280c25",
+      "lineup_name": "Shameless Residents",
+      "event": "Desert Hearts Black 12 Hour Party w/ Marbs Evan Casey & Anakim",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "5c0d764c-2945-4615-b6c2-f68d875a8540",
+      "lineup_name": "Shameless Residents",
+      "event": "Desert Hearts Black 12 Hour Party",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "cb8646f4-b995-4fb8-8e4a-3a04b2c256f1",
+      "lineup_name": "Shameless Residents",
+      "event": "Deck'd Out Season Closing Party",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "81078643-f53b-4262-a91c-24221f455e5e",
+      "lineup_name": "Shameless Residents",
+      "event": "Shameless Audio Record Label Launch Party!",
+      "matched_name": "JAME$ERVIN",
+      "matched_id": "ecfc56ff-037a-4f69-96e9-98b997c98764",
+      "matched_slug": "jame-ervin",
+      "score": 0.39
+    },
+    {
+      "lineup_id": "4eb8046b-162e-4dea-89fb-89fb4e73cfc6",
+      "lineup_name": "Train Car House",
+      "event": "Deck'd Out #6 Dreamin' & Streamin' w/ the Train Car House",
+      "matched_name": "Iain Howie",
+      "matched_id": "f37a16f0-e8ee-4bdc-a826-e640f4a4c04c",
+      "matched_slug": "iain-howie",
+      "score": 0.46
+    },
+    {
+      "lineup_id": "1ab64ff7-c0ff-4382-bee5-85d8ff9339dd",
+      "lineup_name": "VANNI LANGUAGE",
+      "event": "Deck'd Out #3 OFF99 & Shameless Present DJ Said (SF) & Costa Showcase",
+      "matched_name": "Aria Bare",
+      "matched_id": "6410deb0-beb8-4f68-828c-86c919a2f43a",
+      "matched_slug": "aria-bare",
+      "score": 0.38
+    },
+    {
+      "lineup_id": "986df85f-1444-42be-aa7c-898b1c454ca4",
+      "lineup_name": "Westbound",
+      "event": "Deck'd Out #5 Shameless Presents Jason Peters (SF) & Best Butt Camp",
+      "matched_name": "Wet Peynt",
+      "matched_id": "2ca4a377-ee8b-40f2-b73a-71b76e487073",
+      "matched_slug": "wet-peynt",
+      "score": 0.44
+    },
+    {
+      "lineup_id": "42a08d0d-09b1-4c8e-a71f-56e9148b3412",
+      "lineup_name": "good juju",
+      "event": "Deck'd Out #7 Sazón & Shameless Present Mango & Ginger (LA) + more!",
+      "matched_name": "Foofou",
+      "matched_id": "1f1fe529-472f-4ee7-b1fc-3d49e78823c3",
+      "matched_slug": "foofou",
+      "score": 0.38
+    }
+  ]
+}
