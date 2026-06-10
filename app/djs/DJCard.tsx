@@ -19,7 +19,7 @@ export function DJCard({ dj, upcomingCount = 0 }: { dj: DJ; upcomingCount?: numb
   const [hover, setHover] = useState(false)
 
   return (
-    <Link href={/shameless resident/i.test(dj.name) ? '/djs' : `/djs/${dj.slug}`} style={{ textDecoration: 'none', display: 'flex', height: '100%' }}>
+    <Link href={`/djs/${dj.slug}`} style={{ textDecoration: 'none', display: 'flex', height: '100%' }}>
       <div
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
