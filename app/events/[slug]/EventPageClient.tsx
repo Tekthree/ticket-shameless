@@ -1011,7 +1011,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
       {/* ── HERO ─────────────────────────────────────────────────────── */}
       <div className="ep-hero">
         {safeImageUrl(event.banner_url ?? event.image_url) ? (
-          <Image src={safeImageUrl(event.banner_url ?? event.image_url)!} alt={event.title} fill sizes="100vw" style={{ objectFit: 'cover', objectPosition: 'center 30%' }} priority />
+          <Image src={safeImageUrl(event.banner_url ?? event.image_url)!} alt={event.venue ? `${event.title} at ${event.venue}, Seattle WA` : event.title} fill sizes="100vw" style={{ objectFit: 'cover', objectPosition: 'center 30%' }} priority />
         ) : (
           <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(45deg, #252220 0px, #252220 1px, #1c1917 1px, #1c1917 22px)' }} />
         )}

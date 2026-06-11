@@ -1,0 +1,222 @@
+{
+  "ok": 327,
+  "flagged": [
+    {
+      "name": "214",
+      "slug": "214",
+      "handle": "rinzen",
+      "score": 0,
+      "has_img": true
+    },
+    {
+      "name": "DJ KP",
+      "slug": "dj-kp",
+      "handle": "theindiandream",
+      "score": 0,
+      "has_img": true
+    },
+    {
+      "name": "Sean Wood",
+      "slug": "sean-wood",
+      "handle": "noimsean_",
+      "score": 0,
+      "has_img": true
+    },
+    {
+      "name": "DJ Weak Acid",
+      "slug": "dj-weak-acid",
+      "handle": "nickbigeloww",
+      "score": 8,
+      "has_img": true
+    },
+    {
+      "name": "Derrick Carter",
+      "slug": "derrick-carter",
+      "handle": "blucu",
+      "score": 8,
+      "has_img": true
+    },
+    {
+      "name": "Karl Kamakahi",
+      "slug": "karl-kamakahi",
+      "handle": "delacreme.life",
+      "score": 8,
+      "has_img": true
+    },
+    {
+      "name": "Acid Tourist",
+      "slug": "acid-tourist",
+      "handle": "holmarmusik",
+      "score": 9,
+      "has_img": true
+    },
+    {
+      "name": "Freddy M",
+      "slug": "freddy-m",
+      "handle": "sundayafternoonbeers",
+      "score": 10,
+      "has_img": true
+    },
+    {
+      "name": "Tait Modern",
+      "slug": "tait-modern",
+      "handle": "hesitait",
+      "score": 10,
+      "has_img": true
+    },
+    {
+      "name": "DJ Dab & Sherman",
+      "slug": "dj-dab-and-sherman",
+      "handle": "selectorseattle",
+      "score": 13,
+      "has_img": true
+    },
+    {
+      "name": "Dirty Ice Crew",
+      "slug": "dirty-ice-crew",
+      "handle": "kadeejahstreets",
+      "score": 13,
+      "has_img": true
+    },
+    {
+      "name": "Interwave Surfer",
+      "slug": "interwave-surfer",
+      "handle": "madness_mish",
+      "score": 13,
+      "has_img": true
+    },
+    {
+      "name": "Riz & Rob",
+      "slug": "riz-rob",
+      "handle": "reverend_dr_dj_riz",
+      "score": 13,
+      "has_img": true
+    },
+    {
+      "name": "NKL CTY",
+      "slug": "nkl-cty",
+      "handle": "nickcressman.dj",
+      "score": 14,
+      "has_img": true
+    },
+    {
+      "name": "WILL S",
+      "slug": "will-s",
+      "handle": "lovelisounds",
+      "score": 17,
+      "has_img": true
+    },
+    {
+      "name": "BIG SIR",
+      "slug": "big-sir",
+      "handle": "caseyberner",
+      "score": 18,
+      "has_img": true
+    },
+    {
+      "name": "Nazo",
+      "slug": "nazo",
+      "handle": "nthabi4real",
+      "score": 18,
+      "has_img": true
+    },
+    {
+      "name": "Shaner",
+      "slug": "shaner",
+      "handle": "mastakiblah",
+      "score": 18,
+      "has_img": true
+    },
+    {
+      "name": "Sherman",
+      "slug": "sherman",
+      "handle": "sammydmusic",
+      "score": 18,
+      "has_img": true
+    },
+    {
+      "name": "DJ D'Nelski",
+      "slug": "dj-d-nelski",
+      "handle": "djassault1",
+      "score": 20,
+      "has_img": true
+    },
+    {
+      "name": "Jesse Leer",
+      "slug": "jesse-leer",
+      "handle": "jleermusic",
+      "score": 20,
+      "has_img": true
+    },
+    {
+      "name": "Dusty Booty Ranch with Sean Wood",
+      "slug": "dusty-booty-ranch-with-sean-wood",
+      "handle": "noimsean_",
+      "score": 22,
+      "has_img": true
+    },
+    {
+      "name": "Project 32",
+      "slug": "project-32",
+      "handle": "p32_osc",
+      "score": 22,
+      "has_img": true
+    },
+    {
+      "name": "Alex the Cosmic Therapist",
+      "slug": "alex-the-cosmic-therapist",
+      "handle": "asinglewave",
+      "score": 23,
+      "has_img": true
+    },
+    {
+      "name": "Brian Lyons",
+      "slug": "brian-lyons",
+      "handle": "flammable_sundays",
+      "score": 25,
+      "has_img": true
+    },
+    {
+      "name": "Cee White",
+      "slug": "cee-white",
+      "handle": "ceeblanco43",
+      "score": 27,
+      "has_img": true
+    },
+    {
+      "name": "Foofou",
+      "slug": "foofou",
+      "handle": "fouadmasoud.ofc",
+      "score": 29,
+      "has_img": true
+    },
+    {
+      "name": "Carlos Ruiz",
+      "slug": "carlos-ruiz",
+      "handle": "cmrtyz",
+      "score": 30,
+      "has_img": true
+    },
+    {
+      "name": "Josh Verse",
+      "slug": "josh-verse",
+      "handle": "djverse206",
+      "score": 30,
+      "has_img": true
+    },
+    {
+      "name": "Bze",
+      "slug": "bze",
+      "handle": "bgeezyone",
+      "score": 33,
+      "has_img": true
+    },
+    {
+      "name": "March Adstrum",
+      "slug": "march-adstrum",
+      "handle": "air11_dotcom",
+      "score": 33,
+      "has_img": true
+    }
+  ]
+}
