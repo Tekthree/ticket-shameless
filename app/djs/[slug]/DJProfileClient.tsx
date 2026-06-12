@@ -378,7 +378,13 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
 
       {/* ── DJ REQUEST NOTE ────────────────────────────────────────────── */}
       <div className="djp-request-note">
-        If you would like your profile removed or updated, please <a href="mailto:hello@simplyshameless.com" style={{ color: '#7a7068', textDecoration: 'underline' }}>contact us</a>.
+        <p style={{ marginBottom: 16 }}>Want your profile updated or removed?</p>
+        <a
+          href={`mailto:hello@simplyshameless.com?subject=${encodeURIComponent(`DJ Profile: ${dj.name}`)}`}
+          className="djp-contact-btn"
+        >
+          Contact Us
+        </a>
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
@@ -408,9 +414,28 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
           margin: 0 auto;
           padding: 0 clamp(20px, 4vw, 56px) 60px;
           color: #554f4b;
-          font-size: 12px;
+          font-size: 13px;
           font-family: var(--font-barlow), sans-serif;
           text-align: left;
+        }
+        .djp-contact-btn {
+          display: inline-block;
+          padding: 10px 24px;
+          background: transparent;
+          border: 1px solid rgba(255,255,255,0.12);
+          color: #7a7068;
+          font-family: var(--font-barlow), sans-serif;
+          font-weight: 700;
+          font-size: 12px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          text-decoration: none;
+          border-radius: var(--ss-radius-btn);
+          transition: border-color 0.2s, color 0.2s;
+        }
+        .djp-contact-btn:hover {
+          border-color: #c9321a;
+          color: #c9321a;
         }
         @media (max-width: 768px) {
           .djp-hero-grid {
