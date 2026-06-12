@@ -13,7 +13,7 @@ const C = {
   red: '#c9321a',
 }
 
-type Filter = 'all' | 'residents' | 'guests'
+type Filter = 'residents' | 'guests'
 
 export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts?: Record<string, number> }) {
   const [filter, setFilter] = useState<Filter>('residents')
@@ -34,7 +34,6 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
   }, [djs, filter, search])
 
   const tabs: { key: Filter; label: string }[] = [
-    { key: 'all', label: 'All DJs' },
     { key: 'residents', label: 'Shameless Residents' },
     { key: 'guests', label: 'Guests' },
   ]
