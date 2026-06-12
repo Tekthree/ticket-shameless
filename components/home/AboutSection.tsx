@@ -72,9 +72,9 @@ export default function AboutSection() {
           </div>
           <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(64px,8vw,112px)', lineHeight: 0.9, textTransform: 'uppercase' }}>
             {[
-              { text: 'Keeping', color: '#1c1917', stroke: false, delay: 0 },
-              { text: 'It Weird', color: 'transparent', stroke: true, delay: 80 },
-              { text: 'Since', color: '#1c1917', stroke: false, delay: 160 },
+              { text: 'Shaking', color: '#1c1917', stroke: false, delay: 0 },
+              { text: 'the shame', color: 'transparent', stroke: true, delay: 80 },
+              { text: 'off since', color: '#1c1917', stroke: false, delay: 160 },
               { text: '2003', color: '#c9321a', stroke: false, delay: 240 },
             ].map((line, i) => (
               <div key={i} style={{
@@ -86,7 +86,7 @@ export default function AboutSection() {
               }}>{line.text}</div>
             ))}
           </div>
-          <div style={{ marginTop: 48, display: 'flex', gap: 'clamp(24px, 6vw, 56px)', flexWrap: 'wrap' }}>
+          <div style={{ marginTop: 48, display: 'flex', gap: 'clamp(16px, 3vw, 32px)', flexWrap: 'nowrap' }}>
             {[['100+', 'Events'], ['20+', 'Years'], ['10K+', 'Community']].map(([n, l]) => (
               <StatCounter key={l} value={n} label={l} />
             ))}
@@ -138,6 +138,12 @@ export default function AboutSection() {
                 sizes="(max-width: 900px) 100vw, 58vw"
               />
             </div>
+          </div>
+
+          <div ref={r5} style={{ ...revealStyle(v5, 220), marginBottom: 40 }}>
+            <p style={{ color: '#8a8078', fontSize: 18, lineHeight: 1.8, fontWeight: 300, marginBottom: 0 }}>
+              The name is the ethos. Shame is the thing that keeps people standing at the edge of the floor, and the whole point is letting it go. Dance badly. Dance alone. Wear the thing. Nobody here is watching the way you think they are, and everybody came for the same reason. Shake your shame off and get your game on.
+            </p>
           </div>
 
           <div style={{ ...revealStyle(v5, 240) }}>

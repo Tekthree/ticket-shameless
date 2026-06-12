@@ -290,8 +290,7 @@ export default function HeroSection({
               transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)',
               transitionDelay: '0.45s',
             }}>
-            Seattle's underground house &amp; techno collective. We throw
-            parties that feel like freedom.
+            One of Seattle&apos;s longest running underground house &amp; techno collectives.
           </p>
 
           {/* CTAs — design system .btn-primary + .btn-ghost */}

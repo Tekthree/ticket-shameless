@@ -1036,7 +1036,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
           {/* Title block */}
           <div style={{ marginBottom: 24 }}>
             <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.red, marginBottom: 10 }}>Shameless Presents</div>
-            <h1 style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(44px, 7vw, 80px)', lineHeight: 0.88, color: C.darkText, textTransform: 'uppercase', marginBottom: 16 }}>
+            <h1 style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(30px, 3.8vw, 52px)', lineHeight: 1.05, color: C.darkText, textTransform: 'uppercase', marginBottom: 16 }}>
               {titleParts ? (
                 <>
                   {titleParts[0]}<br />
@@ -1163,10 +1163,23 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
         {/* ── RIGHT SIDEBAR (desktop) ───────────────────────────────── */}
         <div className="ep-sidebar" style={{ paddingTop: 40 }}>
-          <TicketBox event={event} sticky />
-          <div style={{ marginTop: 14, display: 'flex', gap: 8 }}>
-            <ShareButton event={event} />
-            <LikeButton event={event} token={token} onNeedAuth={() => setAuthModalOpen(true)} initialCount={socialData.likes.count} initialLiked={socialData.likes.liked} />
+          <div style={{ position: 'sticky', top: 84 }}>
+            {safeImageUrl(event.square_image_url ?? event.image_url ?? event.banner_url) && (
+              <div style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', borderRadius: 'var(--ss-radius)', overflow: 'hidden', marginBottom: 12 }}>
+                <Image
+                  src={safeImageUrl(event.square_image_url ?? event.image_url ?? event.banner_url)!}
+                  alt={event.title}
+                  fill
+                  sizes="380px"
+                  style={{ objectFit: 'cover' }}
+                />
+              </div>
+            )}
+            <TicketBox event={event} />
+            <div style={{ marginTop: 14, display: 'flex', gap: 8 }}>
+              <ShareButton event={event} />
+              <LikeButton event={event} token={token} onNeedAuth={() => setAuthModalOpen(true)} initialCount={socialData.likes.count} initialLiked={socialData.likes.liked} />
+            </div>
           </div>
         </div>
       </div>
@@ -1221,7 +1234,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
           align-items: start;
         }
 
-        .ep-sidebar { display: block; }
+        .ep-sidebar { display: block; align-self: stretch; }
         .ep-share-mobile { display: none; }
 
         .ep-mobile-bar { display: none; }

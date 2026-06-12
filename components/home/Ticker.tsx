@@ -3,7 +3,7 @@ const items = ['Simply Shameless', 'Seattle', 'House Music', 'Techno', 'Communit
 export default function Ticker() {
   const doubled = [...items, ...items]
   return (
-    <div style={{ overflow: 'hidden', background: '#c9321a', padding: '14px 0' }}>
+    <div style={{ overflow: 'hidden', background: '#1E1E1E', padding: '14px 0' }}>
       <div style={{
         display: 'flex',
         width: 'max-content',
@@ -13,10 +13,10 @@ export default function Ticker() {
           <span key={i} style={{
             fontFamily: 'var(--font-barlow), sans-serif',
             fontWeight: 900,
-            fontSize: 15,
+            fontSize: 20,
             letterSpacing: '0.10em',
             textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.9)',
+            color: 'rgba(255,255,255,0.4)',
             padding: '0 40px',
             whiteSpace: 'nowrap',
             display: 'inline-flex',
