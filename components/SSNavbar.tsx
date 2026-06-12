@@ -18,7 +18,6 @@ const NAV_LINKS: [string, string][] = [
   ['Events',  '/events'],
   ['DJs',     '/djs'],
   ['Gallery', '/gallery'],
-  ['Merch',   '/shop'],
   ['About',   '/#about'],
 ]
 

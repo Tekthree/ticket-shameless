@@ -378,7 +378,7 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
 
       {/* ── DJ REQUEST NOTE ────────────────────────────────────────────── */}
       <div className="djp-request-note">
-        If you would like your profile removed or updated, please <a href="mailto:info@simplyshameless.com" style={{ color: '#7a7068', textDecoration: 'underline' }}>contact us</a>.
+        If you would like your profile removed or updated, please <a href="mailto:hello@simplyshameless.com" style={{ color: '#7a7068', textDecoration: 'underline' }}>contact us</a>.
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `

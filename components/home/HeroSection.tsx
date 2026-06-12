@@ -338,36 +338,6 @@ export default function HeroSection({
               View Events
             </Link>
 
-            <Link
-              href='/shop'
-              className='hero-btn-ghost'
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: 'transparent',
-                color: C.darkText,
-                border: '1px solid rgba(255,255,255,0.18)',
-                textDecoration: 'none',
-                fontFamily: 'var(--font-barlow), sans-serif',
-                fontWeight: 800,
-                fontSize: 17,
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                padding: '17px 36px',
-                borderRadius: 'var(--ss-radius-btn)',
-                transition: 'border-color 0.2s, transform 0.12s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.45)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}>
-              Shop Merch
-            </Link>
           </div>
 
           {/* Mono token (design system: DM Mono, technical) */}
