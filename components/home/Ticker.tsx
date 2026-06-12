@@ -1,4 +1,4 @@
-const items = ['Simply Shameless', 'Seattle', 'House Music', 'Techno', 'Community', 'Est. 2003', 'No Regrets']
+const items = ['Simply Shameless', 'Seattle', 'House Music', 'Techno', 'Deep House', 'Dark Wave', 'Community', 'Est. 2003', 'No Regrets']
 
 export default function Ticker() {
   const doubled = [...items, ...items]

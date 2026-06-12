@@ -31,7 +31,7 @@ No third-party ticketing platforms. No commission on door sales. Design is inspi
 | Database | Neon (serverless Postgres) |
 | Image storage | Cloudflare R2 |
 | Payments | Stripe (merch only) |
-| SMS | Twilio (Phase 4) |
+| SMS / Auth | Twilio (OTP login + Phase 4 blasts) |
 | Styling | Tailwind CSS + inline styles |
 | Fonts | Barlow Condensed + DM Sans (via next/font) |
 | Hosting | Vercel |
@@ -47,18 +47,24 @@ npm install
 Create `.env.local`:
 
 ```
-DATABASE_URL=postgresql://...           # from Neon dashboard
-STRIPE_SECRET_KEY=sk_...               # Stripe secret key (merch checkout)
-STRIPE_WEBHOOK_SECRET=whsec_...        # Stripe webhook signing secret
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_...  # Stripe publishable key
-NEXT_PUBLIC_SITE_URL=https://yourdomain.com  # Used for Stripe redirect URLs
+DATABASE_URL=postgresql://...                    # from Neon dashboard
+STRIPE_SECRET_KEY=sk_...                        # Stripe secret key (merch checkout)
+STRIPE_WEBHOOK_SECRET=whsec_...                 # Stripe webhook signing secret
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_...       # Stripe publishable key
+NEXT_PUBLIC_SITE_URL=https://yourdomain.com     # Used for Stripe redirect URLs
 
 # Cloudflare R2 (image storage)
-R2_ACCOUNT_ID=...                      # Cloudflare account ID
-R2_ACCESS_KEY_ID=...                   # R2 API token access key
-R2_SECRET_ACCESS_KEY=...              # R2 API token secret
-R2_BUCKET=shameless-party-images       # bucket name
-R2_PUBLIC_URL=https://pub-xxxxxxxxxxxxxxxxxxxx.r2.dev  # from bucket Settings → Public Development URL
+R2_ACCOUNT_ID=...                               # Cloudflare account ID
+R2_ACCESS_KEY_ID=...                            # R2 API token access key
+R2_SECRET_ACCESS_KEY=...                        # R2 API token secret
+R2_BUCKET=shameless-party-images                # bucket name
+R2_ENDPOINT_URL=https://<account_id>.r2.cloudflarestorage.com
+R2_PUBLIC_URL=https://pub-xxxxxxxxxxxxxxxxxxxx.r2.dev  # bucket Settings → Public Development URL
+
+# Twilio (phone auth + SMS)
+TWILIO_ACCOUNT_SID=...
+TWILIO_AUTH_TOKEN=...
+TWILIO_PHONE_NUMBER=+1...                       # Twilio phone number for OTP + blasts
 ```
 
 Then run:
@@ -90,14 +96,17 @@ npm run seed:merch  # sample products
 
 | Table | Purpose |
 |---|---|
-| `users` | Admin and guest accounts |
-| `events` | Event pages: title, slug, date, venue, image, payment link, suggested price |
-| `lineup` | Artists per event: name, bio, image, mix URL, time slot |
+| `users` | Admin and guest accounts (phone-based) |
+| `otp_codes` | One-time passcodes for phone auth |
+| `user_sessions` | Active session tokens |
+| `events` | Event pages: title, slug, date, venue, image, payment link, suggested price, presented_by, banner_url, gallery_images |
+| `lineup` | Artists per event: name, bio, image, mix URL, time slot, dj_id FK |
 | `rsvps` | Per-event RSVPs: name, email, phone, status |
+| `event_likes` | Per-event likes (linked to user session) |
 | `products` | Merch items: name, price, sizes, stock, Stripe price ID |
 | `orders` + `order_items` | Stripe merch orders |
 | `subscribers` | Newsletter signups |
-| `djs` | DJ profiles: slug, name, bio, location, genres, social URLs, aliases, resident flag, profile image |
+| `djs` | DJ profiles: slug, name, bio, location, genres, social URLs, aliases, resident flag, profile image (523 profiles) |
 
 ### DJ system
 
@@ -122,10 +131,15 @@ npm run link:lineup
 
 The alias map covers A–J (356 entries). K–Z billing variants will be matched by exact name only until the map is extended.
 
+**Status:** DJ verification pass complete. All 523 profiles processed. Known duplicate flags: `erin-oconner`/`erin-o-connor`, `foofou`/`fouad-masoud` (same persons, consider merging).
+
 ### Key fields
 
 - `events.payment_link` — Venmo/Cash App handle or URL. Displayed on the event page as a pay-cover CTA.
 - `events.suggested_price` — optional suggested cover amount shown alongside the payment link.
+- `events.presented_by` — co-presenter string (e.g. "Shameless, Uniting Souls and Viva").
+- `events.banner_url` — wide banner image (used in event detail header). Compressed to ~150KB via ffmpeg before upload.
+- `events.image_url` — portrait image (800x1000, used in event cards). Compressed to ~185KB via ffmpeg before upload.
 - `rsvps.status` — `going`, `maybe`, or `not_going`. Unique on `(event_id, email)` so re-submitting updates in place.
 
 ---
@@ -134,47 +148,109 @@ The alias map covers A–J (356 entries). K–Z billing variants will be matched
 
 ```
 app/
-  page.tsx                # Homepage (server component — fetches events from DB)
+  page.tsx                  # Homepage (server component — fetches events from DB)
   events/
-    page.tsx              # All events list page
-    [slug]/               # Individual event detail pages
+    page.tsx                # All upcoming events
+    past/                   # Past events archive
+    [slug]/                 # Individual event detail page with lineup + RSVP
+  djs/
+    page.tsx                # DJ roster grid
+    [slug]/                 # Individual DJ profile page
+  gallery/                  # Full photo gallery (R2)
   shop/
-    page.tsx              # Merch store grid
-    success/              # Stripe checkout success page
+    page.tsx                # Merch store grid
+    success/                # Stripe checkout success page
+  contact/                  # Contact page
+  terms/                    # Terms of service
+  privacy/                  # Privacy policy
   api/
-    newsletter/           # POST — subscribe an email
-    rsvp/                 # POST — create/update an RSVP
-    checkout/merch/       # POST — create Stripe checkout session
-    webhooks/stripe/      # POST — Stripe webhook (decrements stock)
-    upload/               # POST — upload image to R2 (presign or direct)
+    auth/
+      send-otp/             # POST — send OTP to phone via Twilio
+      verify-otp/           # POST — verify OTP, create session
+    newsletter/             # POST — subscribe an email
+    rsvp/                   # POST — create/update an RSVP
+    likes/                  # POST — toggle event like
+    comment/                # POST — add event comment
+    event-social/           # GET — event social share metadata
+    checkout/merch/         # POST — create Stripe checkout session
+    webhooks/stripe/        # POST — Stripe webhook (decrements stock)
+    upload/                 # POST — upload image to R2 (presign or direct)
 
 components/
   home/
-    HeroSection.tsx       # Full-screen hero (dynamic next-event card)
-    Ticker.tsx            # Scrolling text marquee
-    EventsSection.tsx     # Upcoming events grid
-    GallerySection.tsx    # Asymmetric dark photo grid
-    AboutSection.tsx      # Brand description block
-    NewsletterSection.tsx # Email signup (wired to /api/newsletter)
-    PageLoader.tsx        # Full-screen logo reveal animation
-    HomeClient.tsx        # Client wrapper for PageLoader
-  SSNavbar.tsx            # Branded scroll-aware navigation
-  SSFooter.tsx            # Branded footer
+    HeroSection.tsx         # Full-screen hero with video + poster fallback
+    Ticker.tsx              # Scrolling text marquee
+    EventsSection.tsx       # Upcoming events grid
+    GallerySection.tsx      # Asymmetric dark photo grid
+    AboutSection.tsx        # Brand description block
+    NewsletterSection.tsx   # Email signup (wired to /api/newsletter)
+    PageLoader.tsx          # Full-screen logo reveal animation
+    HomeClient.tsx          # Client wrapper for PageLoader
+  SSNavbar.tsx              # Branded scroll-aware navigation
+  SSFooter.tsx              # Branded footer
+  PageTransition.tsx        # Page-change sting animation (video)
 
 lib/
-  db.ts                   # All database queries + types via Neon
-  events.ts               # Re-exports from db.ts
-  r2.ts                   # Cloudflare R2 client, presign helper, public URL util
+  db.ts                     # All database queries + types via Neon
+  events.ts                 # Re-exports from db.ts
+  r2.ts                     # Cloudflare R2 client, presign helper, public URL util
+  auth.ts                   # Phone/OTP session helpers
+  utils.ts                  # Shared utilities
 
 scripts/
-  migrate.mjs             # Create all tables (idempotent)
-  seed-real-events.mjs    # Seed production events
-  seed-merch.mjs          # Seed sample merch products
+  migrate.mjs               # Create all tables (idempotent)
+  migrate-005.mjs           # Add DJ aliases + is_resident columns
+  seed-real-events.mjs      # Seed production events
+  seed-merch.mjs            # Seed sample merch products
+  seed-dj-roster.mjs        # Seed 523 DJ profiles (upsert-safe, uploads images to R2)
+  link-lineup-djs.mjs       # Link lineup entries to djs table via name/alias matching
+  upload-gallery.mjs        # Upload event gallery photos to R2
+  upload-reverie-june-flyers.mjs  # Upload + compress June Reverie Society flyers
+  fb-bulk-import.mjs        # Bulk import events from Facebook
+  fetch-dj-profile-images.mjs    # Fetch DJ profile images from external sources
 ```
 
 ---
 
 ## Phases
+
+---
+
+## Auth
+
+Phone-based OTP login via Twilio. No passwords.
+
+1. User enters phone number → `POST /api/auth/send-otp` → Twilio SMS with 6-digit code
+2. User enters code → `POST /api/auth/verify-otp` → session token set in cookie
+3. Session validated via `lib/auth.ts` on protected routes
+
+Tables: `users`, `otp_codes`, `user_sessions`, `event_likes`.
+
+---
+
+## Email forwarding
+
+Managed via [ImprovMX](https://app.improvmx.com) for `simplyshameless.com`. DNS-only — no API keys or env vars required. Configured through MX records pointing to ImprovMX's servers. All aliases forward to `tekthree@gmail.com`.
+
+| Alias | Use |
+|---|---|
+| `bookings@simplyshameless.com` | Booking inquiries |
+| `hello@simplyshameless.com` | General contact |
+| `press@simplyshameless.com` | Press and media |
+| `privacy@simplyshameless.com` | Privacy/legal requests |
+
+---
+
+## Image upload workflow
+
+Images for events (banners + portraits) live in `E:\WORK\SHAMELESS\` on the Windows drive. Before uploading to R2:
+
+1. Compress with ffmpeg: `ffmpeg -vf "scale=1200:-1" -q:v 4 out.jpg` (banners), `-q:v 4` only (portraits)
+2. Upload via `scripts/upload-*.mjs` or `POST /api/upload`
+
+Target sizes: banners ~150KB at 1200px wide, portraits ~185KB at 800x1000.
+
+---
 
 ### Phase 1 — Homepage ✓
 
@@ -189,8 +265,9 @@ scripts/
 
 ### Phase 2 — Event pages + RSVP ✓
 
-- [x] `/events` — all events listing page
-- [x] `/events/[slug]` — full event detail page with lineup
+- [x] `/events` — upcoming events listing
+- [x] `/events/past` — past events archive
+- [x] `/events/[slug]` — full event detail page with lineup + likes
 - [x] RSVP form (name, email, phone, status)
 - [x] Payment link display (Venmo/Cash App CTA with suggested price)
 - [x] Neon DB wired in production
@@ -203,9 +280,16 @@ scripts/
 - [x] Stripe webhook decrements stock on purchase
 - [ ] Admin: add/edit products, manage stock
 
-### Phase 4 — SMS
+### Phase 4 — DJ profiles + auth ✓
 
-- [ ] Twilio integration
+- [x] `/djs` — full DJ roster (523 profiles)
+- [x] `/djs/[slug]` — individual DJ profile with events
+- [x] Phone/OTP auth via Twilio (`/api/auth/send-otp`, `/api/auth/verify-otp`)
+- [x] Event likes (linked to user session)
+- [x] Gallery page (`/gallery`)
+
+### Phase 5 — SMS blasts
+
 - [ ] Blast to all RSVPs for a given event (updates, reminders)
 - [ ] Opt-out handling
 
@@ -213,7 +297,7 @@ scripts/
 
 - [ ] Admin dashboard (create/edit events, view RSVPs, manage merch inventory)
 - [ ] Admin gallery upload UI (`/admin/gallery` — drag-and-drop to R2)
-- [ ] Artist profile pages
+- [ ] Merge duplicate DJ profiles (erin-oconner/erin-o-connor, foofou/fouad-masoud)
 
 ---
 
