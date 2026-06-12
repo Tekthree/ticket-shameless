@@ -74,7 +74,7 @@ export default function HeroSection({
           loop
           playsInline
           preload='auto'
-          poster='/brand-hero.jpg'
+          poster='/hero-poster.jpg'
           className='hero-video'
           style={{
             width: '100%',
