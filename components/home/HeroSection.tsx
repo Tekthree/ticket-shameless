@@ -5,7 +5,7 @@ import Link from 'next/link';
 import type { Event } from '@/lib/db';
 
 const HERO_VIDEO_URL =
-  'https://udanlcylpsvxqlihcppb.supabase.co/storage/v1/object/sign/Saves/deckd%20out_2025_promo_video.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9jYzYyMzMyYy0yYzgwLTQ4YjctYjNiYy1lZTAzZGE2ZjUwN2IiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTYXZlcy9kZWNrZCBvdXRfMjAyNV9wcm9tb192aWRlby5tcDQiLCJpYXQiOjE3Nzc0MDM2MzksImV4cCI6MTgwODkzOTYzOX0.nXTsNiqiT003LnZ1ofMM5snYg_8UZlAVuc3UB4PUbu0';
+  'https://pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev/video/deckd-out-2025-promo.mp4';
 
 // Design tokens (from Design System.html)
 const C = {
