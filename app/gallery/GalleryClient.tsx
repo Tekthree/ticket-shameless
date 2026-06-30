@@ -269,20 +269,30 @@ export default function GalleryClient({ events }: { events: GalleryEvent[] }) {
     const el = tabsRef.current
     if (!el) return
     let isDown = false
+    let isDragging = false
     let startX = 0
     let scrollLeft = 0
+    let pointerId = -1
+    const THRESHOLD = 5
     const onDown = (e: PointerEvent) => {
       isDown = true
+      isDragging = false
       startX = e.pageX - el.offsetLeft
       scrollLeft = el.scrollLeft
-      el.setPointerCapture(e.pointerId)
-      el.style.cursor = 'grabbing'
+      pointerId = e.pointerId
     }
-    const onUp = () => { isDown = false; el.style.cursor = '' }
+    const onUp = () => { isDown = false; isDragging = false; el.style.cursor = '' }
     const onMove = (e: PointerEvent) => {
       if (!isDown) return
-      e.preventDefault()
       const x = e.pageX - el.offsetLeft
+      const dist = Math.abs(x - startX)
+      if (!isDragging && dist < THRESHOLD) return
+      if (!isDragging) {
+        isDragging = true
+        el.setPointerCapture(pointerId)
+        el.style.cursor = 'grabbing'
+      }
+      e.preventDefault()
       el.scrollLeft = scrollLeft - (x - startX) * 1.5
     }
     el.addEventListener('pointerdown', onDown)
