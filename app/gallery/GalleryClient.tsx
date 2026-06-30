@@ -265,6 +265,36 @@ export default function GalleryClient({ events }: { events: GalleryEvent[] }) {
     if (active) active.scrollIntoView({ inline: 'nearest', block: 'nearest' })
   }, [activeEvent])
 
+  useEffect(() => {
+    const el = tabsRef.current
+    if (!el) return
+    let isDown = false
+    let startX = 0
+    let scrollLeft = 0
+    const onDown = (e: PointerEvent) => {
+      isDown = true
+      startX = e.pageX - el.offsetLeft
+      scrollLeft = el.scrollLeft
+      el.setPointerCapture(e.pointerId)
+      el.style.cursor = 'grabbing'
+    }
+    const onUp = () => { isDown = false; el.style.cursor = '' }
+    const onMove = (e: PointerEvent) => {
+      if (!isDown) return
+      e.preventDefault()
+      const x = e.pageX - el.offsetLeft
+      el.scrollLeft = scrollLeft - (x - startX) * 1.5
+    }
+    el.addEventListener('pointerdown', onDown)
+    el.addEventListener('pointerup', onUp)
+    el.addEventListener('pointermove', onMove)
+    return () => {
+      el.removeEventListener('pointerdown', onDown)
+      el.removeEventListener('pointerup', onUp)
+      el.removeEventListener('pointermove', onMove)
+    }
+  }, [])
+
   const openModal = (index: number) => setModal({ photoIndex: index })
   const closeModal = useCallback(() => setModal(null), [])
   const navModal = useCallback((dir: number) => {
@@ -326,9 +356,9 @@ export default function GalleryClient({ events }: { events: GalleryEvent[] }) {
                 </button>
               ))}
             </div>
-            <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', paddingLeft: 20, borderLeft: `1px solid ${C.darkBorder}` }}>
-              <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', color: C.darkMuted, whiteSpace: 'nowrap' }}>
-                {event.photos.length} photos
+            <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', paddingLeft: 12, borderLeft: `1px solid ${C.darkBorder}` }}>
+              <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 10, letterSpacing: '0.1em', color: C.darkMuted, whiteSpace: 'nowrap' }}>
+                {event.photos.length}
               </span>
             </div>
           </div>
