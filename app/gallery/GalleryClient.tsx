@@ -190,7 +190,7 @@ function PhotoModal({
   }, [onClose, onNav])
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 500, background: 'rgba(8,7,6,0.92)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, animation: 'ss-fadeIn 0.2s ease' }} onClick={onClose}>
+    <div className="ss-modal-wrap" style={{ position: 'fixed', inset: 0, zIndex: 500, background: 'rgba(8,7,6,0.92)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, animation: 'ss-fadeIn 0.2s ease' }} onClick={onClose}>
       <div style={{ position: 'relative', maxWidth: 1000, width: '100%', animation: 'ss-scaleIn 0.3s cubic-bezier(0.22,1,0.36,1)' }} onClick={e => e.stopPropagation()}>
         {/* Image */}
         <div style={{ position: 'relative', background: C.darkCard, maxHeight: '72vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
@@ -206,35 +206,33 @@ function PhotoModal({
         </div>
 
         {/* Info bar */}
-        <div style={{ background: C.dark, border: `1px solid ${C.darkBorder}`, borderTop: 'none', padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', gap: 20, alignItems: 'center', flex: 1, minWidth: 0, flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke={C.red} strokeWidth="1.3"/><circle cx="8" cy="8" r="2.5" stroke={C.red} strokeWidth="1.3"/><path d="M5.5 5.5L4 4M10.5 5.5L12 4M10.5 10.5L12 12M5.5 10.5L4 12" stroke={C.red} strokeWidth="1.1" strokeLinecap="round"/></svg>
-              <div>
-                <span style={{ color: C.darkMuted, fontSize: 11, fontFamily: 'var(--font-barlow), sans-serif', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700 }}>Photo by </span>
-                <a href={event.photographer.url} target="_blank" rel="noopener noreferrer" style={{ color: C.darkText, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 13, textTransform: 'uppercase', textDecoration: 'none', borderBottom: `1px solid ${C.darkBorder}`, paddingBottom: 1 }}>
+        <div className="ss-modal-bar" style={{ background: C.dark, border: `1px solid ${C.darkBorder}`, borderTop: 'none', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {/* Row 1: photographer + count */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}><circle cx="8" cy="8" r="6.5" stroke={C.red} strokeWidth="1.3"/><circle cx="8" cy="8" r="2.5" stroke={C.red} strokeWidth="1.3"/><path d="M5.5 5.5L4 4M10.5 5.5L12 4M10.5 10.5L12 12M5.5 10.5L4 12" stroke={C.red} strokeWidth="1.1" strokeLinecap="round"/></svg>
+              <span style={{ color: C.darkMuted, fontSize: 11, fontFamily: 'var(--font-barlow), sans-serif', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 700 }}>
+                Photo by{' '}
+                <a href={event.photographer.url} target="_blank" rel="noopener noreferrer" style={{ color: C.darkText, fontWeight: 800, textDecoration: 'none', borderBottom: `1px solid ${C.darkBorder}` }}>
                   {event.photographer.name} ↗
                 </a>
-              </div>
+              </span>
             </div>
-            <span style={{ color: C.darkMuted, fontSize: 12, fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              {event.title} · {event.date}
+            <span style={{ color: 'rgba(122,112,104,0.5)', fontSize: 11, fontFamily: 'var(--font-barlow), sans-serif', flexShrink: 0 }}>
+              {photoIndex + 1} / {allPhotos.length}
             </span>
-            <span style={{ color: 'rgba(122,112,104,0.5)', fontSize: 12 }}>{photoIndex + 1} / {allPhotos.length}</span>
           </div>
-          <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-            <button onClick={handleShare} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '8px 14px', transition: 'color 0.2s' }}
-              onMouseEnter={e => (e.currentTarget.style.color = C.darkText)}
-              onMouseLeave={e => (e.currentTarget.style.color = C.darkMuted)}
-            >
-              <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><circle cx="11" cy="2.5" r="1.5" stroke="currentColor" strokeWidth="1.3"/><circle cx="11" cy="11.5" r="1.5" stroke="currentColor" strokeWidth="1.3"/><circle cx="2.5" cy="7" r="1.5" stroke="currentColor" strokeWidth="1.3"/><path d="M9.5 3.3L4 6.2M4 7.8l5.5 2.9" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>
+          {/* Row 2: buttons */}
+          <div style={{ display: 'flex', gap: 6 }}>
+            <button onClick={handleShare} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '9px 8px' }}>
+              <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><circle cx="11" cy="2.5" r="1.5" stroke="currentColor" strokeWidth="1.3"/><circle cx="11" cy="11.5" r="1.5" stroke="currentColor" strokeWidth="1.3"/><circle cx="2.5" cy="7" r="1.5" stroke="currentColor" strokeWidth="1.3"/><path d="M9.5 3.3L4 6.2M4 7.8l5.5 2.9" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>
               Share
             </button>
-            <button onClick={() => setReporting(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '8px 14px' }}>
-              <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 1v6M7 10v.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.3"/></svg>
+            <button onClick={() => setReporting(true)} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '9px 8px' }}>
+              <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M7 1v6M7 10v.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.3"/></svg>
               Report
             </button>
-            <button onClick={onClose} style={{ background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '8px 14px' }}>
+            <button onClick={onClose} style={{ flex: 1, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '9px 8px' }}>
               Close ×
             </button>
           </div>
@@ -461,6 +459,10 @@ export default function GalleryClient({ events }: { events: GalleryEvent[] }) {
         .ss-photo-cell:hover .ss-photo-credit { opacity: 1 !important; transform: translateY(0) !important; }
         @media (max-width: 640px) {
           .ss-gallery-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .ss-modal-wrap { padding: 0 !important; align-items: flex-end !important; }
+          .ss-modal-wrap > div { max-height: 100dvh; display: flex; flex-direction: column; }
+          .ss-modal-wrap > div > div:first-child { flex: 1; max-height: none !important; }
+          .ss-modal-wrap > div > div:first-child > div { max-height: none !important; height: 100% !important; }
         }
         .report-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #f0ece6; font-family: var(--font-dm), sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.2s; resize: none; box-sizing: border-box; }
         .report-input:focus { border-color: #c9321a; }
