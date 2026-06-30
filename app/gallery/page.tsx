@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import GalleryClient from './GalleryClient'
-import { ANNIV_URLS, PICFLOW_URLS, TBC2024_URLS, REVERIE_URLS } from './gallery-data'
+import { ANNIV_URLS, PICFLOW_URLS, TBC2024_URLS, REVERIE_URLS, DECKD_OUT_PRIDE_2026_URLS } from './gallery-data'
 
 export const metadata: Metadata = {
   title: 'Gallery | Simply Shameless',
@@ -37,6 +37,14 @@ function makePhotos(urls: string[], prefix: string, label: string) {
 
 export default function GalleryPage() {
   const events = [
+    {
+      id: 'deckd-out-pride-2026',
+      title: "Deck'd Out #2 Pride Edition",
+      date: 'June 25, 2026',
+      venue: 'Seattle, WA',
+      photographer: MANNY,
+      photos: makePhotos(DECKD_OUT_PRIDE_2026_URLS, 'deckd-pride-26', "Deck'd Out #2 Pride Edition"),
+    },
     {
       id: 'reverie-society-apr-26',
       title: 'Reverie Society',

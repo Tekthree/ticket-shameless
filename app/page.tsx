@@ -33,6 +33,7 @@ import NewsletterSection from '@/components/home/NewsletterSection'
 import HomeClient from '@/components/home/HomeClient'
 
 const FOLDER_EVENT_MAP: Record<string, string> = {
+  'Deckd-Out-Pride-2026-images': 'deckd-out-pride-2026',
   'Club%20Yes%20and%20Shameless%2023%20year%20anniversary%20party%20images': 'club-yes-anniversary',
   'Picflow%20Images%20Dec%2010': 'breakfast-club-dec',
   'Reverie%20Society-image-collette%204-12-26': 'reverie-society-apr-26',
