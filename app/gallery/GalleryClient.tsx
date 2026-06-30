@@ -245,6 +245,14 @@ export default function GalleryClient({ events }: { events: GalleryEvent[] }) {
   const event = events.find(e => e.id === activeEvent) ?? events[0]
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const eventParam = params.get('event')
+    if (eventParam && events.find(e => e.id === eventParam)) {
+      setActiveEvent(eventParam)
+    }
+  }, [events])
+
+  useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)

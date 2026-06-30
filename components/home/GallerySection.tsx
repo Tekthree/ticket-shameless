@@ -38,13 +38,13 @@ const imageCells = [
   { cols: 2, rows: 1 },
 ]
 
-function GalleryCell({ cols, rows, imageUrl, index }: { cols: number; rows: number; imageUrl?: string; index: number }) {
+function GalleryCell({ cols, rows, imageUrl, eventId, index }: { cols: number; rows: number; imageUrl?: string; eventId?: string; index: number }) {
   const [ref, visible] = useInView<HTMLAnchorElement>()
   const [hover, setHover] = useState(false)
 
   return (
     <Link
-      href="/gallery"
+      href={eventId ? `/gallery?event=${eventId}` : '/gallery'}
       ref={ref}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
@@ -102,9 +102,11 @@ function shuffle<T>(arr: T[]): T[] {
   return a
 }
 
-export default function GallerySection({ images = [] }: { images?: string[] }) {
+type GalleryImage = { src: string; eventId: string }
+
+export default function GallerySection({ images = [] }: { images?: GalleryImage[] }) {
   const [headerRef, headerVisible] = useInView()
-  const [display, setDisplay] = useState<string[]>(images.slice(0, 6))
+  const [display, setDisplay] = useState<GalleryImage[]>(images.slice(0, 6))
 
   useEffect(() => {
     if (images.length > 0) setDisplay(shuffle(images).slice(0, 6))
@@ -152,7 +154,7 @@ export default function GallerySection({ images = [] }: { images?: string[] }) {
           gap: 'var(--ss-card-gap)',
         }}>
           {imageCells.map((cell, i) => (
-            <GalleryCell key={i} cols={cell.cols} rows={cell.rows} imageUrl={display[i]} index={i} />
+            <GalleryCell key={i} cols={cell.cols} rows={cell.rows} imageUrl={display[i]?.src} eventId={display[i]?.eventId} index={i} />
           ))}
         </div>
       </div>

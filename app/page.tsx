@@ -32,6 +32,18 @@ import GallerySection from '@/components/home/GallerySection'
 import NewsletterSection from '@/components/home/NewsletterSection'
 import HomeClient from '@/components/home/HomeClient'
 
+const FOLDER_EVENT_MAP: Record<string, string> = {
+  'Club%20Yes%20and%20Shameless%2023%20year%20anniversary%20party%20images': 'club-yes-anniversary',
+  'Picflow%20Images%20Dec%2010': 'breakfast-club-dec',
+  'Reverie%20Society-image-collette%204-12-26': 'reverie-society-apr-26',
+  'The%20Breakfast%20Club%202024%20Part%201%20images': 'breakfast-club-2024',
+}
+
+function toGalleryImage(url: string) {
+  const folder = url.split('/r2.dev/')[1]?.split('/')[0] ?? ''
+  return { src: url, eventId: FOLDER_EVENT_MAP[folder] ?? 'club-yes-anniversary' }
+}
+
 export default async function Home() {
   let events: Event[] = []
   let galleryImages: string[] = []
@@ -49,6 +61,10 @@ export default async function Home() {
   } catch {
     // R2 not configured — renders placeholder gallery
   }
+
+  const galleryImageObjects = galleryImages
+    .filter(url => !url.includes('/about/'))
+    .map(toGalleryImage)
 
   const orgJsonLd = {
     '@context': 'https://schema.org',
@@ -88,7 +104,7 @@ export default async function Home() {
         <Ticker />
         <EventsSection events={events.slice(0, 6)} />
         <AboutSection />
-        <GallerySection images={galleryImages} />
+        <GallerySection images={galleryImageObjects} />
         <NewsletterSection />
       </div>
     </>
