@@ -105,8 +105,8 @@ export default function AboutSection() {
           <div ref={r2} style={{ ...revealStyle(v2, 80), marginBottom: 40 }}>
             <div style={{ position: 'relative', width: '100%', aspectRatio: '1080/1528', overflow: 'hidden', borderRadius: 'var(--ss-radius)' }}>
               <Image
-                src="https://simplyshameless.com/wp-content/uploads/2020/11/MAIN600.jpg"
-                alt="Shameless Productions party crowd shots"
+                src="https://pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev/about/shameless-productions-seattle-outdoor-dance-party.jpg"
+                alt="Shameless Productions outdoor dance party crowd in Seattle"
                 fill
                 style={{ objectFit: 'cover' }}
                 sizes="(max-width: 900px) 100vw, 58vw"
@@ -131,8 +131,8 @@ export default function AboutSection() {
           <div ref={r5} style={{ ...revealStyle(v5, 200), marginBottom: 40 }}>
             <div style={{ position: 'relative', width: '100%', aspectRatio: '1080/1528', overflow: 'hidden', borderRadius: 'var(--ss-radius)' }}>
               <Image
-                src="https://simplyshameless.com/wp-content/uploads/2023/03/greatjob.jpg"
-                alt="Shameless Productions Deck'd Out party"
+                src="https://pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev/about/shameless-productions-deckd-out-seattle-dj-set.jpg"
+                alt="Shameless Productions Deck'd Out party DJ set in Seattle"
                 fill
                 style={{ objectFit: 'cover' }}
                 sizes="(max-width: 900px) 100vw, 58vw"
