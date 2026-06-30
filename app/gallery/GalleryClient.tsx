@@ -193,7 +193,7 @@ function PhotoModal({
     <div className="ss-modal-wrap" style={{ position: 'fixed', inset: 0, zIndex: 500, background: 'rgba(8,7,6,0.92)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, animation: 'ss-fadeIn 0.2s ease' }} onClick={onClose}>
       <div style={{ position: 'relative', maxWidth: 1000, width: '100%', animation: 'ss-scaleIn 0.3s cubic-bezier(0.22,1,0.36,1)' }} onClick={e => e.stopPropagation()}>
         {/* Image */}
-        <div style={{ position: 'relative', background: C.darkCard, maxHeight: '72vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+        <div className="ss-modal-img" style={{ position: 'relative', background: C.darkCard, maxHeight: '72vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
           {photo.src ? (
             <div style={{ position: 'relative', width: '100%', aspectRatio: photo.aspect || 1, maxHeight: '72vh' }}>
               <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 1024px) 100vw, 1000px" style={{ objectFit: 'contain' }} />
@@ -459,10 +459,8 @@ export default function GalleryClient({ events }: { events: GalleryEvent[] }) {
         .ss-photo-cell:hover .ss-photo-credit { opacity: 1 !important; transform: translateY(0) !important; }
         @media (max-width: 640px) {
           .ss-gallery-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .ss-modal-wrap { padding: 0 !important; align-items: flex-end !important; }
-          .ss-modal-wrap > div { max-height: 100dvh; display: flex; flex-direction: column; }
-          .ss-modal-wrap > div > div:first-child { flex: 1; max-height: none !important; }
-          .ss-modal-wrap > div > div:first-child > div { max-height: none !important; height: 100% !important; }
+          .ss-modal-wrap { padding: 8px !important; }
+          .ss-modal-img { max-height: 55vh !important; }
         }
         .report-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #f0ece6; font-family: var(--font-dm), sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.2s; resize: none; box-sizing: border-box; }
         .report-input:focus { border-color: #c9321a; }
