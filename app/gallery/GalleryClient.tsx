@@ -25,6 +25,7 @@ type Photo = {
 type GalleryEvent = {
   id: string
   title: string
+  tabTitle?: string
   date: string
   venue: string
   photographer: { name: string; url: string }
@@ -358,7 +359,7 @@ export default function GalleryClient({ events }: { events: GalleryEvent[] }) {
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  {e.title}
+                  {e.tabTitle ?? e.title}
                   <span style={{ color: activeEvent === e.id ? 'rgba(240,236,230,0.4)' : 'rgba(240,236,230,0.2)', fontWeight: 600, marginLeft: 6, fontSize: 13 }}>
                     {e.date.split(',')[0]}
                   </span>

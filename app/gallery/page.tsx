@@ -40,6 +40,7 @@ export default function GalleryPage() {
     {
       id: 'deckd-out-pride-2026',
       title: "Deck'd Out #2 Pride Edition",
+      tabTitle: "Deck'd Out",
       date: 'June 25, 2026',
       venue: 'Seattle, WA',
       photographer: MANNY,
