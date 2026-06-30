@@ -161,8 +161,22 @@ function PhotoModal({
   photo: Photo; photoIndex: number; allPhotos: Photo[]; event: GalleryEvent; onClose: () => void; onNav: (d: number) => void
 }) {
   const [reporting, setReporting] = useState(false)
+  const [toast, setToast] = useState(false)
   const hasPrev = photoIndex > 0
   const hasNext = photoIndex < allPhotos.length - 1
+
+  const handleShare = async () => {
+    if (!photo.src) return
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: `${event.title} — ${event.date}`, url: photo.src })
+        return
+      } catch {}
+    }
+    await navigator.clipboard.writeText(photo.src)
+    setToast(true)
+    setTimeout(() => setToast(false), 2000)
+  }
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -209,15 +223,34 @@ function PhotoModal({
             <span style={{ color: 'rgba(122,112,104,0.5)', fontSize: 12 }}>{photoIndex + 1} / {allPhotos.length}</span>
           </div>
           <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+            <button onClick={handleShare} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '8px 14px', transition: 'color 0.2s' }}
+              onMouseEnter={e => (e.currentTarget.style.color = C.darkText)}
+              onMouseLeave={e => (e.currentTarget.style.color = C.darkMuted)}
+            >
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><circle cx="11" cy="2.5" r="1.5" stroke="currentColor" strokeWidth="1.3"/><circle cx="11" cy="11.5" r="1.5" stroke="currentColor" strokeWidth="1.3"/><circle cx="2.5" cy="7" r="1.5" stroke="currentColor" strokeWidth="1.3"/><path d="M9.5 3.3L4 6.2M4 7.8l5.5 2.9" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>
+              Share
+            </button>
             <button onClick={() => setReporting(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '8px 14px' }}>
               <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 1v6M7 10v.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.3"/></svg>
-              Report Image
+              Report
             </button>
             <button onClick={onClose} style={{ background: 'transparent', border: `1px solid ${C.darkBorder}`, color: C.darkMuted, cursor: 'pointer', fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '8px 14px' }}>
               Close ×
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Copy link toast */}
+      <div style={{
+        position: 'fixed', bottom: 32, left: '50%', transform: `translateX(-50%) translateY(${toast ? 0 : 12}px)`,
+        background: '#f0ece6', color: '#1c1917',
+        fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase',
+        padding: '10px 20px', zIndex: 600,
+        opacity: toast ? 1 : 0, transition: 'opacity 0.2s, transform 0.2s',
+        pointerEvents: 'none',
+      }}>
+        Link copied
       </div>
 
       {reporting && <ReportModal photo={photo} event={event} onClose={() => setReporting(false)} />}
