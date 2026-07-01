@@ -7,7 +7,7 @@ export const revalidate = 300
 export const metadata: Metadata = {
   title: 'DJs | Simply Shameless',
   description: 'The artists behind Simply Shameless events. Seattle underground music collective.',
-  alternates: { canonical: 'https://simplyshameless.com/djs' },
+  alternates: { canonical: 'https://www.simplyshameless.com/djs' },
 }
 
 const C = {

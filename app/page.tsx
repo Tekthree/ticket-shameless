@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Simply Shameless — Seattle Underground House & Techno',
     description: "Seattle's underground house and techno collective since 2003. Upcoming events at Monkey Loft and beyond.",
-    url: 'https://simplyshameless.com',
+    url: 'https://www.simplyshameless.com',
     type: 'website',
     images: [{ url: 'https://pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev/site/og-default.jpg', width: 1280, height: 1080, alt: 'Simply Shameless — Seattle Underground House & Techno' }],
   },
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     description: "Seattle's underground house and techno collective since 2003.",
   },
   alternates: {
-    canonical: 'https://simplyshameless.com',
+    canonical: 'https://www.simplyshameless.com',
   },
 }
 import HeroSection from '@/components/home/HeroSection'
@@ -71,8 +71,8 @@ export default async function Home() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Simply Shameless',
-    url: 'https://simplyshameless.com',
-    logo: 'https://simplyshameless.com/shameless-logo.png',
+    url: 'https://www.simplyshameless.com',
+    logo: 'https://www.simplyshameless.com/shameless-logo.png',
     description: "Seattle's underground house and techno collective since 2003.",
     foundingDate: '2003',
     location: { '@type': 'Place', address: { '@type': 'PostalAddress', addressLocality: 'Seattle', addressRegion: 'WA', addressCountry: 'US' } },
@@ -87,10 +87,10 @@ export default async function Home() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Simply Shameless',
-    url: 'https://simplyshameless.com',
+    url: 'https://www.simplyshameless.com',
     potentialAction: {
       '@type': 'SearchAction',
-      target: { '@type': 'EntryPoint', urlTemplate: 'https://simplyshameless.com/events?q={search_term_string}' },
+      target: { '@type': 'EntryPoint', urlTemplate: 'https://www.simplyshameless.com/events?q={search_term_string}' },
       'query-input': 'required name=search_term_string',
     },
   }

@@ -13,6 +13,7 @@ const ALLOWED_IMAGE_HOSTS = [
   'pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev',
   'images.unsplash.com',
   'simplyshameless.com',
+  'www.simplyshameless.com',
   'img.evbuc.com',
   'cdn.evbuc.com',
 ]
@@ -879,7 +880,7 @@ function LikeButton({ event, token, onNeedAuth, initialCount, initialLiked }: {
 
 function SharePanel({ event, onClose }: { event: Event; onClose: () => void }) {
   const [copied, setCopied] = useState(false)
-  const url = typeof window !== 'undefined' ? window.location.href : `https://simplyshameless.com/events/${event.slug}`
+  const url = typeof window !== 'undefined' ? window.location.href : `https://www.simplyshameless.com/events/${event.slug}`
   const shareText = `${event.title} — ${new Date(event.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'America/Los_Angeles' })}${event.venue ? ` at ${event.venue}` : ''}`
 
   function copyLink() {

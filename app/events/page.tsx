@@ -1,15 +1,15 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { getEvents } from '@/lib/events'
-import type { Event } from '@/lib/db'
+import { getEventsWithLineup } from '@/lib/events'
+import type { Event, EventWithLineup } from '@/lib/db'
 
 export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Events - Simply Shameless',
   description: "Upcoming Shameless Productions events in Seattle — underground house and techno.",
-  alternates: { canonical: 'https://simplyshameless.com/events' },
+  alternates: { canonical: 'https://www.simplyshameless.com/events' },
 }
 
 function toSeattleISO(dateStr: string): string {
@@ -95,14 +95,29 @@ function EventRow({ event }: { event: Event }) {
   )
 }
 
+function buildPerformers(event: EventWithLineup) {
+  const performers: object[] = event.lineup.map(a => ({
+    '@type': 'MusicGroup',
+    name: a.name,
+    ...(a.dj_slug ? { url: `https://www.simplyshameless.com/djs/${a.dj_slug}` } : {}),
+  }))
+  if (event.presented_by) {
+    performers.push({ '@type': 'MusicGroup', name: event.presented_by })
+  }
+  if (performers.length === 0) {
+    performers.push({ '@type': 'MusicGroup', name: 'Shameless', url: 'https://www.simplyshameless.com' })
+  }
+  return performers
+}
+
 export default async function EventsPage() {
-  const events = await getEvents(20)
+  const events = await getEventsWithLineup(20)
 
   const jsonLd = events.length > 0 ? {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'Upcoming Simply Shameless Events',
-    url: 'https://simplyshameless.com/events',
+    url: 'https://www.simplyshameless.com/events',
     itemListElement: events.map((event, i) => ({
       '@type': 'ListItem',
       position: i + 1,
@@ -110,15 +125,27 @@ export default async function EventsPage() {
         '@type': 'MusicEvent',
         name: event.title,
         startDate: toSeattleISO(event.date),
+        ...(event.end_date ? { endDate: toSeattleISO(event.end_date) } : {}),
+        description: event.description ?? `${event.venue}, Seattle — underground house and techno by Simply Shameless.`,
         eventStatus: 'https://schema.org/EventScheduled',
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-        url: `https://simplyshameless.com/events/${event.slug}`,
+        url: `https://www.simplyshameless.com/events/${event.slug}`,
         location: {
           '@type': 'MusicVenue',
           name: event.venue,
           address: { '@type': 'PostalAddress', addressLocality: 'Seattle', addressRegion: 'WA', addressCountry: 'US' },
         },
-        organizer: { '@type': 'Organization', name: 'Simply Shameless', url: 'https://simplyshameless.com' },
+        organizer: { '@type': 'Organization', name: 'Shameless Productions', url: 'https://www.simplyshameless.com' },
+        performer: buildPerformers(event),
+        ...(event.payment_link ? {
+          offers: {
+            '@type': 'Offer',
+            url: event.payment_link,
+            priceCurrency: 'USD',
+            price: event.suggested_price ?? 0,
+            availability: 'https://schema.org/InStock',
+          },
+        } : {}),
         ...(event.banner_url ?? event.image_url ? { image: event.banner_url ?? event.image_url } : {}),
       },
     })),

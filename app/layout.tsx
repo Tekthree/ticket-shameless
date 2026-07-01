@@ -22,7 +22,7 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://simplyshameless.com'),
+  metadataBase: new URL('https://www.simplyshameless.com'),
   title: {
     default: 'Simply Shameless — Seattle Underground House & Techno',
     template: '%s | Simply Shameless',

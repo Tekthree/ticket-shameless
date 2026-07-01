@@ -87,6 +87,10 @@ export type DJ = {
   created_at: string
 }
 
+export type EventWithLineup = Event & {
+  lineup: Pick<LineupArtist, 'id' | 'name' | 'dj_slug' | 'is_headliner'>[]
+}
+
 export async function getEvents(limit = 10): Promise<Event[]> {
   try {
     const rows = await sql`
@@ -99,6 +103,37 @@ export async function getEvents(limit = 10): Promise<Event[]> {
     return rows as Event[]
   } catch (error) {
     console.warn('Failed to fetch events:', error)
+    return []
+  }
+}
+
+export async function getEventsWithLineup(limit = 10): Promise<EventWithLineup[]> {
+  try {
+    const rows = await sql`
+      select e.*,
+        coalesce(
+          json_agg(
+            json_build_object(
+              'id', l.id,
+              'name', l.name,
+              'dj_slug', d.slug,
+              'is_headliner', coalesce(l.is_headliner, false)
+            ) order by l.sort_order asc
+          ) filter (where l.id is not null),
+          '[]'::json
+        ) as lineup
+      from events e
+      left join lineup l on l.event_id = e.id
+      left join djs d on d.id = l.dj_id
+      where e.is_published = true
+      and e.date >= now()
+      group by e.id
+      order by e.date asc
+      limit ${limit}
+    `
+    return rows as EventWithLineup[]
+  } catch (error) {
+    console.warn('Failed to fetch events with lineup:', error)
     return []
   }
 }

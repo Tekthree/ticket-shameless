@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Contact — Simply Shameless',
   description: 'Get in touch with Simply Shameless for bookings, press, general inquiries, or photo removal requests.',
-  alternates: { canonical: 'https://simplyshameless.com/contact' },
+  alternates: { canonical: 'https://www.simplyshameless.com/contact' },
 }
 
 const C = {

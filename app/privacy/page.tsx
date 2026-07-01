@@ -4,7 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Privacy Policy — Simply Shameless',
   description: 'How Simply Shameless handles your data, event photos, and contact information.',
-  alternates: { canonical: 'https://simplyshameless.com/privacy' },
+  alternates: { canonical: 'https://www.simplyshameless.com/privacy' },
 }
 
 const C = {

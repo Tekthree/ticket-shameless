@@ -14,7 +14,7 @@ export async function generateStaticParams() {
   }
 }
 
-const SITE_URL = 'https://simplyshameless.com'
+const SITE_URL = 'https://www.simplyshameless.com'
 
 function fmtDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Los_Angeles' })
@@ -112,7 +112,7 @@ export default async function EventPage({
     },
     organizer: {
       '@type': 'Organization',
-      name: 'Simply Shameless',
+      name: 'Shameless Productions',
       url: SITE_URL,
     },
     ...(lineup.length > 0 ? {

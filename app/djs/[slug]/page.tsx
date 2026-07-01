@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const description = dj.seo_description ?? dj.bio?.slice(0, 155) ?? `${dj.name} plays Simply Shameless events in Seattle.`
 
-  const url = `https://simplyshameless.com/djs/${slug}`
+  const url = `https://www.simplyshameless.com/djs/${slug}`
 
   return {
     title: `${dj.name} | Simply Shameless`,
@@ -70,13 +70,13 @@ export default async function DJProfilePage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'MusicGroup',
     name: dj.name,
-    url: `https://simplyshameless.com/djs/${slug}`,
+    url: `https://www.simplyshameless.com/djs/${slug}`,
     description: dj.bio ?? undefined,
     ...(dj.profile_image_url ? { image: dj.profile_image_url } : {}),
     ...(dj.location ? { location: { '@type': 'Place', name: dj.location } } : {}),
     ...(dj.genres.length > 0 ? { genre: dj.genres } : {}),
     ...(sameAs.length > 0 ? { sameAs } : {}),
-    member: { '@type': 'Organization', name: 'Simply Shameless', url: 'https://simplyshameless.com' },
+    member: { '@type': 'Organization', name: 'Simply Shameless', url: 'https://www.simplyshameless.com' },
   }
 
   return (

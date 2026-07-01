@@ -8,7 +8,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: 'Past Events - Simply Shameless',
   description: 'Archive of past Shameless Productions events in Seattle.',
-  alternates: { canonical: 'https://simplyshameless.com/events/past' },
+  alternates: { canonical: 'https://www.simplyshameless.com/events/past' },
 }
 
 function fmt(dateStr: string) {
