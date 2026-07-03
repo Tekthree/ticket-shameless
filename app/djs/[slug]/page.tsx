@@ -20,14 +20,14 @@ type Props = { params: Promise<{ slug: string }> }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const dj = await getDJBySlug(slug).catch(() => null)
-  if (!dj) return { title: 'DJ Not Found | Simply Shameless' }
+  if (!dj) return { title: 'DJ Not Found' }
 
   const description = dj.seo_description ?? dj.bio?.slice(0, 155) ?? `${dj.name} plays Simply Shameless events in Seattle.`
 
   const url = `https://www.simplyshameless.com/djs/${slug}`
 
   return {
-    title: `${dj.name} | Simply Shameless`,
+    title: dj.name,
     description,
     alternates: { canonical: url },
     openGraph: {
