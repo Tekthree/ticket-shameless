@@ -1211,7 +1211,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
         .ep-hero {
           position: relative;
-          height: 420px;
+          height: clamp(450px, 40vw, 560px);
           overflow: hidden;
           margin-top: 64px;
         }
@@ -1251,8 +1251,8 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
         }
 
         @media (max-width: 1100px) {
-          .ep-hero { height: 260px; margin-top: 64px; }
-          .ep-hero-tags-wrap { bottom: 20px; }
+          .ep-hero { height: 300px; margin-top: 64px; }
+          .ep-hero-tags-wrap { bottom: 21px; }
 
           .ep-body {
             grid-template-columns: 1fr;
@@ -1260,7 +1260,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
             padding: 0 20px 120px;
           }
 
-          .ep-body > div:first-child { padding-top: 28px; }
+          .ep-body > div:first-child { padding-top: 32px; }
 
           .ep-sidebar { display: none; }
           .ep-share-mobile { display: block; margin-bottom: 8px; }
