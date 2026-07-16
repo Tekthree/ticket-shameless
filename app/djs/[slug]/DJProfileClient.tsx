@@ -379,12 +379,12 @@ export default function DJProfileClient({ dj, events }: { dj: DJ; events: Event[
       {/* ── DJ REQUEST NOTE ────────────────────────────────────────────── */}
       <div className="djp-request-note">
         <p style={{ marginBottom: 16 }}>Want your profile updated or removed?</p>
-        <a
-          href={`mailto:hello@simplyshameless.com?subject=${encodeURIComponent(`DJ Profile: ${dj.name}`)}`}
+        <Link
+          href="/contact"
           className="djp-contact-btn"
         >
           Contact Us
-        </a>
+        </Link>
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
