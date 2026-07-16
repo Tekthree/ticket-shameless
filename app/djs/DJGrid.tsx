@@ -33,6 +33,8 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
     return list
   }, [djs, filter, search])
 
+  const visibleIds = useMemo(() => new Set(filtered.map(d => d.id)), [filtered])
+
   const tabs: { key: Filter; label: string }[] = [
     { key: 'residents', label: 'Shameless Residents' },
     { key: 'guests', label: 'Guests' },
@@ -137,17 +139,23 @@ export function DJGrid({ djs, upcomingCounts = {} }: { djs: DJ[]; upcomingCounts
 
       {/* Grid */}
       <div style={{ maxWidth: 1312, margin: '0 auto', padding: '0 clamp(20px, 4vw, 56px) 80px' }}>
-        {filtered.length === 0 ? (
+        {filtered.length === 0 && (
           <div style={{ color: C.darkMuted, fontSize: 15, padding: '48px 0', textAlign: 'center' }}>
             <span style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
               No DJs found
             </span>
           </div>
-        ) : (
-          <div className="ss-dj-grid" style={{ display: 'grid' }}>
-            {filtered.map(dj => <DJCard key={dj.id} dj={dj} upcomingCount={upcomingCounts[dj.id] ?? 0} />)}
-          </div>
         )}
+        <div className="ss-dj-grid" style={{ display: filtered.length === 0 ? 'none' : 'grid' }}>
+          {djs.map(dj => {
+            const isVisible = visibleIds.has(dj.id)
+            return (
+              <div key={dj.id} style={{ display: isVisible ? 'block' : 'none', minWidth: 0 }}>
+                <DJCard dj={dj} upcomingCount={upcomingCounts[dj.id] ?? 0} />
+              </div>
+            )
+          })}
+        </div>
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `

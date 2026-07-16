@@ -125,7 +125,10 @@ export default async function EventPage({
         }
       }),
     } : {}),
-    ...(event.banner_url ?? event.image_url ? { image: event.banner_url ?? event.image_url } : {}),
+    image: (() => {
+      const rawImg = event.banner_url ?? event.image_url ?? event.square_image_url ?? '/shameless-logo.png'
+      return rawImg.startsWith('http') ? rawImg : `${SITE_URL}${rawImg.startsWith('/') ? '' : '/'}${rawImg}`
+    })(),
     url: `${SITE_URL}/events/${event.slug}`,
     ...(event.payment_link ? {
       offers: {

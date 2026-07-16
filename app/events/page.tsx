@@ -146,7 +146,10 @@ export default async function EventsPage() {
             availability: 'https://schema.org/InStock',
           },
         } : {}),
-        ...(event.banner_url ?? event.image_url ? { image: event.banner_url ?? event.image_url } : {}),
+        image: (() => {
+          const rawImg = event.banner_url ?? event.image_url ?? event.square_image_url ?? '/shameless-logo.png'
+          return rawImg.startsWith('http') ? rawImg : `https://www.simplyshameless.com${rawImg.startsWith('/') ? '' : '/'}${rawImg}`
+        })(),
       },
     })),
   } : null
