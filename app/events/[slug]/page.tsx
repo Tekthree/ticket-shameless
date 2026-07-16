@@ -49,7 +49,8 @@ export async function generateMetadata({
   const dateStr = fmtDate(event.date)
   const description = event.description
     ?? `${dateStr} · ${event.venue}${event.address ? `, ${event.address}` : ''} · Seattle underground house and techno.`
-  const image = event.banner_url ?? event.image_url
+  const rawImage = event.banner_url ?? event.image_url ?? event.square_image_url ?? 'https://pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev/site/og-default.jpg'
+  const imageUrl = rawImage.startsWith('http') ? rawImage : `${SITE_URL}${rawImage.startsWith('/') ? '' : '/'}${rawImage}`
   const url = `${SITE_URL}/events/${event.slug}`
 
   return {
@@ -60,13 +61,13 @@ export async function generateMetadata({
       description,
       url,
       type: 'website',
-      images: image ? [{ url: image, width: 1200, height: 630, alt: `${event.title} at ${event.venue}, Seattle` }] : [],
+      images: [{ url: imageUrl, width: 1200, height: 630, alt: `${event.title} at ${event.venue}, Seattle` }],
     },
     twitter: {
       card: 'summary_large_image',
       title: `${event.title} | Simply Shameless`,
       description,
-      images: image ? [image] : [],
+      images: [imageUrl],
     },
     alternates: {
       canonical: url,

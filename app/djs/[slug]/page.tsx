@@ -26,6 +26,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const url = `https://www.simplyshameless.com/djs/${slug}`
 
+  const rawImage = dj.profile_image_url ?? 'https://pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev/site/og-default.jpg'
+  const imageUrl = rawImage.startsWith('http') ? rawImage : `https://www.simplyshameless.com${rawImage.startsWith('/') ? '' : '/'}${rawImage}`
+
   return {
     title: dj.name,
     description,
@@ -34,13 +37,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${dj.name} | Simply Shameless`,
       description,
       url,
-      images: dj.profile_image_url ? [{ url: dj.profile_image_url, width: 800, height: 800, alt: dj.name }] : [],
+      images: [{ url: imageUrl, width: 800, height: 800, alt: dj.name }],
     },
     twitter: {
       card: 'summary_large_image',
       title: `${dj.name} | Simply Shameless`,
       description,
-      images: dj.profile_image_url ? [dj.profile_image_url] : [],
+      images: [imageUrl],
     },
   }
 }
