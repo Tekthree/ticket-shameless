@@ -98,7 +98,7 @@ export default async function EventPage({
     name: event.title,
     startDate: toSeattleISO(event.date),
     ...(event.end_date ? { endDate: toSeattleISO(event.end_date) } : {}),
-    eventStatus: isPast ? 'https://schema.org/EventScheduled' : 'https://schema.org/EventScheduled',
+    eventStatus: isPast ? 'https://schema.org/EventCompleted' : 'https://schema.org/EventScheduled',
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     location: {
       '@type': 'MusicVenue',
