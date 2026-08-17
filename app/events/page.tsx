@@ -41,7 +41,7 @@ function EventRow({ event }: { event: Event }) {
   const timeStr = fmtTime(event.date)
   const endTimeStr = event.end_date ? fmtTime(event.end_date) : null
   const tags = event.tags ?? []
-  const imageUrl = event.banner_url || event.image_url || null
+  const imageUrl = event.square_image_url || event.banner_url || event.image_url || null
 
   return (
     <Link href={`/events/${event.slug}`} style={{ display: 'block', textDecoration: 'none' }}>
