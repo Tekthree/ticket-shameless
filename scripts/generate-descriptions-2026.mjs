@@ -59,7 +59,7 @@ const events = await sql`
   FROM events e
   LEFT JOIN lineup l ON l.event_id = e.id
   WHERE e.is_published = true
-    AND (e.description IS NULL OR e.description = '')
+    AND (e.description IS NULL OR e.description = '' OR length(e.description) < 150)
     AND e.date >= '2026-01-01'
     AND e.date < '2027-01-01'
   GROUP BY e.id
@@ -87,7 +87,7 @@ async function callGemini(parts) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`
   const body = {
     contents: [{ role: 'user', parts }],
-    generationConfig: { temperature: 0.7, maxOutputTokens: 512 },
+    generationConfig: { temperature: 0.7, maxOutputTokens: 1024, thinkingConfig: { thinkingBudget: 0 } },
     systemInstruction: {
       parts: [{
         text: `You write short, punchy event descriptions for a Seattle underground house and techno collective called Simply Shameless (aka Shameless Productions). 
@@ -118,7 +118,10 @@ Output ONLY the description text. No title, no markdown, no quotes around the ou
     throw new Error(`Gemini error ${res.status}: ${err.slice(0, 200)}`)
   }
   const data = await res.json()
-  return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? null
+  // Gemini thinking models can split output across multiple parts — join them all
+  const parts2 = data.candidates?.[0]?.content?.parts ?? []
+  const text = parts2.map(p => p.text ?? '').join('').trim()
+  return text || null
 }
 
 // ── Build prompt for one event ─────────────────────────────────────────────────
