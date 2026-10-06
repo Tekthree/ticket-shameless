@@ -67,6 +67,7 @@ export default async function DJProfilePage({ params }: Props) {
     dj.youtube_url,
     dj.mixcloud_url,
     dj.website_url,
+    dj.beatport_url,
   ].filter(Boolean) as string[]
 
   const jsonLd = {
