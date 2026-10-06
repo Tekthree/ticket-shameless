@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { getEventBySlug, getEventLineup, getEvents } from '@/lib/events'
 import EventPageClient from './EventPageClient'
 
-export const revalidate = 60
+export const revalidate = 3600
 
 export async function generateStaticParams() {
   try {
@@ -150,7 +150,7 @@ export default async function EventPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <EventPageClient event={event} lineup={lineup} otherEvents={otherEvents} />
+      <EventPageClient event={event} lineup={lineup} otherEvents={otherEvents} deferComments={new Date(event.end_date ?? event.date).getTime() < Date.now()} />
     </>
   )
 }

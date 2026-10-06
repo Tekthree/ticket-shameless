@@ -3,7 +3,7 @@ import { getEvents } from '@/lib/events'
 import type { Event } from '@/lib/db'
 import { getGalleryImages } from '@/lib/r2'
 
-export const revalidate = 60
+export const revalidate = 900
 
 export const metadata: Metadata = {
   title: 'Simply Shameless — Seattle Underground House & Techno',

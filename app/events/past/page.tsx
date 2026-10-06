@@ -53,7 +53,7 @@ export default async function PastEventsPage() {
     if (!byYear.has(yr)) byYear.set(yr, [])
     byYear.get(yr)!.push(e)
   }
-  const years = [...byYear.keys()].sort((a, b) => b - a)
+  const years = Array.from(byYear.keys()).sort((a, b) => b - a)
 
   return (
     <div style={{ minHeight: '100vh', background: '#1c1917', paddingTop: 64 }}>

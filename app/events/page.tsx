@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { getEventsWithLineup } from '@/lib/events'
 import type { Event, EventWithLineup } from '@/lib/db'
 
-export const revalidate = 60
+export const revalidate = 900
 
 export const metadata: Metadata = {
   title: 'Events - Simply Shameless',

@@ -1,3 +1,4 @@
+import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 import { neon } from '@neondatabase/serverless'
 
@@ -59,6 +60,7 @@ export async function POST(req: NextRequest) {
     await db`INSERT INTO event_likes (user_id, event_id) VALUES (${user.id as string}, ${event_id})`
   }
 
+  revalidateTag('event-social')
   const countRows = await db`SELECT COUNT(*)::int AS count FROM event_likes WHERE event_id = ${event_id}`
 
   return NextResponse.json({

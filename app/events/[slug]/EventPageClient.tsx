@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import type { Event, LineupArtist } from '@/lib/db'
 import { useAuth, storeSession, type AuthUser } from '@/lib/auth'
 import EventPhotoStrip from './EventPhotoStrip'
@@ -586,31 +586,33 @@ function RSVPSection({ event, onOpenModal, myRsvp, counts, onCountsChange }: {
   )
 }
 
-function CommentsSection({ event, myRsvp, onOpenModal, initialComments }: {
+function CommentsSection({ event, myRsvp, onOpenModal, initialComments, isPast }: {
   event: Event;
   myRsvp: { name: string; status: string } | null;
   onOpenModal: () => void;
   initialComments: CommentRow[];
+  isPast: boolean;
 }) {
   const [comments, setComments] = useState<CommentRow[]>(initialComments)
   const [newMsg, setNewMsg] = useState('')
   const [posting, setPosting] = useState(false)
+  const [opened, setOpened] = useState(false)
 
   useEffect(() => {
-    setComments(initialComments)
-  }, [initialComments])
+    if (!isPast) setComments(initialComments)
+  }, [initialComments, isPast])
 
-  function loadComments() {
+  const loadComments = useCallback(() => {
     fetch(`/api/comment?event_id=${event.id}`)
       .then(r => r.json())
       .then(d => setComments(Array.isArray(d) ? d : []))
       .catch(() => {})
-  }
+  }, [event.id])
 
   useEffect(() => {
-    if (!myRsvp?.status) return
+    if (isPast ? !opened : !myRsvp?.status) return
     loadComments()
-  }, [myRsvp?.status])
+  }, [myRsvp?.status, opened, isPast, loadComments])
 
   async function handlePost() {
     if (!newMsg.trim() || !myRsvp) return
@@ -636,6 +638,13 @@ function CommentsSection({ event, myRsvp, onOpenModal, initialComments }: {
     if (h < 24) return `${h}h ago`
     return `${Math.floor(h / 24)}d ago`
   }
+
+  if (isPast && !opened) return (
+    <div>
+      <SecLabel>Message Board</SecLabel>
+      <button type="button" onClick={() => setOpened(true)} style={{ color: C.darkText, background: 'transparent', border: `1px solid ${C.darkBorder}`, padding: '10px 24px', cursor: 'pointer' }}>Show conversation</button>
+    </div>
+  )
 
   return (
     <div>
@@ -962,7 +971,7 @@ function ShareButton({ event }: { event: Event }) {
 
 // ── PAGE ─────────────────────────────────────────────────────────────────
 
-export default function EventPageClient({ event, lineup, otherEvents }: { event: Event; lineup: LineupArtist[]; otherEvents: Event[] }) {
+export default function EventPageClient({ event, lineup, otherEvents, deferComments = false }: { event: Event; lineup: LineupArtist[]; otherEvents: Event[]; deferComments?: boolean }) {
   const [heroRef, heroVisible] = useInView()
   const [bodyRef, bodyVisible] = useInView(0.02)
   const [rsvpModalOpen, setRsvpModalOpen] = useState(false)
@@ -980,11 +989,11 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
   useEffect(() => {
     const headers: HeadersInit = token ? { 'x-session-token': token } : {}
-    fetch(`/api/event-social?event_id=${event.id}`, { headers })
+    fetch(`/api/event-social?event_id=${event.id}&comments=${deferComments ? '0' : '1'}`, { headers })
       .then(r => r.json())
       .then(d => setSocialData(d))
       .catch(() => {})
-  }, [event.id, token])
+  }, [event.id, token, deferComments])
 
   const [myRsvp, setMyRsvp] = useState<{ name: string; status: string } | null>(() => {
     if (typeof window === 'undefined') return null
@@ -1148,7 +1157,7 @@ export default function EventPageClient({ event, lineup, otherEvents }: { event:
 
           {/* Message Board */}
           <Divider />
-          <CommentsSection event={event} myRsvp={myRsvp} onOpenModal={() => setRsvpModalOpen(true)} initialComments={socialData.comments} />
+          <CommentsSection key={event.id} isPast={deferComments} event={event} myRsvp={myRsvp} onOpenModal={() => setRsvpModalOpen(true)} initialComments={socialData.comments} />
 
           {/* More from Simply Shameless */}
           {otherEvents.length > 0 && (

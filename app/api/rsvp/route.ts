@@ -1,12 +1,14 @@
+import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
-import { createRsvp, getRsvpCounts, createComment } from '@/lib/db'
+import { createRsvp, createComment } from '@/lib/db'
+import { getPublicEventSocial } from '@/lib/event-social'
 
 export async function GET(req: NextRequest) {
   const event_id = req.nextUrl.searchParams.get('event_id')
   if (!event_id) return NextResponse.json({ error: 'event_id required' }, { status: 400 })
 
   try {
-    const counts = await getRsvpCounts(event_id)
+    const { rsvpCounts: counts } = await getPublicEventSocial(event_id)
     return NextResponse.json({ counts })
   } catch (err) {
     console.error('RSVP GET error:', err)
@@ -27,6 +29,7 @@ export async function POST(req: NextRequest) {
     if (note?.trim()) {
       await createComment({ event_id, name, message: note.trim() })
     }
+    revalidateTag('event-social')
     return NextResponse.json(rsvp, { status: 201 })
   } catch (err) {
     console.error('RSVP error:', err)

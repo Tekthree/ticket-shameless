@@ -1,11 +1,13 @@
+import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
-import { createComment, getComments } from '@/lib/db'
+import { createComment } from '@/lib/db'
+import { getPublicEventComments } from '@/lib/event-social'
 
 export async function GET(req: NextRequest) {
   const event_id = req.nextUrl.searchParams.get('event_id')
   if (!event_id) return NextResponse.json({ error: 'event_id required' }, { status: 400 })
   try {
-    const comments = await getComments(event_id)
+    const comments = await getPublicEventComments(event_id)
     return NextResponse.json(comments)
   } catch (err) {
     console.error('Comments GET error:', err)
@@ -20,6 +22,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'event_id, name, and message are required' }, { status: 400 })
     }
     const comment = await createComment({ event_id, name, message: message.trim() })
+    revalidateTag('event-social')
     return NextResponse.json(comment, { status: 201 })
   } catch (err) {
     console.error('Comment POST error:', err)

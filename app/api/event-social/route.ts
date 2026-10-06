@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { neon } from '@neondatabase/serverless'
+import { getPublicEventSocial, getPublicEventComments } from '@/lib/event-social'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -9,8 +10,8 @@ export async function GET(req: NextRequest) {
   const token = req.headers.get('x-session-token')
   const db = neon(process.env.DATABASE_URL!, { fetchOptions: { cache: 'no-store' } })
 
-  const [likeCountRows, userLikeRows, rsvpRows, commentRows] = await Promise.all([
-    db`SELECT COUNT(*)::int AS count FROM event_likes WHERE event_id = ${eventId}`,
+  const [publicData, userLikeRows, commentRows] = await Promise.all([
+    getPublicEventSocial(eventId),
     token
       ? db`
           SELECT l.user_id FROM user_sessions s
@@ -19,29 +20,15 @@ export async function GET(req: NextRequest) {
           LIMIT 1
         `
       : Promise.resolve([]),
-    db`
-      SELECT status, COUNT(*)::int AS count
-      FROM rsvps WHERE event_id = ${eventId}
-      GROUP BY status
-    `,
-    db`
-      SELECT id, name, message, created_at
-      FROM comments WHERE event_id = ${eventId}
-      ORDER BY created_at ASC
-    `,
+    searchParams.get('comments') === '0' ? Promise.resolve([]) : getPublicEventComments(eventId),
   ])
-
-  const rsvpCounts = { going: 0, maybe: 0, not_going: 0 }
-  for (const r of rsvpRows) {
-    rsvpCounts[r.status as keyof typeof rsvpCounts] = r.count as number
-  }
 
   return NextResponse.json({
     likes: {
-      count: (likeCountRows[0]?.count as number) ?? 0,
+      count: publicData.count,
       liked: userLikeRows.length > 0,
     },
-    rsvpCounts,
+    rsvpCounts: publicData.rsvpCounts,
     comments: commentRows,
-  })
+  }, { headers: { 'Cache-Control': 'private, no-store' } })
 }
