@@ -1004,6 +1004,7 @@ export default function EventPageClient({ event, lineup, otherEvents, deferComme
   })
 
   const dateStr = fmt(event.date, { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase()
+  const timeKnown = event.time_confirmed !== false
   const timeStr = fmtTime(event.date)
   const endTimeStr = event.end_date ? fmtTime(event.end_date) : null
   // Split title on " × " for outline effect on second part
@@ -1057,7 +1058,7 @@ export default function EventPageClient({ event, lineup, otherEvents, deferComme
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, flexWrap: 'wrap' }}>
               <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="11" rx="1" stroke={C.red} strokeWidth="1.4" /><path d="M5 2V5M11 2V5M2 8H14" stroke={C.red} strokeWidth="1.4" strokeLinecap="round" /></svg>
               <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 800, fontSize: 'clamp(17px, 2.5vw, 22px)', color: C.red }}>
-                {dateStr} &bull; {timeStr}{endTimeStr ? ` – ${endTimeStr}` : ''}
+                {dateStr}{timeKnown ? <> &bull; {timeStr}{endTimeStr ? ` – ${endTimeStr}` : ''}</> : null}
               </div>
             </div>
             {event.venue && (
@@ -1081,9 +1082,11 @@ export default function EventPageClient({ event, lineup, otherEvents, deferComme
           {/* About */}
           <div>
             <SecLabel>About</SecLabel>
+            {timeKnown && (
             <MetaRow icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.3" /><path d="M8 5V8.5L10 10.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" /></svg>}>
               Doors open at <strong style={{ color: C.darkText }}>{timeStr}</strong>{endTimeStr ? <> · Show ends <strong style={{ color: C.darkText }}>{endTimeStr}</strong></> : null}
             </MetaRow>
+            )}
             <MetaRow icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1a4 4 0 1 1 0 8A4 4 0 0 1 8 1ZM2 15c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" /></svg>}>
               21+ only
             </MetaRow>
@@ -1136,10 +1139,12 @@ export default function EventPageClient({ event, lineup, otherEvents, deferComme
                       Open in Maps
                     </a>
                   )}
+                  {timeKnown && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 7, color: C.darkMuted, fontSize: 13 }}>
                     <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.3" /><path d="M7 4V7.5L9 9.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" /></svg>
                     Doors open {timeStr}
                   </div>
+                  )}
                 </div>
                 <div style={{ width: '100%', height: 200, background: C.darkCard, border: `1px solid ${C.darkBorder}`, borderRadius: 'var(--ss-radius)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                   <div style={{ position: 'absolute', inset: 0, background: `repeating-linear-gradient(0deg, ${C.darkBorder} 0, ${C.darkBorder} 1px, transparent 1px, transparent 32px), repeating-linear-gradient(90deg, ${C.darkBorder} 0, ${C.darkBorder} 1px, transparent 1px, transparent 32px)` }} />

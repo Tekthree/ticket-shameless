@@ -42,6 +42,8 @@ export type Event = {
   ticket_tiers: TicketTier[] | null
   presented_by: string | null
   gallery_images: string[] | null
+  // false for imported past events whose start time was never recorded; show the date only
+  time_confirmed?: boolean
 }
 
 export type LineupArtist = {

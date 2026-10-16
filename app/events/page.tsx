@@ -61,7 +61,7 @@ function EventRow({ event }: { event: Event }) {
         {/* Date */}
         <div>
           <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 18, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#c9321a', marginBottom: 4 }}>{dateStr}</div>
-          <div style={{ color: '#7a7068', fontSize: 13 }}>{timeStr}{endTimeStr ? ` – ${endTimeStr}` : ''}</div>
+          {event.time_confirmed !== false && <div style={{ color: '#7a7068', fontSize: 13 }}>{timeStr}{endTimeStr ? ` – ${endTimeStr}` : ''}</div>}
         </div>
 
         {/* Square image */}
@@ -124,8 +124,8 @@ export default async function EventsPage() {
       item: {
         '@type': 'MusicEvent',
         name: event.title,
-        startDate: toSeattleISO(event.date),
-        ...(event.end_date ? { endDate: toSeattleISO(event.end_date) } : {}),
+        startDate: event.time_confirmed === false ? toSeattleISO(event.date).slice(0, 10) : toSeattleISO(event.date),
+        ...(event.end_date && event.time_confirmed !== false ? { endDate: toSeattleISO(event.end_date) } : {}),
         description: event.description ?? `${event.venue}, Seattle — underground house and techno by Simply Shameless.`,
         eventStatus: 'https://schema.org/EventScheduled',
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',

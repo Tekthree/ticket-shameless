@@ -96,8 +96,8 @@ export default async function EventPage({
     '@context': 'https://schema.org',
     '@type': 'MusicEvent',
     name: event.title,
-    startDate: toSeattleISO(event.date),
-    ...(event.end_date ? { endDate: toSeattleISO(event.end_date) } : {}),
+    startDate: event.time_confirmed === false ? toSeattleISO(event.date).slice(0, 10) : toSeattleISO(event.date),
+    ...(event.end_date && event.time_confirmed !== false ? { endDate: toSeattleISO(event.end_date) } : {}),
     eventStatus: isPast ? 'https://schema.org/EventCompleted' : 'https://schema.org/EventScheduled',
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     location: {
