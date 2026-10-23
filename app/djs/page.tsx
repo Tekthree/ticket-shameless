@@ -2,7 +2,7 @@ import { getDJs, getUpcomingCountsByDJ, type DJ } from '@/lib/db'
 import type { Metadata } from 'next'
 import { DJGrid } from './DJGrid'
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 export const metadata: Metadata = {
   title: 'DJs | Simply Shameless',

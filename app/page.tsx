@@ -3,7 +3,9 @@ import { getEvents } from '@/lib/events'
 import type { Event } from '@/lib/db'
 import { getGalleryImages } from '@/lib/r2'
 
-export const revalidate = 900
+// Event imports explicitly revalidate this route, so the timed fallback can be
+// long enough that normal crawler traffic does not keep Neon compute awake.
+export const revalidate = 21600
 
 export const metadata: Metadata = {
   title: 'Simply Shameless — Seattle Underground House & Techno',

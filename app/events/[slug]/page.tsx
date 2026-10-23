@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { getEventBySlug, getEventLineup, getEvents } from '@/lib/events'
 import EventPageClient from './EventPageClient'
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 export async function generateStaticParams() {
   try {

@@ -1,9 +1,10 @@
 # Content caching
 
-Public page freshness: home and upcoming event listing 15 minutes; event detail,
-past-event listing and DJ listing 1 hour; DJ profiles 24 hours. These are
-request-driven regeneration intervals, not background timers. Time-sensitive
-event listings retain a timed fallback so past events eventually roll off.
+Public page freshness: home and upcoming event listing 6 hours; event detail,
+past-event listing, DJ listing, DJ profiles, and the sitemap 24 hours. These are
+request-driven regeneration intervals, not background timers. Event and DJ
+publishing explicitly revalidates these routes, while the timed fallback keeps
+direct database edits from remaining stale indefinitely.
 
 Public social counts and comments use a 15-minute Next.js data cache keyed by
 event ID. Likes, RSVPs and comment writes invalidate the social cache. Personal
