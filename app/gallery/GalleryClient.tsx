@@ -365,13 +365,16 @@ export default function GalleryClient({ events }: { events: GalleryEvent[] }) {
         </div>
 
         {/* Event tabs */}
+        <p className="ss-album-hint">Swipe to browse party albums</p>
         <div style={{ position: 'sticky', top: 64, zIndex: 100, background: 'rgba(28,25,23,0.97)', backdropFilter: 'blur(16px)', borderBottom: `1px solid ${C.darkBorder}`, marginTop: 32 }}>
           <div style={{ maxWidth: 1312, margin: '0 auto', padding: `0 clamp(20px, 4vw, 56px)`, display: 'flex', alignItems: 'stretch' }}>
-            <div ref={tabsRef} style={{ flex: 1, display: 'flex', overflowX: 'auto', scrollbarWidth: 'none' }}>
+            <div ref={tabsRef} aria-label="Party albums" className="ss-album-list" style={{ minWidth: 0, flex: 1, display: 'flex', overflowX: 'auto', scrollbarWidth: 'none' }}>
               {events.map(e => (
                 <button
                   key={e.id}
-                  className={activeEvent === e.id ? 'ss-tab-active' : ''}
+                  type="button"
+                  aria-pressed={activeEvent === e.id}
+                  className={`ss-album-button ${activeEvent === e.id ? 'ss-tab-active' : ''}`}
                   onClick={() => { setActiveEvent(e.id); window.scrollTo({ top: 200, behavior: 'smooth' }) }}
                   style={{
                     flexShrink: 0,
@@ -394,7 +397,6 @@ export default function GalleryClient({ events }: { events: GalleryEvent[] }) {
                   <span style={{ color: activeEvent === e.id ? 'rgba(240,236,230,0.4)' : 'rgba(240,236,230,0.2)', fontWeight: 600, marginLeft: 6, fontSize: 13 }}>
                     {e.date.split(',')[0]}
                   </span>
-                  <span style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: 2, background: C.red, transform: `scaleX(${activeEvent === e.id ? 1 : 0})`, transformOrigin: 'left', transition: 'transform 0.3s cubic-bezier(0.22,1,0.36,1)' }} />
                 </button>
               ))}
             </div>
@@ -455,6 +457,16 @@ export default function GalleryClient({ events }: { events: GalleryEvent[] }) {
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes ss-fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes ss-scaleIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+        .ss-album-list::-webkit-scrollbar { display: none; }
+        .ss-album-list { gap: 0.5rem; padding: 0.5rem 0; }
+        .ss-album-hint { display: none; }
+        .ss-album-button { background: #242120 !important; border: none !important; border-radius: 0.125rem; color: ${C.darkText} !important; padding: 0.5rem 0.75rem !important; font-size: 0.8125rem !important; letter-spacing: 0.08em !important; }
+        .ss-album-button.ss-tab-active { background: #302d2b !important; }
+        .ss-album-button span:first-child { color: ${C.darkText} !important; font-size: 0.75rem !important; }
+        .ss-album-button:focus-visible { outline: 2px solid ${C.darkText}; outline-offset: -4px; }
+        @media (max-width: 640px) {
+          .ss-album-hint { display: block; margin: 24px 20px -20px; color: ${C.darkText}; font-size: 0.8125rem; }
+        }
         .ss-photo-cell:hover .ss-photo-overlay { background: rgba(28,25,23,0.5) !important; }
         .ss-photo-cell:hover .ss-photo-credit { opacity: 1 !important; transform: translateY(0) !important; }
         @media (max-width: 640px) {
