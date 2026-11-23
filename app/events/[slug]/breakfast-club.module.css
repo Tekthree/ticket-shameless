@@ -7,7 +7,7 @@
   background: var(--cream);
   color: var(--ink);
 }
-.promo section[id] { scroll-margin-top: 6rem; }
+.promo :is(section[id], [data-stage]) { scroll-margin-top: 6rem; }
 .promo :is(a, button, summary):focus-visible { outline: 3px solid #1762b6; outline-offset: 4px; }
 .wrap, .heroInner { width: min(100% - 2rem, 72rem); margin-inline: auto; }
 .hero {
@@ -72,11 +72,34 @@
 .promo section { padding-block: clamp(2.75rem, 6vw, 5.25rem); }
 .promo h2 { font-size: clamp(3.2rem, 7vw, 6.25rem); }
 .promo h3 { font-size: clamp(1.85rem, 4vw, 3rem); }
+.stageLinks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .85rem;
+  margin-top: 1.5rem;
+}
+.stageLinks a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 7rem;
+  padding: .8rem 1rem;
+  border: 2px solid var(--ink);
+  border-radius: .75rem;
+  box-shadow: .2rem .25rem 0 var(--ink);
+  background: var(--orange);
+  font-family: var(--font-barlow), sans-serif;
+  font-size: clamp(1.65rem, 4vw, 3rem);
+  font-weight: 800;
+  line-height: .95;
+}
+.stageLinks a[data-room='rooftop'] { background: var(--green); }
+.stageLinks a:hover > span { text-decoration: underline; }
+.stageLinks .character { width: clamp(3rem, 10vw, 7rem); height: clamp(4rem, 10vw, 7rem); transform: rotate(8deg); }
 .stage { margin-top: 2.25rem; }
 .stageHeading, .sectionHeading { display: flex; gap: .75rem; align-items: center; justify-content: space-between; }
 .stageHeading { border: 2px solid var(--ink); padding: .8rem 1rem; border-radius: .7rem; background: var(--orange); margin-bottom: 1rem; }
 .stage[data-stage='rooftop'] .stageHeading { background: var(--green); }
-.stageHeading .character { width: 4.75rem; height: 3.7rem; transform: rotate(9deg); }
 .artists { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .75rem; }
 .artists li { overflow-wrap: anywhere; border: 1px solid var(--ink); border-radius: .55rem; background: #fff8e6; }
 .artists a { display: block; height: 100%; border-radius: inherit; }
@@ -91,8 +114,10 @@
 .scheduleGrid :is(p, ul) { margin-top: .75rem; }
 .scheduleGrid li { padding: .45rem 0; border-top: 1px dashed; }
 .archive { background: #ffbfa2; }
-.photos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; margin-block: 1rem; }
-.photos a { position: relative; aspect-ratio: 4 / 5; border: .35rem solid #fff8e6; box-shadow: 2px 3px 0 var(--ink); }
+.photos { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-auto-rows: clamp(9rem, 17vw, 13rem); gap: .75rem; margin-block: 1rem; }
+.photos a { position: relative; border: .35rem solid #fff8e6; box-shadow: 2px 3px 0 var(--ink); }
+.photos a:first-child { grid-row: span 2; }
+.photos a:last-child { grid-column: span 2; }
 .photos img { object-fit: cover; }
 .faq { background: var(--green); border-top: 2px solid var(--ink); }
 .faq details { padding: .75rem 0; border-bottom: 1px solid var(--ink); }
@@ -107,5 +132,8 @@
 }
 @media (max-width: 520px) {
   .artists, .photos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .photos a:first-child { grid-row: auto; grid-column: span 2; }
+  .photos a:last-child { grid-column: span 2; }
+  .stageLinks a { padding: .55rem; gap: .25rem; }
   .scheduleGrid { grid-template-columns: 1fr; }
 }

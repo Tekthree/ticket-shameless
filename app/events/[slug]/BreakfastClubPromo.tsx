@@ -88,10 +88,18 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
       <section className={styles.lineup} id="lineup" aria-labelledby="lineup-heading">
         <div className={styles.wrap}>
           <h2 id="lineup-heading">The lineup</h2>
+          <nav className={styles.stageLinks} aria-label="Jump to a stage">
+            {groups.map(stage => (
+              <a key={stage.key} href={`#${stage.key}`} data-room={stage.key}>
+                <span>{stage.name} <span aria-hidden="true">↓</span></span>
+                <Character name={stage.character} />
+              </a>
+            ))}
+          </nav>
           {groups.map(stage => (
-            <div key={stage.key} className={styles.stage} data-stage={stage.key}>
+            <div key={stage.key} id={stage.key} className={styles.stage} data-stage={stage.key}>
               <div className={styles.stageHeading}>
-                <h3>{stage.name}</h3><Character name={stage.character} />
+                <h3>{stage.name}</h3>
               </div>
               <ul className={styles.artists}>{stage.artists.map(artist => <ArtistCard key={artist.id} artist={artist} />)}</ul>
             </div>
@@ -122,7 +130,7 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
           <div className={styles.photos}>
             {pastPhotos.map(([file, alt]) => {
               const src = PICFLOW_URLS.find(url => url.endsWith(`${file}.jpg`))
-              return src && <a key={file} href={src}><Image src={src} alt={alt} fill sizes="(max-width: 560px) 50vw, 25vw" /></a>
+              return src && <a key={file} href={src}><Image src={src} alt={alt} fill sizes="(max-width: 520px) 90vw, 50vw" /></a>
             })}
           </div>
           <Link className={styles.secondary} href="/gallery">More photos in the Shameless gallery →</Link>
