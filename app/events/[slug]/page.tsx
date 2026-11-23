@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getEventBySlug, getEventLineup, getEvents } from '@/lib/events'
 import EventPageClient from './EventPageClient'
+import BreakfastClubPromo, { BREAKFAST_CLUB_2027 } from './BreakfastClubPromo'
 
 export const revalidate = 86400
 
@@ -83,9 +84,10 @@ export default async function EventPage({
   const event = await getEventBySlug(params.slug)
   if (!event) notFound()
 
+  const isBreakfastClub = event.slug === BREAKFAST_CLUB_2027
   const [lineup, allEvents] = await Promise.all([
     getEventLineup(event.id),
-    getEvents(10),
+    isBreakfastClub ? Promise.resolve([]) : getEvents(10),
   ])
 
   const otherEvents = allEvents.filter(e => e.id !== event.id).slice(0, 4)
@@ -150,7 +152,9 @@ export default async function EventPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <EventPageClient event={event} lineup={lineup} otherEvents={otherEvents} deferComments={new Date(event.end_date ?? event.date).getTime() < Date.now()} />
+      {isBreakfastClub
+        ? <BreakfastClubPromo event={event} lineup={lineup} />
+        : <EventPageClient event={event} lineup={lineup} otherEvents={otherEvents} deferComments={new Date(event.end_date ?? event.date).getTime() < Date.now()} />}
     </>
   )
 }
