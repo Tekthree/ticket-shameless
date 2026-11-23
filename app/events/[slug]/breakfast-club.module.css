@@ -58,7 +58,7 @@
   background: #242556;
 }
 .character { display: block; object-fit: contain; width: clamp(4rem, 10vw, 8.5rem); height: auto; }
-.flyer > .character { position: absolute; bottom: -1rem; right: -.5rem; pointer-events: none; transform: rotate(-12deg); }
+.flyer > .character { position: absolute; bottom: -1rem; right: 0; pointer-events: none; transform: rotate(-12deg); }
 .motion { position: absolute; bottom: .8rem; left: .7rem; padding: .35rem .75rem; border-radius: 2rem; background: #161735; color: var(--text); }
 .stickers { display: flex; gap: .65rem; margin-top: 1.6rem; }
 .stickers .character { width: 3.6rem; transform: rotate(-12deg); }

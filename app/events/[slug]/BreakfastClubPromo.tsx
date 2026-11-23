@@ -13,10 +13,21 @@ const portraits: Record<string, string> = {
   'Solana Solstice': 'solana-solstice',
 }
 
+const characterDimensions = {
+  avocado: [427, 506],
+  bear: [547, 720],
+  breakfast: [491, 274],
+  cat_with_plant: [974, 1070],
+  just_up: [329, 333],
+  spoon: [260, 343],
+  still_up: [266, 258],
+  top_plant: [525, 1113],
+} as const
+
 const stages = [
   { key: 'loft', name: 'The Loft', character: 'bear' },
   { key: 'rooftop', name: 'The Rooftop', character: 'cat_with_plant' },
-]
+] as const
 
 const pastPhotos = [
   ['trio_rooftop_disco_ball_decorations', 'Friends under disco balls on the Monkey Loft rooftop'],
@@ -32,8 +43,10 @@ const faq = [
   ['Where do I find set times?', 'Check the Set times section here for the Loft and Rooftop schedules.'],
 ]
 
-function Character({ name }: { name: string }) {
-  return <Image className={styles.character} src={`${media}/${name}.webp`} width={260} height={260} alt="" />
+function Character({ name }: { name: keyof typeof characterDimensions }) {
+  const [width, height] = characterDimensions[name]
+  return <Image className={styles.character} src={`${media}/characters/${name}.png`}
+    width={width} height={height} sizes="(max-width: 640px) 64px, 136px" quality={95} alt="" />
 }
 
 function ArtistCard({ artist }: { artist: LineupArtist }) {
