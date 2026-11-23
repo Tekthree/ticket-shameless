@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { PICFLOW_URLS } from '@/app/gallery/gallery-data'
 import type { Event, LineupArtist } from '@/lib/events'
+import ArchiveMarquee from './ArchiveMarquee'
 import FlyerVideo from './FlyerVideo'
 import styles from './breakfast-club.module.css'
 
@@ -30,11 +31,18 @@ const stages = [
 ] as const
 
 const pastPhotos = [
+  ['004_dj-turntables-crowd-hands-up', 'Hands in the air behind the Breakfast Club DJ booth'],
   ['trio_rooftop_disco_ball_decorations', 'Friends under disco balls on the Monkey Loft rooftop'],
   ['woman_gold_dress_heart_hands_headpiece_crowd', 'Dancer in gold making a heart with her hands'],
   ['trio_shameless_shirt_excited_balloons', 'Friends celebrating with balloons at Breakfast Club'],
+  ['012_party-microphone-trumpet-player-costumes', 'Costumed performers with a microphone and trumpet'],
   ['woman_neon_green_wig_zebra_coat_rooftop', 'Guest in a neon green wig on the rooftop'],
 ] as const
+
+const archivePhotos = pastPhotos.flatMap(([file, alt]) => {
+  const src = PICFLOW_URLS.find(url => url.endsWith(`${file}.jpg`))
+  return src ? [{ src, alt }] : []
+})
 
 const faq = [
   ['Which morning does it start?', 'Doors open at 4 AM on Friday, January 1, 2027, after midnight on New Year’s Eve. We dance until 4 PM that afternoon.'],
@@ -98,6 +106,14 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
         <a href="#lineup">Lineup</a><a href="#set-times">Set times</a><a href="#past-photos">Past photos</a><a href="#faq">FAQ</a>
       </nav>
 
+      <div className={styles.ticker} aria-hidden="true">
+        <div className={styles.tickerTrack}>
+          {[0, 1].map(copy => <div key={copy}>{[0, 1, 2, 3].map(item => (
+            <span key={item}>Still up? <b>✦</b> Just up? <b>✦</b></span>
+          ))}</div>)}
+        </div>
+      </div>
+
       <section className={styles.lineup} id="lineup" aria-labelledby="lineup-heading">
         <div className={styles.wrap}>
           <h2 id="lineup-heading">The lineup</h2>
@@ -140,12 +156,9 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
       <section className={styles.archive} id="past-photos" aria-labelledby="past-heading">
         <div className={styles.wrap}>
           <div className={styles.sectionHeading}><h2 id="past-heading">From the archives</h2><Character name="breakfast" /></div>
-          <div className={styles.photos}>
-            {pastPhotos.map(([file, alt]) => {
-              const src = PICFLOW_URLS.find(url => url.endsWith(`${file}.jpg`))
-              return src && <a key={file} href={src}><Image src={src} alt={alt} fill sizes="(max-width: 520px) 90vw, 50vw" /></a>
-            })}
-          </div>
+        </div>
+        <ArchiveMarquee photos={archivePhotos} />
+        <div className={styles.wrap}>
           <Link className={styles.secondary} href="/gallery">More photos in the Shameless gallery →</Link>
         </div>
       </section>
