@@ -16,6 +16,7 @@
   --card-padding: clamp(1rem, 2.4vw, 1.8rem);
   --gutter: clamp(1.1rem, 5vw, 5rem);
   --display: var(--font-barlow), 'Arial Narrow', sans-serif;
+  --title-max: 7.5rem;
   background: var(--night);
   color: var(--paper);
   overflow-x: clip;
@@ -46,7 +47,7 @@
 .hero { padding-block-start: calc(4rem + var(--section-space)); background: var(--blue) var(--tex); color: var(--night); }
 .masthead { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .3rem 1rem; font-weight: 800; font-size: .9rem; }
 .promo h1 {
-  margin-block: var(--content-space) var(--group-space); font-size: clamp(4.4rem, 9.7vw, 8.9rem); letter-spacing: -.03em; color: var(--paper);
+  margin-block: var(--content-space) var(--group-space); font-size: clamp(4.4rem, 9.7vw, var(--title-max)); letter-spacing: -.03em; color: var(--paper);
   text-shadow: .012em .012em var(--night), .024em .024em var(--night), .036em .036em var(--night), .05em .05em var(--night);
 }
 .year {
@@ -181,7 +182,7 @@
   .heroInner { grid-template-columns: 1fr; }
   .photoTeaser { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .photoTeaser span:nth-child(n + 5) { display: none; }
-  .promo h1 { font-size: clamp(4.1rem, 21.5vw, 8.5rem); }
+  .promo h1 { font-size: clamp(4.1rem, 21.5vw, var(--title-max)); }
   .venuePhoto { aspect-ratio: 1.6; }
   .stageLinks a:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .artists { grid-template-columns: repeat(3, minmax(0, 1fr)); }
