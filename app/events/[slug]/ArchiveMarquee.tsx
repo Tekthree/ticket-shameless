@@ -2,12 +2,29 @@
 
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
+import placeholders from './archive-placeholders.json'
 import styles from './breakfast-club.module.css'
+
+const blurBySource: Record<string, string> = placeholders
+const photoSizes = '(max-width: 730px) 248px, (max-width: 1270px) 34vw, 432px'
 
 export default function ArchiveMarquee({ photos }: { photos: { src: string; alt: string }[] }) {
   const strip = useRef<HTMLDivElement>(null)
   const repeat = useRef<HTMLDivElement>(null)
   const [playing, setPlaying] = useState(false)
+  const [warm, setWarm] = useState(false)
+
+  useEffect(() => {
+    const rail = strip.current
+    if (!rail) return
+    const observer = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting)) return
+      setWarm(true)
+      observer.disconnect()
+    }, { rootMargin: '1400px 0px' })
+    observer.observe(rail)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -45,6 +62,16 @@ export default function ArchiveMarquee({ photos }: { photos: { src: string; alt:
     }
   }, [playing])
 
+  function photoProps(src: string) {
+    const blur = blurBySource[src]
+    return {
+      sizes: photoSizes,
+      loading: warm ? 'eager' as const : 'lazy' as const,
+      placeholder: blur ? 'blur' as const : 'empty' as const,
+      blurDataURL: blur,
+    }
+  }
+
   function move(direction: number) {
     const rail = strip.current
     if (!rail) return
@@ -56,10 +83,10 @@ export default function ArchiveMarquee({ photos }: { photos: { src: string; alt:
     <div ref={strip} className={styles.photos} aria-label="Past Breakfast Club photos" role="region" tabIndex={0}
       onPointerDown={() => setPlaying(false)} onWheel={() => setPlaying(false)} onKeyDown={() => setPlaying(false)}>
       <div className={styles.photoRow}>
-        {photos.map(({ src, alt }, index) => <a key={src} href={src} data-analytics-event="festival_photo_click" data-analytics-target={index + 1}><Image src={src} alt={alt} fill sizes="(max-width: 600px) 75vw, 380px" /></a>)}
+        {photos.map(({ src, alt }, index) => <a key={src} href={src} data-analytics-event="festival_photo_click" data-analytics-target={index + 1}><Image src={src} alt={alt} fill {...photoProps(src)} /></a>)}
       </div>
       <div ref={repeat} className={styles.photoRow} aria-hidden="true">
-        {photos.map(({ src }) => <div key={src}><Image src={src} alt="" fill sizes="(max-width: 600px) 75vw, 380px" /></div>)}
+        {photos.map(({ src }) => <div key={src}><Image src={src} alt="" fill {...photoProps(src)} /></div>)}
       </div>
     </div>
     <div className={styles.archiveControls}>
