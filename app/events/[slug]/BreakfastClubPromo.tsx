@@ -120,7 +120,12 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
   const schedule = groups.map(stage => ({ ...stage, artists: stage.artists.filter(artist => artist.time_slot) }))
   const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`Monkey Loft ${event.address ?? 'Seattle'}`)}`
   const names = lineup.map(artistName)
-  const nameRows = [0, 1, 2, 3].map(row => names.filter((_, index) => index % 4 === row))
+  const nameGroups = [0, 1, 2, 3].map(row => names.filter((_, index) => index % 4 === row))
+  const nameRows = Array.from({ length: 12 }, (_, index) => {
+    const group = nameGroups[index % nameGroups.length]
+    const offset = Math.floor(index / nameGroups.length)
+    return [...group.slice(offset), ...group.slice(0, offset)]
+  })
   const venuePhoto = archivePhotos[1]
 
   return (
