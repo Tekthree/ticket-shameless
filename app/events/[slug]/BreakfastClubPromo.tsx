@@ -10,9 +10,31 @@ import styles from './breakfast-club.module.css'
 export const BREAKFAST_CLUB_2027 = 'the-breakfast-club-new-years-day-2027-2027-01-01'
 const media = '/breakfast-club-2027'
 const portraits: Record<string, string> = {
-  Peach: 'peach',
-  'Maya Mem Saab': 'maya-mem-saab',
-  'Solana Solstice': 'solana-solstice',
+  "Riz Rollins": "riz-and-rob",
+  "Rob Green": "riz-and-rob",
+  "Solana Solstice": "solana-solstice",
+  "Maya Mem Saab": "maya-mem-saab",
+  "Christine Michelle": "christine-michelle",
+  "Aivilo": "aivilo",
+  "Brit Jean": "brit-jean",
+  "Levi Clark": "levi-clark",
+  "Sloane Motion": "sloane-and-mia",
+  "Mia Maya": "sloane-and-mia",
+  "Just Beef": "just-beef",
+  "LGSP": "lgsp",
+  "Recess": "recess",
+  "Nazo": "nazo",
+  "Chaotic Noise Marching Corps": "chaotic-noise",
+  "Tek Jones": "tek-jones",
+  "Nayiram": "nayiram",
+  "Duncfoo": "duncfoo",
+  "Peach": "peach",
+  "Kadeejah Streets": "kadeejah-streets",
+  "Jen Woolfe": "jen-woolfe",
+  "Jon Lee": "jon-lee",
+  "Tony H": "tony-h",
+  "Papito Peace": "papito-peace",
+  "Moist Towelette": "moist-towelette"
 }
 
 const characterDimensions = {
@@ -72,7 +94,7 @@ function artistName(artist: LineupArtist) {
 
 function ArtistCard({ artist }: { artist: LineupArtist }) {
   const localPortrait = portraits[artist.name]
-  const image = localPortrait ? `${media}/${localPortrait}.webp` : artist.image_url ?? artist.dj_profile_image_url
+  const image = localPortrait ? `${media}/lineup/${localPortrait}.webp` : artist.image_url ?? artist.dj_profile_image_url
   const content = <>
     <div className={styles.portrait}>
       {image
