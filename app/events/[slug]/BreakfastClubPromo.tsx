@@ -177,21 +177,23 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
         </div>
       </div>
 
-      <div className={styles.doors}>
-        <div className={styles.wrap}>
-          <p>Doors open in</p>
-          <BreakfastCountdown />
-          {event.payment_link && <a className={styles.ticket} href={event.payment_link}>Get tickets <span aria-hidden="true">↗</span></a>}
+      <div className={styles.lineupIntro}>
+        <div className={styles.doors}>
+          <div className={styles.wrap}>
+            <p>Doors open in</p>
+            <BreakfastCountdown />
+            {event.payment_link && <a className={styles.ticket} href={event.payment_link}>Get tickets <span aria-hidden="true">↗</span></a>}
+          </div>
         </div>
-      </div>
-
-      <section className={styles.lineup} id="lineup" aria-labelledby="lineup-heading">
-        <div className={styles.names}>
+        <div className={styles.names} id="lineup">
           <div className={styles.nameRows} aria-hidden="true">
             {nameRows.map((row, index) => <div key={index}>{[0, 1].map(copy => <span key={copy}>{row.map(name => <b key={name}>{name}</b>)}</span>)}</div>)}
           </div>
           <h2 id="lineup-heading"><span className={styles.squiggle}>Lineup</span></h2>
         </div>
+      </div>
+
+      <section className={styles.lineup} aria-labelledby="lineup-heading">
         <div className={styles.drip} aria-hidden="true" />
         <div className={styles.wrap}>
           <nav className={styles.stageLinks} aria-label="Jump to a stage">
