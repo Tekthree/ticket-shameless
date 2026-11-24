@@ -47,7 +47,7 @@
 .hero { padding-block-start: calc(4rem + var(--section-space)); background: var(--blue) var(--tex); color: var(--night); }
 .masthead { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .3rem 1rem; font-weight: 800; font-size: .9rem; }
 .promo h1 {
-  margin-block: var(--content-space) var(--group-space); font-size: var(--title-size); letter-spacing: -.03em; color: var(--paper);
+  margin-block: var(--content-space) var(--group-space); font-size: clamp(3.2rem, 9.15vw, 7.5rem); letter-spacing: -.03em; color: var(--paper);
   text-shadow: .012em .012em var(--night), .024em .024em var(--night), .036em .036em var(--night), .05em .05em var(--night);
 }
 .year {
