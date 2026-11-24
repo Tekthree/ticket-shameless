@@ -163,11 +163,10 @@
 .archiveControls button { min-width: 3rem; min-height: 3rem; padding-inline: 1.1rem; border-radius: .8rem; background: var(--blue); color: var(--night); font-weight: 800; }
 .archiveControls button:hover { background: var(--acid); }
 .archiveGalleryLink {
-  display: flex; align-items: center; justify-content: center; width: fit-content; max-width: 100%;
-  min-height: 3rem; margin-inline: auto; padding: .65rem 1.1rem; border-radius: .8rem;
-  background: #29365e; color: var(--paper); font-weight: 750; text-align: center;
+  display: block; width: max-content; margin-inline: auto; color: var(--paper);
+  font-size: clamp(.875rem, 4.4vw, 1rem); font-weight: 750; white-space: nowrap;
 }
-.archiveGalleryLink:hover { background: #34436e; }
+.archiveGalleryLink:hover { text-decoration: underline; text-underline-offset: .28em; }
 .faq { background: var(--blue) var(--tex); color: var(--night); }
 .faq details { padding: var(--card-padding); border-radius: var(--radius); background: var(--night); color: var(--paper); }
 .faq details + details { margin-top: var(--card-gap); }
