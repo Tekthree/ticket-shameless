@@ -16,6 +16,8 @@ export async function generateStaticParams() {
 }
 
 const SITE_URL = 'https://www.simplyshameless.com'
+const BREAKFAST_CLUB_TITLE = 'The Breakfast Club 2027 — New Year’s Day in Seattle'
+const BREAKFAST_CLUB_DESCRIPTION = 'Dance into 2027 at Monkey Loft in Seattle. The Breakfast Club runs January 1 from 4 AM to 4 PM, with DJs and live performances across three stages. 21+.'
 
 function fmtDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Los_Angeles' })
@@ -47,28 +49,40 @@ export async function generateMetadata({
   const event = await getEventBySlug(params.slug)
   if (!event) return { title: 'Event Not Found' }
 
+  const isBreakfastClub = event.slug === BREAKFAST_CLUB_2027
+  const title = isBreakfastClub ? BREAKFAST_CLUB_TITLE : event.title
+  const shareTitle = isBreakfastClub ? title : `${title} | Simply Shameless`
   const dateStr = fmtDate(event.date)
-  const description = event.description
+  const description = (isBreakfastClub ? BREAKFAST_CLUB_DESCRIPTION : event.description)
     ?? `${dateStr} · ${event.venue}${event.address ? `, ${event.address}` : ''} · Seattle underground house and techno.`
   const rawImage = event.banner_url ?? event.image_url ?? event.square_image_url ?? 'https://pub-d0e8a25adf7347f4aa8120dcaed15ac1.r2.dev/site/og-default.jpg'
   const imageUrl = rawImage.startsWith('http') ? rawImage : `${SITE_URL}${rawImage.startsWith('/') ? '' : '/'}${rawImage}`
   const url = `${SITE_URL}/events/${event.slug}`
 
+  const image = {
+    url: imageUrl,
+    width: isBreakfastClub ? 1920 : 1200,
+    height: isBreakfastClub ? 1005 : 630,
+    alt: isBreakfastClub ? 'The Breakfast Club 2027 lineup flyer for New Year’s Day at Monkey Loft' : `${title} at ${event.venue}, Seattle`,
+  }
+
   return {
-    title: event.title,
+    title,
     description,
     openGraph: {
-      title: `${event.title} | Simply Shameless`,
+      title: shareTitle,
       description,
       url,
       type: 'website',
-      images: [{ url: imageUrl, width: 1200, height: 630, alt: `${event.title} at ${event.venue}, Seattle` }],
+      ...(isBreakfastClub ? { siteName: 'Simply Shameless', locale: 'en_US' } : {}),
+      images: [image],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${event.title} | Simply Shameless`,
+      title: shareTitle,
       description,
-      images: [imageUrl],
+      ...(isBreakfastClub ? { site: '@simplyshameless' } : {}),
+      images: [image],
     },
     alternates: {
       canonical: url,
@@ -107,7 +121,8 @@ export default async function EventPage({
       name: event.venue,
       address: {
         '@type': 'PostalAddress',
-        streetAddress: event.address ?? '',
+        streetAddress: isBreakfastClub ? '2915 1st Ave S' : event.address ?? '',
+        ...(isBreakfastClub ? { postalCode: '98134' } : {}),
         addressLocality: 'Seattle',
         addressRegion: 'WA',
         addressCountry: 'US',
@@ -123,7 +138,7 @@ export default async function EventPage({
         const profileUrl = a.dj_slug ? `${SITE_URL}/djs/${a.dj_slug}` : null
         return {
           '@type': 'MusicGroup',
-          name: a.name,
+          name: isBreakfastClub && a.name === 'Magickat' ? 'MagicKat' : a.name,
           ...(profileUrl ? { url: profileUrl, sameAs: [profileUrl] } : {}),
         }
       }),
@@ -137,13 +152,16 @@ export default async function EventPage({
       offers: {
         '@type': 'Offer',
         url: event.payment_link,
-        priceCurrency: 'USD',
-        price: event.suggested_price ?? 0,
-        validFrom: new Date(event.created_at).toISOString(),
-        availability: isPast ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
+        ...(!isBreakfastClub || event.suggested_price != null
+          ? { priceCurrency: 'USD', price: event.suggested_price ?? 0 }
+          : {}),
+        ...(!isBreakfastClub ? {
+          validFrom: new Date(event.created_at).toISOString(),
+          availability: isPast ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
+        } : {}),
       },
     } : {}),
-    description: event.description ?? '',
+    description: isBreakfastClub ? BREAKFAST_CLUB_DESCRIPTION : event.description ?? '',
   }
 
   return (
