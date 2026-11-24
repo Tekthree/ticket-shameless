@@ -10,7 +10,6 @@ const photoSizes = '(max-width: 730px) 248px, (max-width: 1270px) 34vw, 432px'
 
 export default function ArchiveMarquee({ photos }: { photos: { src: string; alt: string }[] }) {
   const strip = useRef<HTMLDivElement>(null)
-  const repeat = useRef<HTMLDivElement>(null)
   const [playing, setPlaying] = useState(false)
   const [warm, setWarm] = useState(false)
 
@@ -36,8 +35,7 @@ export default function ArchiveMarquee({ photos }: { photos: { src: string; alt:
 
   useEffect(() => {
     const rail = strip.current
-    const copy = repeat.current
-    if (!rail || !copy || !playing) return
+    if (!rail || !playing) return
     let frame = 0
     let previous = 0
     let position = rail.scrollLeft
@@ -46,10 +44,12 @@ export default function ArchiveMarquee({ photos }: { photos: { src: string; alt:
     observer.observe(rail)
     const tick = (now: number) => {
       if (visible && previous && !rail.matches(':hover, :focus-within')) {
-        const length = copy.offsetLeft - (rail.firstElementChild as HTMLElement).offsetLeft
-        if (length > 0) {
-          position = (position + Math.min(now - previous, 40) * .035) % length
-          rail.scrollLeft = position
+        const end = rail.scrollWidth - rail.clientWidth
+        position = Math.min(position + Math.min(now - previous, 40) * .035, end)
+        rail.scrollLeft = position
+        if (position >= end) {
+          setPlaying(false)
+          return
         }
       }
       previous = now
@@ -72,6 +72,14 @@ export default function ArchiveMarquee({ photos }: { photos: { src: string; alt:
     }
   }
 
+  function togglePlayback() {
+    const rail = strip.current
+    if (!playing && rail && rail.scrollLeft >= rail.scrollWidth - rail.clientWidth - 1) {
+      rail.scrollLeft = 0
+    }
+    setPlaying(!playing)
+  }
+
   function move(direction: number) {
     const rail = strip.current
     if (!rail) return
@@ -85,13 +93,10 @@ export default function ArchiveMarquee({ photos }: { photos: { src: string; alt:
       <div className={styles.photoRow}>
         {photos.map(({ src, alt }, index) => <a key={src} href={src} data-analytics-event="festival_photo_click" data-analytics-target={index + 1}><Image src={src} alt={alt} fill {...photoProps(src)} /></a>)}
       </div>
-      <div ref={repeat} className={styles.photoRow} aria-hidden="true">
-        {photos.map(({ src }) => <div key={src}><Image src={src} alt="" fill {...photoProps(src)} /></div>)}
-      </div>
     </div>
     <div className={styles.archiveControls}>
       <button type="button" onClick={() => move(-1)} aria-label="Scroll photos left">←</button>
-      <button type="button" onClick={() => setPlaying(value => !value)}>{playing ? 'Pause photos' : 'Play photos'}</button>
+      <button type="button" onClick={togglePlayback}>{playing ? 'Pause photos' : 'Play photos'}</button>
       <button type="button" onClick={() => move(1)} aria-label="Scroll photos right">→</button>
     </div>
   </>
