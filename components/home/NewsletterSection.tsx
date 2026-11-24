@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { currentNewsletterAttribution } from '@/lib/newsletter-attribution'
 
 function useInView() {
   const ref = useRef<HTMLDivElement>(null)
@@ -17,7 +18,9 @@ function useInView() {
   return [ref, visible] as const
 }
 
-export default function NewsletterSection() {
+export default function NewsletterSection({ festival = false }: { festival?: boolean }) {
+  const source = festival ? 'breakfast-club-2027' : 'homepage'
+  const accent = festival ? '#0b0f24' : '#c9321a'
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -39,13 +42,14 @@ export default function NewsletterSection() {
       const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, source, attribution: currentNewsletterAttribution() }),
       })
       if (!res.ok) {
         const data = await res.json()
         throw new Error(data.error || 'Something went wrong')
       }
       setSubmitted(true)
+      window.dispatchEvent(new CustomEvent('shameless-newsletter-signup', { detail: source }))
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -54,23 +58,23 @@ export default function NewsletterSection() {
   }
 
   return (
-    <section id="signup" style={{ padding: '120px clamp(20px, 4vw, 56px)', background: '#c9321a', position: 'relative', overflow: 'hidden' }}>
+    <section id="signup" style={{ scrollMarginTop: 80, padding: festival ? 'clamp(3rem, 7vw, 6.5rem) clamp(20px, 4vw, 56px)' : '120px clamp(20px, 4vw, 56px)', background: accent, position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 18px)' }} />
       <div ref={ref} style={{ maxWidth: 780, margin: '0 auto', textAlign: 'center', position: 'relative' }}>
         <div style={revealStyle()}>
           <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)', marginBottom: 16 }}>Stay in the Loop</div>
-          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 'clamp(56px,8vw,100px)', lineHeight: 0.86, color: '#fff', textTransform: 'uppercase', marginBottom: 28 }}>
-            Never Miss<br />a Party.
+          <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: festival ? 'clamp(2.65rem, 6.2vw, 4.5rem)' : 'clamp(56px,8vw,100px)', lineHeight: 0.86, color: '#fff', textTransform: 'uppercase', marginBottom: 28 }}>
+            {festival ? 'Get Shameless updates' : <>Never Miss<br />a Party.</>}
           </div>
         </div>
         <div style={revealStyle(100)}>
           <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 18, lineHeight: 1.7, fontWeight: 300, marginBottom: 52 }}>
-            First access to tickets, merch drops & lineup announcements. No spam, ever.
+            {festival ? 'Get lineup announcements, ticket updates, and news about future Shameless parties by email.' : 'First access to tickets, merch drops & lineup announcements. No spam, ever.'}
           </p>
         </div>
         <div style={revealStyle(180)}>
           {submitted ? (
-            <div style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 32, color: '#fff', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+            <div role="status" style={{ fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 32, color: '#fff', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
               You're in. See you on the floor. ✓
             </div>
           ) : (
@@ -78,13 +82,16 @@ export default function NewsletterSection() {
               <form onSubmit={handleSubmit} style={{ display: 'flex', maxWidth: 560, margin: '0 auto' }}>
                 <input
                   type="email"
+                  aria-label="Email address"
+                  autoComplete="email"
+                  maxLength={254}
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   required
                   disabled={loading}
                   placeholder="your@email.com"
                   style={{
-                    flex: 1, border: 'none', borderBottom: '2px solid rgba(255,255,255,0.4)',
+                    flex: 1, minWidth: 0, border: 'none', borderBottom: '2px solid rgba(255,255,255,0.4)',
                     background: 'transparent', color: '#fff', outline: 'none',
                     fontFamily: 'var(--font-dm), sans-serif', fontSize: 17,
                     padding: '14px 20px 14px 0', transition: 'border-color 0.25s',
@@ -94,7 +101,7 @@ export default function NewsletterSection() {
                   onBlur={e => (e.target.style.borderBottomColor = 'rgba(255,255,255,0.4)')}
                 />
                 <button type="submit" disabled={loading} style={{
-                  background: '#fff', color: '#c9321a', border: 'none', cursor: loading ? 'default' : 'pointer',
+                  background: festival ? '#ffd93b' : '#fff', color: accent, border: 'none', cursor: loading ? 'default' : 'pointer',
                   fontFamily: 'var(--font-barlow), sans-serif', fontWeight: 900, fontSize: 16,
                   letterSpacing: '0.08em', textTransform: 'uppercase', padding: '14px 40px',
                   marginLeft: 16, flexShrink: 0, borderRadius: 'var(--ss-radius-btn)', transition: 'transform 0.12s, opacity 0.2s',
@@ -107,7 +114,7 @@ export default function NewsletterSection() {
                 >{loading ? '...' : 'Subscribe'}</button>
               </form>
               {error && (
-                <div style={{ marginTop: 14, color: 'rgba(255,255,255,0.85)', fontSize: 14, fontFamily: 'var(--font-dm), sans-serif' }}>
+                <div role="alert" style={{ marginTop: 14, color: 'rgba(255,255,255,0.85)', fontSize: 14, fontFamily: 'var(--font-dm), sans-serif' }}>
                   {error}
                 </div>
               )}

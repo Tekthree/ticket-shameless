@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import type { PostHog } from 'posthog-js'
+import { currentNewsletterAttribution } from '@/lib/newsletter-attribution'
 
 type Choice = 'allow' | 'decline'
 const preferenceKey = 'shameless-analytics-preference'
@@ -54,6 +55,8 @@ export default function SiteAnalytics({ projectToken, apiHost }: { projectToken:
   const [choice, setChoice] = useAnalyticsPreference()
   const client = useRef<PostHog | null>(null)
 
+  useEffect(() => { currentNewsletterAttribution() }, [])
+
   useEffect(() => {
     if (choice !== 'allow') {
       client.current?.opt_out_capturing()
@@ -70,6 +73,12 @@ export default function SiteAnalytics({ projectToken, apiHost }: { projectToken:
         festival: 'breakfast_club_2027',
         interaction_target: element.dataset.analyticsTarget,
       }, { transport: 'sendBeacon' })
+    }
+
+    const captureSignup = (event: Event) => {
+      const source = (event as CustomEvent<unknown>).detail
+      if (savedPreference() !== 'allow' || (source !== 'homepage' && source !== 'breakfast-club-2027')) return
+      client.current?.capture('newsletter_signup', { signup_placement: source })
     }
 
     void import('posthog-js').then(({ default: posthog }) => {
@@ -96,6 +105,7 @@ export default function SiteAnalytics({ projectToken, apiHost }: { projectToken:
         client.current = posthog
       }
       document.addEventListener('click', captureClick, true)
+      window.addEventListener('shameless-newsletter-signup', captureSignup)
     }).catch(() => {
       // Analytics is optional. A blocked SDK should never interrupt navigation.
     })
@@ -103,6 +113,7 @@ export default function SiteAnalytics({ projectToken, apiHost }: { projectToken:
     return () => {
       active = false
       document.removeEventListener('click', captureClick, true)
+      window.removeEventListener('shameless-newsletter-signup', captureSignup)
     }
   }, [apiHost, choice, projectToken])
 

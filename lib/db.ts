@@ -352,10 +352,10 @@ export async function getProducts(): Promise<Product[]> {
 
 // ── SUBSCRIBERS ───────────────────────────────────────────────────────────────
 
-export async function addSubscriber(email: string, name?: string): Promise<void> {
+export async function addSubscriber(email: string, name?: string, source?: string, attribution?: Record<string, string>): Promise<void> {
   await sql`
-    insert into subscribers (email, name)
-    values (${email}, ${name ?? null})
+    insert into subscribers (email, name, source, attribution)
+    values (${email}, ${name ?? null}, ${source ?? null}, ${attribution ? JSON.stringify(attribution) : null}::jsonb)
     on conflict (email) do nothing
   `
 }

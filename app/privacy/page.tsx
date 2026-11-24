@@ -37,7 +37,7 @@ export default function PrivacyPage() {
         </div>
 
         <Section label="What we collect">
-          <p style={{ color: C.text, fontSize: 16, lineHeight: 1.8, margin: '0 0 16px' }}>When you sign up for our newsletter, we collect your email address. That's it. No name required, no profile built, no tracking pixel.</p>
+          <p style={{ color: C.text, fontSize: 16, lineHeight: 1.8, margin: '0 0 16px' }}>When you sign up for our newsletter, we save your email address, the signup form you used, and any campaign tags or referring website available with your signup. PostHog receives the signup event if you allow analytics, and the email address stays in our subscriber list.</p>
           <p style={{ color: C.text, fontSize: 16, lineHeight: 1.8, margin: 0 }}>If you purchase merch, our payment processor (Stripe) handles your card and billing details. We receive only what's needed to fulfill your order — name and shipping address. We don't store card numbers.</p>
         </Section>
 

@@ -1,3 +1,4 @@
+import NewsletterSection from '@/components/home/NewsletterSection'
 import Image from 'next/image'
 import Link from 'next/link'
 import { PICFLOW_URLS } from '@/app/gallery/gallery-data'
@@ -258,6 +259,8 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
           {event.payment_link && <a className={styles.ticket} href={event.payment_link} data-analytics-event="ticket_click" data-analytics-target="faq">Get tickets <span aria-hidden="true">↗</span></a>}
         </div>
       </section>
+
+      <NewsletterSection festival />
 
       {event.payment_link && <a className={styles.dateBar} href={event.payment_link} data-analytics-event="ticket_click" data-analytics-target="mobile_bar">
         <span><strong>01/01</strong><small>Fri, 4 AM<br />2027</small></span><b>Get tickets</b>
