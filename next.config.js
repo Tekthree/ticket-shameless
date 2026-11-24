@@ -11,6 +11,16 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react', 'date-fns', 'embla-carousel-react'],
   },
+  async redirects() {
+    return [
+      {
+        // Temporary: this short link points at whichever year is current.
+        source: '/breakfast-club',
+        destination: '/events/the-breakfast-club-new-years-day-2027-2027-01-01',
+        permanent: false,
+      },
+    ]
+  },
   async headers() {
     return [
       {

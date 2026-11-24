@@ -22,16 +22,18 @@ export default function FlyerVideo() {
 
   return <>
     <video ref={video} muted loop playsInline preload="none"
-      poster="/breakfast-club-2027/portal.webp"
+      poster="/breakfast-club-2027/square-flyer.webp"
       aria-label="Animated Breakfast Club 2027 flyer"
       onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)}>
-      <source src="/breakfast-club-2027/portal.mp4" type="video/mp4" />
+      <source src="/breakfast-club-2027/square-flyer.mp4" type="video/mp4" />
     </video>
-    <button className={styles.motion} type="button" onClick={() => {
+    <button className={styles.motion} type="button" aria-label={playing ? 'Pause animation' : 'Play animation'} onClick={() => {
       const element = video.current
       if (!element) return
       if (element.paused) void element.play().catch(() => {})
       else element.pause()
-    }}>{playing ? 'Pause animation' : 'Play animation'}</button>
+    }}><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+      <path d={playing ? 'M6 4h4v16H6zM14 4h4v16h-4z' : 'M7 4l13 8-13 8z'} />
+    </svg></button>
   </>
 }

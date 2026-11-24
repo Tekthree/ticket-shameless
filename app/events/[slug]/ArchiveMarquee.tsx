@@ -25,7 +25,7 @@ export default function ArchiveMarquee({ photos }: { photos: { src: string; alt:
     let previous = 0
     let position = rail.scrollLeft
     let visible = false
-    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting })
+    const observer = new IntersectionObserver(entries => { visible = entries[entries.length - 1].isIntersecting })
     observer.observe(rail)
     const tick = (now: number) => {
       if (visible && previous && !rail.matches(':hover, :focus-within')) {
