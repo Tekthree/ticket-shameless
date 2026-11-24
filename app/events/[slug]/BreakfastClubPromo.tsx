@@ -68,6 +68,22 @@ const archivePhotos = pastPhotos.flatMap(([file, alt]) => {
   return src ? [{ src, alt }] : []
 })
 
+const instagramPhotos = [
+  'Crowd dancing under colored lights beside the DJ booth',
+  'Guest holding a poster on the Monkey Loft rooftop',
+  'Costumed friends cheering on the rooftop',
+  'Marching band performer with a blue star headpiece',
+  'Guests in colorful outfits dancing together',
+  'Dancers raising their hands behind the decks',
+  'DJ playing to a crowd under purple lights',
+  'Friends posing together in party outfits',
+  'Dancers cheering at an open-air DJ booth',
+  'DJ smiling at the decks on the rooftop',
+].map((alt, index) => ({
+  src: `${media}/archive/past-party-${String(index + 3).padStart(2, '0')}.webp`,
+  alt,
+}))
+
 const faq = [
   ['Which morning does it start?', 'Doors open at 4 AM on Friday, January 1, 2027, after midnight on New Year’s Eve. We dance until 4 PM that afternoon.'],
   ['Is it 21+?', 'Yes. Bring a valid photo ID.'],
@@ -241,7 +257,7 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
         <div className={styles.wrap}>
           <div className={styles.sectionHeading}><h2 id="past-heading">Last time on the dance floor</h2><Character name="breakfast" /></div>
         </div>
-        <ArchiveMarquee photos={archivePhotos} />
+        <ArchiveMarquee photos={[...archivePhotos, ...instagramPhotos]} />
         <div className={styles.wrap}>
           <Link className={styles.secondary} href="/gallery">More photos in the Shameless gallery →</Link>
         </div>
