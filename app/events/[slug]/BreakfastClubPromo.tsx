@@ -175,7 +175,7 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
           <span key={src}><Image src={src} alt="" fill sizes="(max-width: 600px) 25vw, 17vw" /></span>
         ))}
       </a>
-      <Ticker words={['Still up?', 'Just up?', 'Jan 1', '4 AM to 4 PM', 'Monkey Loft']} />
+      <Ticker words={['Just up?', 'Still up?', 'What up?', 'Jan 1', '4 AM to 4 PM', 'Monkey Loft']} />
 
       <nav className={styles.jump} aria-label="Breakfast Club sections">
         <div className={styles.wrap}>

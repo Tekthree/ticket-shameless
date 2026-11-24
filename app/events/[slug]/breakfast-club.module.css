@@ -72,11 +72,11 @@
 .photoTeaser span { position: relative; aspect-ratio: 1.45; overflow: hidden; }
 .photoTeaser img { object-fit: cover; transition: scale .25s; }
 .photoTeaser:hover img { scale: 1.06; }
-.ticker { display: flex; overflow: hidden; padding-block: .55rem; background: var(--night); color: var(--acid); border-block: 2px solid var(--acid); font: 800 1.25rem/1 var(--display); text-transform: uppercase; }
-.ticker[data-tone] { background: var(--pink); color: var(--night); border-color: var(--night); padding-block: .85rem; font-size: clamp(1.325rem, 2.25vw, 1.875rem); }
+.ticker { --separator-space: 1.65rem; display: flex; overflow: hidden; padding-block: .55rem; background: var(--night); color: var(--acid); border-block: 2px solid var(--acid); font: 800 1.25rem/1 var(--display); text-transform: uppercase; }
+.ticker[data-tone] { --separator-space: 1.1rem; background: var(--pink); color: var(--night); border-color: var(--night); padding-block: .85rem; font-size: clamp(1.325rem, 2.25vw, 1.875rem); }
 .ticker > span { display: flex; flex: none; animation: slide 42s linear infinite; }
-.ticker b { white-space: nowrap; padding-right: 1.1rem; }
-.ticker b::after { content: '✺'; padding-left: 1.1rem; }
+.ticker b { white-space: nowrap; padding-right: var(--separator-space); }
+.ticker b::after { content: '✺'; padding-left: var(--separator-space); }
 
 .jump { background: var(--night) var(--doodle); }
 .jump a { display: flex; align-items: center; gap: clamp(.9rem, 2.5vw, 2rem); padding: clamp(.7rem, 1.4vw, 1.1rem) var(--card-padding); border-bottom: 2px solid var(--blue); font: 900 clamp(2.125rem, 5.1vw, 4rem)/1.06 var(--display); letter-spacing: -.02em; text-transform: uppercase; transition: rotate .18s, background .18s, color .18s; }
