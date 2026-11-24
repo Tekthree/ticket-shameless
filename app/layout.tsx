@@ -4,6 +4,7 @@ import { Barlow_Condensed, DM_Sans } from 'next/font/google'
 import { Toaster } from '@/components/ui/toaster'
 import SSNavbar from '@/components/SSNavbar'
 import SSFooter from '@/components/SSFooter'
+import SiteAnalytics from '@/components/SiteAnalytics'
 import PageTransition from '@/components/PageTransition'
 
 const barlowCondensed = Barlow_Condensed({
@@ -53,6 +54,10 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const projectToken = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN
+  const apiHost = process.env.NEXT_PUBLIC_POSTHOG_REGION === 'EU'
+    ? 'https://eu.i.posthog.com'
+    : 'https://us.i.posthog.com'
   return (
     <html lang="en">
       <body className={`${barlowCondensed.variable} ${dmSans.variable} min-h-screen flex flex-col`} style={{ fontFamily: 'var(--font-dm), sans-serif', background: '#1c1917', color: '#f0ece6' }}>
@@ -61,6 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SSFooter />
         <Toaster />
         <PageTransition />
+        {projectToken && /^phc_[a-zA-Z0-9]+$/.test(projectToken) && <SiteAnalytics projectToken={projectToken} apiHost={apiHost} />}
       </body>
     </html>
   )

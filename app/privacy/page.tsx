@@ -1,3 +1,4 @@
+import { AnalyticsPreferences } from '@/components/SiteAnalytics'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
@@ -54,8 +55,12 @@ export default function PrivacyPage() {
         </Section>
 
         <Section label="Cookies & tracking">
-          <p style={{ color: C.text, fontSize: 16, lineHeight: 1.8, margin: '0 0 16px' }}>This site uses minimal cookies — only what's necessary to keep the site functional (session handling, Stripe checkout). No ad tracking, no third-party analytics cookies, no fingerprinting.</p>
+          <p style={{ color: C.text, fontSize: 16, lineHeight: 1.8, margin: '0 0 16px' }}>We use cookies for essential functions such as sessions and Stripe checkout. {process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && 'If you allow analytics, PostHog measures page visits and interactions such as ticket-link clicks. You can change your choice here at any time.'}</p>
         </Section>
+
+        {process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && <div id="analytics" className="scroll-mt-24">
+          <Section label="Analytics preferences"><AnalyticsPreferences /></Section>
+        </div>}
 
         <Section label="Your rights">
           <p style={{ color: C.text, fontSize: 16, lineHeight: 1.8, margin: '0 0 16px' }}>You can unsubscribe from our newsletter at any time via the link in any email. You can request deletion of any personal data we hold by emailing us. We'll confirm within a week.</p>

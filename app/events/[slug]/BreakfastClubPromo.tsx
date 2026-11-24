@@ -108,7 +108,7 @@ function ArtistCard({ artist }: { artist: LineupArtist }) {
     {/* Zero-width space lets the long name break between its two words. */}
     <span>{artistName(artist).replace('ThemCandescence', 'Them\u200bCandescence')}</span>
   </>
-  return <li>{artist.dj_slug ? <Link href={`/djs/${artist.dj_slug}`}>{content}</Link> : <div>{content}</div>}</li>
+  return <li>{artist.dj_slug ? <Link href={`/djs/${artist.dj_slug}`} data-analytics-event="artist_profile_click" data-analytics-target={artist.dj_slug}>{content}</Link> : <div>{content}</div>}</li>
 }
 
 export default function BreakfastClubPromo({ event, lineup }: { event: Event; lineup: LineupArtist[] }) {
@@ -146,7 +146,7 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
                 <p><strong>4 AM → 4 PM</strong></p>
                 <p>Friday, January 1, 2027 · 21+</p>
               </div>
-              {event.payment_link && <a className={styles.ticket} href={event.payment_link}>Get tickets <span aria-hidden="true">↗</span></a>}
+              {event.payment_link && <a className={styles.ticket} href={event.payment_link} data-analytics-event="ticket_click" data-analytics-target="hero">Get tickets <span aria-hidden="true">↗</span></a>}
               <div className={styles.stickers}><Character name="just_up" /><Character name="still_up" /></div>
             </div>
           </div>
@@ -162,10 +162,10 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
 
       <nav className={styles.jump} aria-label="Breakfast Club sections">
         <div className={styles.wrap}>
-          <a href="#lineup"><Character name="bear" /><span>Lineup</span><i aria-hidden="true">↗</i></a>
-          <a href="#set-times"><Character name="spoon" /><span>Set times</span><i aria-hidden="true">↗</i></a>
-          <a href="#past-photos"><Character name="avocado" /><span>Past photos</span><i aria-hidden="true">↗</i></a>
-          <a href="#faq"><Character name="breakfast" /><span>FAQ</span><i aria-hidden="true">↗</i></a>
+          <a href="#lineup" data-analytics-event="festival_section_click" data-analytics-target="lineup"><Character name="bear" /><span>Lineup</span><i aria-hidden="true">↗</i></a>
+          <a href="#set-times" data-analytics-event="festival_section_click" data-analytics-target="set-times"><Character name="spoon" /><span>Set times</span><i aria-hidden="true">↗</i></a>
+          <a href="#past-photos" data-analytics-event="festival_section_click" data-analytics-target="past-photos"><Character name="avocado" /><span>Past photos</span><i aria-hidden="true">↗</i></a>
+          <a href="#faq" data-analytics-event="festival_section_click" data-analytics-target="faq"><Character name="breakfast" /><span>FAQ</span><i aria-hidden="true">↗</i></a>
         </div>
       </nav>
 
@@ -173,7 +173,7 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
         <div className={styles.wrap}>
           <div className={styles.fact}><p>Party length</p><strong>12 hours</strong></div>
           <a className={styles.fact} href="#lineup"><p>{groups.length === 3 ? 'Three' : 'Two'} stages</p><strong>{lineup.length} artists</strong><i aria-hidden="true">↗</i></a>
-          <a className={styles.venue} href={mapUrl}>
+          <a className={styles.venue} href={mapUrl} data-analytics-event="venue_directions_click">
             {venuePhoto && <span className={styles.venuePhoto}><Image src={venuePhoto.src} alt="" fill sizes="(max-width: 720px) 92vw, 760px" /></span>}
             <b className={styles.note}>Here!</b>
             <span className={styles.address}><span><strong>Monkey Loft</strong>{event.address ?? 'Seattle, WA'}</span><i aria-hidden="true">↗</i></span>
@@ -187,7 +187,7 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
           <div className={styles.wrap}>
             <p>Doors open in</p>
             <BreakfastCountdown />
-            {event.payment_link && <a className={styles.ticket} href={event.payment_link}>Get tickets <span aria-hidden="true">↗</span></a>}
+            {event.payment_link && <a className={styles.ticket} href={event.payment_link} data-analytics-event="ticket_click" data-analytics-target="countdown">Get tickets <span aria-hidden="true">↗</span></a>}
           </div>
         </div>
         <div className={styles.names} id="lineup">
@@ -203,7 +203,7 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
         <div className={styles.wrap}>
           <nav className={styles.stageLinks} aria-label="Jump to a stage">
             {groups.map(stage => (
-              <a key={stage.key} href={`#${stage.key}`} data-room={stage.key}>
+              <a key={stage.key} href={`#${stage.key}`} data-room={stage.key} data-analytics-event="stage_select" data-analytics-target={stage.key}>
                 <span>{stage.name} <span aria-hidden="true">↓</span></span>
                 <Character name={stage.character} />
               </a>
@@ -250,16 +250,16 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
       <section className={styles.faq} id="faq" aria-labelledby="faq-heading">
         <div className={styles.wrap}>
           <div className={styles.sectionHeading}><h2 id="faq-heading">Good to know</h2><Character name="top_plant" /></div>
-          <details><summary>Where is Monkey Loft?</summary><p><a href={mapUrl}>{event.address ?? 'Monkey Loft, Seattle'} ↗</a></p></details>
+          <details><summary>Where is Monkey Loft?</summary><p><a href={mapUrl} data-analytics-event="venue_directions_click">{event.address ?? 'Monkey Loft, Seattle'} ↗</a></p></details>
           {faq.filter(([question]) => event.payment_link || question !== 'Where do I get tickets?').map(([question, answer]) => (
             <details key={question}><summary>{question}</summary><p>{answer}</p></details>
           ))}
           <p className={styles.recording}>Photography, audio and video recording may take place at the event.</p>
-          {event.payment_link && <a className={styles.ticket} href={event.payment_link}>Get tickets <span aria-hidden="true">↗</span></a>}
+          {event.payment_link && <a className={styles.ticket} href={event.payment_link} data-analytics-event="ticket_click" data-analytics-target="faq">Get tickets <span aria-hidden="true">↗</span></a>}
         </div>
       </section>
 
-      {event.payment_link && <a className={styles.dateBar} href={event.payment_link}>
+      {event.payment_link && <a className={styles.dateBar} href={event.payment_link} data-analytics-event="ticket_click" data-analytics-target="mobile_bar">
         <span><strong>01/01</strong><small>Fri, 4 AM<br />2027</small></span><b>Get tickets</b>
       </a>}
     </div>

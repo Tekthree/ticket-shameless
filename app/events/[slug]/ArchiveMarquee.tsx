@@ -56,7 +56,7 @@ export default function ArchiveMarquee({ photos }: { photos: { src: string; alt:
     <div ref={strip} className={styles.photos} aria-label="Past Breakfast Club photos" role="region" tabIndex={0}
       onPointerDown={() => setPlaying(false)} onWheel={() => setPlaying(false)} onKeyDown={() => setPlaying(false)}>
       <div className={styles.photoRow}>
-        {photos.map(({ src, alt }) => <a key={src} href={src}><Image src={src} alt={alt} fill sizes="(max-width: 600px) 75vw, 380px" /></a>)}
+        {photos.map(({ src, alt }, index) => <a key={src} href={src} data-analytics-event="festival_photo_click" data-analytics-target={index + 1}><Image src={src} alt={alt} fill sizes="(max-width: 600px) 75vw, 380px" /></a>)}
       </div>
       <div ref={repeat} className={styles.photoRow} aria-hidden="true">
         {photos.map(({ src }) => <div key={src}><Image src={src} alt="" fill sizes="(max-width: 600px) 75vw, 380px" /></div>)}
