@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { PICFLOW_URLS } from '@/app/gallery/gallery-data'
 import type { Event, LineupArtist } from '@/lib/events'
 import ArchiveMarquee from './ArchiveMarquee'
+import BreakfastCountdown from './BreakfastCountdown'
 import FlyerVideo from './FlyerVideo'
 import styles from './breakfast-club.module.css'
 
@@ -54,13 +55,23 @@ const faq = [
 function Character({ name }: { name: keyof typeof characterDimensions }) {
   const [width, height] = characterDimensions[name]
   return <Image className={styles.character} src={`${media}/characters/${name}.png`}
-    width={width} height={height} sizes="(max-width: 640px) 64px, 136px" quality={95} alt="" />
+    width={width} height={height} sizes="(max-width: 640px) 120px, 260px" quality={95} alt="" />
+}
+
+function Ticker({ words, tone }: { words: string[]; tone?: 'pink' }) {
+  const run = [...words, ...words, ...words]
+  return <div className={styles.ticker} data-tone={tone} aria-hidden="true">
+    {[0, 1].map(copy => <span key={copy}>{run.map((word, index) => <b key={index}>{word}</b>)}</span>)}
+  </div>
+}
+
+function artistName(artist: LineupArtist) {
+  return artist.name === 'Magickat' ? 'MagicKat' : artist.name
 }
 
 function ArtistCard({ artist }: { artist: LineupArtist }) {
   const localPortrait = portraits[artist.name]
   const image = localPortrait ? `${media}/${localPortrait}.webp` : artist.image_url ?? artist.dj_profile_image_url
-  const name = artist.name === 'Magickat' ? 'MagicKat' : artist.name
   const content = <>
     <div className={styles.portrait}>
       {image
@@ -69,9 +80,10 @@ function ArtistCard({ artist }: { artist: LineupArtist }) {
         ? <img src={image} alt="" loading="lazy" decoding="async" />
         : <Character name="avocado" />}
     </div>
-    <span>{name}</span>
+    {/* Zero-width space lets the long name break between its two words. */}
+    <span>{artistName(artist).replace('ThemCandescence', 'Them\u200bCandescence')}</span>
   </>
-  return <li>{artist.dj_slug ? <Link href={`/djs/${artist.dj_slug}`}>{content}</Link> : content}</li>
+  return <li>{artist.dj_slug ? <Link href={`/djs/${artist.dj_slug}`}>{content}</Link> : <div>{content}</div>}</li>
 }
 
 export default function BreakfastClubPromo({ event, lineup }: { event: Event; lineup: LineupArtist[] }) {
@@ -79,44 +91,81 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
   const otherArtists = lineup.filter(artist => !stages.some(stage => stage.key === artist.stage))
   const schedule = groups.map(stage => ({ ...stage, artists: stage.artists.filter(artist => artist.time_slot) }))
   const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`Monkey Loft ${event.address ?? 'Seattle'}`)}`
+  const names = lineup.map(artistName)
+  const nameRows = [0, 1, 2, 3].map(row => names.filter((_, index) => index % 4 === row))
+  const venuePhoto = archivePhotos[1]
 
   return (
     <div className={styles.promo}>
       <header className={styles.hero}>
-        <div className={styles.heroInner}>
-          <div className={styles.intro}>
-            <p className={styles.eyebrow}>Shameless Presents · New Year’s Day 2027</p>
-            <h1>The Breakfast <em>Club</em></h1>
-            <p className={styles.tagline}>Still up or just up?</p>
-            <p className={styles.details}><strong>Friday, January 1 · 4 AM–4 PM</strong><br />Monkey Loft, Seattle · 21+</p>
-            <div className={styles.actions}>
-              {event.payment_link && <a className={styles.ticket} href={event.payment_link}>Get tickets <span aria-hidden="true">↗</span></a>}
-              <a className={styles.secondary} href="#lineup">See the lineup ↓</a>
-            </div>
-            <div className={styles.stickers}><Character name="still_up" /><Character name="just_up" /></div>
+        <div className={styles.wrap}>
+          <div className={styles.masthead}>
+            <p>Shameless presents</p>
+            <p>Seattle, WA · 01.01.27</p>
           </div>
-          <div className={styles.flyer}>
-            <FlyerVideo />
-            <Character name="avocado" />
+          <h1>The Breakfast <span className={styles.squiggle}>Club</span> <span className={styles.year}>2027</span></h1>
+          <div className={styles.heroInner}>
+            <div className={styles.flyer}><FlyerVideo /></div>
+            <div className={styles.intro}>
+              <p className={styles.tagline}><span>Still up?</span><span>Just up?</span></p>
+              <div className={styles.details}>
+                <p>New Year’s Day at Monkey Loft</p>
+                <p><strong>4 AM → 4 PM</strong></p>
+                <p>Friday, January 1, 2027 · 21+</p>
+              </div>
+              {event.payment_link && <a className={styles.ticket} href={event.payment_link}>Get tickets <span aria-hidden="true">↗</span></a>}
+              <div className={styles.stickers}><Character name="just_up" /><Character name="still_up" /></div>
+            </div>
           </div>
         </div>
       </header>
 
+      <a className={styles.photoTeaser} href="#past-photos" aria-label="See photos from past Breakfast Club parties">
+        {archivePhotos.map(({ src }) => (
+          <span key={src}><Image src={src} alt="" fill sizes="(max-width: 600px) 25vw, 17vw" /></span>
+        ))}
+      </a>
+      <Ticker words={['Still up?', 'Just up?', 'Jan 1', '4 AM to 4 PM', 'Monkey Loft']} />
+
       <nav className={styles.jump} aria-label="Breakfast Club sections">
-        <a href="#lineup">Lineup</a><a href="#set-times">Set times</a><a href="#past-photos">Past photos</a><a href="#faq">FAQ</a>
+        <div className={styles.wrap}>
+          <a href="#lineup"><Character name="bear" /><span>Lineup</span><i aria-hidden="true">↗</i></a>
+          <a href="#set-times"><Character name="spoon" /><span>Set times</span><i aria-hidden="true">↗</i></a>
+          <a href="#past-photos"><Character name="avocado" /><span>Past photos</span><i aria-hidden="true">↗</i></a>
+          <a href="#faq"><Character name="breakfast" /><span>FAQ</span><i aria-hidden="true">↗</i></a>
+        </div>
       </nav>
 
-      <div className={styles.ticker} aria-hidden="true">
-        <div className={styles.tickerTrack}>
-          {[0, 1].map(copy => <div key={copy}>{[0, 1, 2, 3].map(item => (
-            <span key={item}>Still up? <b>✦</b> Just up? <b>✦</b></span>
-          ))}</div>)}
+      <div className={styles.facts}>
+        <div className={styles.wrap}>
+          <div className={styles.fact}><p>Party length</p><strong>12 hours</strong></div>
+          <a className={styles.fact} href="#lineup"><p>Two stages</p><strong>{lineup.length} artists</strong><i aria-hidden="true">↗</i></a>
+          <a className={styles.venue} href={mapUrl}>
+            {venuePhoto && <span className={styles.venuePhoto}><Image src={venuePhoto.src} alt="" fill sizes="(max-width: 720px) 92vw, 760px" /></span>}
+            <b className={styles.note}>Here!</b>
+            <span className={styles.address}><span><strong>Monkey Loft</strong>{event.address ?? 'Seattle, WA'}</span><i aria-hidden="true">↗</i></span>
+          </a>
+          <Character name="cat_with_plant" />
+        </div>
+      </div>
+
+      <div className={styles.doors}>
+        <div className={styles.wrap}>
+          <p>Doors open in</p>
+          <BreakfastCountdown />
+          {event.payment_link && <a className={styles.ticket} href={event.payment_link}>Get tickets <span aria-hidden="true">↗</span></a>}
         </div>
       </div>
 
       <section className={styles.lineup} id="lineup" aria-labelledby="lineup-heading">
+        <div className={styles.names}>
+          <div className={styles.nameRows} aria-hidden="true">
+            {nameRows.map((row, index) => <div key={index}>{[0, 1].map(copy => <span key={copy}>{row.map(name => <b key={name}>{name}</b>)}</span>)}</div>)}
+          </div>
+          <h2 id="lineup-heading"><span className={styles.squiggle}>Lineup</span></h2>
+        </div>
+        <div className={styles.drip} aria-hidden="true" />
         <div className={styles.wrap}>
-          <h2 id="lineup-heading">The lineup</h2>
           <nav className={styles.stageLinks} aria-label="Jump to a stage">
             {groups.map(stage => (
               <a key={stage.key} href={`#${stage.key}`} data-room={stage.key}>
@@ -127,9 +176,7 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
           </nav>
           {groups.map(stage => (
             <div key={stage.key} id={stage.key} className={styles.stage} data-stage={stage.key}>
-              <div className={styles.stageHeading}>
-                <h3>{stage.name}</h3>
-              </div>
+              <h3>{stage.name}</h3>
               <ul className={styles.artists}>{stage.artists.map(artist => <ArtistCard key={artist.id} artist={artist} />)}</ul>
             </div>
           ))}
@@ -143,10 +190,11 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
           <div className={styles.scheduleGrid}>
             {schedule.map(stage => (
               <div key={stage.key}>
+                <span className={styles.calendar} aria-hidden="true"><small>Jan</small>01</span>
                 <h3>{stage.name}</h3>
                 {stage.artists.length > 0
-                  ? <ul>{stage.artists.map(artist => <li key={artist.id}><strong>{artist.time_slot}</strong> {artist.name}</li>)}</ul>
-                  : <p>Set times will be posted here once announced.</p>}
+                  ? <ul>{stage.artists.map(artist => <li key={artist.id}><strong>{artist.time_slot}</strong> {artistName(artist)}</li>)}</ul>
+                  : <p>Coming soon</p>}
               </div>
             ))}
           </div>
@@ -155,13 +203,14 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
 
       <section className={styles.archive} id="past-photos" aria-labelledby="past-heading">
         <div className={styles.wrap}>
-          <div className={styles.sectionHeading}><h2 id="past-heading">From the archives</h2><Character name="breakfast" /></div>
+          <div className={styles.sectionHeading}><h2 id="past-heading">Last time on the dance floor</h2><Character name="breakfast" /></div>
         </div>
         <ArchiveMarquee photos={archivePhotos} />
         <div className={styles.wrap}>
           <Link className={styles.secondary} href="/gallery">More photos in the Shameless gallery →</Link>
         </div>
       </section>
+      <Ticker tone="pink" words={['Breakfast is served', 'New Year’s Day', 'Dance till 4 PM', 'Shameless']} />
 
       <section className={styles.faq} id="faq" aria-labelledby="faq-heading">
         <div className={styles.wrap}>
@@ -174,6 +223,10 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
           {event.payment_link && <a className={styles.ticket} href={event.payment_link}>Get tickets <span aria-hidden="true">↗</span></a>}
         </div>
       </section>
+
+      {event.payment_link && <a className={styles.dateBar} href={event.payment_link}>
+        <span><strong>01/01</strong><small>Fri, 4 AM<br />2027</small></span><b>Get tickets</b>
+      </a>}
     </div>
   )
 }

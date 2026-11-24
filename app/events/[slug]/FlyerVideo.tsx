@@ -22,10 +22,10 @@ export default function FlyerVideo() {
 
   return <>
     <video ref={video} muted loop playsInline preload="none"
-      poster="/breakfast-club-2027/flyer.webp"
+      poster="/breakfast-club-2027/portal.webp"
       aria-label="Animated Breakfast Club 2027 flyer"
       onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)}>
-      <source src="/breakfast-club-2027/flyer.mp4" type="video/mp4" />
+      <source src="/breakfast-club-2027/portal.mp4" type="video/mp4" />
     </video>
     <button className={styles.motion} type="button" onClick={() => {
       const element = video.current
