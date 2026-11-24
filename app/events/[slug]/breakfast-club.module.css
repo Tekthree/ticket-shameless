@@ -29,8 +29,8 @@
 .promo h3 { font-size: clamp(2.4rem, 5vw, 4.2rem); }
 .promo i { font-style: normal; }
 .character { display: block; object-fit: contain; height: auto; }
-.squiggle { display: inline-block; position: relative; }
-.squiggle::after { content: ''; position: absolute; inset: calc(100% + .07em) 0 auto; aspect-ratio: 300 / 26; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 26'%3E%3Cpath d='M5 13q14.5-16 29 0 t29 0 t29 0 t29 0 t29 0 t29 0 t29 0 t29 0 t29 0 t29 0' fill='none' stroke='%23ff8fdc' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+.squiggle { display: inline-block; }
+.squiggle::after { content: ''; display: block; margin-top: .07em; aspect-ratio: 300 / 26; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 26'%3E%3Cpath d='M5 13q14.5-16 29 0 t29 0 t29 0 t29 0 t29 0 t29 0 t29 0 t29 0 t29 0 t29 0' fill='none' stroke='%23ff8fdc' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
 .ticket {
   display: inline-flex; align-items: center; gap: 1.6rem; padding: .85rem 1.35rem;
   border-radius: .8rem; background: var(--acid); color: var(--night);
@@ -100,7 +100,7 @@
 .address { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .9rem .6rem .4rem; }
 .address strong { display: block; font: 900 clamp(1.8rem, 3.4vw, 2.6rem)/1 var(--display); text-transform: uppercase; }
 .address i { font-size: 1.6rem; }
-.facts > div > .character { position: absolute; right: -1rem; bottom: calc(-.5 * var(--section-space)); width: clamp(6.5rem, 17vw, 15rem); pointer-events: none; z-index: 1; }
+.facts > div > .character { position: absolute; right: -1rem; bottom: 4.5rem; width: clamp(5rem, 13vw, 12rem); pointer-events: none; z-index: 1; }
 
 .doors { background: var(--acid); color: var(--night); text-align: center; }
 .doors .ticket { background: var(--pink); }
@@ -116,10 +116,10 @@
 .nameRows b { white-space: nowrap; }
 .nameRows b::after { content: '/'; padding-inline: .45em; color: #171d3a; }
 .names h2 { position: relative; font-size: clamp(6rem, 18vw, 16rem); text-shadow: 0 0 1.6rem var(--night), .03em .035em var(--night); }
-.lineup { position: relative; background: var(--blue) var(--tex); }
-.drip { position: absolute; inset-inline: 0; height: calc(.75 * var(--section-space)); pointer-events: none; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='90'%3E%3Cpath fill='%23ffc930' d='M0 0H400V26C388 26 386 52 372 52S358 30 344 30C328 30 330 86 312 86S298 34 280 34C264 34 262 60 246 60S232 28 214 28C196 28 200 76 182 76S168 32 150 32C134 32 132 48 118 48S104 26 88 26C70 26 74 68 56 68S42 30 26 30C14 30 12 26 0 26Z'/%3E%3C/svg%3E") repeat-x center top / auto 100%; }
+.lineup { background: var(--blue) var(--tex); }
+.drip { height: calc(.75 * var(--section-space)); pointer-events: none; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='90'%3E%3Cpath fill='%23ffc930' d='M0 0H400V26C388 26 386 52 372 52S358 30 344 30C328 30 330 86 312 86S298 34 280 34C264 34 262 60 246 60S232 28 214 28C196 28 200 76 182 76S168 32 150 32C134 32 132 48 118 48S104 26 88 26C70 26 74 68 56 68S42 30 26 30C14 30 12 26 0 26Z'/%3E%3C/svg%3E") repeat-x center top / auto 100%; }
 .stageLinks { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(45%, 16rem), 1fr)); gap: var(--card-gap); }
-.stageLinks a { position: relative; display: flex; align-items: center; justify-content: space-between; min-width: 0; padding: clamp(.8rem, 2vw, 1.5rem); border-radius: var(--radius); background: var(--pink); color: var(--night); font: 900 clamp(1.75rem, 4.4vw, 3.6rem)/.92 var(--display); text-transform: uppercase; rotate: -1deg; transition: rotate .18s; }
+.stageLinks a { position: relative; display: flex; align-items: center; justify-content: space-between; min-width: 0; padding: clamp(.8rem, 2vw, 1.5rem); border-radius: var(--radius); background: var(--pink); color: var(--night); font: 900 clamp(1.6rem, 3.3vw, 3rem)/.96 var(--display); text-transform: uppercase; rotate: -1deg; transition: rotate .18s; }
 .stageLinks a[data-room='rooftop'] { background: var(--acid); rotate: 1deg; }
 .stageLinks a[data-room='gallery'] { background: var(--lilac); }
 .stageLinks a:hover { rotate: 0deg; }
