@@ -11,14 +11,13 @@ export const BREAKFAST_CLUB_2027 = 'the-breakfast-club-new-years-day-2027-2027-0
 const media = '/breakfast-club-2027'
 const portraits: Record<string, string> = {
   "Riz Rollins": "riz-and-rob",
-  "Rob Green": "riz-and-rob",
   "Solana Solstice": "solana-solstice",
   "Maya Mem Saab": "maya-mem-saab",
   "Christine Michelle": "christine-michelle",
   "Aivilo": "aivilo",
   "Brit Jean": "brit-jean",
   "Levi Clark": "levi-clark",
-  "Sloane Motion": "sloane-and-mia",
+  "Sloane Motion": "sloane-motion",
   "Mia Maya": "sloane-and-mia",
   "Just Beef": "just-beef",
   "LGSP": "lgsp",
@@ -94,7 +93,10 @@ function artistName(artist: LineupArtist) {
 
 function ArtistCard({ artist }: { artist: LineupArtist }) {
   const localPortrait = portraits[artist.name]
-  const image = localPortrait ? `${media}/lineup/${localPortrait}.webp` : artist.image_url ?? artist.dj_profile_image_url
+  const eventPortrait = localPortrait ? `${media}/lineup/${localPortrait}.webp` : artist.image_url
+  const image = artist.name === 'Rob Green'
+    ? artist.dj_profile_image_url ?? eventPortrait
+    : eventPortrait ?? artist.dj_profile_image_url
   const content = <>
     <div className={styles.portrait}>
       {image
