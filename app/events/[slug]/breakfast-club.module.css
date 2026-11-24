@@ -109,14 +109,16 @@
 .names h2 { position: relative; font-size: clamp(6rem, 18vw, 16rem); text-shadow: 0 0 1.6rem var(--night), .03em .035em var(--night); }
 .lineup { background: var(--blue) var(--tex); padding-bottom: clamp(3.5rem, 8vw, 7rem); }
 .drip { height: 90px; margin-bottom: 1.5rem; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='90'%3E%3Cpath fill='%23ffc930' d='M0 0H400V26C388 26 386 52 372 52S358 30 344 30C328 30 330 86 312 86S298 34 280 34C264 34 262 60 246 60S232 28 214 28C196 28 200 76 182 76S168 32 150 32C134 32 132 48 118 48S104 26 88 26C70 26 74 68 56 68S42 30 26 30C14 30 12 26 0 26Z'/%3E%3C/svg%3E") repeat-x center top; }
-.stageLinks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(.7rem, 2vw, 1.4rem); }
+.stageLinks { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(45%, 16rem), 1fr)); gap: clamp(.7rem, 2vw, 1.4rem); }
 .stageLinks a { position: relative; display: flex; align-items: center; justify-content: space-between; min-width: 0; padding: clamp(.8rem, 2vw, 1.5rem); border-radius: var(--radius); background: var(--pink); color: var(--night); font: 900 clamp(1.75rem, 4.4vw, 3.6rem)/.92 var(--display); text-transform: uppercase; rotate: -1deg; transition: rotate .18s; }
 .stageLinks a[data-room='rooftop'] { background: var(--acid); rotate: 1deg; }
+.stageLinks a[data-room='gallery'] { background: var(--lilac); }
 .stageLinks a:hover { rotate: 0deg; }
 .stageLinks .character { width: clamp(3rem, 8vw, 6.2rem); height: clamp(3.6rem, 9vw, 6.6rem); margin-block: -1.2rem -.4rem; }
 .stage { margin-top: clamp(2.5rem, 6vw, 5rem); }
 .stage h3 { width: fit-content; margin-bottom: 1.1rem; padding: .06em .25em .1em; border-radius: .18em; background: var(--night); color: var(--pink); rotate: -1deg; }
 .stage[data-stage='rooftop'] h3 { color: var(--acid); rotate: 1deg; }
+.stage[data-stage='gallery'] h3 { color: var(--lilac); }
 .artists { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(.55rem, 1.2vw, 1rem); }
 .artists li > * { display: flex; flex-direction: column; height: 100%; overflow: hidden; border-radius: .9rem; background: var(--night); transition: rotate .18s, background .18s, color .18s; }
 .artists li > a:hover { background: var(--pink); color: var(--night); rotate: -2deg; }
@@ -130,8 +132,9 @@
 .sectionHeading .character { flex: none; width: clamp(4.6rem, 13vw, 11rem); animation: bob 3s ease-in-out infinite alternate; }
 .schedule, .archive, .faq { padding-block: clamp(3.8rem, 8vw, 7.5rem); }
 .schedule { background: var(--pink); color: var(--night); }
-.scheduleGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem; margin-top: clamp(2.4rem, 5vw, 3.6rem); }
+.scheduleGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 1.2rem; margin-top: clamp(2.4rem, 5vw, 3.6rem); }
 .scheduleGrid > div { position: relative; padding: clamp(1.3rem, 3vw, 2.2rem); border-radius: var(--radius); background: var(--night); color: var(--paper); }
+.scheduleGrid h3 { padding-right: 1.4em; font-size: clamp(2.2rem, 3.4vw, 3rem); }
 .scheduleGrid :is(p, ul) { margin-top: .8rem; font-size: 1.1rem; }
 .scheduleGrid li { padding: .55rem 0; border-top: 1px solid #47507e; }
 .calendar { position: absolute; right: 1.1rem; top: -1.4rem; display: grid; width: 4.4rem; overflow: hidden; border-radius: .55rem; background: var(--paper); color: var(--night); font: 900 2.6rem/1.15 var(--display); text-align: center; rotate: 4deg; box-shadow: 0 4px 0 rgb(0 0 0 / .35); }
@@ -172,6 +175,7 @@
   .photoTeaser span:nth-child(n + 5) { display: none; }
   .promo h1 { font-size: clamp(4.1rem, 21.5vw, 8.5rem); }
   .venuePhoto { aspect-ratio: 1.6; }
+  .stageLinks a:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .artists { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .artists li > * > span { padding-inline: .5rem; font-size: clamp(.94rem, 4.2vw, 1.5rem); letter-spacing: -.01em; }
   .dateBar {

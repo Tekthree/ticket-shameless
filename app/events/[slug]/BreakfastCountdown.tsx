@@ -15,7 +15,7 @@ export default function BreakfastCountdown() {
     return () => clearInterval(timer)
   }, [])
 
-  if (left === 0) return <p className={styles.count}>Breakfast is served</p>
+  if (left === 0) return <p className={styles.count}>Doors are open</p>
   const seconds = left === null ? null : Math.floor(left / 1000)
   const parts = [
     ['D', seconds === null ? null : Math.floor(seconds / 86400)],

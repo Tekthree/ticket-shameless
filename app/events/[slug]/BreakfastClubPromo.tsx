@@ -29,6 +29,7 @@ const characterDimensions = {
 const stages = [
   { key: 'loft', name: 'The Loft', character: 'bear' },
   { key: 'rooftop', name: 'The Rooftop', character: 'cat_with_plant' },
+  { key: 'gallery', name: 'The Gallery', character: 'avocado' },
 ] as const
 
 const pastPhotos = [
@@ -49,7 +50,7 @@ const faq = [
   ['Which morning does it start?', 'Doors open at 4 AM on Friday, January 1, 2027, after midnight on New Year’s Eve. We dance until 4 PM that afternoon.'],
   ['Is it 21+?', 'Yes. Bring a valid photo ID.'],
   ['Where do I get tickets?', 'Use the Get tickets link on this page to buy through Eventbrite.'],
-  ['Where do I find set times?', 'Check the Set times section here for the Loft and Rooftop schedules.'],
+  ['Where do I find set times?', 'Check the Set times section here for the schedule on each stage.'],
 ]
 
 function Character({ name }: { name: keyof typeof characterDimensions }) {
@@ -87,8 +88,11 @@ function ArtistCard({ artist }: { artist: LineupArtist }) {
 }
 
 export default function BreakfastClubPromo({ event, lineup }: { event: Event; lineup: LineupArtist[] }) {
-  const groups = stages.map(stage => ({ ...stage, artists: lineup.filter(artist => artist.stage === stage.key) }))
-  const otherArtists = lineup.filter(artist => !stages.some(stage => stage.key === artist.stage))
+  // Roaming performers are saved once with stage "all" and appear under every stage.
+  const groups = stages
+    .filter(stage => lineup.some(artist => artist.stage === stage.key))
+    .map(stage => ({ ...stage, artists: [...lineup.filter(artist => artist.stage === stage.key), ...lineup.filter(artist => artist.stage === 'all')] }))
+  const otherArtists = lineup.filter(artist => artist.stage !== 'all' && !stages.some(stage => stage.key === artist.stage))
   const schedule = groups.map(stage => ({ ...stage, artists: stage.artists.filter(artist => artist.time_slot) }))
   const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`Monkey Loft ${event.address ?? 'Seattle'}`)}`
   const names = lineup.map(artistName)
@@ -139,7 +143,7 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
       <div className={styles.facts}>
         <div className={styles.wrap}>
           <div className={styles.fact}><p>Party length</p><strong>12 hours</strong></div>
-          <a className={styles.fact} href="#lineup"><p>Two stages</p><strong>{lineup.length} artists</strong><i aria-hidden="true">↗</i></a>
+          <a className={styles.fact} href="#lineup"><p>{groups.length === 3 ? 'Three' : 'Two'} stages</p><strong>{lineup.length} artists</strong><i aria-hidden="true">↗</i></a>
           <a className={styles.venue} href={mapUrl}>
             {venuePhoto && <span className={styles.venuePhoto}><Image src={venuePhoto.src} alt="" fill sizes="(max-width: 720px) 92vw, 760px" /></span>}
             <b className={styles.note}>Here!</b>
@@ -210,7 +214,7 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
           <Link className={styles.secondary} href="/gallery">More photos in the Shameless gallery →</Link>
         </div>
       </section>
-      <Ticker tone="pink" words={['Breakfast is served', 'New Year’s Day', 'Dance till 4 PM', 'Shameless']} />
+      <Ticker tone="pink" words={['The Breakfast Club', 'New Year’s Day', 'Dance till 4 PM', 'Shameless']} />
 
       <section className={styles.faq} id="faq" aria-labelledby="faq-heading">
         <div className={styles.wrap}>
