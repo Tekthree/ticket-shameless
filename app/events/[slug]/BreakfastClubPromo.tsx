@@ -259,7 +259,7 @@ export default function BreakfastClubPromo({ event, lineup }: { event: Event; li
         </div>
         <ArchiveMarquee photos={[...archivePhotos, ...instagramPhotos]} />
         <div className={styles.wrap}>
-          <Link className={styles.secondary} href="/gallery">More photos in the Shameless gallery →</Link>
+          <Link className={styles.archiveGalleryLink} href="/gallery">More photos in the Shameless gallery →</Link>
         </div>
       </section>
       <Ticker tone="pink" words={['The Breakfast Club', 'New Year’s Day', 'Dance till 4 PM', 'Shameless']} />

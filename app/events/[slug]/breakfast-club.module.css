@@ -162,7 +162,12 @@
 .archiveControls { display: flex; justify-content: center; gap: .65rem; margin-block: var(--content-space) var(--group-space); }
 .archiveControls button { min-width: 3rem; min-height: 3rem; padding-inline: 1.1rem; border-radius: .8rem; background: var(--blue); color: var(--night); font-weight: 800; }
 .archiveControls button:hover { background: var(--acid); }
-.secondary { font-weight: 750; text-decoration: underline; text-underline-offset: .28em; }
+.archiveGalleryLink {
+  display: flex; align-items: center; justify-content: center; width: fit-content; max-width: 100%;
+  min-height: 3rem; margin-inline: auto; padding: .65rem 1.1rem; border-radius: .8rem;
+  background: #29365e; color: var(--paper); font-weight: 750; text-align: center;
+}
+.archiveGalleryLink:hover { background: #34436e; }
 .faq { background: var(--blue) var(--tex); color: var(--night); }
 .faq details { padding: var(--card-padding); border-radius: var(--radius); background: var(--night); color: var(--paper); }
 .faq details + details { margin-top: var(--card-gap); }
