@@ -20,7 +20,7 @@ function useInView() {
 
 export default function NewsletterSection({ festival = false }: { festival?: boolean }) {
   const source = festival ? 'breakfast-club-2027' : 'homepage'
-  const accent = festival ? '#0b0f24' : '#c9321a'
+  const accent = festival ? '#111110' : '#c9321a'
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
